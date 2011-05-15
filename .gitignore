@@ -1,0 +1,6 @@
+bin/
+progard.cfg
+.project
+.settings
+default.properties
+gen/
