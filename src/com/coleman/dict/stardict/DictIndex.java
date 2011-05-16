@@ -22,12 +22,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 
-import com.coleman.dict.util.ByteConverter;
+import com.coleman.util.ByteConverter;
 
 /**
  * Dictionary index entry structure.
@@ -71,9 +72,9 @@ public class DictIndex {
      * @throws java.io.FileNotFoundException
      * @see cn.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
-    public static ArrayList<DictIndex> readIndexFile(Context context, String indexFileName,
-            int count) {
-        ArrayList<DictIndex> dictIndexList = new ArrayList<DictIndex>();
+    public static HashMap<String, DictIndex> readIndexFile(Context context, String indexFileName,
+            int numCount) {
+        HashMap<String, DictIndex> wordmap = new HashMap<String, DictIndex>();
         InputStream reader = null;
         try {
             reader = context.getAssets().open(indexFileName, AssetManager.ACCESS_RANDOM);
@@ -88,7 +89,7 @@ public class DictIndex {
                 long offset = 0; // offset of a word in data file
                 long size = 0; // size of word's definition
                 mark = 0;
-                for (int i = 0; i < bytes.length && dictIndexList.size() < count; i++) {
+                for (int i = 0; i < bytes.length && wordmap.size() < numCount; i++) {
                     if (bytes[i] == 0 && i < bytes.length - 9) {
                         word = new String(bytes, mark, i - mark, "UTF-8");
                         offset = ByteConverter.unsigned4BytesToInt(bytes, i + 1);
@@ -97,7 +98,7 @@ public class DictIndex {
                         dictIndex.word = word;
                         dictIndex.offset = offset;
                         dictIndex.size = size;
-                        dictIndexList.add(dictIndex);
+                        wordmap.put(word,dictIndex);
                         mark = i + 9;
                         i += 9;
                     }
@@ -111,8 +112,6 @@ public class DictIndex {
                 }
             }
             reader.close();
-
-            sortIndexList(dictIndexList);
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -122,14 +121,7 @@ public class DictIndex {
                 ex.printStackTrace();
             }
         }
-        return dictIndexList;
+        return wordmap;
     }
 
-    private static void sortIndexList(List<DictIndex> dictIndexList) {
-        java.util.Collections.sort(dictIndexList, new Comparator<DictIndex>() {
-            public int compare(DictIndex o1, DictIndex o2) {
-                return o1.word.compareTo(o2.word);
-            }
-        });
-    }
 }

@@ -13,9 +13,9 @@ import android.util.Log;
 public class DictData {
     private static final String TAG = DictData.class.getName();
 
-    String symbol;
+    public String symbol;
 
-    String data;
+    public String data;
 
     public static DictData readData(Context context, DictInfo info, DictIndex index, String fileName) {
         DictData dici = new DictData();

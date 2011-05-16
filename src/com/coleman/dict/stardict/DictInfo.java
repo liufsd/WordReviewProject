@@ -26,7 +26,7 @@ import java.io.InputStreamReader;
 import android.content.Context;
 import android.content.res.AssetManager;
 
-import com.coleman.dict.util.FileAccessor;
+import com.coleman.util.FileAccessor;
 
 /**
  * Dictionary information
