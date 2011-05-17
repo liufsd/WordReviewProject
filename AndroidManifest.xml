@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.coleman.activity"
-      android:versionCode="1"
-      android:versionName="1.0">
+	package="com.coleman.kingword" android:versionCode="1"
+	android:versionName="1.0">
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
+		<provider android:name="com.coleman.kingword.provider.KingWordProvider"
+			android:authorities="kingword" />
+		<activity android:name="com.coleman.kingword.activity.KingWordActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 
-
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name="KingWordActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-    </application>
+	</application>
 </manifest>
