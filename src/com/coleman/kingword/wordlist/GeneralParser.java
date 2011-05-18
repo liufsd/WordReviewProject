@@ -15,7 +15,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.util.FileAccessor;
+import com.coleman.util.FileAccessor;
 
 /**
  * A general parser should have the ability to parse the following format:

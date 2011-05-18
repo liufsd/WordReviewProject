@@ -25,9 +25,26 @@ public class WordList {
 
     private ArrayList<List<String>> sublist = new ArrayList<List<String>>();
 
+    private int p;
+
     public WordList(ArrayList<String> list) {
         this.list.addAll(list);
-        split(set_method);
+//        split(set_method);
+        p = 0;
+    }
+
+    public String getWord() {
+        return list.get(p);
+    }
+
+    public String getPre() {
+        p = p - 1 < 0 ? 0 : p - 1;
+        return list.get(p);
+    }
+
+    public String getNext() {
+        p = p + 1 > list.size() - 1 ? list.size() - 1 : p + 1;
+        return list.get(p);
     }
 
     public void split(SetMethod method) {

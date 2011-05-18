@@ -79,7 +79,7 @@ public class DictData {
                     }
                     dici.data = data2;
                     if (k > 1) {// for debug
-                    // Log.d(TAG, "first data:" + data1);
+                        // Log.d(TAG, "first data:" + data1);
                         dici.symbol = "/" + data1 + "/";
                     }
                     break;
@@ -110,5 +110,13 @@ public class DictData {
             e.printStackTrace();
             return bytes;
         }
+    }
+
+    @Override
+    public String toString() {
+        String str = "";
+        str += symbol == null ? "" : symbol;
+        str += " " + data == null ? "" : data;
+        return str;
     }
 }

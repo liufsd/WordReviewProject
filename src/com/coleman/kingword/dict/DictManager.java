@@ -5,25 +5,29 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictLibrary;
-import com.coleman.kingword.dict.stardict.DictParser;
+import com.coleman.kingword.dict.stardict.DictLibraryFactory;
 
 /**
  * Manager the dictionary, there are two kinds of files 1.the stardict
  * dictionary stardict dictionary are made of three parts: *.dict, *.idx and
- * *.ifo 2.the target new word list files the target word list files should be
- * simple UTF-8 encoded, and can be read line by line. the correct format is
- * "cat 猫" or "cat". the manager can cut the target new word list into parts,
- * and lookup the new word in the stardict dictionary.
+ * *.ifo
  * 
  * @author coleman
  */
 public class DictManager {
+    private static final String TAG = DictManager.class.getName();
+
     private static DictManager manager;
 
+    /**
+     * @TODO to save the memory, should do some optimization to the dictmap,
+     *       such as merge the different dicts.
+     */
     private HashMap<String, DictLibrary> dictmap = new HashMap<String, DictLibrary>();
 
     private String curLib = DictLibrary.STARDICT;
@@ -41,11 +45,17 @@ public class DictManager {
     /**********************************************************************
      * operate library
      **********************************************************************/
+    /**
+     * This method will do several things: 1. initial the database if not
+     * initialed otherwise do nothing. 2. release the data if the database have
+     * been initialed.
+     */
     public void initLibrary(Context context) {
         long time = System.currentTimeMillis();
         try {
-            dictmap.put(DictLibrary.OXFORD, DictParser.loadLibrary(context, DictLibrary.OXFORD));
-            dictmap.put(DictLibrary.STARDICT, DictParser.loadLibrary(context, DictLibrary.STARDICT));
+            DictLibraryFactory factory = new DictLibraryFactory();
+            factory.loadLibrary(context, DictLibrary.OXFORD, dictmap);
+            factory.loadLibrary(context, DictLibrary.STARDICT, dictmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,15 +106,21 @@ public class DictManager {
     public void moveToNewWordList(DictIndex dici) {
     }
 
-    public String viewWord(Context context, String word) {
+    public DictData viewWord(Context context, String word) {
         DictLibrary library = dictmap.get(curLib);
-        DictIndex index = library.getDictIndex(word);
-        if (index == null) {
-            return "not found!";
+        if (library == null) {
+            Log.w(TAG, "library has not been initialed!");
+            return null;
         }
+        DictIndex index = library.getDictIndex(context, word);
+        if (index == null) {
+            Log.w(TAG, "not found!");
+            return null;
+        }
+        Log.d(TAG, "index word:" + index.word);
         DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
                 library.getLibraryName());
-        return wordData.data;
+        return wordData;
     }
 
     /**
@@ -136,8 +152,6 @@ public class DictManager {
 
         public ViewType getViewType(int type) {
             switch (type) {
-                case 0:
-                    return DEFAULT;
                 case 1:
                     return ALL;
                 case 2:
@@ -146,8 +160,8 @@ public class DictManager {
                     return IMPORTANT;
                 case 4:
                     return NEW_WORD;
+                case 0:
                 default:
-                    // TODO need to report the exception.
                     return DEFAULT;
             }
         }

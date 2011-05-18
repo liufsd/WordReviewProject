@@ -31,7 +31,7 @@ import android.database.Cursor;
 
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
-import com.coleman.kingword.util.ByteConverter;
+import com.coleman.util.ByteConverter;
 
 /**
  * Dictionary index entry structure.
@@ -61,26 +61,36 @@ public class DictIndex {
     /**
      * word data size
      */
-    public long size;
+    public int size;
+
+    public DictIndex() {
+    }
+
+    public DictIndex(String word, long offset, int size) {
+        this.word = word;
+        this.offset = offset;
+        this.size = size;
+    }
 
     @Override
     public String toString() {
         return word + "\t" + offset + "\t" + size;
     }
 
-    public static HashMap<String, DictIndex> loadDictIndexMap(Context context,
-            String indexFileName, int numCount) {
+    static HashMap<String, DictIndex> loadDictIndexMap(Context context, String indexFileName,
+            int numCount) {
         HashMap<String, DictIndex> wordmap = new HashMap<String, DictIndex>();
-        // if (isLoaded(context, indexFileName)) {
-        // readIndexFileDB(context, indexFileName, wordmap);
-        // } else {
         readIndexFileNative(context, indexFileName, numCount, wordmap);
-        // }
         return wordmap;
     }
 
-    private static HashMap<String, DictIndex> readIndexFileDB(Context context,
-            String indexFileName, HashMap<String, DictIndex> wordmap) {
+    /**
+     * If you try to load too many data from the database, error will happened.
+     * 
+     * @deprecated
+     */
+    static void readIndexFileDB(Context context, String indexFileName,
+            HashMap<String, DictIndex> wordmap) {
         Cursor c = null;
         if (indexFileName.startsWith(DictLibrary.STARDICT)) {
             String projection[] = new String[] {
@@ -93,7 +103,7 @@ public class DictIndex {
                     DictIndex di = new DictIndex();
                     di.word = c.getString(1);
                     di.offset = c.getLong(2);
-                    di.size = c.getLong(3);
+                    di.size = c.getInt(3);
                     wordmap.put(di.word, di);
                     c.moveToNext();
                 }
@@ -111,14 +121,13 @@ public class DictIndex {
                     DictIndex di = new DictIndex();
                     di.word = c.getString(1);
                     di.offset = c.getLong(2);
-                    di.size = c.getLong(3);
+                    di.size = c.getInt(3);
                     wordmap.put(di.word, di);
                     c.moveToNext();
                 }
                 c.close();
             }
         }
-        return wordmap;
     }
 
     /**
@@ -128,8 +137,8 @@ public class DictIndex {
      * @throws java.io.FileNotFoundException
      * @see cn.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
-    private static HashMap<String, DictIndex> readIndexFileNative(Context context,
-            String indexFileName, int numCount, HashMap<String, DictIndex> wordmap) {
+    private static void readIndexFileNative(Context context, String indexFileName, int numCount,
+            HashMap<String, DictIndex> wordmap) {
         InputStream reader = null;
         try {
             reader = context.getAssets().open(indexFileName, AssetManager.ACCESS_RANDOM);
@@ -152,7 +161,7 @@ public class DictIndex {
                         DictIndex dictIndex = new DictIndex();
                         dictIndex.word = word;
                         dictIndex.offset = offset;
-                        dictIndex.size = size;
+                        dictIndex.size = (int) size;
                         wordmap.put(word, dictIndex);
                         mark = i + 9;
                         i += 9;
@@ -176,61 +185,5 @@ public class DictIndex {
                 ex.printStackTrace();
             }
         }
-        long time = System.currentTimeMillis();
-        // doInsert(context, wordmap, indexFileName);
-        time = System.currentTimeMillis() - time;
-        System.out
-                .println(indexFileName + " insert dict indexs to the database cost time: " + time);
-        return wordmap;
-    }
-
-    private static void doInsert(Context context, HashMap<String, DictIndex> wordmap,
-            String indexFileName) {
-        Collection<DictIndex> col = wordmap.values();
-        ContentValues[] values = null;
-        if (indexFileName.startsWith(DictLibrary.STARDICT_PATH)) {
-            values = new ContentValues[col.size()];
-            int i = 0;
-            for (DictIndex dictIndex : col) {
-                values[i] = new ContentValues();
-                values[i].put(StarDictIndex.WORD, dictIndex.word);
-                values[i].put(StarDictIndex.OFFSET, dictIndex.offset);
-                values[i].put(StarDictIndex.SIZE, dictIndex.size);
-                i++;
-            }
-            System.out.println("insert start dict size: " + i);
-            context.getContentResolver().bulkInsert(StarDictIndex.CONTENT_URI, values);
-        } else if (indexFileName.startsWith(DictLibrary.OXFORD_PATH)) {
-            values = new ContentValues[col.size()];
-            int i = 0;
-            for (DictIndex dictIndex : col) {
-                values[i] = new ContentValues();
-                values[i].put(OxfordDictIndex.WORD, dictIndex.word);
-                values[i].put(OxfordDictIndex.OFFSET, dictIndex.offset);
-                values[i].put(OxfordDictIndex.SIZE, dictIndex.size);
-                i++;
-            }
-            System.out.println("insert oxford dict size: " + i);
-            context.getContentResolver().bulkInsert(OxfordDictIndex.CONTENT_URI, values);
-        }
-    }
-
-    private static boolean isLoaded(Context context, String indexFileName) {
-        Cursor c = null;
-        if (indexFileName.startsWith(DictLibrary.OXFORD_PATH)) {
-            c = context.getContentResolver().query(OxfordDictIndex.CONTENT_URI, null, null, null,
-                    null);
-        } else if (indexFileName.startsWith(DictLibrary.STARDICT_PATH)) {
-            c = context.getContentResolver().query(StarDictIndex.CONTENT_URI, null, null, null,
-                    null);
-        }
-        if (c != null && c.getCount() > 0) {
-            c.close();
-            return true;
-        }
-        if (c != null) {
-            c.close();
-        }
-        return false;
     }
 }

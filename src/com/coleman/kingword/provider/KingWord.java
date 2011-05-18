@@ -14,8 +14,16 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class KingWord {
+    public static interface IDictIndex {
+        // fields
+        public static String WORD = "word";
 
-    public static final class StarDictIndex implements BaseColumns {
+        public static String OFFSET = "offset";
+
+        public static String SIZE = "size";
+    }
+
+    public static final class StarDictIndex implements BaseColumns, IDictIndex {
 
         // table name
         public static final String TABLE_NAME = "star_dict_index";
@@ -23,13 +31,6 @@ public class KingWord {
         // content uri
         public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
                 + File.separator + TABLE_NAME);
-
-        // fields
-        public static final String WORD = "word";
-
-        public static final String OFFSET = "offset";
-
-        public static final String SIZE = "size";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
@@ -44,7 +45,7 @@ public class KingWord {
         }
     }
 
-    public static final class OxfordDictIndex implements BaseColumns {
+    public static final class OxfordDictIndex implements BaseColumns, IDictIndex {
 
         // table name
         public static final String TABLE_NAME = "oxford_dict_index";
@@ -52,13 +53,6 @@ public class KingWord {
         // content uri
         public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
                 + File.separator + TABLE_NAME);
-
-        // fields
-        public static final String WORD = "word";
-
-        public static final String OFFSET = "offset";
-
-        public static final String SIZE = "size";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
@@ -191,7 +185,7 @@ public class KingWord {
         static {
             projectionMap.put(_ID, _ID);
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
-            projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(WORD, WORD);
         }
     }
 }

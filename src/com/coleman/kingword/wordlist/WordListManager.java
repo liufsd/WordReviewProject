@@ -31,24 +31,28 @@ public class WordListManager {
         return manager;
     }
 
-    public void loadWordList(Context context, String wordlistName, boolean inAsset)
-            throws IOException {
+    public void loadWordList(Context context, String wordlistName, boolean inAsset) {
         if (isExist(context, wordlistName)) {
             Log.w(TAG, "The word list is already exist!");
             return;
         }
         ArrayList<String> list = null;
         if (inAsset) {
-            list = GeneralParser.parseAsset(context, wordlistName);
+            try {
+                list = GeneralParser.parseAsset(context, wordlistName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
             WordList wordlist = new WordList(list);
             map.put(wordlistName, wordlist);
         }
         doInsert(context, wordlistName, list);
     }
 
-    public void loadWordList(Context context, long wordlist_id, String wordListName) {
+    public void loadWordList(Context context, long wordlist_id, String wordlist_name) {
         String projection[] = new String[] {
-                WordListItem._ID, WordListItem.WORD
+                WordListItem._ID, WordListItem.WORD_LIST_ID, WordListItem.WORD
         };
         Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
                 WordListItem.WORD_LIST_ID + "=" + wordlist_id, null, null);
@@ -61,12 +65,12 @@ public class WordListManager {
         ArrayList<String> list = new ArrayList<String>();
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
-                list.add(c.getString(1));
+                list.add(c.getString(2));
                 c.moveToNext();
             }
         }
         WordList wordlist = new WordList(list);
-        map.put(wordListName, wordlist);
+        map.put(wordlist_name, wordlist);
         c.close();
     }
 
@@ -98,7 +102,7 @@ public class WordListManager {
         context.getContentResolver().bulkInsert(WordListItem.CONTENT_URI, cv);
     }
 
-    private boolean isExist(Context context, String wordlist) {
+    public boolean isExist(Context context, String wordlist) {
         String projection[] = new String[] {
                 WordsList._ID, WordsList.PATH_NAME
         };
