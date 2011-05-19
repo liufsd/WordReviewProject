@@ -29,7 +29,7 @@ public class WordList {
 
     public WordList(ArrayList<String> list) {
         this.list.addAll(list);
-//        split(set_method);
+        split(set_method);
         p = 0;
     }
 
@@ -48,7 +48,7 @@ public class WordList {
     }
 
     public void split(SetMethod method) {
-        split(method, 20);
+        split(method, 100);
     }
 
     public void split(SetMethod method, int suggest) {
@@ -61,6 +61,7 @@ public class WordList {
                     int tmpEnd = start + suggest <= end ? start + suggest : end;
                     sublist.add(list.subList(start, tmpEnd));
                     start = tmpEnd;
+                    System.out.println("AVARAGE_DEVIDE Split point: " + tmpEnd);
                 }
                 break;
             }
@@ -76,6 +77,7 @@ public class WordList {
                     if (list.get(i).charAt(i) != prefix) {
                         sublist.add(list.subList(start, i));
                         start = i;
+                        System.out.println("CHARACTER_DEVIDER Split point: " + start);
                     }
                 }
                 break;
@@ -89,6 +91,7 @@ public class WordList {
                     int tmpEnd = start + suggest <= end ? start + suggest : end;
                     sublist.add(list.subList(start, tmpEnd));
                     start = tmpEnd;
+                    System.out.println("DEFAULT_DEVIDE Split point: " + tmpEnd);
                 }
                 break;
             }

@@ -8,6 +8,7 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.wordlist.WordList;
 import com.coleman.kingword.wordlist.WordList.InternalWordList;
+import com.coleman.kingword.wordlist.WordListManager.LoadNotifier;
 import com.coleman.kingword.wordlist.WordListManager;
 
 import android.app.Activity;
@@ -44,23 +45,39 @@ public class ParaphraseActivity extends Activity implements OnItemClickListener 
     }
 
     private void initView() {
-        wordlist = WordListManager.getInstance()
-                .getWordList(InternalWordList.POSTGRADUATE_WORDLIST);
         textView = (TextView) findViewById(R.id.textView1);
         listView = (ListView) findViewById(R.id.listView1);
-
-        String word = wordlist.getWord();
-        textView.setText(word);
-        lookupInDict(word);
         adapter = new ParaphraseAdapter(list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        WordListManager wm = WordListManager.getInstance();
+        LoadNotifier notifier = new LoadNotifier() {
+            @Override
+            public void notifyProgress(int p) {
+            }
+
+            @Override
+            public void notifyDone() {
+                wordlist = WordListManager.getInstance().getWordList(
+                        InternalWordList.POSTGRADUATE_WORDLIST);
+                String word = wordlist.getWord();
+                textView.setText(word);
+                lookupInDict(word);
+            }
+        };
+        if (wm.isExist(ParaphraseActivity.this, InternalWordList.POSTGRADUATE_WORDLIST)) {
+            wm.loadWordListFromDB(ParaphraseActivity.this, 1,
+                    InternalWordList.POSTGRADUATE_WORDLIST, notifier);
+        } else {
+            wm.loadWordListFromFile(ParaphraseActivity.this,
+                    InternalWordList.POSTGRADUATE_WORDLIST, true, notifier);
+        }
     }
 
     private void lookupInDict(String word) {
         DictData dd = DictManager.getInstance().viewWord(this, word);
         list.add(dd);
-        if(adapter!=null){
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }

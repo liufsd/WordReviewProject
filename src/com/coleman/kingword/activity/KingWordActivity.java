@@ -15,6 +15,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.wordlist.WordList.InternalWordList;
+import com.coleman.kingword.wordlist.WordListManager.LoadNotifier;
 import com.coleman.kingword.wordlist.WordListManager;
 
 public class KingWordActivity extends Activity {
@@ -31,14 +32,6 @@ public class KingWordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 DictManager.getInstance().initLibrary(KingWordActivity.this);
-                WordListManager wm = WordListManager.getInstance();
-                if (wm.isExist(KingWordActivity.this, InternalWordList.POSTGRADUATE_WORDLIST)) {
-                    wm.loadWordList(KingWordActivity.this, 1,
-                            InternalWordList.POSTGRADUATE_WORDLIST);
-                } else {
-                    wm.loadWordList(KingWordActivity.this, InternalWordList.POSTGRADUATE_WORDLIST,
-                            true);
-                }
                 startActivity(new Intent(KingWordActivity.this, ParaphraseActivity.class));
             }
         });
