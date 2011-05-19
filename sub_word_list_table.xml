@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<TableLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/tableLayout1">
+		<TableRow style="@style/unit_row">
+			<Button android:text="@string/nothing" android:id="@+id/button1"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button2"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button3"
+				style="@style/unit_item_margin"></Button>
+		</TableRow>
+		<TableRow style="@style/unit_row">
+			<Button android:text="@string/nothing" android:id="@+id/button4"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button5"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button6"
+				style="@style/unit_item_margin"></Button>
+		</TableRow>
+		<TableRow style="@style/unit_row">
+			<Button android:text="@string/nothing" android:id="@+id/button7"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button8"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button9"
+				style="@style/unit_item_margin"></Button>
+		</TableRow>
+		<TableRow style="@style/unit_row">
+			<Button android:text="@string/nothing" android:id="@+id/button10"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button11"
+				style="@style/unit_item_margin"></Button>
+			<Button android:text="@string/nothing" android:id="@+id/button12"
+				style="@style/unit_item_margin"></Button>
+		</TableRow>
+	</TableLayout>
+	<View android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:layout_weight="1"></View>
+	<com.coleman.cg.android.HListView
+		android:id="@+id/cflayout02" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:background="#888800ff"></com.coleman.cg.android.HListView>
+	<ProgressBar android:layout_width="fill_parent"
+		android:layout_height="15dp" android:id="@+id/progressBar1"
+		style="@android:style/Widget.ProgressBar.Horizontal"></ProgressBar>
+</LinearLayout>

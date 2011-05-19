@@ -24,8 +24,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ParaphraseActivity extends Activity implements OnItemClickListener {
-    private static final String TAG = ParaphraseActivity.class.getName();
+public class CoreActivity extends Activity implements OnItemClickListener {
+    private static final String TAG = CoreActivity.class.getName();
 
     TextView textView;
 
@@ -40,7 +40,7 @@ public class ParaphraseActivity extends Activity implements OnItemClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.paraphrase_list);
+        setContentView(R.layout.core_list);
         initView();
     }
 
@@ -65,11 +65,11 @@ public class ParaphraseActivity extends Activity implements OnItemClickListener 
                 lookupInDict(word);
             }
         };
-        if (wm.isExist(ParaphraseActivity.this, InternalWordList.POSTGRADUATE_WORDLIST)) {
-            wm.loadWordListFromDB(ParaphraseActivity.this, 1,
+        if (wm.isExist(CoreActivity.this, InternalWordList.POSTGRADUATE_WORDLIST)) {
+            wm.loadWordListFromDB(CoreActivity.this, 1,
                     InternalWordList.POSTGRADUATE_WORDLIST, notifier);
         } else {
-            wm.loadWordListFromFile(ParaphraseActivity.this,
+            wm.loadWordListFromFile(CoreActivity.this,
                     InternalWordList.POSTGRADUATE_WORDLIST, true, notifier);
         }
     }
@@ -121,7 +121,7 @@ public class ParaphraseActivity extends Activity implements OnItemClickListener 
         public View getView(int position, View convertView, ViewGroup parent) {
             View v;
             if (convertView == null) {
-                v = inflater.inflate(R.layout.paraphrase_item, null);
+                v = inflater.inflate(R.layout.core_item, null);
             } else {
                 v = convertView;
             }

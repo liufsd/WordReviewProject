@@ -163,6 +163,32 @@ public class KingWord {
         }
     }
 
+    public static final class SubWordsList implements BaseColumns {
+
+        // table name
+        public static final String TABLE_NAME = "sub_word_list";
+
+        // content uri
+        public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
+                + File.separator + TABLE_NAME);
+
+        // fields
+        public static final String WORD_LIST_ID = "word_list_id";
+
+        public static final String LEVEL = "level";
+
+        // default sort order
+        public static final String DEFAULT_SORT_ORDER = _ID + " asc";
+
+        // projection map , used for query builder
+        public static HashMap<String, String> projectionMap = new HashMap<String, String>();
+        static {
+            projectionMap.put(_ID, _ID);
+            projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(LEVEL, LEVEL);
+        }
+    }
+
     public static final class WordListItem implements BaseColumns {
 
         // table name
@@ -173,7 +199,7 @@ public class KingWord {
                 + File.separator + TABLE_NAME);
 
         // fields
-        public static final String WORD_LIST_ID = "list_id";
+        public static final String SUB_WORD_LIST_ID = "sub_list_id";
 
         public static final String WORD = "word";
 
@@ -184,7 +210,7 @@ public class KingWord {
         public static HashMap<String, String> projectionMap = new HashMap<String, String>();
         static {
             projectionMap.put(_ID, _ID);
-            projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(SUB_WORD_LIST_ID, SUB_WORD_LIST_ID);
             projectionMap.put(WORD, WORD);
         }
     }

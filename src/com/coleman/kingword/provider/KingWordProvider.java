@@ -17,9 +17,11 @@ import android.util.Log;
 import com.coleman.kingword.provider.KingWord.Achievement;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
+import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.wordlist.WordList;
 
 public class KingWordProvider extends ContentProvider {
     private KingWordDBHepler dbHelper;
@@ -47,9 +49,13 @@ public class KingWordProvider extends ContentProvider {
 
     private static final int URI_WORDLIST_ID = 10;
 
-    private static final int URI_WORDLISTITEM = 11;
+    private static final int URI_SUB_WORDLIST = 11;
 
-    private static final int URI_WORDLISTITEM_ID = 12;
+    private static final int URI_SUB_WORDLIST_ID = 12;
+
+    private static final int URI_WORDLISTITEM = 13;
+
+    private static final int URI_WORDLISTITEM_ID = 14;
 
     private static final String TAG = KingWordProvider.class.getName();
 
@@ -71,6 +77,10 @@ public class KingWordProvider extends ContentProvider {
 
         matcher.addURI(AUTHORITY, WordsList.TABLE_NAME, URI_WORDLIST);
         matcher.addURI(AUTHORITY, WordsList.TABLE_NAME + File.separator + "#", URI_WORDLIST_ID);
+
+        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME, URI_SUB_WORDLIST);
+        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME + File.separator + "#",
+                URI_SUB_WORDLIST_ID);
 
         matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME, URI_WORDLISTITEM);
         matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME + File.separator + "#",
@@ -94,6 +104,9 @@ public class KingWordProvider extends ContentProvider {
                 break;
             case URI_OXFORDDICT:
                 tableName = OxfordDictIndex.TABLE_NAME;
+                break;
+            case URI_SUB_WORDLIST:
+                tableName = SubWordsList.TABLE_NAME;
                 break;
             case URI_WORDLISTITEM:
                 tableName = WordListItem.TABLE_NAME;
@@ -124,6 +137,9 @@ public class KingWordProvider extends ContentProvider {
                 break;
             case URI_WORDLIST:
                 tableName = WordsList.TABLE_NAME;
+                break;
+            case URI_SUB_WORDLIST:
+                tableName = SubWordsList.TABLE_NAME;
                 break;
             case URI_WORDLISTITEM:
                 tableName = WordListItem.TABLE_NAME;
@@ -157,12 +173,21 @@ public class KingWordProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         switch (matcher.match(uri)) {
             case URI_WORDLIST:
-                count = db.delete(StarDictIndex.TABLE_NAME, selection, selectionArgs);
+                count = db.delete(WordsList.TABLE_NAME, selection, selectionArgs);
                 break;
-            case URI_WORDLIST_ID:
+            case URI_WORDLIST_ID: {
                 String rowId = uri.getPathSegments().get(1);
-                count = db.delete(StarDictIndex.TABLE_NAME, whereWithId(rowId, selection), null);
+                count = db.delete(WordsList.TABLE_NAME, whereWithId(rowId, selection), null);
                 break;
+            }
+            case URI_SUB_WORDLIST:
+                count = db.delete(SubWordsList.TABLE_NAME, selection, selectionArgs);
+                break;
+            case URI_SUB_WORDLIST_ID: {
+                String rowId = uri.getPathSegments().get(1);
+                count = db.delete(SubWordsList.TABLE_NAME, whereWithId(rowId, selection), null);
+                break;
+            }
             default:
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }
@@ -219,6 +244,15 @@ public class KingWordProvider extends ContentProvider {
                 qb.setTables(WordsList.TABLE_NAME);
                 qb.setProjectionMap(WordsList.projectionMap);
                 qb.appendWhere(WordsList._ID + "=" + uri.getPathSegments().get(1));
+                break;
+            case URI_SUB_WORDLIST:
+                qb.setTables(SubWordsList.TABLE_NAME);
+                qb.setProjectionMap(SubWordsList.projectionMap);
+                break;
+            case URI_SUB_WORDLIST_ID:
+                qb.setTables(SubWordsList.TABLE_NAME);
+                qb.setProjectionMap(SubWordsList.projectionMap);
+                qb.appendWhere(SubWordsList._ID + "=" + uri.getPathSegments().get(1));
                 break;
             case URI_WORDLISTITEM:
                 qb.setTables(WordListItem.TABLE_NAME);

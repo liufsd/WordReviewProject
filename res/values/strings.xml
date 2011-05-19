@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, KingWordActivity!</string>
     <string name="app_name">KingWord</string>
+    <string name="nothing">AA</string>
 </resources>

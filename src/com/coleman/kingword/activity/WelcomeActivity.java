@@ -18,21 +18,21 @@ import com.coleman.kingword.wordlist.WordList.InternalWordList;
 import com.coleman.kingword.wordlist.WordListManager.LoadNotifier;
 import com.coleman.kingword.wordlist.WordListManager;
 
-public class KingWordActivity extends Activity {
-    private static final String TAG = KingWordActivity.class.getName();
+public class WelcomeActivity extends Activity {
+    private static final String TAG = WelcomeActivity.class.getName();
 
     private ArrayList<DictData> list = new ArrayList<DictData>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.kingword);
+        setContentView(R.layout.welcome);
         Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                DictManager.getInstance().initLibrary(KingWordActivity.this);
-                startActivity(new Intent(KingWordActivity.this, ParaphraseActivity.class));
+                DictManager.getInstance().initLibrary(WelcomeActivity.this);
+                startActivity(new Intent(WelcomeActivity.this, SubWordListActivity.class));
             }
         });
     }

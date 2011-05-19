@@ -92,10 +92,10 @@ public class WordListManager {
 
         private void loadWordList(Context context, long wordlist_id, String wordlist_name) {
             String projection[] = new String[] {
-                    WordListItem._ID, WordListItem.WORD_LIST_ID, WordListItem.WORD
+                    WordListItem._ID, WordListItem.SUB_WORD_LIST_ID, WordListItem.WORD
             };
             Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
-                    WordListItem.WORD_LIST_ID + "=" + wordlist_id, null, null);
+                    WordListItem.SUB_WORD_LIST_ID + "=" + wordlist_id, null, null);
             if (c == null || c.getCount() <= 0) {
                 if (c != null) {
                     c.close();
@@ -184,7 +184,7 @@ public class WordListManager {
             for (String string : list) {
                 cv[i] = new ContentValues();
                 cv[i].put(WordListItem.WORD, string);
-                cv[i].put(WordListItem.WORD_LIST_ID, rowId);
+                cv[i].put(WordListItem.SUB_WORD_LIST_ID, rowId);
                 i++;
             }
             context.getContentResolver().bulkInsert(WordListItem.CONTENT_URI, cv);
