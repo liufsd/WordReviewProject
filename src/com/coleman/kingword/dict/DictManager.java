@@ -28,9 +28,9 @@ public class DictManager {
      * @TODO to save the memory, should do some optimization to the dictmap,
      *       such as merge the different dicts.
      */
-    private HashMap<String, DictLibrary> dictmap = new HashMap<String, DictLibrary>();
+    private HashMap<String, DictLibrary> libmap = new HashMap<String, DictLibrary>();
 
-    private String curLib = DictLibrary.STARDICT;
+    private String curLib = DictLibrary.OXFORD;
 
     private DictManager() {
     }
@@ -54,8 +54,8 @@ public class DictManager {
         long time = System.currentTimeMillis();
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
-            factory.loadLibrary(context, DictLibrary.OXFORD, dictmap);
-            factory.loadLibrary(context, DictLibrary.STARDICT, dictmap);
+            factory.loadLibrary(context, DictLibrary.OXFORD, libmap);
+            factory.loadLibrary(context, DictLibrary.STARDICT, libmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class DictManager {
     }
 
     public DictData viewWord(Context context, String word) {
-        DictLibrary library = dictmap.get(curLib);
+        DictLibrary library = libmap.get(curLib);
         if (library == null) {
             Log.w(TAG, "library has not been initialed!");
             return null;
@@ -117,9 +117,10 @@ public class DictManager {
             Log.w(TAG, "not found!");
             return null;
         }
-        Log.d(TAG, "index word:" + index.word);
+        Log.d(TAG, word + ":" + index + ":");
         DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
                 library.getLibraryName());
+        Log.d(TAG, "" + wordData);
         return wordData;
     }
 

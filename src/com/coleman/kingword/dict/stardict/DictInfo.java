@@ -80,8 +80,8 @@ public class DictInfo {
 
     @Override
     public String toString() {
-        return "Book Name: " + bookName + "\nWord Count: " + wordCount + "\nIndex File Size: "
-                + idxFileSize + "\nSame Type Sequence:" + this.sameTypeSequence;
+        return "Book Name: " + bookName + "\tWord Count: " + wordCount + "\tIndex File Size: "
+                + idxFileSize + "\tSame Type Sequence:" + this.sameTypeSequence;
     }
 
     public static DictInfo readDicInfo(Context context, String ifoFileName) {

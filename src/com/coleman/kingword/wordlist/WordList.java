@@ -2,9 +2,15 @@
 package com.coleman.kingword.wordlist;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+
+import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.provider.KingWord.WordsList;
 
 public class WordList {
     public static interface InternalWordList {
@@ -13,7 +19,9 @@ public class WordList {
         String POSTGRADUATE_PHRASE_WORDLIST = "kingword/wordlist/postgraduate/phrase.wl";
     }
 
-    public long _ID = -1;
+    private static final String TAG = WordList.class.getName();
+
+    public long id = -1;
 
     public String describe = "";
 
@@ -21,93 +29,13 @@ public class WordList {
 
     public SetMethod set_method = SetMethod.DEFAULT_DEVIDE;
 
-    private ArrayList<String> list = new ArrayList<String>();
-
-    private ArrayList<List<String>> sublist = new ArrayList<List<String>>();
-
-    private int p;
-
-    public WordList(ArrayList<String> list) {
-        this.list.addAll(list);
-        split(set_method);
-        p = 0;
+    public WordList() {
     }
 
-    public String getWord() {
-        return list.get(p);
-    }
-
-    public String getPre() {
-        p = p - 1 < 0 ? 0 : p - 1;
-        return list.get(p);
-    }
-
-    public String getNext() {
-        p = p + 1 > list.size() - 1 ? list.size() - 1 : p + 1;
-        return list.get(p);
-    }
-
-    public void split(SetMethod method) {
-        split(method, 100);
-    }
-
-    public void split(SetMethod method, int suggest) {
-        sublist.clear();
-        switch (method) {
-            case AVARAGE_DEVIDE: {
-                int start = 0;
-                int end = list.size();
-                while (start < end) {
-                    int tmpEnd = start + suggest <= end ? start + suggest : end;
-                    sublist.add(list.subList(start, tmpEnd));
-                    start = tmpEnd;
-                    System.out.println("AVARAGE_DEVIDE Split point: " + tmpEnd);
-                }
-                break;
-            }
-            case CHARACTER_DEVIDER: {
-                int start = 0;
-                int size = list.size();
-                char prefix = '!';
-                sort(list);
-                if (size > 0) {
-                    prefix = list.get(0).charAt(0);
-                }
-                for (int i = 0; i < size; i++) {
-                    if (list.get(i).charAt(i) != prefix) {
-                        sublist.add(list.subList(start, i));
-                        start = i;
-                        System.out.println("CHARACTER_DEVIDER Split point: " + start);
-                    }
-                }
-                break;
-            }
-            case DEFAULT_DEVIDE:
-            default: {
-                sort(list);
-                int start = 0;
-                int end = list.size();
-                while (start < end) {
-                    int tmpEnd = start + suggest <= end ? start + suggest : end;
-                    sublist.add(list.subList(start, tmpEnd));
-                    start = tmpEnd;
-                    System.out.println("DEFAULT_DEVIDE Split point: " + tmpEnd);
-                }
-                break;
-            }
-        }
-    }
-
-    public ArrayList<String> getList() {
-        return list;
-    }
-
-    /**
-     * Return the split result of wordlist, it is a collection of raw wordlist's
-     * sublist.
-     */
-    public ArrayList<List<String>> getSubList() {
-        return sublist;
+    WordList(String describe, String path_name, SetMethod method) {
+        this.describe = describe == null ? "" : describe;
+        this.path_name = path_name == null ? "" : path_name;
+        this.set_method = method == null ? this.set_method : method;
     }
 
     public static enum SetMethod {
@@ -135,14 +63,12 @@ public class WordList {
         }
     }
 
-    private void sort(ArrayList<String> list) {
-        Collections.sort(list, new Comparator<String>() {
-            @Override
-            public int compare(String object1, String object2) {
-                return object1.compareTo(object2);
-            }
-
-        });
+    public ContentValues toContentValues() {
+        ContentValues value = new ContentValues();
+        value.put(WordsList.DESCRIBE, describe);
+        value.put(WordsList.PATH_NAME, path_name);
+        value.put(WordsList.SET_METHOD, set_method.getValue());
+        return value;
     }
 
 }

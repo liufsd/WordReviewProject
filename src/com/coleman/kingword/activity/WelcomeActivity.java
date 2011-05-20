@@ -32,7 +32,7 @@ public class WelcomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 DictManager.getInstance().initLibrary(WelcomeActivity.this);
-                startActivity(new Intent(WelcomeActivity.this, SubWordListActivity.class));
+                startActivity(new Intent(WelcomeActivity.this, WordListActivity.class));
             }
         });
     }

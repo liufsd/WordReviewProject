@@ -3,16 +3,9 @@ package com.coleman.kingword.activity;
 
 import java.util.ArrayList;
 
-import com.coleman.kingword.R;
-import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.wordlist.WordList;
-import com.coleman.kingword.wordlist.WordList.InternalWordList;
-import com.coleman.kingword.wordlist.WordListManager.LoadNotifier;
-import com.coleman.kingword.wordlist.WordListManager;
-
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -23,6 +16,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.kingword.provider.KingWord.SubWordsList;
+import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.wordlist.SubWordList;
 
 public class CoreActivity extends Activity implements OnItemClickListener {
     private static final String TAG = CoreActivity.class.getName();
@@ -35,12 +35,14 @@ public class CoreActivity extends Activity implements OnItemClickListener {
 
     ParaphraseAdapter adapter;
 
-    private WordList wordlist;
+    private SubWordList wordlist;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
+        int sub_id = getIntent().getIntExtra(SubWordsList._ID, -1);
+        wordlist = new SubWordList(this, sub_id);
         initView();
     }
 
@@ -50,28 +52,9 @@ public class CoreActivity extends Activity implements OnItemClickListener {
         adapter = new ParaphraseAdapter(list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-        WordListManager wm = WordListManager.getInstance();
-        LoadNotifier notifier = new LoadNotifier() {
-            @Override
-            public void notifyProgress(int p) {
-            }
-
-            @Override
-            public void notifyDone() {
-                wordlist = WordListManager.getInstance().getWordList(
-                        InternalWordList.POSTGRADUATE_WORDLIST);
-                String word = wordlist.getWord();
-                textView.setText(word);
-                lookupInDict(word);
-            }
-        };
-        if (wm.isExist(CoreActivity.this, InternalWordList.POSTGRADUATE_WORDLIST)) {
-            wm.loadWordListFromDB(CoreActivity.this, 1,
-                    InternalWordList.POSTGRADUATE_WORDLIST, notifier);
-        } else {
-            wm.loadWordListFromFile(CoreActivity.this,
-                    InternalWordList.POSTGRADUATE_WORDLIST, true, notifier);
-        }
+        String word = wordlist.getWord();
+        textView.setText(word);
+        lookupInDict(word);
     }
 
     private void lookupInDict(String word) {
@@ -126,6 +109,8 @@ public class CoreActivity extends Activity implements OnItemClickListener {
                 v = convertView;
             }
             TextView tv = (TextView) v.findViewById(R.id.textView1);
+            tv.setMaxLines(100);
+            tv.setMinLines(4);
             DictData data = list.get(position);
             if (data != null) {
                 tv.setText(data.toString());

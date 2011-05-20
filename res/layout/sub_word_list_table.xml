@@ -41,7 +41,7 @@
 		android:layout_weight="1"></View>
 	<com.coleman.kingword.view.HListView
 		android:id="@+id/cflayout02" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:background="#888800ff"></com.coleman.kingword.view.HListView>
+		android:layout_height="wrap_content" android:background="@color/gray"></com.coleman.kingword.view.HListView>
 	<ProgressBar android:layout_width="fill_parent"
 		android:layout_height="15dp" android:id="@+id/progressBar1"
 		style="@android:style/Widget.ProgressBar.Horizontal"></ProgressBar>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, KingWordActivity!</string>
+	<string name="app_name">KingWord</string>
+	<string name="nothing">AA</string>
+	<string name="load">load</string>
+	<string name="path">path</string>
+	<string name="back">back</string>
+<string name="app_name">短信天使</string>
+	<string name="send">发送</string>
+	<string name="send_to">发送给%s</string>
+	<string name="edit">编辑</string>
+	<string name="delete">删除 </string>
+	<string name="search">搜索</string>
+	<string name="delete_all">删除所有</string>
+	<string name="new_one">新建</string>
+	<string name="ok">确定 </string>
+	<string name="cancel">取消</string>
+	<string name="save">保存</string>
+	<string name="back">返回</string>
+	<string name="exit">退出</string>
+	<string name="split">分割</string>
+	<string name="clear">清除</string>
+	<string name="select_all">全部选择</string>
+	<string name="none_select">取消选择</string>
+	<string name="load">文件加载</string>
+	<string name="delete_msg">你确定要删除这条记录吗？</string>
+	<string name="delete_all_msg">你确定要删除所有记录吗？</string>
+	<string name="sms_list">短信大全</string>
+	<string name="set_num">设置号码</string>
+	<string name="set_option">设置选项</string>
+	<string name="path">路径:%s</string>
+
+	<string name="help">帮助</string>
+	<string name="about">关于</string>
+	<string name="option">选项</string>
+	<string name="contact_me">联系作者</string>
+	
+	<!-- smsender setting option -->
+	<string name="default_favor">默认发送人</string>
+	<string name="add_favor">增加发送人</string>
+	<string name="delete_favor">删除发送人</string>
+	<string name="delete_all_favor">删除所有人</string>
+
+	<string name="save_hint">此操作会覆盖原文件，你确实要保存它吗？</string>
+
+	<string name="mail_subject">给作者的一封信</string>
+	<string name="mail_content">亲爱的Coleman:\n 你好!\n\n我很喜欢这个软件，谢谢你的无私贡献！</string>
+	<string name="help_title">帮助信息</string>
+	<string name="about_title">关于信息</string>
+	<string name="help_hint">暂无帮助信息！\n（警告：请勿使用此软件进行任何不法活动！）</string>
+	<string name="about_hint">献给梅子！\n\n

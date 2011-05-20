@@ -73,9 +73,9 @@ public class DictLibrary {
         if (dbInitialed) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    OxfordDictIndex.CONTENT_URI.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
+                    OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
                             : StarDictIndex.CONTENT_URI, projection,
-                    OxfordDictIndex.WORD + "='" + word + "'", null, null);
+                    IDictIndex.WORD + "='" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
@@ -131,6 +131,7 @@ public class DictLibrary {
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }
+            Log.d(TAG, "lib info:" + libraryInfo);
             return null;
         }
 

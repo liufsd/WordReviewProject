@@ -3,7 +3,9 @@ package com.coleman.kingword.wordlist;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,13 +14,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.provider.KingWord.WordsList;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();
-
-    private HashMap<String, WordList> map = new HashMap<String, WordList>();
 
     private static WordListManager manager;
 
@@ -32,18 +33,27 @@ public class WordListManager {
         return manager;
     }
 
-    public void loadWordListFromDB(Context context, long wordlist_id, String wordlist_name,
-            LoadNotifier notifier) {
-        new LoadWordListFromDBTask(context, wordlist_id, wordlist_name, notifier).execute();
-    }
+    // public void loadWordListFromDB(Context context, long wordlist_id, String
+    // wordlist_name,
+    // LoadNotifier notifier) {
+    // new LoadWordListFromDBTask(context, wordlist_id, wordlist_name,
+    // notifier).execute();
+    // }
 
     public void loadWordListFromFile(Context context, String wordlistName, boolean inAsset,
             LoadNotifier notifier) {
-        new LoadWordListFromFileTask(context, wordlistName, inAsset, notifier).execute();
-    }
+        if (notifier == null) {
+            notifier = new LoadNotifier() {
+                @Override
+                public void notifyProgress(int p) {
+                }
 
-    public WordList getWordList(String wordlistName) {
-        return map.get(wordlistName);
+                @Override
+                public void notifyDone() {
+                }
+            };
+        }
+        new LoadWordListFromFileTask(context, wordlistName, inAsset, notifier).execute();
     }
 
     public boolean isExist(Context context, String wordlist) {
@@ -62,58 +72,61 @@ public class WordListManager {
         return true;
     }
 
-    private class LoadWordListFromDBTask extends AsyncTask<Void, Void, Void> {
-        Context context;
-
-        long wordlist_id;
-
-        String wordlist_name;
-
-        LoadNotifier notifier;
-
-        public LoadWordListFromDBTask(Context context, long wordlist_id, String wordlist_name,
-                LoadNotifier notifier) {
-            this.context = context;
-            this.wordlist_id = wordlist_id;
-            this.wordlist_name = wordlist_name;
-            this.notifier = notifier;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            loadWordList(context, wordlist_id, wordlist_name);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            notifier.notifyDone();
-        }
-
-        private void loadWordList(Context context, long wordlist_id, String wordlist_name) {
-            String projection[] = new String[] {
-                    WordListItem._ID, WordListItem.SUB_WORD_LIST_ID, WordListItem.WORD
-            };
-            Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
-                    WordListItem.SUB_WORD_LIST_ID + "=" + wordlist_id, null, null);
-            if (c == null || c.getCount() <= 0) {
-                if (c != null) {
-                    c.close();
-                }
-                return;
-            }
-            ArrayList<String> list = new ArrayList<String>();
-            if (c.moveToFirst()) {
-                while (!c.isAfterLast()) {
-                    list.add(c.getString(2));
-                    c.moveToNext();
-                }
-            }
-            WordList wordlist = new WordList(list);
-            map.put(wordlist_name, wordlist);
-            c.close();
-        }
-    }
+    // private class LoadWordListFromDBTask extends AsyncTask<Void, Void, Void>
+    // {
+    // Context context;
+    //
+    // long wordlist_id;
+    //
+    // String wordlist_name;
+    //
+    // LoadNotifier notifier;
+    //
+    // public LoadWordListFromDBTask(Context context, long wordlist_id, String
+    // wordlist_name,
+    // LoadNotifier notifier) {
+    // this.context = context;
+    // this.wordlist_id = wordlist_id;
+    // this.wordlist_name = wordlist_name;
+    // this.notifier = notifier;
+    // }
+    //
+    // @Override
+    // protected Void doInBackground(Void... params) {
+    // loadWordList(context, wordlist_id, wordlist_name);
+    // return null;
+    // }
+    //
+    // @Override
+    // protected void onPostExecute(Void result) {
+    // notifier.notifyDone();
+    // }
+    //
+    // private void loadWordList(Context context, long wordlist_id, String
+    // wordlist_name) {
+    // String projection[] = new String[] {
+    // WordListItem._ID, WordListItem.SUB_WORD_LIST_ID, WordListItem.WORD
+    // };
+    // Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI,
+    // projection,
+    // WordListItem.SUB_WORD_LIST_ID + "=" + wordlist_id, null, null);
+    // if (c == null || c.getCount() <= 0) {
+    // if (c != null) {
+    // c.close();
+    // }
+    // return;
+    // }
+    // ArrayList<String> list = new ArrayList<String>();
+    // if (c.moveToFirst()) {
+    // while (!c.isAfterLast()) {
+    // list.add(c.getString(2));
+    // c.moveToNext();
+    // }
+    // }
+    // WordList wordlist = new WordList();
+    // c.close();
+    // }
+    // }
 
     private class LoadWordListFromFileTask extends AsyncTask<Void, Void, Void> {
         Context context;
@@ -156,39 +169,104 @@ public class WordListManager {
                     e.printStackTrace();
                     return;
                 }
-                WordList wordlist = new WordList(list);
-                map.put(wordlistName, wordlist);
+                WordList wordlist = new WordList("", wordlistName, null);
+                insertWordList(context, wordlist);
+                splitAndInsertSubWordList(context, list, wordlist, 100);
             } else {
                 /**
                  * @TODO need implementation.
                  */
             }
-            doInsert(context, wordlistName, list);
         }
 
-        /**
-         * Make sure that the specified word list had never been insert to the
-         * table, or you should not do it again.
-         */
-        private void doInsert(Context context, String fileName, ArrayList<String> list) {
-            ContentValues value = new ContentValues();
-            value.put(WordsList.PATH_NAME, fileName);
-            Uri uri = context.getContentResolver().insert(WordsList.CONTENT_URI, value);
-            if (list == null || list.size() == 0) {
-                Log.w(TAG, "The word list don't have any words!");
-                return;
+    }
+
+    private void insertWordList(Context context, WordList wordlist) {
+        Uri uri = context.getContentResolver().insert(WordsList.CONTENT_URI,
+                wordlist.toContentValues());
+        wordlist.id = Long.parseLong(uri.getPathSegments().get(1));
+    }
+
+    private void splitAndInsertSubWordList(Context context, ArrayList<String> list,
+            WordList wordlist, int suggest) {
+        ArrayList<List<String>> sublist = new ArrayList<List<String>>();
+        switch (wordlist.set_method) {
+            case AVARAGE_DEVIDE: {
+                int start = 0;
+                int end = list.size();
+                while (start < end) {
+                    int tmpEnd = start + suggest <= end ? start + suggest : end;
+                    sublist.add(list.subList(start, tmpEnd));
+                    start = tmpEnd;
+                    System.out.println("AVARAGE_DEVIDE Split point: " + tmpEnd);
+                }
+                break;
             }
-            long rowId = Long.parseLong(uri.getPathSegments().get(1));
-            ContentValues cv[] = new ContentValues[list.size()];
-            int i = 0;
-            for (String string : list) {
-                cv[i] = new ContentValues();
-                cv[i].put(WordListItem.WORD, string);
-                cv[i].put(WordListItem.SUB_WORD_LIST_ID, rowId);
-                i++;
+            case CHARACTER_DEVIDER: {
+                int start = 0;
+                int size = list.size();
+                char prefix = '!';
+                sort(list);
+                if (size > 0) {
+                    prefix = list.get(0).charAt(0);
+                }
+                for (int i = 0; i < size; i++) {
+                    if (list.get(i).charAt(i) != prefix) {
+                        sublist.add(list.subList(start, i));
+                        start = i;
+                        System.out.println("CHARACTER_DEVIDER Split point: " + start);
+                    }
+                }
+                break;
             }
-            context.getContentResolver().bulkInsert(WordListItem.CONTENT_URI, cv);
+            case DEFAULT_DEVIDE:
+            default: {
+                sort(list);
+                int start = 0;
+                int end = list.size();
+                while (start < end) {
+                    int tmpEnd = start + suggest <= end ? start + suggest : end;
+                    sublist.add(list.subList(start, tmpEnd));
+                    start = tmpEnd;
+                    System.out.println("DEFAULT_DEVIDE Split point: " + tmpEnd);
+                }
+                break;
+            }
         }
+        for (List<String> list2 : sublist) {
+            SubWordList sub = new SubWordList(wordlist.id);
+            doInsertSubWordList(context, sub);
+            doInsertWords(context, sub, list2);
+        }
+
+    }
+
+    private void doInsertSubWordList(Context context, SubWordList sub) {
+        Uri uri = context.getContentResolver().insert(SubWordsList.CONTENT_URI,
+                sub.toContentValues());
+        sub.id = Long.parseLong(uri.getPathSegments().get(1));
+    }
+
+    private void doInsertWords(Context context, SubWordList sub, List<String> list) {
+        ContentValues cv[] = new ContentValues[list.size()];
+        int i = 0;
+        for (String string : list) {
+            cv[i] = new ContentValues();
+            cv[i].put(WordListItem.WORD, string);
+            cv[i].put(WordListItem.SUB_WORD_LIST_ID, sub.id);
+            i++;
+        }
+        context.getContentResolver().bulkInsert(WordListItem.CONTENT_URI, cv);
+    }
+
+    private void sort(ArrayList<String> list) {
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String object1, String object2) {
+                return object1.compareTo(object2);
+            }
+
+        });
     }
 
     public static interface LoadNotifier {
