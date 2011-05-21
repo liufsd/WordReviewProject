@@ -3,7 +3,10 @@
 	<string name="hello">Hello World, KingWordActivity!</string>
 	<string name="app_name">KingWord</string>
 	<string name="nothing">1</string>
-	
+
+	<string name="init_word_list">词库正在进行初使化...</string>
+
+
 	<string name="send">发送</string>
 	<string name="send_to">发送给%s</string>
 	<string name="edit">编辑</string>
@@ -20,7 +23,7 @@
 	<string name="clear">清除</string>
 	<string name="select_all">全部选择</string>
 	<string name="none_select">取消选择</string>
-	<string name="load">文件加载</string>
+	<string name="load">单词表加载</string>
 	<string name="delete_msg">你确定要删除这条记录吗？</string>
 	<string name="delete_all_msg">你确定要删除所有记录吗？</string>
 	<string name="sms_list">短信大全</string>
@@ -32,7 +35,7 @@
 	<string name="about">关于</string>
 	<string name="option">选项</string>
 	<string name="contact_me">联系作者</string>
-	
+
 	<!-- smsender setting option -->
 	<string name="default_favor">默认发送人</string>
 	<string name="add_favor">增加发送人</string>
@@ -61,6 +64,6 @@
 
 	<string name="editor_hint">文字编辑框</string>
 	<string name="search_hint">输入你想查找的关键字！</string>
-	<!-- add a null pointer, to skip the build error-->
+	<!-- add a null pointer, to skip the build error -->
 	<string name="pointer">*p</string>
 </resources>

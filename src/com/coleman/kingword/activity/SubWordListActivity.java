@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
@@ -19,6 +20,18 @@ import com.coleman.kingword.provider.KingWord.WordsList;
 public class SubWordListActivity extends Activity implements OnClickListener {
     Button[] btns = new Button[12];
 
+    private ProgressBar progressBar;
+
+    /**
+     * Loading when first entering.
+     */
+    private ProgressBar preProgress;
+
+    /**
+     * This view do nothing, just to occupy the residual space.
+     */
+    private View emptyView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,16 +39,11 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         long wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
         Bundle b = new Bundle();
         b.putLong(WordsList._ID, wordlist_id);
-        new CostTask().execute(b);
-        initButtons();
-        initHListView();
+        initViews();
+        new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
     }
 
-    private void initHListView() {
-        
-    }
-
-    private void initButtons() {
+    private void initViews() {
         btns[0] = (Button) findViewById(R.id.button1);
         btns[1] = (Button) findViewById(R.id.button2);
         btns[2] = (Button) findViewById(R.id.button3);
@@ -57,6 +65,9 @@ public class SubWordListActivity extends Activity implements OnClickListener {
             btn.setOnClickListener(this);
             i++;
         }
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        preProgress = (ProgressBar) findViewById(R.id.progressBar2);
+        emptyView = findViewById(R.id.view1);
     }
 
     @Override
@@ -84,16 +95,36 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         }
     }
 
-    private class CostTask extends AsyncTask<Bundle, Void, Void> {
-        private byte workType;
+    private class ExpensiveTask extends AsyncTask<Bundle, Void, Void> {
+        private byte type;
 
         private static final byte INIT_QUERY = 0;
 
         PageControl pageControl;
 
+        public ExpensiveTask(byte type) {
+            this.type = type;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            switch (type) {
+                case INIT_QUERY:
+                    for (Button btn : btns) {
+                        btn.setVisibility(View.GONE);
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
+                    preProgress.setVisibility(View.VISIBLE);
+                    break;
+                default:// ignore
+                    break;
+            }
+        }
+
         @Override
         protected Void doInBackground(Bundle... params) {
-            switch (workType) {
+            switch (type) {
                 case INIT_QUERY:
                     String projection[] = new String[] {
                         SubWordsList._ID
@@ -122,8 +153,14 @@ public class SubWordListActivity extends Activity implements OnClickListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            switch (workType) {
+            switch (type) {
                 case INIT_QUERY:
+                    for (Button btn : btns) {
+                        btn.setVisibility(View.VISIBLE);
+                    }
+                    progressBar.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                    preProgress.setVisibility(View.GONE);
                     long[] sub_ids = pageControl.getPageInfo();
                     int i = 0;
                     for (Button btn : btns) {
@@ -135,6 +172,7 @@ public class SubWordListActivity extends Activity implements OnClickListener {
                         }
                         i++;
                     }
+                    progressBar.setProgress(pageControl.getProgress());
                     break;
                 default:// ignore
                     break;
@@ -168,6 +206,17 @@ public class SubWordListActivity extends Activity implements OnClickListener {
                 }
                 mlist.add(page);
             }
+        }
+
+        public int getProgress() {
+            if (mlist.size() == 0) {
+                return 0;
+            }
+            return (curIndex + 1) * 100 / mlist.size();
+        }
+
+        public int getCurPageIndex() {
+            return curIndex;
         }
 
         public void setCurPageIndex(int index) {

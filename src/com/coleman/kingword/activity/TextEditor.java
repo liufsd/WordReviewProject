@@ -8,9 +8,13 @@
 
 package com.coleman.kingword.activity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -38,23 +43,15 @@ import com.coleman.util.Config;
 import com.coleman.util.Log;
 
 public class TextEditor extends Activity implements OnClickListener {
-    public static final String ACTION_EDIT_TEXT = "com.coleman.sms.activity.ACTION_EDIT_TEXT";
-
-    public static final String ACTION_EDIT_FILE = "com.coleman.sms.activity.ACTION_EDIT_FILE";
+    public static final String ACTION_EDIT_FILE = "edit_text";
 
     private static final String TAG = TextEditor.class.getName();
 
     private EditText editText;
 
-    private Button btnSend;
-
-    private Button btnSplit;
-
     private String path;
 
-    private IReader binder;
-
-    private ReadFileServiceConnection conn;
+    private Button btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,32 +59,20 @@ public class TextEditor extends Activity implements OnClickListener {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         Intent intent = getIntent();
         setContentView(R.layout.text_editor);
-        editText = (EditText) findViewById(R.id.editor);
-        btnSend = (Button) findViewById(R.id.btn_send);
-        btnSplit = (Button) findViewById(R.id.btn_split);
-        btnSend.setOnClickListener(this);
-        btnSplit.setOnClickListener(this);
+        editText = (EditText) findViewById(R.id.editorText1);
+        btnSave = (Button) findViewById(R.id.button1);
+        btnSave.setOnClickListener(this);
 
-        if (ACTION_EDIT_TEXT.equals(intent.getAction())) {
-            String text = intent.getStringExtra("text");
-            Log.d(TAG, "text: " + text);
-            editText.setText(text);
-        } else if (ACTION_EDIT_FILE.equals(intent.getAction())) {
+        if (ACTION_EDIT_FILE.equals(intent.getAction())) {
             path = intent.getStringExtra("path");
             Log.d(TAG, "path: " + path);
             editText.setText("");
             setProgressBarIndeterminateVisibility(true);
             setProgressBarIndeterminate(true);
-            doRead(path);
+            new ExpensiveTask(ExpensiveTask.LOAD_FILE).execute();
         } else {
             Log.d(TAG, "Unknow action, exiting!");
             finish();
-        }
-        // gone the split button
-        if (!ACTION_EDIT_FILE.equals(getIntent().getAction())) {
-            findViewById(R.id.btn_split).setVisibility(View.GONE);
-            findViewById(R.id.view_left).setVisibility(View.INVISIBLE);
-            findViewById(R.id.view_right).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -95,30 +80,14 @@ public class TextEditor extends Activity implements OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = new MenuInflater(this);
         inflater.inflate(R.menu.editor_option, menu);
-        if (!ACTION_EDIT_FILE.equals(getIntent().getAction())) {
-            // menu.removeItem(R.id.menu_save);
-            menu.removeItem(R.id.menu_split);
-        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_send:
-                doSend();
-                finish();
-                break;
-            case R.id.menu_split:
-                doSplit();
-                break;
             case R.id.menu_save:
-                String action = getIntent().getAction();
-                if (ACTION_EDIT_FILE.equals(action)) {
-                    doSave(path, editText.getText().toString());
-                } else if (ACTION_EDIT_TEXT.equals(action)) {
-                    doSave(editText.getText().toString());
-                }
+                doSave();
                 finish();
                 break;
             case R.id.menu_back:
@@ -130,86 +99,32 @@ public class TextEditor extends Activity implements OnClickListener {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_send:
-                doSend();
+            case R.id.button1:
+                doSave();
                 finish();
-                break;
-            case R.id.btn_split:
-                doSplit();
                 break;
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (conn != null) {
-            unbindService(conn);
-        }
         super.onDestroy();
-    }
-
-    private void doRead(String path) {
-        Intent intent = new Intent(ColemanIntent.ACTION_FILE_READ);
-        intent.putExtra(ColemanIntent.EXTRA_PATH, path);
-        conn = new ReadFileServiceConnection();
-        bindService(intent, conn, BIND_AUTO_CREATE);
-    }
-
-    /**
-     * save content to database.
-     * 
-     * @param string
-     */
-    private void doSave(String string) {
     }
 
     /**
      * save content to sdcard.
      * 
+     * @TODO need to do this work in the service.
      * @param path
      * @param text
      */
-    private void doSave(String path, final String text) {
-        if (TextUtils.isEmpty(path)) {
-            return;
-        }
-        String state = Environment.getExternalStorageState();
-        if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            Toast.makeText(this, R.string.toast_media_unmounted, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final File file = new File(path);
-        if (!file.exists()) {
-            return;
-        }
-        final Thread writeThread = new Thread() {
-            public void run() {
-                OutputStreamWriter osw = null;
-                try {
-                    osw = new OutputStreamWriter(new FileOutputStream(file), Config.ENCODE);
-                    Log.d(TAG, "fw.getEncoding(): " + osw.getEncoding());
-                    System.out.println(text);
-                    osw.append(text);
-                    osw.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (osw != null) {
-                            osw.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-        };
+    private void doSave() {
+        
         DialogInterface.OnClickListener ocl = new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        writeThread.start();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;
@@ -221,18 +136,6 @@ public class TextEditor extends Activity implements OnClickListener {
 
     }
 
-    private void doSend() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("smsto:"));
-        String body = editText.getText().toString();
-        intent.putExtra("sms_body", body == null ? "" : body);
-        startActivity(intent);
-    }
-
-    private void doSplit() {
-    }
-
     private void toast(String format, Object... params) {
         if (params != null && params.length > 0) {
             Toast.makeText(this, String.format(format, params), Toast.LENGTH_SHORT).show();
@@ -241,30 +144,93 @@ public class TextEditor extends Activity implements OnClickListener {
         }
     }
 
-    private class ReadFileServiceConnection implements ServiceConnection {
+    private class ExpensiveTask extends AsyncTask<Void, Void, Void> {
+        private byte type;
 
-        public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, name + " service disconnected.");
+        private static final byte LOAD_FILE = 0;
+
+        private String content = "";
+
+        public ExpensiveTask(byte loadFile) {
+            this.type = loadFile;
         }
 
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            binder = (IReader) service;
-            binder.doRead(new Runnable() {
-                public void run() {
-                    String str = binder.getContent();
-                    editText.setText(str);
-                    editText.setSelection(0);
-                    editText.invalidate();
-                    setProgressBarIndeterminateVisibility(false);
-                }
-            });
+        @Override
+        protected Void doInBackground(Void... params) {
+            switch (type) {
+                case LOAD_FILE:
+                    content = new FileLoader(path).getContent();
+                    break;
+                default:
+                    break;
+            }
+            return null;
         }
 
+        @Override
+        protected void onPostExecute(Void result) {
+            switch (type) {
+                case LOAD_FILE:
+                    editText.setText(content);
+                    setProgressBarIndeterminate(false);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
-    public static interface IReader {
-        public void doRead(Runnable callback);
+    private class FileLoader {
 
-        public String getContent();
+        private String content;
+
+        private FileLoader(String path) {
+            InputStream is = null;
+            try {
+                is = new FileInputStream(path);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            doLoad(is);
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        private void doLoad(InputStream is) {
+            ByteArrayOutputStream baos;
+            if (is == null) {
+                Log.w(TAG, "InputStream should not be null!");
+                return;
+            }
+            baos = new ByteArrayOutputStream();
+            try {
+                byte[] buf = new byte[512];
+                int count = -1;
+                while ((count = is.read(buf)) != -1) {
+                    baos.write(buf, 0, count);
+                }
+                buf = baos.toByteArray();
+                Log.d(TAG, buf[0] + "   buf[0]: " + Integer.toHexString(buf[0]));
+                Log.d(TAG, buf[1] + "   buf[1]: " + Integer.toHexString(buf[1]));
+                content = new String(buf, Config.ENCODE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (Exception e2) {
+                }
+                try {
+                    if (baos != null) {
+                        baos.close();
+                    }
+                } catch (Exception e2) {
+                }
+            }
+        }
     }
 }

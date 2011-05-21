@@ -38,11 +38,11 @@
 		</TableRow>
 	</TableLayout>
 	<View android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_weight="1"></View>
-	<com.coleman.kingword.view.HListView
-		android:id="@+id/cflayout02" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:background="@color/gray"></com.coleman.kingword.view.HListView>
+		android:layout_weight="1" android:id="@+id/view1"></View>
 	<ProgressBar android:layout_width="fill_parent"
 		android:layout_height="15dp" android:id="@+id/progressBar1"
 		style="@android:style/Widget.ProgressBar.Horizontal"></ProgressBar>
+	<ProgressBar android:layout_width="wrap_content"
+		android:visibility="gone" android:layout_height="wrap_content"
+		android:id="@+id/progressBar2" android:layout_gravity="center"></ProgressBar>
 </LinearLayout>

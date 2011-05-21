@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 
 import com.coleman.kingword.R;
@@ -31,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class FileExplorer extends Activity {
@@ -175,6 +177,11 @@ public class FileExplorer extends Activity {
     }
 
     private void doEdit(final String path) {
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            Toast.makeText(this, R.string.toast_media_unmounted, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent();
         intent.setAction(TextEditor.ACTION_EDIT_FILE);
         intent.putExtra("path", path);

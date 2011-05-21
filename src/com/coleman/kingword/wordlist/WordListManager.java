@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.coleman.kingword.provider.KingWord.SubWordsList;
@@ -33,27 +32,18 @@ public class WordListManager {
         return manager;
     }
 
-    // public void loadWordListFromDB(Context context, long wordlist_id, String
-    // wordlist_name,
-    // LoadNotifier notifier) {
-    // new LoadWordListFromDBTask(context, wordlist_id, wordlist_name,
-    // notifier).execute();
-    // }
-
     public void loadWordListFromFile(Context context, String wordlistName, boolean inAsset,
-            LoadNotifier notifier) {
+            IProgressNotifier notifier) {
+        // make sure the notifier is not null
         if (notifier == null) {
-            notifier = new LoadNotifier() {
+            notifier = new IProgressNotifier() {
                 @Override
-                public void notifyProgress(int p) {
-                }
-
-                @Override
-                public void notifyDone() {
+                public void notify(int p) {
+                    Log.d(TAG, "p+++++++++++:"+p);
                 }
             };
         }
-        new LoadWordListFromFileTask(context, wordlistName, inAsset, notifier).execute();
+        loadWordList(context, wordlistName, inAsset, notifier);
     }
 
     public boolean isExist(Context context, String wordlist) {
@@ -72,123 +62,41 @@ public class WordListManager {
         return true;
     }
 
-    // private class LoadWordListFromDBTask extends AsyncTask<Void, Void, Void>
-    // {
-    // Context context;
-    //
-    // long wordlist_id;
-    //
-    // String wordlist_name;
-    //
-    // LoadNotifier notifier;
-    //
-    // public LoadWordListFromDBTask(Context context, long wordlist_id, String
-    // wordlist_name,
-    // LoadNotifier notifier) {
-    // this.context = context;
-    // this.wordlist_id = wordlist_id;
-    // this.wordlist_name = wordlist_name;
-    // this.notifier = notifier;
-    // }
-    //
-    // @Override
-    // protected Void doInBackground(Void... params) {
-    // loadWordList(context, wordlist_id, wordlist_name);
-    // return null;
-    // }
-    //
-    // @Override
-    // protected void onPostExecute(Void result) {
-    // notifier.notifyDone();
-    // }
-    //
-    // private void loadWordList(Context context, long wordlist_id, String
-    // wordlist_name) {
-    // String projection[] = new String[] {
-    // WordListItem._ID, WordListItem.SUB_WORD_LIST_ID, WordListItem.WORD
-    // };
-    // Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI,
-    // projection,
-    // WordListItem.SUB_WORD_LIST_ID + "=" + wordlist_id, null, null);
-    // if (c == null || c.getCount() <= 0) {
-    // if (c != null) {
-    // c.close();
-    // }
-    // return;
-    // }
-    // ArrayList<String> list = new ArrayList<String>();
-    // if (c.moveToFirst()) {
-    // while (!c.isAfterLast()) {
-    // list.add(c.getString(2));
-    // c.moveToNext();
-    // }
-    // }
-    // WordList wordlist = new WordList();
-    // c.close();
-    // }
-    // }
-
-    private class LoadWordListFromFileTask extends AsyncTask<Void, Void, Void> {
-        Context context;
-
-        String wordlistName;
-
-        boolean inAsset;
-
-        LoadNotifier notifier;
-
-        public LoadWordListFromFileTask(Context context, String wordlistName, boolean inAsset,
-                LoadNotifier notifier) {
-            this.context = context;
-            this.wordlistName = wordlistName;
-            this.inAsset = inAsset;
-            this.notifier = notifier;
+    private void loadWordList(Context context, String wordlistName, boolean inAsset,
+            IProgressNotifier notifier) {
+        if (isExist(context, wordlistName)) {
+            Log.w(TAG, "The word list is already exist!");
+            notifier.notify(100);
+            return;
         }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            loadWordList(context, wordlistName, inAsset);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            notifier.notifyDone();
-        }
-
-        private void loadWordList(Context context, String wordlistName, boolean inAsset) {
-            if (isExist(context, wordlistName)) {
-                Log.w(TAG, "The word list is already exist!");
+        ArrayList<String> list = null;
+        if (inAsset) {
+            try {
+                list = GeneralParser.parseAsset(context, wordlistName, notifier);
+            } catch (IOException e) {
+                e.printStackTrace();
                 return;
             }
-            ArrayList<String> list = null;
-            if (inAsset) {
-                try {
-                    list = GeneralParser.parseAsset(context, wordlistName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                WordList wordlist = new WordList("", wordlistName, null);
-                insertWordList(context, wordlist);
-                splitAndInsertSubWordList(context, list, wordlist, 100);
-            } else {
-                /**
-                 * @TODO need implementation.
-                 */
-            }
+            WordList wordlist = new WordList("", wordlistName, null);
+            notifier.notify(35);
+            insertWordList(context, wordlist, notifier);
+            splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
+        } else {
+            /**
+             * @TODO need implementation.
+             */
         }
-
     }
 
-    private void insertWordList(Context context, WordList wordlist) {
+    private void insertWordList(Context context, WordList wordlist, IProgressNotifier notifier) {
         Uri uri = context.getContentResolver().insert(WordsList.CONTENT_URI,
                 wordlist.toContentValues());
+        notifier.notify(45);
         wordlist.id = Long.parseLong(uri.getPathSegments().get(1));
     }
 
     private void splitAndInsertSubWordList(Context context, ArrayList<String> list,
-            WordList wordlist, int suggest) {
+            WordList wordlist, int suggest, IProgressNotifier notifier) {
         ArrayList<List<String>> sublist = new ArrayList<List<String>>();
         switch (wordlist.set_method) {
             case AVARAGE_DEVIDE: {
@@ -233,10 +141,21 @@ public class WordListManager {
                 break;
             }
         }
+        notifier.notify(50);
+        // for notifier vas
+        int total_steps = sublist.size();
+        int step = 0;
+
         for (List<String> list2 : sublist) {
             SubWordList sub = new SubWordList(wordlist.id);
             doInsertSubWordList(context, sub);
             doInsertWords(context, sub, list2);
+            step++;
+            if (total_steps == 0) {
+                notifier.notify(100);
+            } else {
+                notifier.notify(50 + step * 50 / total_steps);
+            }
         }
 
     }
@@ -269,9 +188,7 @@ public class WordListManager {
         });
     }
 
-    public static interface LoadNotifier {
-        void notifyDone();
-
-        void notifyProgress(int p);
+    public static interface IProgressNotifier {
+        void notify(int p);
     }
 }

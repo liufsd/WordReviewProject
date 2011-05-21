@@ -109,8 +109,6 @@ public class CoreActivity extends Activity implements OnItemClickListener {
                 v = convertView;
             }
             TextView tv = (TextView) v.findViewById(R.id.textView1);
-            tv.setMaxLines(100);
-            tv.setMinLines(4);
             DictData data = list.get(position);
             if (data != null) {
                 tv.setText(data.toString());
