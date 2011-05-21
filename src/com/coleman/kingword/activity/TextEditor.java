@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.coleman.kingword.R;
+import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.Config;
 import com.coleman.util.Log;
 
@@ -119,21 +120,10 @@ public class TextEditor extends Activity implements OnClickListener {
      * @param text
      */
     private void doSave() {
-        
-        DialogInterface.OnClickListener ocl = new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
-        new AlertDialog.Builder(this).setTitle(R.string.save).setMessage(R.string.save_hint)
-                .setPositiveButton(R.string.ok, ocl).setNegativeButton(R.string.cancel, ocl).show();
-
+        Intent intent = new Intent(this, WordListActivity.class);
+        intent.putExtra(WordListActivity.EXTERNAL_FILE, true);
+        intent.putExtra(WordListActivity.EXTERNAL_FILE_PATH, path);
+        startActivity(intent);
     }
 
     private void toast(String format, Object... params) {

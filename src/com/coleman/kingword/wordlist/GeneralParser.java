@@ -33,8 +33,8 @@ public class GeneralParser {
      * @param fileName
      * @throws IOException
      */
-    static ArrayList<String> parseAsset(Context context, String fileName,
-            IProgressNotifier notifier) throws IOException {
+    static ArrayList<String> parseAsset(Context context, String fileName, IProgressNotifier notifier)
+            throws IOException {
         // init notifier vars
         int max = 30;// progress here can go for 30%
         int cur = 0;// current progress 0%
@@ -85,8 +85,17 @@ public class GeneralParser {
      * The files stored in the internal or external files.
      * 
      * @param fileName
+     * @throws IOException
      */
-    public static void parseFiles(String fileName) {
-
+    public static ArrayList<String> parseFile(String fileName) throws IOException {
+        FileAccessor fa = new FileAccessor(fileName, "rw");
+        String line;
+        ArrayList<String> list = new ArrayList<String>();
+        while ((line = fa.readLine()) != null) {
+            list.add(line);
+            Log.d(TAG, "line:" + line);
+        }
+        fa.close();
+        return list;
     }
 }

@@ -32,6 +32,7 @@ import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnMenuItemClickListener {
     private static final String TAG = WordListActivity.class.getName();
+
     private WordListAdapter adapter;
 
     private Cursor c;
@@ -39,6 +40,12 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     private static final String projection[] = new String[] {
             WordsList._ID, WordsList.DESCRIBE, WordsList.PATH_NAME, WordsList.SET_METHOD
     };
+
+    public static final String EXTERNAL_FILE = "external_file";
+
+    public static final String EXTERNAL_FILE_PATH = "external_file_path";
+
+    private String external_file_path;
 
     private ListView listView;
 
@@ -55,7 +62,27 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
         loadBtn.setOnClickListener(this);
-        new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
+        if (loadExternal) {
+            external_file_path = getIntent().getStringExtra(EXTERNAL_FILE_PATH);
+            new ExpensiveTask(ExpensiveTask.LOAD_EXTERNAL).execute();
+        } else {
+            new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (c != null) {
+            c.close();
+            c = null;
+        }
+        super.onDestroy();
     }
 
     private class WordListAdapter extends ResourceCursorAdapter {
@@ -131,6 +158,8 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
         private static final byte INIT_QUERY = 0;
 
+        private static final byte LOAD_EXTERNAL = 1;
+
         public ExpensiveTask(byte initQuery) {
             this.type = initQuery;
         }
@@ -143,6 +172,12 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     findViewById(R.id.loadLayout).setVisibility(View.GONE);
                     findViewById(R.id.view1).setVisibility(View.VISIBLE);
                     break;
+                case LOAD_EXTERNAL:
+                    listView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    findViewById(R.id.loadLayout).setVisibility(View.GONE);
+                    findViewById(R.id.view1).setVisibility(View.VISIBLE);
+                    break;
                 default:
                     break;
             }
@@ -151,24 +186,40 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         @Override
         protected Void doInBackground(Void... params) {
             switch (type) {
-                case INIT_QUERY:
+                case INIT_QUERY: {
                     c = getContentResolver().query(WordsList.CONTENT_URI, projection, null, null,
                             null);
                     if (!c.moveToFirst()) {
                         IProgressNotifier notifier = new IProgressNotifier() {
                             @Override
                             public void notify(int p) {
-                                Log.d(TAG, "progress:"+p);
+                                Log.d(TAG, "progress:" + p);
                                 publishProgress(p);
                             }
                         };
-                        WordListManager.getInstance().loadWordListFromFile(WordListActivity.this,
-                                InternalWordList.POSTGRADUATE_WORDLIST, true, notifier);
+                        WordListManager.getInstance().loadWordListFromAsset(WordListActivity.this,
+                                InternalWordList.POSTGRADUATE_WORDLIST, notifier);
                         c.requery();
                     }
                     publishProgress(100);
                     break;
-
+                }
+                case LOAD_EXTERNAL: {
+                    c = getContentResolver().query(WordsList.CONTENT_URI, projection, null, null,
+                            null);
+                    IProgressNotifier notifier = new IProgressNotifier() {
+                        @Override
+                        public void notify(int p) {
+                            Log.d(TAG, "progress:" + p);
+                            publishProgress(p);
+                        }
+                    };
+                    WordListManager.getInstance().loadWordListFromFile(WordListActivity.this,
+                            external_file_path, notifier);
+                    c.requery();
+                    publishProgress(100);
+                    break;
+                }
                 default:
                     break;
             }
@@ -180,6 +231,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             switch (type) {
                 case INIT_QUERY:
                     Log.d(TAG, "update:" + values[0]);
+                    progressBar.setProgress(values[0]);
+                    break;
+                case LOAD_EXTERNAL:
                     progressBar.setProgress(values[0]);
                     break;
                 default:
@@ -197,6 +251,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     findViewById(R.id.loadLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.view1).setVisibility(View.INVISIBLE);
                     // adapter.notifyDataSetChanged();
+                    break;
+                case LOAD_EXTERNAL:
+                    listView.setVisibility(View.VISIBLE);
+                    adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
+                    listView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);
+                    findViewById(R.id.loadLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.view1).setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;

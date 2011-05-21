@@ -32,18 +32,45 @@ public class WordListManager {
         return manager;
     }
 
-    public void loadWordListFromFile(Context context, String wordlistName, boolean inAsset,
+    public void loadWordListFromAsset(Context context, String wordlistName,
             IProgressNotifier notifier) {
         // make sure the notifier is not null
         if (notifier == null) {
             notifier = new IProgressNotifier() {
                 @Override
                 public void notify(int p) {
-                    Log.d(TAG, "p+++++++++++:"+p);
+                    Log.d(TAG, "asset progress+++++++++++:" + p);
                 }
             };
         }
-        loadWordList(context, wordlistName, inAsset, notifier);
+        loadWordList(context, wordlistName, notifier);
+    }
+
+    public void loadWordListFromFile(Context context, String wordlistName,
+            IProgressNotifier notifier) {
+        if (isExist(context, wordlistName)) {
+            Log.w(TAG, "The word list is already exist!");
+            return;
+        }
+        // make sure the notifier is not null
+        if (notifier == null) {
+            notifier = new IProgressNotifier() {
+                @Override
+                public void notify(int p) {
+                    Log.d(TAG, "file progress+++++++++++:" + p);
+                }
+            };
+        }
+        ArrayList<String> list = null;
+        try {
+            list = GeneralParser.parseFile(wordlistName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        WordList wordlist = new WordList("", wordlistName, null);
+        insertWordList(context, wordlist, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
     }
 
     public boolean isExist(Context context, String wordlist) {
@@ -62,30 +89,23 @@ public class WordListManager {
         return true;
     }
 
-    private void loadWordList(Context context, String wordlistName, boolean inAsset,
-            IProgressNotifier notifier) {
+    private void loadWordList(Context context, String wordlistName, IProgressNotifier notifier) {
         if (isExist(context, wordlistName)) {
             Log.w(TAG, "The word list is already exist!");
             notifier.notify(100);
             return;
         }
         ArrayList<String> list = null;
-        if (inAsset) {
-            try {
-                list = GeneralParser.parseAsset(context, wordlistName, notifier);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            WordList wordlist = new WordList("", wordlistName, null);
-            notifier.notify(35);
-            insertWordList(context, wordlist, notifier);
-            splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
-        } else {
-            /**
-             * @TODO need implementation.
-             */
+        try {
+            list = GeneralParser.parseAsset(context, wordlistName, notifier);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
         }
+        WordList wordlist = new WordList("", wordlistName, null);
+        notifier.notify(35);
+        insertWordList(context, wordlist, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
     }
 
     private void insertWordList(Context context, WordList wordlist, IProgressNotifier notifier) {
