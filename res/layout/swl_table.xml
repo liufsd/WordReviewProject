@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:id="@+id/tableLayout1" android:visibility="gone">
+	<TableRow style="@style/unit_row">
+		<Button android:text="@string/nothing" android:id="@+id/button1"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button2"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button3"
+			style="@style/unit_item_margin"></Button>
+	</TableRow>
+	<TableRow style="@style/unit_row">
+		<Button android:text="@string/nothing" android:id="@+id/button4"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button5"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button6"
+			style="@style/unit_item_margin"></Button>
+	</TableRow>
+	<TableRow style="@style/unit_row">
+		<Button android:text="@string/nothing" android:id="@+id/button7"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button8"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button9"
+			style="@style/unit_item_margin"></Button>
+	</TableRow>
+	<TableRow style="@style/unit_row">
+		<Button android:text="@string/nothing" android:id="@+id/button10"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button11"
+			style="@style/unit_item_margin"></Button>
+		<Button android:text="@string/nothing" android:id="@+id/button12"
+			style="@style/unit_item_margin"></Button>
+	</TableRow>
+</TableLayout>

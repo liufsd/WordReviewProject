@@ -52,11 +52,17 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     private Button loadBtn;
 
     private ProgressBar progressBar;
+    
+    private View loadLayout;
+    
+    private View emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
+        loadLayout=findViewById(R.id.loadLayout);
+        emptyView=findViewById(R.id.view1);
         listView = (ListView) findViewById(R.id.listView1);
         loadBtn = (Button) findViewById(R.id.button1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -169,14 +175,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             switch (type) {
                 case INIT_QUERY:
                     progressBar.setVisibility(View.VISIBLE);
-                    findViewById(R.id.loadLayout).setVisibility(View.GONE);
-                    findViewById(R.id.view1).setVisibility(View.VISIBLE);
+                    loadLayout.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                     break;
                 case LOAD_EXTERNAL:
                     listView.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
-                    findViewById(R.id.loadLayout).setVisibility(View.GONE);
-                    findViewById(R.id.view1).setVisibility(View.VISIBLE);
+                    loadLayout.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
@@ -248,8 +254,8 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
                     listView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
-                    findViewById(R.id.loadLayout).setVisibility(View.VISIBLE);
-                    findViewById(R.id.view1).setVisibility(View.INVISIBLE);
+                    loadLayout.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.INVISIBLE);
                     // adapter.notifyDataSetChanged();
                     break;
                 case LOAD_EXTERNAL:
@@ -257,8 +263,8 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
                     listView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
-                    findViewById(R.id.loadLayout).setVisibility(View.VISIBLE);
-                    findViewById(R.id.view1).setVisibility(View.INVISIBLE);
+                    loadLayout.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;

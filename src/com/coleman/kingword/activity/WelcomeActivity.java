@@ -27,7 +27,7 @@ public class WelcomeActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-        Button button = (Button) findViewById(R.id.button1);
+        Button button = (Button) findViewById(R.id.w_button1);
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

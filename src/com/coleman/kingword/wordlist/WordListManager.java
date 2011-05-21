@@ -70,7 +70,7 @@ public class WordListManager {
         }
         WordList wordlist = new WordList("", wordlistName, null);
         insertWordList(context, wordlist, notifier);
-        splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, 20, notifier);
     }
 
     public boolean isExist(Context context, String wordlist) {
@@ -105,7 +105,7 @@ public class WordListManager {
         WordList wordlist = new WordList("", wordlistName, null);
         notifier.notify(35);
         insertWordList(context, wordlist, notifier);
-        splitAndInsertSubWordList(context, list, wordlist, 100, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, 20, notifier);
     }
 
     private void insertWordList(Context context, WordList wordlist, IProgressNotifier notifier) {

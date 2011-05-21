@@ -4,21 +4,24 @@ package com.coleman.kingword.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.view.SlideTableSwitcher;
 
-public class SubWordListActivity extends Activity implements OnClickListener {
-    Button[] btns = new Button[12];
+public class SubWordListActivity extends Activity {
+
+    private static final String TAG = SubWordListActivity.class.getName();
 
     private ProgressBar progressBar;
 
@@ -32,75 +35,33 @@ public class SubWordListActivity extends Activity implements OnClickListener {
      */
     private View emptyView;
 
+    private SlideTableSwitcher mSwitcher;
+
+    private PageControl pageControl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sub_word_list_table);
+        initViews();
+
         long wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
         Bundle b = new Bundle();
         b.putLong(WordsList._ID, wordlist_id);
-        initViews();
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
     }
 
     private void initViews() {
-        btns[0] = (Button) findViewById(R.id.button1);
-        btns[1] = (Button) findViewById(R.id.button2);
-        btns[2] = (Button) findViewById(R.id.button3);
-
-        btns[3] = (Button) findViewById(R.id.button4);
-        btns[4] = (Button) findViewById(R.id.button5);
-        btns[5] = (Button) findViewById(R.id.button6);
-
-        btns[6] = (Button) findViewById(R.id.button7);
-        btns[7] = (Button) findViewById(R.id.button8);
-        btns[8] = (Button) findViewById(R.id.button9);
-
-        btns[9] = (Button) findViewById(R.id.button10);
-        btns[10] = (Button) findViewById(R.id.button11);
-        btns[11] = (Button) findViewById(R.id.button12);
-
-        int i = 0;
-        for (Button btn : btns) {
-            btn.setOnClickListener(this);
-            i++;
-        }
+        mSwitcher = (SlideTableSwitcher) findViewById(R.id.viewSwitcher1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         preProgress = (ProgressBar) findViewById(R.id.progressBar2);
         emptyView = findViewById(R.id.view1);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button1:
-            case R.id.button2:
-            case R.id.button3:
-            case R.id.button4:
-            case R.id.button5:
-            case R.id.button6:
-            case R.id.button7:
-            case R.id.button8:
-            case R.id.button9:
-            case R.id.button10:
-            case R.id.button11:
-            case R.id.button12:
-                Intent intent = new Intent(this, CoreActivity.class);
-                int id = Integer.parseInt(((Button) v).getText().toString());
-                intent.putExtra(SubWordsList._ID, id);
-                startActivity(intent);
-                break;
-            default:
-                break;
-        }
     }
 
     private class ExpensiveTask extends AsyncTask<Bundle, Void, Void> {
         private byte type;
 
         private static final byte INIT_QUERY = 0;
-
-        PageControl pageControl;
 
         public ExpensiveTask(byte type) {
             this.type = type;
@@ -110,9 +71,6 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         protected void onPreExecute() {
             switch (type) {
                 case INIT_QUERY:
-                    for (Button btn : btns) {
-                        btn.setVisibility(View.GONE);
-                    }
                     progressBar.setVisibility(View.GONE);
                     emptyView.setVisibility(View.GONE);
                     preProgress.setVisibility(View.VISIBLE);
@@ -155,23 +113,11 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         protected void onPostExecute(Void result) {
             switch (type) {
                 case INIT_QUERY:
-                    for (Button btn : btns) {
-                        btn.setVisibility(View.VISIBLE);
-                    }
                     progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     preProgress.setVisibility(View.GONE);
                     long[] sub_ids = pageControl.getPageInfo();
-                    int i = 0;
-                    for (Button btn : btns) {
-                        if (i < sub_ids.length) {
-                            btn.setText("" + sub_ids[i]);
-                            btn.setVisibility(View.VISIBLE);
-                        } else {
-                            btn.setVisibility(View.GONE);
-                        }
-                        i++;
-                    }
+                    mSwitcher.showCurrentScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                     break;
                 default:// ignore
@@ -211,8 +157,10 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         public int getProgress() {
             if (mlist.size() == 0) {
                 return 0;
+            } else if (mlist.size() == 1) {
+                return 100;
             }
-            return (curIndex + 1) * 100 / mlist.size();
+            return curIndex * 100 / (mlist.size() - 1);
         }
 
         public int getCurPageIndex() {
@@ -229,5 +177,51 @@ public class SubWordListActivity extends Activity implements OnClickListener {
         public long[] getPageInfo() {
             return mlist.get(curIndex);
         }
+
+        public boolean hasNextPage() {
+            return curIndex + 1 <= mlist.size() - 1;
+        }
+
+        public boolean hasPreviousPage() {
+            return curIndex - 1 >= 0;
+        }
+
+        public long[] moveToNextPage() {
+            curIndex = curIndex + 1 > mlist.size() - 1 ? mlist.size() - 1 : curIndex + 1;
+            return mlist.get(curIndex);
+        }
+
+        public long[] moveToPrePage() {
+            curIndex = curIndex - 1 < 0 ? 0 : curIndex - 1;
+            return mlist.get(curIndex);
+        }
     }
+
+    int d_x = 0;
+
+    int u_x = 0;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (MotionEvent.ACTION_DOWN == event.getAction()) {
+            d_x = (int) event.getX();
+        } else if (MotionEvent.ACTION_UP == event.getAction()) {
+            u_x = (int) event.getX();
+            if (u_x - d_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
+                if (pageControl.hasPreviousPage()) {
+                    long sub_ids[] = pageControl.moveToPrePage();
+                    mSwitcher.showPreviousScreen(sub_ids);
+                    progressBar.setProgress(pageControl.getProgress());
+                }
+            } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
+                if (pageControl.hasNextPage()) {
+                    long sub_ids[] = pageControl.moveToNextPage();
+                    mSwitcher.showNextScreen(sub_ids);
+                    progressBar.setProgress(pageControl.getProgress());
+                }
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
 }
