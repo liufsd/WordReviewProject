@@ -1,7 +1,6 @@
 
 package com.coleman.kingword.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
@@ -13,8 +12,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.ViewSwitcher;
+
 import com.coleman.kingword.R;
 import com.coleman.kingword.activity.CoreActivity;
+import com.coleman.kingword.activity.SubWordListActivity.SubInfo;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 
 public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener {
@@ -51,12 +52,13 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         initViews((TableLayout) getCurrentView());
     }
 
-    public void setData(long sub_ids[]) {
+    public void setData(SubInfo sub_ids[]) {
         int i = 0;
         for (Button btn : btns) {
             if (i < sub_ids.length) {
                 Log.d(TAG, "sub_ids " + i + ":" + sub_ids[i]);
-                btn.setText("" + sub_ids[i]);
+                btn.setText("" + sub_ids[i].index);
+                btn.setTag(sub_ids[i].id);
                 btn.setVisibility(View.VISIBLE);
             } else {
                 btn.setVisibility(View.GONE);
@@ -65,7 +67,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         }
     }
 
-    public void showNextScreen(long sub_ids[]) {
+    public void showNextScreen(SubInfo sub_ids[]) {
         setInAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right_in));
         setOutAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left_out));
         TableLayout l = (TableLayout) getNextView();
@@ -75,7 +77,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         showNext();
     }
 
-    public void showPreviousScreen(long sub_ids[]) {
+    public void showPreviousScreen(SubInfo sub_ids[]) {
         setInAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left_in));
         setOutAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right_out));
         TableLayout l = (TableLayout) getNextView();
@@ -85,7 +87,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         showPrevious();
     }
 
-    public void showCurrentScreen(long sub_ids[]) {
+    public void showCurrentScreen(SubInfo sub_ids[]) {
         setVisibility(VISIBLE);
         setData(sub_ids);
     }
@@ -106,7 +108,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
             case R.id.button11:
             case R.id.button12:
                 Intent intent = new Intent(getContext(), CoreActivity.class);
-                int id = Integer.parseInt(((Button) v).getText().toString());
+                long id = (Long) (v.getTag());
                 intent.putExtra(SubWordsList._ID, id);
                 getContext().startActivity(intent);
                 break;

@@ -41,7 +41,7 @@ public class CoreActivity extends Activity implements OnItemClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        int sub_id = getIntent().getIntExtra(SubWordsList._ID, -1);
+        long sub_id = getIntent().getLongExtra(SubWordsList._ID, -1);
         wordlist = new SubWordList(this, sub_id);
         initView();
     }

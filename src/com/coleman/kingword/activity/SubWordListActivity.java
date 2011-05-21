@@ -116,7 +116,7 @@ public class SubWordListActivity extends Activity {
                     progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     preProgress.setVisibility(View.GONE);
-                    long[] sub_ids = pageControl.getPageInfo();
+                    SubInfo[] sub_ids = pageControl.getPageInfo();
                     mSwitcher.showCurrentScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                     break;
@@ -127,7 +127,7 @@ public class SubWordListActivity extends Activity {
     }
 
     public static class PageControl {
-        private ArrayList<long[]> mlist = new ArrayList<long[]>();
+        private ArrayList<SubInfo[]> mlist = new ArrayList<SubInfo[]>();
 
         private int curIndex;
 
@@ -138,17 +138,18 @@ public class SubWordListActivity extends Activity {
             int size = list.size();
             int pnum = size / MAX_PAGE_ITEM;
             int lp = size % MAX_PAGE_ITEM;
+            int k = 0;
             for (int i = 0; i < pnum; i++) {
-                long[] page = new long[12];
+                SubInfo[] page = new SubInfo[12];
                 for (int j = 0; j < MAX_PAGE_ITEM; j++) {
-                    page[j] = list.remove(0);
+                    page[j] = new SubInfo(list.remove(0), k++);
                 }
                 mlist.add(page);
             }
             if (lp != 0) {
-                long[] page = new long[lp];
+                SubInfo[] page = new SubInfo[lp];
                 for (int j = 0; j < lp; j++) {
-                    page[j] = list.remove(0);
+                    page[j] = new SubInfo(list.remove(0), k++);
                 }
                 mlist.add(page);
             }
@@ -174,7 +175,7 @@ public class SubWordListActivity extends Activity {
         /**
          * return an array of current page info.
          */
-        public long[] getPageInfo() {
+        public SubInfo[] getPageInfo() {
             return mlist.get(curIndex);
         }
 
@@ -186,14 +187,34 @@ public class SubWordListActivity extends Activity {
             return curIndex - 1 >= 0;
         }
 
-        public long[] moveToNextPage() {
+        public SubInfo[] moveToNextPage() {
             curIndex = curIndex + 1 > mlist.size() - 1 ? mlist.size() - 1 : curIndex + 1;
             return mlist.get(curIndex);
         }
 
-        public long[] moveToPrePage() {
+        public SubInfo[] moveToPrePage() {
             curIndex = curIndex - 1 < 0 ? 0 : curIndex - 1;
             return mlist.get(curIndex);
+        }
+
+    }
+
+    /**
+     * For map the index to the id storing in the database.
+     */
+    public static class SubInfo {
+        private SubInfo(long id, int index) {
+            this.id = id;
+            this.index = index;
+        }
+
+        public int index;
+
+        public long id;
+
+        @Override
+        public String toString() {
+            return "id:" + id + "  index:" + index;
         }
     }
 
@@ -209,13 +230,13 @@ public class SubWordListActivity extends Activity {
             u_x = (int) event.getX();
             if (u_x - d_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
                 if (pageControl.hasPreviousPage()) {
-                    long sub_ids[] = pageControl.moveToPrePage();
+                    SubInfo sub_ids[] = pageControl.moveToPrePage();
                     mSwitcher.showPreviousScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                 }
             } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
                 if (pageControl.hasNextPage()) {
-                    long sub_ids[] = pageControl.moveToNextPage();
+                    SubInfo sub_ids[] = pageControl.moveToNextPage();
                     mSwitcher.showNextScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                 }

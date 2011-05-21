@@ -38,7 +38,7 @@ public class SubWordList {
         this.word_list_id = word_list_id;
     }
 
-    public SubWordList(Context context, int sub_id) {
+    public SubWordList(Context context, long sub_id) {
         load(context, sub_id);
     }
 
@@ -47,7 +47,7 @@ public class SubWordList {
         p = 0;
     }
 
-    private void load(Context context, int sub_id) {
+    private void load(Context context, long sub_id) {
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
                 WordListItem.SUB_WORD_LIST_ID + "=" + sub_id, null, null);
