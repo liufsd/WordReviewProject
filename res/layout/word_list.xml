@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-	<ListView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/listView1"></ListView>
 	<ProgressBar android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/progressBar1"
 		style="@android:style/Widget.ProgressBar.Horizontal"></ProgressBar>
+	<ListView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/listView1"></ListView>
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:text="@string/init_word_list"
 		android:layout_weight="1" android:id="@+id/view1" android:visibility="invisible"></TextView>

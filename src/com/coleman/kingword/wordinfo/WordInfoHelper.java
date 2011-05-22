@@ -5,12 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.coleman.kingword.provider.KingWord.WordInfo;
 
 /**
  * WordInfo helper to operate the WordInfo database, it only support three
- * operations: query, delete, store.
+ * operations: query, delete, store, etc.
  * 
  * @TODO there is a issue: the database's size is limited to 1048576, if the
  *       records number is large enough, maybe some problems will happen.
@@ -21,29 +22,90 @@ public class WordInfoHelper {
             WordInfo.ERROR_COUNT, WordInfo.WEIGHT
     };
 
+    private static final String TAG = WordInfoHelper.class.getName();
+
     /**
-     * return the word information.
+     * make a cache.
      */
-    public static WordInfoVO query(Context context, String word) {
+    private static WordInfoVO _CACHE;
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static boolean upgrade(Context context, String word) {
+        WordInfoVO wordinfo = getWordInfo(context, word);
+        if (wordinfo.increaseWeight() && store(context, wordinfo)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static boolean degrade(Context context, String word) {
+        WordInfoVO wordinfo = getWordInfo(context, word);
+        if (wordinfo.decreaseWeight() && store(context, wordinfo)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static boolean study(Context context, String word) {
+        WordInfoVO wordinfo = getWordInfo(context, word);
+        wordinfo.studycount++;
+        return store(context, wordinfo);
+    }
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static boolean reportMiss(Context context, String word) {
+        WordInfoVO wordinfo = getWordInfo(context, word);
+        wordinfo.errorcount++;
+        return store(context, wordinfo);
+    }
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static boolean ignore(Context context, String word) {
+        WordInfoVO wordinfo = getWordInfo(context, word);
+        wordinfo.ignore = true;
+        return store(context, wordinfo);
+    }
+
+    /**
+     * You must make sure the word is not empty.
+     */
+    public static WordInfoVO getWordInfo(Context context, String word) {
+        if (_CACHE != null && _CACHE.word.equals(word)) {
+            return _CACHE;
+        }
         Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
                 WordInfo.WORD + "='" + word + "'", null, null);
         WordInfoVO wi = new WordInfoVO(word);
         if (c.moveToFirst()) {
             wi.id = c.getLong(0);
             wi.word = c.getString(1);
-            wi.ignore = c.getInt(2) == 0 ? true : false;
+            wi.ignore = c.getInt(2) == 2 ? true : false;
             wi.studycount = (byte) c.getInt(3);
             wi.errorcount = (byte) c.getInt(4);
             wi.weight = (byte) c.getInt(5);
         }
+        _CACHE = wi;
+        Log.d(TAG, "word info:" + wi);
         if (c != null) {
             c.close();
         }
-        return wi;
+        return _CACHE;
     }
 
     /**
-     * Return the rows number deleted.
+     * You must make sure the word is not empty.
      */
     public static int delete(Context context, String word) {
         int count = context.getContentResolver().delete(WordInfo.CONTENT_URI,
@@ -78,7 +140,7 @@ public class WordInfoHelper {
         if (info != null) {
             value = new ContentValues();
             value.put(WordInfo.WORD, info.word);
-            value.put(WordInfo.IGNORE, info.ignore ? 0 : 1);
+            value.put(WordInfo.IGNORE, info.ignore ? 2 : 1);
             value.put(WordInfo.STUDY_COUNT, info.studycount);
             value.put(WordInfo.ERROR_COUNT, info.errorcount);
             value.put(WordInfo.WEIGHT, info.weight);
@@ -96,7 +158,7 @@ public class WordInfoHelper {
         if (info != null) {
             value = new ContentValues();
             value.put(WordInfo.WORD, info.word);
-            value.put(WordInfo.IGNORE, info.ignore ? 0 : 1);
+            value.put(WordInfo.IGNORE, info.ignore ? 2 : 1);
             value.put(WordInfo.STUDY_COUNT, info.studycount);
             value.put(WordInfo.ERROR_COUNT, info.errorcount);
             value.put(WordInfo.WEIGHT, info.weight);

@@ -17,6 +17,16 @@ public class DictData {
 
     public String data;
 
+    DictData() {
+    }
+
+    public static DictData constructData(String word) {
+        DictData dici = new DictData();
+        dici.data = word;
+        dici.symbol = "";
+        return dici;
+    }
+
     public static DictData readData(Context context, DictInfo info, DictIndex index, String fileName) {
         DictData dici = new DictData();
 

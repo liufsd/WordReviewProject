@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:id="@+id/container">
+	android:layout_height="fill_parent" android:id="@+id/container"
+	android:background="@drawable/blue">
 	<ProgressBar android:layout_width="fill_parent"
-		android:layout_height="wrap_content" style="@android:style/Widget.ProgressBar.Horizontal"
-		android:id="@+id/progressBar1"></ProgressBar>
+		android:layout_alignParentTop="true" android:layout_height="wrap_content"
+		style="@android:style/Widget.ProgressBar.Horizontal" android:id="@+id/progressBar1"></ProgressBar>
 	<LinearLayout android:id="@+id/linearLayout1"
-		android:layout_width="fill_parent" android:layout_height="35dp">
+		android:layout_below="@id/progressBar1" android:layout_width="fill_parent"
+		android:layout_height="35dp">
 		<TextView android:layout_width="wrap_content" android:text="TextView"
-			android:id="@+id/textView1" android:layout_height="fill_parent"></TextView>
+			android:id="@+id/textView1" android:layout_height="fill_parent"
+			style="@style/word_title"></TextView>
 	</LinearLayout>
 	<ListView android:layout_height="wrap_content" android:id="@+id/listView1"
-		android:layout_width="fill_parent"></ListView>
-</LinearLayout>
+		android:layout_below="@id/linearLayout1" android:layout_above="@+id/loadLayout"
+		android:layout_width="fill_parent" ></ListView>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_alignParentBottom="true" android:id="@id/loadLayout"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		style="@android:style/ButtonBar">
+		<Button android:id="@+id/button1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="2"
+			android:text="@string/upgrade" />
+		<Button android:id="@+id/button2" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="2"
+			android:text="@string/degrade" />
+		<Button android:id="@+id/button3" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="2"
+			android:text="@string/ignore" />
+	</LinearLayout>
+</RelativeLayout>

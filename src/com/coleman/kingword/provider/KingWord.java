@@ -203,6 +203,8 @@ public class KingWord {
 
         public static final String WORD = "word";
 
+        public static final String IGNORE = "ignore";
+
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
 
@@ -212,6 +214,7 @@ public class KingWord {
             projectionMap.put(_ID, _ID);
             projectionMap.put(SUB_WORD_LIST_ID, SUB_WORD_LIST_ID);
             projectionMap.put(WORD, WORD);
+            projectionMap.put(IGNORE, IGNORE);
         }
     }
 }

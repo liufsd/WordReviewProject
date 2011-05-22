@@ -30,7 +30,7 @@ public class DictManager {
      */
     private HashMap<String, DictLibrary> libmap = new HashMap<String, DictLibrary>();
 
-    private String curLib = DictLibrary.OXFORD;
+    private String curLib = DictLibrary.STARDICT;
 
     private DictManager() {
     }
@@ -54,8 +54,8 @@ public class DictManager {
         long time = System.currentTimeMillis();
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
-            factory.loadLibrary(context, DictLibrary.OXFORD, libmap);
             factory.loadLibrary(context, DictLibrary.STARDICT, libmap);
+            factory.loadLibrary(context, DictLibrary.OXFORD, libmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,12 +110,12 @@ public class DictManager {
         DictLibrary library = libmap.get(curLib);
         if (library == null) {
             Log.w(TAG, "library has not been initialed!");
-            return null;
+            return DictData.constructData(word + ": library has not been initialed!");
         }
         DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
             Log.w(TAG, "not found!");
-            return null;
+            return DictData.constructData(word + ": not found!");
         }
         Log.d(TAG, word + ":" + index + ":");
         DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,

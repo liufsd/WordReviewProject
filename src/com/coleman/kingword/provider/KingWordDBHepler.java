@@ -52,7 +52,8 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
     private static final String word_list_item_table = "create table " + WordListItem.TABLE_NAME
             + " ( " + WordListItem._ID + " integer primary key autoincrement , "
-            + WordListItem.SUB_WORD_LIST_ID + " integer ," + WordListItem.WORD + " text )";
+            + WordListItem.SUB_WORD_LIST_ID + " integer ," + WordListItem.WORD + " text ,"
+            + WordListItem.IGNORE + " integer )";
 
     private static final String delete_sub_word_list_trigger = "CREATE TRIGGER delete_sub_word_list_trigger AFTER DELETE ON "
             + WordsList.TABLE_NAME
