@@ -13,13 +13,19 @@
 			android:id="@+id/textView1" android:layout_height="fill_parent"
 			style="@style/word_title"></TextView>
 	</LinearLayout>
-	<ListView android:layout_height="wrap_content" android:id="@+id/listView1"
+	<ListView android:layout_height="fill_parent" android:id="@+id/listView1"
 		android:layout_below="@id/linearLayout1" android:layout_above="@+id/loadLayout"
-		android:layout_width="fill_parent" ></ListView>
+		android:layout_width="fill_parent"></ListView>
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_alignParentBottom="true" android:id="@id/loadLayout"
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		style="@android:style/ButtonBar">
+		<Button android:id="@+id/viewmore" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="2"
+			android:text="@string/view_more" />
+		<Button android:id="@+id/viewraw" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="2"
+			android:text="@string/view_raw" />
 		<Button android:id="@+id/button1" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
 			android:text="@string/upgrade" />

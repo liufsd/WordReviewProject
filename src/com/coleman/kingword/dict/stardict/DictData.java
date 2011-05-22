@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class DictData {
@@ -16,6 +17,8 @@ public class DictData {
     public String symbol;
 
     public String data;
+
+    private boolean isDetail;
 
     DictData() {
     }
@@ -70,6 +73,7 @@ public class DictData {
         }
 
         if (!info.sameTypeSequence.equals("tm")) {
+            dici.isDetail = true;
             // one word's data can't be larger than Integer's value
             try {
                 dici.data = new String(bytes, 0, bytes.length, "UTF-8");
@@ -122,11 +126,43 @@ public class DictData {
         }
     }
 
+    public String getDatas() {
+        if (isDetail) {
+            data = removeSymbol();
+        }
+        return data == null ? "" : data;
+    }
+
+    private String removeSymbol() {
+        int first, last;
+        if (!TextUtils.isEmpty(data) && data.charAt(0) == '/' && data.length() > 5) {
+            first = 0;
+            last = data.substring(1).indexOf('/');
+            if (last - first > 0 && last - first < 40 && last + 1 < data.length()) {
+                Log.d(TAG, "data last:"+data.indexOf(last+1)+"  nn:"+'\n');
+                if (data.indexOf(last + 1) == '\n'||data.indexOf(last + 1) == -1) {
+                    return data.substring(last + 3);
+                } else {
+                    return data.substring(last + 2);
+                }
+            }
+        }
+        return data;
+    }
+
+    public String getSymbol() {
+        return symbol == null ? "" : symbol;
+    }
+
+    public String getDataAndSymbol() {
+        return TextUtils.isEmpty(getSymbol()) ? getDatas() : getSymbol() + "\n" + getDatas();
+    }
+
     @Override
     public String toString() {
         String str = "";
         str += symbol == null ? "" : symbol;
-        str += " " + data == null ? "" : data;
+        str += " " + (data == null ? "" : data);
         return str;
     }
 }

@@ -17,6 +17,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AdapterView;
@@ -30,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
@@ -61,7 +62,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private WordInfoVO nextWordInfo;
 
-    private Button upgrade, degrade, ignore;
+    private Button viewmore, viewraw, upgrade, degrade, ignore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,11 +75,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (list.get(position).equals(nextWordItem.getDictData(this))) {
-            Log.d(TAG, "choose correct++++++++++++++++++++++++++++++");
-            if (list.size() == 1) {
-                nextWordItem.setPassView();
-            } else if (list.size() == 2) {
+        if (list.size() == 1) {
+            nextWordItem.setPassView();
+            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
+        } else if (list.get(position).equals(nextWordItem.getDictData(this))) {
+            if (list.size() == 2) {
                 nextWordItem.setPassAlternative(true);
             } else if (list.size() == 4) {
                 nextWordItem.setPassMultiple(true);
@@ -90,14 +91,23 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             } else if (list.size() == 4) {
                 nextWordItem.setPassMultiple(false);
             }
-            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
-            Log.d(TAG, "choose not correct++++++++++++++++++++++++++++++");
+            Toast.makeText(this, getString(R.string.miss), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.viewmore:
+                new ExpensiveTask(ExpensiveTask.VIEW_MORE).execute();
+                viewmore.setVisibility(View.GONE);
+                viewraw.setVisibility(View.VISIBLE);
+                break;
+            case R.id.viewraw:
+                new ExpensiveTask(ExpensiveTask.VIEW_RAW).execute();
+                viewmore.setVisibility(View.VISIBLE);
+                viewraw.setVisibility(View.GONE);
+                break;
             case R.id.button1:
                 new ExpensiveTask(ExpensiveTask.UPGRADE).execute();
                 break;
@@ -117,17 +127,23 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         textView = (TextView) findViewById(R.id.textView1);
         listView = (ListView) findViewById(R.id.listView1);
         container = (RelativeLayout) findViewById(R.id.container);
+        viewmore = (Button) findViewById(R.id.viewmore);
+        viewraw = (Button) findViewById(R.id.viewraw);
         upgrade = (Button) findViewById(R.id.button1);
         degrade = (Button) findViewById(R.id.button2);
         ignore = (Button) findViewById(R.id.button3);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 
+        viewraw.setVisibility(View.GONE);
+
         listView.setOnItemClickListener(this);
+        viewmore.setOnClickListener(this);
+        viewraw.setOnClickListener(this);
         upgrade.setOnClickListener(this);
         degrade.setOnClickListener(this);
         ignore.setOnClickListener(this);
 
-        adapter = new ParaphraseAdapter(list);
+        adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
 
     }
@@ -155,6 +171,46 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         rotation.setAnimationListener(new DisplayNextView());
 
         container.startAnimation(rotation);
+    }
+
+    private void applySlideIn() {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+        anim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+                Animation a = AnimationUtils
+                        .loadAnimation(CoreActivity.this, R.anim.slide_right_in);
+                a.setAnimationListener(new AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+                listView.startAnimation(a);
+            }
+        });
+        listView.startAnimation(anim);
     }
 
     private void lookupInDict(WordItem worditem) {
@@ -198,10 +254,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private class ParaphraseAdapter extends BaseAdapter {
         final LayoutInflater inflater;
 
-        ArrayList<DictData> list;
-
-        public ParaphraseAdapter(ArrayList<DictData> list) {
-            this.list = list;
+        public ParaphraseAdapter() {
             inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -230,8 +283,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             }
             TextView tv = (TextView) v.findViewById(R.id.textView1);
             DictData data = list.get(position);
+            Log.d(TAG, "data:" + data);
             if (data != null) {
-                tv.setText(data.toString());
+                if (!nextWordItem.isPassView()) {
+                    tv.setText(data.getDataAndSymbol());
+                } else {
+                    tv.setText(data.getDatas());
+                }
             }
             return v;
         }
@@ -256,6 +314,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
+            if(nextWordItem.isPassView()){
+                viewmore.setVisibility(View.GONE);
+                viewraw.setVisibility(View.GONE);
+            }
+            else{
+                viewmore.setVisibility(View.VISIBLE);
+                viewraw.setVisibility(View.GONE);
+            }
             container.post(new SwapViews());
         }
 
@@ -264,7 +330,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
+
         private byte type;
+
+        public static final byte VIEW_RAW = -3;
+
+        public static final byte VIEW_MORE = -2;
 
         private static final byte INIT_QUERY = -1;
 
@@ -283,6 +354,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         protected void onPreExecute() {
             switch (type) {
+                case VIEW_MORE:
+                    break;
+                case VIEW_RAW:
+                    break;
                 case INIT_QUERY:
                     break;
                 case LOOKUP:
@@ -310,6 +385,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         protected Bundle doInBackground(Void... params) {
             Bundle bundle = null;
             switch (type) {
+                case VIEW_MORE:
+                    list.clear();
+                    Log.d(TAG, "detail:" + nextWordItem.getDetail(CoreActivity.this));
+                    list.add(nextWordItem.getDetail(CoreActivity.this));
+                    break;
+                case VIEW_RAW:
+                    list.clear();
+                    list.add(nextWordItem.getDictData(CoreActivity.this));
+                    break;
                 case INIT_QUERY:
                     bundle = new Bundle();
                     wordlist = new SubWordList(CoreActivity.this, sub_id);
@@ -359,6 +443,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         protected void onPostExecute(Bundle result) {
             switch (type) {
+                case VIEW_MORE:
+                    applySlideIn();
+                    break;
+                case VIEW_RAW:
+                    applySlideIn();
+                    break;
                 case INIT_QUERY:
                     boolean isComplete = result.getBoolean("complete");
                     if (!isComplete) {

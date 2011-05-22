@@ -11,6 +11,7 @@ import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.dict.stardict.DictLibraryFactory;
+import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 
 /**
  * Manager the dictionary, there are two kinds of files 1.the stardict
@@ -124,13 +125,28 @@ public class DictManager {
         return wordData;
     }
 
+    public DictData viewMore(Context context, String word) {
+        DictLibrary library = libmap.get(DictLibrary.OXFORD);
+        if (library == null) {
+            Log.w(TAG, "library has not been initialed!");
+            return DictData.constructData(word + ": library has not been initialed!");
+        }
+        DictIndex index = library.getDictIndex(context, word);
+        if (index == null) {
+            Log.w(TAG, "not found!");
+            return DictData.constructData(word + ": not found!");
+        }
+        Log.d(TAG, word + ":" + index + ":");
+        DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
+                library.getLibraryName());
+        Log.d(TAG, "" + wordData);
+        return wordData;
+    }
+
     /**
      * Increase the importance of specified word.
      */
     public void addPower(DictIndex dici) {
-    }
-
-    public void viewMore(DictIndex dici) {
     }
 
     public class CutMethod {

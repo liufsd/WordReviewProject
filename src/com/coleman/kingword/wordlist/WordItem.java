@@ -49,6 +49,8 @@ public class WordItem {
     boolean _pmc;
 
     private DictData dictData;
+    
+    private DictData detailData;
 
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
@@ -59,6 +61,18 @@ public class WordItem {
 
     public boolean isComplete() {
         return passView && passAlternative && passMultiple;
+    }
+
+    public boolean isPassView() {
+        return passView;
+    }
+
+    public boolean isPassAlternative() {
+        return passAlternative;
+    }
+
+    public boolean isPassMultiple() {
+        return passMultiple;
     }
 
     public void setPassView() {
@@ -99,5 +113,12 @@ public class WordItem {
             dictData = DictManager.getInstance().viewWord(context, word);
         }
         return dictData;
+    }
+
+    public DictData getDetail(Context context) {
+        if(detailData==null){
+            detailData= DictManager.getInstance().viewMore(context, word);
+        }
+        return detailData;
     }
 }
