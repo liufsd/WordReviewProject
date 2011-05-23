@@ -13,9 +13,9 @@
 	<string name="ignore">忽略</string>
 	
 	<string name="new_unit">新单元</string>
-	<string name="low_level">初级</string>
-	<string name="mid_level">中级</string>
-	<string name="high_level">高级</string>
+	<string name="low_level">通过</string>
+	<string name="mid_level">良好</string>
+	<string name="high_level">优秀</string>
 
 	<string name="miss">选择错误！</string>
 	
