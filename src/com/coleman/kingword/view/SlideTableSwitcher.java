@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.coleman.kingword.R;
@@ -23,6 +24,8 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
     private static final String TAG = SlideTableSwitcher.class.getName();
 
     Button[] btns = new Button[12];
+
+    TextView[] tvs = new TextView[12];
 
     private void initViews(TableLayout layout) {
         btns[0] = (Button) layout.findViewById(R.id.button1);
@@ -40,6 +43,22 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         btns[9] = (Button) layout.findViewById(R.id.button10);
         btns[10] = (Button) layout.findViewById(R.id.button11);
         btns[11] = (Button) layout.findViewById(R.id.button12);
+
+        tvs[0] = (TextView) layout.findViewById(R.id.textView1);
+        tvs[1] = (TextView) layout.findViewById(R.id.textView2);
+        tvs[2] = (TextView) layout.findViewById(R.id.textView3);
+
+        tvs[3] = (TextView) layout.findViewById(R.id.textView4);
+        tvs[4] = (TextView) layout.findViewById(R.id.textView5);
+        tvs[5] = (TextView) layout.findViewById(R.id.textView6);
+
+        tvs[6] = (TextView) layout.findViewById(R.id.textView7);
+        tvs[7] = (TextView) layout.findViewById(R.id.textView8);
+        tvs[8] = (TextView) layout.findViewById(R.id.textView9);
+
+        tvs[9] = (TextView) layout.findViewById(R.id.textView10);
+        tvs[10] = (TextView) layout.findViewById(R.id.textView11);
+        tvs[11] = (TextView) layout.findViewById(R.id.textView12);
         for (Button btn : btns) {
             btn.setOnClickListener(this);
         }
@@ -52,14 +71,27 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         initViews((TableLayout) getCurrentView());
     }
 
+    private int getTextId(int level) {
+        if (level == 0) {
+            return R.string.new_unit;
+        } else if (level == 1) {
+            return R.string.low_level;
+        } else if (level == 2) {
+            return R.string.mid_level;
+        } else if (level == 3) {
+            return R.string.high_level;
+        }
+        return R.string.new_unit;
+    }
+
     public void setData(SubInfo sub_ids[]) {
         int i = 0;
         for (Button btn : btns) {
             if (i < sub_ids.length) {
-                Log.d(TAG, "sub_ids " + i + ":" + sub_ids[i]);
                 btn.setText("" + sub_ids[i].index);
                 btn.setTag(sub_ids[i].id);
                 btn.setVisibility(View.VISIBLE);
+                tvs[i].setText(getTextId(sub_ids[i].level));
             } else {
                 btn.setVisibility(View.GONE);
             }

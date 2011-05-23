@@ -11,6 +11,11 @@
 	<string name="degrade">降级</string>
 	<string name="add_new">加入生词本</string>
 	<string name="ignore">忽略</string>
+	
+	<string name="new_unit">新单元</string>
+	<string name="low_level">初级</string>
+	<string name="mid_level">中级</string>
+	<string name="high_level">高级</string>
 
 	<string name="miss">选择错误！</string>
 	

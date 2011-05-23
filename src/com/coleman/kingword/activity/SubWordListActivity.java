@@ -8,8 +8,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -93,16 +91,18 @@ public class SubWordListActivity extends Activity {
             switch (type) {
                 case INIT_QUERY:
                     String projection[] = new String[] {
-                        SubWordsList._ID
+                            SubWordsList._ID, SubWordsList.LEVEL
                     };
                     long wordlist_id = params[0].getLong(WordsList._ID);
                     Cursor c = getContentResolver().query(SubWordsList.CONTENT_URI, projection,
                             SubWordsList.WORD_LIST_ID + "=" + wordlist_id, null, null);
-                    ArrayList<Long> list = new ArrayList<Long>();
+                    ArrayList<SubInfo> list = new ArrayList<SubInfo>();
+                    int i = 0;
                     if (c.moveToFirst()) {
                         while (!c.isAfterLast()) {
-                            list.add(c.getLong(0));
+                            list.add(new SubInfo(c.getLong(0), i, c.getInt(1)));
                             c.moveToNext();
+                            i++;
                         }
                     }
                     pageControl = new PageControl(list);
@@ -141,23 +141,22 @@ public class SubWordListActivity extends Activity {
 
         private final int MAX_PAGE_ITEM = 12;
 
-        public PageControl(ArrayList<Long> list) {
+        public PageControl(ArrayList<SubInfo> list) {
             curIndex = 0;
             int size = list.size();
             int pnum = size / MAX_PAGE_ITEM;
             int lp = size % MAX_PAGE_ITEM;
-            int k = 0;
             for (int i = 0; i < pnum; i++) {
                 SubInfo[] page = new SubInfo[12];
                 for (int j = 0; j < MAX_PAGE_ITEM; j++) {
-                    page[j] = new SubInfo(list.remove(0), k++);
+                    page[j] = list.remove(0);
                 }
                 mlist.add(page);
             }
             if (lp != 0) {
                 SubInfo[] page = new SubInfo[lp];
                 for (int j = 0; j < lp; j++) {
-                    page[j] = new SubInfo(list.remove(0), k++);
+                    page[j] = list.remove(0);
                 }
                 mlist.add(page);
             }
@@ -211,18 +210,21 @@ public class SubWordListActivity extends Activity {
      * For map the index to the id storing in the database.
      */
     public static class SubInfo {
-        private SubInfo(long id, int index) {
+        private SubInfo(long id, int index, int level) {
             this.id = id;
             this.index = index;
+            this.level = level;
         }
 
         public int index;
 
         public long id;
 
+        public int level;
+
         @Override
         public String toString() {
-            return "id:" + id + "  index:" + index;
+            return "id:" + id + "  index:" + index + " level:" + level;
         }
     }
 
