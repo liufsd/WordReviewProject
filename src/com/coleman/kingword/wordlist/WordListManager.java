@@ -16,6 +16,7 @@ import android.util.Log;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.wordlist.SubWordList.SubInfo;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();
@@ -167,7 +168,7 @@ public class WordListManager {
         int step = 0;
 
         for (List<String> list2 : sublist) {
-            SubWordList sub = new SubWordList(wordlist.id);
+            SubInfo sub = new SubInfo(wordlist.id);
             doInsertSubWordList(context, sub);
             doInsertWords(context, sub, list2);
             step++;
@@ -180,13 +181,13 @@ public class WordListManager {
 
     }
 
-    private void doInsertSubWordList(Context context, SubWordList sub) {
+    private void doInsertSubWordList(Context context, SubInfo sub) {
         Uri uri = context.getContentResolver().insert(SubWordsList.CONTENT_URI,
                 sub.toContentValues());
         sub.id = Long.parseLong(uri.getPathSegments().get(1));
     }
 
-    private void doInsertWords(Context context, SubWordList sub, List<String> list) {
+    private void doInsertWords(Context context, SubInfo sub, List<String> list) {
         ContentValues cv[] = new ContentValues[list.size()];
         int i = 0;
         for (String string : list) {

@@ -294,6 +294,9 @@ public class KingWordProvider extends ContentProvider {
                 return db.update(WordInfo.TABLE_NAME, values, WordInfo._ID + "=" + id, null);
             }
             case URI_SUB_WORDLIST:
+                Log.d(TAG,
+                        "sub word list updated!!!!!!!!!!!!!!!!!!!!!!!!!!!:"
+                                + values.getAsByte("level"));
                 return db.update(SubWordsList.TABLE_NAME, values, selection, selectionArgs);
             case URI_SUB_WORDLIST_ID: {
                 long id = Long.parseLong(uri.getPathSegments().get(1));

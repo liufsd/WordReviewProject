@@ -16,8 +16,8 @@ import android.widget.ViewSwitcher;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.activity.CoreActivity;
-import com.coleman.kingword.activity.SubWordListActivity.SubInfo;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
+import com.coleman.kingword.wordlist.SubWordList.SubInfo;
 
 public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener {
 
@@ -89,11 +89,13 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         for (Button btn : btns) {
             if (i < sub_ids.length) {
                 btn.setText("" + sub_ids[i].index);
-                btn.setTag(sub_ids[i].id);
+                btn.setTag(sub_ids[i]);
                 btn.setVisibility(View.VISIBLE);
+                tvs[i].setVisibility(View.VISIBLE);
                 tvs[i].setText(getTextId(sub_ids[i].level));
             } else {
                 btn.setVisibility(View.GONE);
+                tvs[i].setVisibility(View.GONE);
             }
             i++;
         }
@@ -140,8 +142,11 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
             case R.id.button11:
             case R.id.button12:
                 Intent intent = new Intent(getContext(), CoreActivity.class);
-                long id = (Long) (v.getTag());
-                intent.putExtra(SubWordsList._ID, id);
+                SubInfo info = (SubInfo) (v.getTag());
+                intent.putExtra(SubWordsList._ID, info.id);
+                intent.putExtra(SubWordsList.LEVEL, info.level);
+                intent.putExtra("index", info.index);
+                intent.putExtra(SubWordsList.WORD_LIST_ID, info.word_list_id);
                 getContext().startActivity(intent);
                 break;
             default:

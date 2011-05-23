@@ -11,13 +11,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Camera;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -39,6 +43,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.wordlist.SubWordList;
+import com.coleman.kingword.wordlist.SubWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
@@ -54,8 +59,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ParaphraseAdapter adapter;
 
-    private long sub_id;
-
     private SubWordList wordlist;
 
     private RelativeLayout container;
@@ -67,11 +70,19 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private Button viewmore, viewraw, upgrade, degrade, addnew, ignore;
 
+    private TextView continueView;
+
+    private int continueHitCount;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        sub_id = getIntent().getLongExtra(SubWordsList._ID, -1);
+        long sub_id = getIntent().getLongExtra(SubWordsList._ID, -1);
+        int index = getIntent().getIntExtra("index", 0);
+        int level = getIntent().getIntExtra(SubWordsList.LEVEL, 0);
+        long word_list_id = getIntent().getIntExtra(SubWordsList.LEVEL, 0);
+        wordlist = new SubWordList(new SubInfo(sub_id, index, level, word_list_id));
         initView();
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
     }
@@ -88,6 +99,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             } else if (list.size() == 4) {
                 nextWordItem.setPassMultiple(true);
             }
+            continueHitCount++;
+            if (continueHitCount >= 3) {
+                continueView.setVisibility(View.VISIBLE);
+                continueView.setText(String.format(getString(R.string.continue_hit_count),
+                        continueHitCount));
+            }
             nextWordItem.studyPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
@@ -96,6 +113,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             } else if (list.size() == 4) {
                 nextWordItem.setPassMultiple(false);
             }
+            continueHitCount = 0;
+            continueView.setVisibility(View.INVISIBLE);
             nextWordItem.errorPlus(this);
             Toast.makeText(this, getString(R.string.miss), Toast.LENGTH_SHORT).show();
         }
@@ -143,6 +162,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         addnew = (Button) findViewById(R.id.addnew);
         ignore = (Button) findViewById(R.id.ignore);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        continueView = (TextView) findViewById(R.id.continueHitView);
 
         viewraw.setVisibility(View.GONE);
         upgrade.setVisibility(View.GONE);
@@ -282,11 +302,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void showCompleteStudyDialog() {
-        new AlertDialog.Builder(this).setMessage(R.string.show_complete_study)
+        String str1 = wordlist.getErrorPercentage() + "%";
+        String str2 = wordlist.computeStudyResult(CoreActivity.this);
+        new AlertDialog.Builder(this)
+                .setMessage(String.format(getString(R.string.show_complete_study), str1, str2))
                 .setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        wordlist.computeStudyResult(CoreActivity.this);
                         finish();
                     }
                 }).show();
@@ -440,7 +462,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case INIT_QUERY:
                     bundle = new Bundle();
-                    wordlist = new SubWordList(CoreActivity.this, sub_id);
+                    wordlist.load(CoreActivity.this);
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);

@@ -16,6 +16,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.view.SlideTableSwitcher;
+import com.coleman.kingword.wordlist.SubWordList.SubInfo;
 
 public class SubWordListActivity extends Activity {
 
@@ -100,11 +101,12 @@ public class SubWordListActivity extends Activity {
                     int i = 0;
                     if (c.moveToFirst()) {
                         while (!c.isAfterLast()) {
-                            list.add(new SubInfo(c.getLong(0), i, c.getInt(1)));
+                            list.add(new SubInfo(c.getLong(0), i, c.getInt(1), wordlist_id));
                             c.moveToNext();
                             i++;
                         }
                     }
+                    Log.d(TAG, "list size7777777777777777777777777777777" + list.size());
                     pageControl = new PageControl(list);
                     if (c != null) {
                         c.close();
@@ -204,28 +206,6 @@ public class SubWordListActivity extends Activity {
             return mlist.get(curIndex);
         }
 
-    }
-
-    /**
-     * For map the index to the id storing in the database.
-     */
-    public static class SubInfo {
-        private SubInfo(long id, int index, int level) {
-            this.id = id;
-            this.index = index;
-            this.level = level;
-        }
-
-        public int index;
-
-        public long id;
-
-        public int level;
-
-        @Override
-        public String toString() {
-            return "id:" + id + "  index:" + index + " level:" + level;
-        }
     }
 
     int d_x = 0;

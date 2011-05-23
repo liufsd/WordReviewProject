@@ -10,18 +10,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 
 public class SubWordList {
-    public long id;
+    private SubInfo subinfo;
 
-    public long word_list_id = -1;
-
-    public int level = 0;
-
-    private ArrayList<WordItem> list = new ArrayList<WordItem>();
+    private ArrayList<WordItem> list;
 
     private static final String projection[] = new String[] {
             WordListItem.WORD, WordListItem._ID
@@ -51,25 +48,19 @@ public class SubWordList {
 
     private Random ran = new Random();
 
-    /**
-     * only used for WordListManager, don't call this constructor anywhere else.
-     */
-    SubWordList(long word_list_id) {
-        this.word_list_id = word_list_id;
-    }
-
-    public SubWordList(Context context, long sub_id) {
+    public SubWordList(SubInfo info) {
+        subinfo = info;
+        list = new ArrayList<WordItem>();
         passViewCount = 0;
         passAltCount = 0;
         passMulCount = 0;
         errorCount = 0;
-        load(context, sub_id);
     }
 
-    private void load(Context context, long sub_id) {
+    public void load(Context context) {
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
-                WordListItem.SUB_WORD_LIST_ID + "=" + sub_id, null, null);
+                WordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
         if (c.moveToFirst()) {
             WordItem item;
             while (!c.isAfterLast()) {
@@ -197,31 +188,86 @@ public class SubWordList {
         }
     }
 
-    public ContentValues toContentValues() {
-        ContentValues value = new ContentValues();
-        value.put(SubWordsList.WORD_LIST_ID, word_list_id);
-        value.put(SubWordsList.LEVEL, level);
-        return value;
-    }
-
-    public void computeStudyResult(Context context) {
+    public String computeStudyResult(Context context) {
         int tmp = 0;
-        if (errorCount < list.size() * 4 / 10) {
-            tmp = 1;
-        } else if (errorCount < list.size() * 2 / 10) {
-            tmp = 2;
-        } else if (errorCount < list.size() * 98 / 100) {
+        String levels = context.getString(R.string.new_unit);
+        if (errorCount <= list.size() * 5 / 100) {
             tmp = 3;
+        } else if (errorCount <= list.size() * 2 / 10) {
+            tmp = 2;
+        } else if (errorCount <= list.size() * 4 / 10) {
+            tmp = 1;
         }
-        if (tmp > level) {
-            level = tmp;
+        if (tmp > subinfo.level) {
+            subinfo.level = tmp;
         }
         update(context);
+        switch (subinfo.level) {
+            case 1:
+                levels = context.getString(R.string.low_level);
+                break;
+            case 2:
+                levels = context.getString(R.string.mid_level);
+                break;
+            case 3:
+                levels = context.getString(R.string.high_level);
+                break;
+            case 0:
+            default:
+                break;
+        }
+        return levels;
+    }
+
+    public int getErrorPercentage() {
+        if (list.size() == 0) {
+            return 0;
+        }
+        return errorCount * 100 / list.size();
     }
 
     private void update(Context context) {
-        ContentValues values = toContentValues();
-        context.getContentResolver().update(SubWordsList.CONTENT_URI, values,
-                SubWordsList._ID + "=" + id, null);
+        ContentValues values = subinfo.toContentValues();
+        Log.d(TAG, "sub word list update!!!!!!!!!!!!!!!!!!!!!!!!!!:" + subinfo);
+        int num = context.getContentResolver().update(SubWordsList.CONTENT_URI, values,
+                SubWordsList._ID + "=" + subinfo.id, null);
+        Log.d(TAG, "sub word list update nummmmm!!!!!!!!!!!!!!!!!!!!!!!!!!:" + num);
+    }
+
+    /**
+     * For map the index to the id storing in the database.
+     */
+    public static class SubInfo {
+        public SubInfo(long id, int index, int level, long wordlist_id) {
+            this.id = id;
+            this.index = index;
+            this.level = level;
+            this.word_list_id = wordlist_id;
+        }
+
+        SubInfo(long word_list_id) {
+            this.word_list_id = word_list_id;
+        }
+
+        public int index;
+
+        public long id;
+
+        public long word_list_id;
+
+        public int level;
+
+        public ContentValues toContentValues() {
+            ContentValues value = new ContentValues();
+            value.put(SubWordsList.WORD_LIST_ID, word_list_id);
+            value.put(SubWordsList.LEVEL, level);
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return "id:" + id + "  index:" + index + " level:" + level + " word_list_id"
+                    + word_list_id;
+        }
     }
 }
