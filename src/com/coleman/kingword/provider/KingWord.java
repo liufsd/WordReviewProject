@@ -87,6 +87,8 @@ public class KingWord {
 
         public static final String WEIGHT = "weight";
 
+        public static final String NEW_WORD = "new_word";
+
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
 
@@ -99,6 +101,7 @@ public class KingWord {
             projectionMap.put(STUDY_COUNT, STUDY_COUNT);
             projectionMap.put(ERROR_COUNT, ERROR_COUNT);
             projectionMap.put(WEIGHT, WEIGHT);
+            projectionMap.put(NEW_WORD, NEW_WORD);
         }
     }
 
@@ -203,8 +206,6 @@ public class KingWord {
 
         public static final String WORD = "word";
 
-        public static final String IGNORE = "ignore";
-
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
 
@@ -214,7 +215,6 @@ public class KingWord {
             projectionMap.put(_ID, _ID);
             projectionMap.put(SUB_WORD_LIST_ID, SUB_WORD_LIST_ID);
             projectionMap.put(WORD, WORD);
-            projectionMap.put(IGNORE, IGNORE);
         }
     }
 }

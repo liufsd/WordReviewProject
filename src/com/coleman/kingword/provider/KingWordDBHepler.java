@@ -35,7 +35,8 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
     private static final String word_info_table = "create table " + WordInfo.TABLE_NAME + " ( "
             + WordInfo._ID + " integer primary key autoincrement , " + WordInfo.WORD + " text ,"
             + WordInfo.IGNORE + " integer," + WordInfo.STUDY_COUNT + " integer,"
-            + WordInfo.ERROR_COUNT + " integer," + WordInfo.WEIGHT + " integer )";
+            + WordInfo.ERROR_COUNT + " integer," + WordInfo.WEIGHT + " integer,"
+            + WordInfo.NEW_WORD + " integer )";
 
     private static final String achievement_table = "create table " + Achievement.TABLE_NAME
             + " ( " + Achievement._ID + " integer primary key autoincrement , " + Achievement.TIME
@@ -52,8 +53,7 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
     private static final String word_list_item_table = "create table " + WordListItem.TABLE_NAME
             + " ( " + WordListItem._ID + " integer primary key autoincrement , "
-            + WordListItem.SUB_WORD_LIST_ID + " integer ," + WordListItem.WORD + " text ,"
-            + WordListItem.IGNORE + " integer )";
+            + WordListItem.SUB_WORD_LIST_ID + " integer ," + WordListItem.WORD + " text )";
 
     private static final String delete_sub_word_list_trigger = "CREATE TRIGGER delete_sub_word_list_trigger AFTER DELETE ON "
             + WordsList.TABLE_NAME

@@ -4,6 +4,9 @@ package com.coleman.kingword.wordinfo;
 import android.text.TextUtils;
 import android.util.Log;
 
+/**
+ * Should only be used by WordItem and WordInfoHelper.
+ */
 public class WordInfoVO {
     public static final byte MIN_WEIGHT = 0;
 
@@ -25,6 +28,8 @@ public class WordInfoVO {
     public byte errorcount = 0;
 
     public byte weight = 3;
+
+    public boolean newword = false;
 
     public WordInfoVO(String word) {
         if (!TextUtils.isEmpty(word)) {
@@ -65,7 +70,7 @@ public class WordInfoVO {
     @Override
     public String toString() {
         return "id:" + id + " word:" + word + " ignore:" + ignore + " studycount:" + studycount
-                + " errorcount:" + errorcount + " weight:" + weight;
+                + " errorcount:" + errorcount + " weight:" + weight + " newword:" + newword;
     }
 
     @Override
@@ -75,6 +80,9 @@ public class WordInfoVO {
             return false;
         }
         if (ignore != info.ignore) {
+            return false;
+        }
+        if (newword != info.newword) {
             return false;
         }
         if (studycount != info.studycount) {

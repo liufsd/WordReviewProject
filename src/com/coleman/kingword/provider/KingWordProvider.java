@@ -289,9 +289,16 @@ public class KingWordProvider extends ContentProvider {
         switch (matcher.match(uri)) {
             case URI_WORDINFO:
                 return db.update(WordInfo.TABLE_NAME, values, selection, selectionArgs);
-            case URI_WORDINFO_ID:
+            case URI_WORDINFO_ID: {
                 long id = Long.parseLong(uri.getPathSegments().get(1));
                 return db.update(WordInfo.TABLE_NAME, values, WordInfo._ID + "=" + id, null);
+            }
+            case URI_SUB_WORDLIST:
+                return db.update(SubWordsList.TABLE_NAME, values, selection, selectionArgs);
+            case URI_SUB_WORDLIST_ID: {
+                long id = Long.parseLong(uri.getPathSegments().get(1));
+                return db.update(SubWordsList.TABLE_NAME, values, WordInfo._ID + "=" + id, null);
+            }
             default:
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }

@@ -10,8 +10,7 @@ import android.util.Log;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 
 /**
- * WordInfo helper to operate the WordInfo database, it only support three
- * operations: query, delete, store, etc.
+ * Should only be used by WordItem.
  * 
  * @TODO there is a issue: the database's size is limited to 1048576, if the
  *       records number is large enough, maybe some problems will happen.
@@ -19,15 +18,10 @@ import com.coleman.kingword.provider.KingWord.WordInfo;
 public class WordInfoHelper {
     private static final String[] projection = new String[] {
             WordInfo._ID, WordInfo.WORD, WordInfo.IGNORE, WordInfo.STUDY_COUNT,
-            WordInfo.ERROR_COUNT, WordInfo.WEIGHT
+            WordInfo.ERROR_COUNT, WordInfo.WEIGHT, WordInfo.NEW_WORD
     };
 
     private static final String TAG = WordInfoHelper.class.getName();
-
-    /**
-     * make a cache.
-     */
-    private static WordInfoVO _CACHE;
 
     /**
      * You must make sure the word is not empty.
@@ -82,9 +76,6 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static WordInfoVO getWordInfo(Context context, String word) {
-        if (_CACHE != null && _CACHE.word.equals(word)) {
-            return _CACHE;
-        }
         Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
                 WordInfo.WORD + "='" + word + "'", null, null);
         WordInfoVO wi = new WordInfoVO(word);
@@ -95,13 +86,13 @@ public class WordInfoHelper {
             wi.studycount = (byte) c.getInt(3);
             wi.errorcount = (byte) c.getInt(4);
             wi.weight = (byte) c.getInt(5);
+            wi.newword = c.getInt(6) == 2 ? true : false;
         }
-        _CACHE = wi;
         Log.d(TAG, "word info:" + wi);
         if (c != null) {
             c.close();
         }
-        return _CACHE;
+        return wi;
     }
 
     /**
@@ -144,6 +135,7 @@ public class WordInfoHelper {
             value.put(WordInfo.STUDY_COUNT, info.studycount);
             value.put(WordInfo.ERROR_COUNT, info.errorcount);
             value.put(WordInfo.WEIGHT, info.weight);
+            value.put(WordInfo.NEW_WORD, info.newword ? 2 : 1);
             uri = context.getContentResolver().insert(WordInfo.CONTENT_URI, value);
         }
         return uri;
@@ -162,6 +154,7 @@ public class WordInfoHelper {
             value.put(WordInfo.STUDY_COUNT, info.studycount);
             value.put(WordInfo.ERROR_COUNT, info.errorcount);
             value.put(WordInfo.WEIGHT, info.weight);
+            value.put(WordInfo.NEW_WORD, info.newword ? 2 : 1);
             count = context.getContentResolver().update(WordInfo.CONTENT_URI, value,
                     WordInfo._ID + "=" + info.id, null);
         }

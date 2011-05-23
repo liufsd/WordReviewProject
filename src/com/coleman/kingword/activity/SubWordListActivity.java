@@ -39,14 +39,22 @@ public class SubWordListActivity extends Activity {
 
     private PageControl pageControl;
 
+    private long wordlist_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sub_word_list_table);
         initViews();
+    }
 
-        long wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
+    @Override
+    protected void onStart() {
+        super.onStart();
         Bundle b = new Bundle();
+        if (wordlist_id == 0) {
+            wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
+        }
         b.putLong(WordsList._ID, wordlist_id);
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
     }

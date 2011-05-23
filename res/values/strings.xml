@@ -9,17 +9,23 @@
 	<string name="view_raw">恢复</string>
 	<string name="upgrade">升级</string>
 	<string name="degrade">降级</string>
+	<string name="add_new">加入生词本</string>
 	<string name="ignore">忽略</string>
 
 	<string name="miss">选择错误！</string>
+	
+	<string name="show_sub_list_reach_end">此单元学习已经完成！</string>
+	<string name="show_complete_study">恭喜完成此单元学习！</string>
 
 	<string name="upgrade_success">单词升级成功</string>
 	<string name="degrade_success">单词降级成功</string>
 	<string name="ignore_success">单词忽略成功</string>
+	<string name="add_success">添加生词本成功</string>
 
 	<string name="upgrade_failed">单词升级失败</string>
 	<string name="degrade_failed">单词降级失败</string>
 	<string name="ignore_failed">单词忽略失败</string>
+	<string name="add_failed">添加生词本失败</string>
 
 	<string name="send">发送</string>
 	<string name="send_to">发送给%s</string>
