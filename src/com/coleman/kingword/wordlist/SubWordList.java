@@ -8,6 +8,9 @@ import java.util.Random;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 import android.util.Log;
 
 import com.coleman.kingword.R;
@@ -98,17 +101,12 @@ public class SubWordList {
         if (list.size() == 0) {
             return true;
         }
-        if (passMulCount == list.size()) {
-            return true;
+        for (WordItem item : list) {
+            if (!item.isComplete()) {
+                return false;
+            }
         }
-        return false;
-    }
-
-    public boolean hasNext() {
-        if (passMulCount < list.size()) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public ArrayList<DictData> getDictData(Context context, WordItem item) {
@@ -147,7 +145,7 @@ public class SubWordList {
         int index = ran.nextInt(list.size());
         int i = 0;
         while (datalist.contains(list.get(index).getDictData(context))) {
-            index = p + 1 > list.size() - 1 ? 0 : p + 1;
+            index = index + 1 > list.size() - 1 ? 0 : index + 1;
             i++;
             // to avoid deadlock if there are two or more same words.
             if (i == list.size()) {
@@ -190,7 +188,7 @@ public class SubWordList {
 
     public String computeStudyResult(Context context) {
         int tmp = 0;
-        String levels = context.getString(R.string.new_unit);
+        String levels = context.getString(R.string.history_level);
         if (errorCount <= list.size() * 5 / 100) {
             tmp = 3;
         } else if (errorCount <= list.size() * 2 / 10) {
@@ -200,21 +198,22 @@ public class SubWordList {
         }
         if (tmp > subinfo.level) {
             subinfo.level = tmp;
-        }
-        update(context);
-        switch (subinfo.level) {
-            case 1:
-                levels = context.getString(R.string.low_level);
-                break;
-            case 2:
-                levels = context.getString(R.string.mid_level);
-                break;
-            case 3:
-                levels = context.getString(R.string.high_level);
-                break;
-            case 0:
-            default:
-                break;
+            update(context);
+            switch (subinfo.level) {
+                case 1:
+                    levels = context.getString(R.string.low_level);
+                    break;
+                case 2:
+                    levels = context.getString(R.string.mid_level);
+                    break;
+                case 3:
+                    levels = context.getString(R.string.high_level);
+                    break;
+                default:// ignore
+                    break;
+            }
+        } else if (tmp == 3) {
+            levels = context.getString(R.string.high_level);
         }
         return levels;
     }
@@ -237,7 +236,7 @@ public class SubWordList {
     /**
      * For map the index to the id storing in the database.
      */
-    public static class SubInfo {
+    public static class SubInfo implements Parcelable {
         public SubInfo(long id, int index, int level, long wordlist_id) {
             this.id = id;
             this.index = index;
@@ -251,6 +250,7 @@ public class SubWordList {
 
         public int index;
 
+        // field
         public long id;
 
         public long word_list_id;
@@ -266,8 +266,44 @@ public class SubWordList {
 
         @Override
         public String toString() {
-            return "id:" + id + "  index:" + index + " level:" + level + " word_list_id"
+            return "id:" + id + "  index:" + index + " level:" + level + " word_list_id:"
                     + word_list_id;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        /**
+         * Implement the Parcelable interface.
+         * 
+         * @hide
+         */
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(id);
+            dest.writeLong(word_list_id);
+            dest.writeInt(level);
+            dest.writeInt(index);
+        }
+
+        /**
+         * Implement the Parcelable interface.
+         * 
+         * @hide
+         */
+        public static final Creator<SubInfo> CREATOR = new Creator<SubInfo>() {
+            public SubInfo createFromParcel(Parcel in) {
+                long id = in.readLong();
+                long word_list_id = in.readLong();
+                int level = in.readInt();
+                int index = in.readInt();
+                return new SubInfo(id, index, level, word_list_id);
+            }
+
+            public SubInfo[] newArray(int size) {
+                return new SubInfo[size];
+            }
+        };
     }
 }

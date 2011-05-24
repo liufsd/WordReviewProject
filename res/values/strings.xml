@@ -19,11 +19,12 @@
 	<string name="low_level">通过</string>
 	<string name="mid_level">良好</string>
 	<string name="high_level">优秀</string>
+	<string name="history_level">没有超过历史最好成绩，将不计入新的成绩榜</string>
 
 	<string name="miss">选择错误！</string>
 
 	<string name="show_sub_list_reach_end">此单元学习已经完成！</string>
-	<string name="show_complete_study" formatted="false">恭喜完成此单元学习,错误百分比%s,此单元成绩为%s！
+	<string name="show_complete_study" formatted="false">您已完成此单元学习,错误百分比%s,此单元成绩%s！
 	</string>
 
 	<string name="upgrade_success">单词升级成功</string>

@@ -78,11 +78,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        long sub_id = getIntent().getLongExtra(SubWordsList._ID, -1);
-        int index = getIntent().getIntExtra("index", 0);
-        int level = getIntent().getIntExtra(SubWordsList.LEVEL, 0);
-        long word_list_id = getIntent().getIntExtra(SubWordsList.LEVEL, 0);
-        wordlist = new SubWordList(new SubInfo(sub_id, index, level, word_list_id));
+        SubInfo info = getIntent().getParcelableExtra("subinfo");
+        Log.d(TAG, "info:" + info);
+        wordlist = new SubWordList(info);
         initView();
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
     }
@@ -473,7 +471,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case LOOKUP:
                     bundle = new Bundle();
-                    if (wordlist.hasNext()) {
+                    if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getNext();
                         lookupInDict(nextWordItem);
                         bundle.putBoolean("next", true);

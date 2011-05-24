@@ -143,10 +143,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
             case R.id.button12:
                 Intent intent = new Intent(getContext(), CoreActivity.class);
                 SubInfo info = (SubInfo) (v.getTag());
-                intent.putExtra(SubWordsList._ID, info.id);
-                intent.putExtra(SubWordsList.LEVEL, info.level);
-                intent.putExtra("index", info.index);
-                intent.putExtra(SubWordsList.WORD_LIST_ID, info.word_list_id);
+                intent.putExtra("subinfo", info);
                 getContext().startActivity(intent);
                 break;
             default:

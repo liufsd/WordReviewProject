@@ -38,7 +38,7 @@ public class SubWordListActivity extends Activity {
 
     private PageControl pageControl;
 
-    private long wordlist_id;
+    private long wordlist_id = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class SubWordListActivity extends Activity {
     protected void onStart() {
         super.onStart();
         Bundle b = new Bundle();
-        if (wordlist_id == 0) {
+        if (wordlist_id == -1) {
             wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
         }
         b.putLong(WordsList._ID, wordlist_id);
@@ -98,7 +98,7 @@ public class SubWordListActivity extends Activity {
                     Cursor c = getContentResolver().query(SubWordsList.CONTENT_URI, projection,
                             SubWordsList.WORD_LIST_ID + "=" + wordlist_id, null, null);
                     ArrayList<SubInfo> list = new ArrayList<SubInfo>();
-                    int i = 0;
+                    int i = 1;
                     if (c.moveToFirst()) {
                         while (!c.isAfterLast()) {
                             list.add(new SubInfo(c.getLong(0), i, c.getInt(1), wordlist_id));
@@ -106,7 +106,6 @@ public class SubWordListActivity extends Activity {
                             i++;
                         }
                     }
-                    Log.d(TAG, "list size7777777777777777777777777777777" + list.size());
                     pageControl = new PageControl(list);
                     if (c != null) {
                         c.close();
