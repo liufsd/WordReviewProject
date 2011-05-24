@@ -1,0 +1,74 @@
+========page 1========
+加生词本（主动，被动）
+加词库
+分解词库
+缓存词库
+选择词库
+选择单元
+========page 2========
+看例句
+过滤
+过滤列表
+错误频次
+操作失误
+========page 3========
+分割词库－字母
+分割词库－数量
+分割词库－单词长度
+========page 4========
+正确激励－连击
+正确激励－难度增长
+正确激励－时间考虑长短效果
+正确激励－击碎效果
+========page 5========
+stardict解析
+oxford解析
+wordlist解析
+uidesigh
+database design
+cache design
+inspirit design
+more info
+========page 6========
+start dict index table: id word offset size
+oxford dict index table: id word offset size
+word info table: id word offset size power ignore errorcount studycount
+achievement table: id time describe subtype
+word list table: id describe pathname setmethod
+sub word list table: id wordlistid level
+word item table: id subwordlistid word
+========page 7========
+连击 速度 进度 特效
+连击说明： 数量＋称号＝hit.rule
+进度： 简单指示
+初级>=60% 中级>=80% 高级>=98%
+特效：1秒内 perfect 3秒内 OK other bad
+触发连击>触发记录>单元间连续
+========page 8========
+subwordlist 翻页
+inspirit 
+wordinfo
+file load
+beautify
+optimize
+bug test
+修正音标
+字典切换查找
+美化list
+多选时去音标
+修正音标
+进度修正
+随机顺序
+list最小行数
+view附音标，其它无音标
+可以查看更多信息
+错误时停留
+详细时换动画
+升降级自动完成
+加入生词本
+加入单元星级
+加入连击
+完成控制
+去重复
+序幕设置
+最后一词释义bug
