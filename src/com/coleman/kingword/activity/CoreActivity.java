@@ -1,6 +1,10 @@
 
 package com.coleman.kingword.activity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -45,6 +49,7 @@ import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.wordlist.SubWordList;
 import com.coleman.kingword.wordlist.SubWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
+import com.coleman.util.FileAccessor;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
     private static final String TAG = CoreActivity.class.getName();
@@ -83,6 +88,26 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         wordlist = new SubWordList(info);
         initView();
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!wordlist.allComplete()) {
+            File file = new File(getFilesDir(), "tmp");
+            try {
+                file.createNewFile();
+                FileOutputStream fos = new FileOutputStream(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        super.onDestroy();
     }
 
     @Override
