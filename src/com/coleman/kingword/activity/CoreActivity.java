@@ -341,7 +341,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private class ParaphraseAdapter extends BaseAdapter {
         final LayoutInflater inflater;
 
-        Typeface mFace = Typeface.createFromAsset(getAssets(), "font/DroidSans.ttf");
+        Typeface mFace = Typeface.createFromAsset(getAssets(), "font/seguibk.ttf");
 
         public ParaphraseAdapter() {
             inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
