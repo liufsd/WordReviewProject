@@ -190,10 +190,12 @@ public class SubWordList {
         int tmp = 0;
         String levels = context.getString(R.string.history_level);
         if (errorCount <= list.size() * 5 / 100) {
-            tmp = 3;
+            tmp = 4;
         } else if (errorCount <= list.size() * 2 / 10) {
-            tmp = 2;
+            tmp = 3;
         } else if (errorCount <= list.size() * 4 / 10) {
+            tmp = 2;
+        } else {
             tmp = 1;
         }
         if (tmp > subinfo.level) {
@@ -201,36 +203,38 @@ public class SubWordList {
             update(context);
             switch (subinfo.level) {
                 case 1:
-                    levels = context.getString(R.string.low_level);
+                    levels = context.getString(R.string.unpass_unit);
                     break;
                 case 2:
-                    levels = context.getString(R.string.mid_level);
+                    levels = context.getString(R.string.low_level);
                     break;
                 case 3:
+                    levels = context.getString(R.string.mid_level);
+                    break;
+                case 4:
                     levels = context.getString(R.string.high_level);
                     break;
                 default:// ignore
                     break;
             }
-        } else if (tmp == 3) {
+        } else if (tmp == 4) {
             levels = context.getString(R.string.high_level);
         }
         return levels;
     }
 
-    public int getErrorPercentage() {
+    public int getCorrectPercentage() {
         if (list.size() == 0) {
             return 0;
         }
-        return errorCount * 100 / list.size();
+        return 100 - errorCount * 100 / list.size();
     }
 
     private void update(Context context) {
         ContentValues values = subinfo.toContentValues();
-        Log.d(TAG, "sub word list update!!!!!!!!!!!!!!!!!!!!!!!!!!:" + subinfo);
         int num = context.getContentResolver().update(SubWordsList.CONTENT_URI, values,
                 SubWordsList._ID + "=" + subinfo.id, null);
-        Log.d(TAG, "sub word list update nummmmm!!!!!!!!!!!!!!!!!!!!!!!!!!:" + num);
+        Log.d(TAG, "sub word list update num: " + num);
     }
 
     /**

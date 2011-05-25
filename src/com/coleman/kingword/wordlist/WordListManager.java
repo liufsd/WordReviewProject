@@ -64,7 +64,7 @@ public class WordListManager {
         }
         ArrayList<String> list = null;
         try {
-            list = GeneralParser.parseFile(wordlistName);
+            list = GeneralParser.parseFile(context, wordlistName, false, notifier);
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -98,7 +98,7 @@ public class WordListManager {
         }
         ArrayList<String> list = null;
         try {
-            list = GeneralParser.parseAsset(context, wordlistName, notifier);
+            list = GeneralParser.parseFile(context, wordlistName, true, notifier);
         } catch (IOException e) {
             e.printStackTrace();
             return;

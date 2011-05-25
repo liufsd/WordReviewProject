@@ -2,6 +2,7 @@
 package com.coleman.kingword.wordlist;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +34,10 @@ public class GeneralParser {
      * @param fileName
      * @throws IOException
      */
-    static ArrayList<String> parseAsset(Context context, String fileName, IProgressNotifier notifier)
-            throws IOException {
+    static ArrayList<String> parseFile(Context context, String fileName, boolean fromAsset,
+            IProgressNotifier notifier) throws IOException {
+        InputStream is = null;
+
         // init notifier vars
         int max = 30;// progress here can go for 30%
         int cur = 0;// current progress 0%
@@ -42,7 +45,11 @@ public class GeneralParser {
         int load_size = 1;// already load stream size
 
         // get the file's input stream
-        InputStream is = context.getAssets().open(fileName);
+        if (fromAsset) {
+            is = context.getAssets().open(fileName);
+        } else {
+            is = new FileInputStream(fileName);
+        }
         total_size = is.available();
 
         // process the stream line by line
@@ -57,45 +64,20 @@ public class GeneralParser {
         }
         is.close();
 
-        // write the asset files to the package data
-        final String CACHE_FILE = "/cache";
-        FileOutputStream fos = new FileOutputStream(context.getFilesDir() + File.separator
-                + CACHE_FILE);
-        fos.write(baf.toByteArray());
-        fos.flush();
-        fos.close();
-        notifier.notify(25);
-        // read the file just stored and delete it
-        File file = new File(context.getFilesDir() + File.separator + CACHE_FILE);
-        FileAccessor fa = new FileAccessor(file, "rw");
-        String line;
+        String str = new String(baf.toByteArray());
+        String temps[] = str.split("\n");
+        int cc = 0;
         ArrayList<String> list = new ArrayList<String>();
-        while ((line = fa.readLine()) != null) {
-            list.add(line);
-            Log.d(TAG, "line:" + line);
+        for (String string : temps) {
+            list.add(string);
+            if (cc == temps.length / 10) {
+                notifier.notify(++cur);
+                cc = 0;
+            }
+            cc++;
         }
-        notifier.notify(28);
-        fa.close();
-        file.delete();
-        notifier.notify(30);
+
         return list;
     }
 
-    /**
-     * The files stored in the internal or external files.
-     * 
-     * @param fileName
-     * @throws IOException
-     */
-    public static ArrayList<String> parseFile(String fileName) throws IOException {
-        FileAccessor fa = new FileAccessor(fileName, "rw");
-        String line;
-        ArrayList<String> list = new ArrayList<String>();
-        while ((line = fa.readLine()) != null) {
-            list.add(line);
-            Log.d(TAG, "line:" + line);
-        }
-        fa.close();
-        return list;
-    }
 }

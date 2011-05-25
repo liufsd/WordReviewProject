@@ -75,10 +75,12 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         if (level == 0) {
             return R.string.new_unit;
         } else if (level == 1) {
-            return R.string.low_level;
+            return R.string.unpass_unit;
         } else if (level == 2) {
-            return R.string.mid_level;
+            return R.string.low_level;
         } else if (level == 3) {
+            return R.string.mid_level;
+        } else if (level == 4) {
             return R.string.high_level;
         }
         return R.string.new_unit;

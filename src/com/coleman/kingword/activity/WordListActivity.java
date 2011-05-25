@@ -52,17 +52,17 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     private Button loadBtn;
 
     private ProgressBar progressBar;
-    
+
     private View loadLayout;
-    
+
     private View emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
-        loadLayout=findViewById(R.id.loadLayout);
-        emptyView=findViewById(R.id.view1);
+        loadLayout = findViewById(R.id.loadLayout);
+        emptyView = findViewById(R.id.view1);
         listView = (ListView) findViewById(R.id.listView1);
         loadBtn = (Button) findViewById(R.id.button1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -103,14 +103,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             String text = cursor.getLong(0) + ":" + cursor.getString(2);
             tv.setText(text);
             tv.setLines(3);
-            tv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
-                    i.putExtra(WordsList._ID, cursor.getLong(0));
-                    startActivity(i);
-                }
-            });
         }
 
         @Override
@@ -122,8 +114,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO Auto-generated method stub
-
+        Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
+        i.putExtra(WordsList._ID, (Long) view.getTag());
+        startActivity(i);
     }
 
     @Override
@@ -256,7 +249,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     progressBar.setVisibility(View.GONE);
                     loadLayout.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.INVISIBLE);
-                    // adapter.notifyDataSetChanged();
                     break;
                 case LOAD_EXTERNAL:
                     listView.setVisibility(View.VISIBLE);

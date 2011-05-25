@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -325,7 +326,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void showCompleteStudyDialog() {
-        String str1 = wordlist.getErrorPercentage() + "%";
+        String str1 = wordlist.getCorrectPercentage() + "%";
         String str2 = wordlist.computeStudyResult(CoreActivity.this);
         new AlertDialog.Builder(this)
                 .setMessage(String.format(getString(R.string.show_complete_study), str1, str2))
@@ -339,6 +340,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class ParaphraseAdapter extends BaseAdapter {
         final LayoutInflater inflater;
+
+        Typeface mFace = Typeface.createFromAsset(getAssets(), "font/DroidSans.ttf");
 
         public ParaphraseAdapter() {
             inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -368,6 +371,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 v = convertView;
             }
             TextView tv = (TextView) v.findViewById(R.id.textView1);
+            tv.setTypeface(mFace);
             DictData data = list.get(position);
             Log.d(TAG, "data:" + data);
             if (data != null) {

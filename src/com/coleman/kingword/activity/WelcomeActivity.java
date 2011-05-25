@@ -69,14 +69,6 @@ public class WelcomeActivity extends Activity {
             is = null;
             str = new String(baf.toByteArray());
             baf.clear();
-            // String str[] = new String(baf.toByteArray()).split("\n");
-            // baf.clear();
-            // baf = null;
-            // for (String string : str) {
-            // if (!TextUtils.isEmpty(string)) {
-            // list.add(string);
-            // }
-            // }
         } catch (IOException e) {
             e.printStackTrace();
         }

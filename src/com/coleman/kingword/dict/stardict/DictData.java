@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import com.coleman.util.ConvertUtils;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
@@ -127,20 +129,20 @@ public class DictData {
     }
 
     public String getDatas() {
-        if (isDetail) {
-            data = removeSymbol();
-        }
         return data == null ? "" : data;
     }
 
-    private String removeSymbol() {
+    /**
+     * @deprecated
+     */
+    String removeSymbol() {
         int first, last;
         if (!TextUtils.isEmpty(data) && data.charAt(0) == '/' && data.length() > 5) {
             first = 0;
             last = data.substring(1).indexOf('/');
             if (last - first > 0 && last - first < 40 && last + 1 < data.length()) {
-                Log.d(TAG, "data last:"+data.indexOf(last+1)+"  nn:"+'\n');
-                if (data.indexOf(last + 1) == '\n'||data.indexOf(last + 1) == -1) {
+                Log.d(TAG, "data last:" + data.indexOf(last + 1) + "  nn:" + '\n');
+                if (data.indexOf(last + 1) == '\n' || data.indexOf(last + 1) == -1) {
                     return data.substring(last + 3);
                 } else {
                     return data.substring(last + 2);
