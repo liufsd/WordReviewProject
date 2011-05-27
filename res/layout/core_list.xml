@@ -13,10 +13,12 @@
 	</TextView>
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_below="@id/progressBar1" android:layout_width="fill_parent"
-		android:layout_height="35dp">
+		android:layout_height="35dp" android:orientation="vertical">
 		<TextView android:layout_width="wrap_content" android:text="TextView"
-			android:id="@+id/textView1" android:layout_height="fill_parent"
-			style="@style/word_title"></TextView>
+			android:id="@+id/textView1" android:layout_height="wrap_content"
+			style="@style/word_title" android:layout_weight="1"></TextView>
+		<ImageView android:layout_width="fill_parent"
+			android:layout_height="2dp" android:background="@drawable/title_rect_line"></ImageView>
 	</LinearLayout>
 	<ListView android:layout_height="fill_parent" android:id="@+id/listView1"
 		android:layout_below="@id/linearLayout1" android:layout_above="@+id/linearLayout2"
