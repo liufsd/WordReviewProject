@@ -445,8 +445,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     break;
                 case INIT_QUERY:
+                    findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
-                    textView.setVisibility(View.INVISIBLE);
                     break;
                 case LOOKUP:
                     /**
@@ -564,7 +564,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     applySlideIn();
                     break;
                 case INIT_QUERY:
-                    textView.setVisibility(View.VISIBLE);
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
                         list.clear();
@@ -579,6 +578,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         } else {
                             addOrRemove.setText(R.string.add_new);
                         }
+                        findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                     } else {
                         progressBar.setProgress(100);
