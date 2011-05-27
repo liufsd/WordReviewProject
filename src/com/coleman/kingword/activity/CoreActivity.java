@@ -445,6 +445,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     break;
                 case INIT_QUERY:
+                    findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
                     textView.setVisibility(View.INVISIBLE);
                     break;
                 case LOOKUP:
@@ -578,6 +579,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         } else {
                             addOrRemove.setText(R.string.add_new);
                         }
+                        findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                     } else {
                         progressBar.setProgress(100);
                         handler.sendEmptyMessage(SUBLIST_REACH_END);
