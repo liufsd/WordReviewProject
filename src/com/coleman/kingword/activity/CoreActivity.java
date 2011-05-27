@@ -74,7 +74,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     /**
      * upgrade and degrade are not support by user anymore.
      */
-    private Button viewmore, viewraw, upgrade, degrade, addnew, ignore;
+    private Button viewmore, viewraw, upgrade, degrade, addOrRemove, ignore;
 
     private TextView continueView;
 
@@ -98,16 +98,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onDestroy() {
-        if (!wordlist.allComplete()) {
-            File file = new File(getFilesDir(), "tmp");
-            try {
-                file.createNewFile();
-                FileOutputStream fos = new FileOutputStream(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         super.onDestroy();
     }
 
@@ -160,8 +150,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.upgrade:
                 new ExpensiveTask(ExpensiveTask.UPGRADE).execute();
                 break;
-            case R.id.addnew:
-                new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
+            case R.id.add_or_remove:
+                if (addOrRemove.getText().equals(getString(R.string.add_new))) {
+                    new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
+                } else {
+                    new ExpensiveTask(ExpensiveTask.REMOVE_FROM_NEW).execute();
+                }
                 break;
             case R.id.degrade:
                 new ExpensiveTask(ExpensiveTask.DEGRADE).execute();
@@ -183,7 +177,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         viewraw = (Button) findViewById(R.id.viewraw);
         upgrade = (Button) findViewById(R.id.upgrade);
         degrade = (Button) findViewById(R.id.degrade);
-        addnew = (Button) findViewById(R.id.addnew);
+        addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignore = (Button) findViewById(R.id.ignore);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         continueView = (TextView) findViewById(R.id.continueHitView);
@@ -195,7 +189,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         listView.setOnItemClickListener(this);
         listView.setEmptyView(findViewById(R.id.progressBar2));
 
-        addnew.setOnClickListener(this);
+        addOrRemove.setOnClickListener(this);
         viewmore.setOnClickListener(this);
         viewraw.setOnClickListener(this);
         upgrade.setOnClickListener(this);
@@ -415,6 +409,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
 
+        public static final byte REMOVE_FROM_NEW = -5;
+
         public static final byte ADD_NEW = -4;
 
         public static final byte VIEW_RAW = -3;
@@ -440,6 +436,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         protected void onPreExecute() {
             switch (type) {
+                case REMOVE_FROM_NEW:
+                    break;
                 case ADD_NEW:
                     break;
                 case VIEW_MORE:
@@ -474,6 +472,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         protected Bundle doInBackground(Void... params) {
             Bundle bundle = null;
             switch (type) {
+                case REMOVE_FROM_NEW: {
+                    boolean b = nextWordItem.removeFromNew(CoreActivity.this);
+                    bundle = new Bundle();
+                    bundle.putBoolean("removenew", b);
+                    break;
+                }
                 case ADD_NEW: {
                     boolean b = nextWordItem.addNew(CoreActivity.this);
                     bundle = new Bundle();
@@ -535,11 +539,21 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         protected void onPostExecute(Bundle result) {
             switch (type) {
+                case REMOVE_FROM_NEW: {
+                    boolean b = result.getBoolean("removenew");
+                    Toast.makeText(
+                            CoreActivity.this,
+                            b ? getString(R.string.remove_success)
+                                    : getString(R.string.remove_failed), Toast.LENGTH_SHORT).show();
+                    addOrRemove.setText(R.string.add_new);
+                    break;
+                }
                 case ADD_NEW: {
                     boolean b = result.getBoolean("addnew");
                     Toast.makeText(CoreActivity.this,
                             b ? getString(R.string.add_success) : getString(R.string.add_failed),
                             Toast.LENGTH_SHORT).show();
+                    addOrRemove.setText(R.string.remove_from_new);
                     break;
                 }
                 case VIEW_MORE:
@@ -559,6 +573,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBar.setProgress(wordlist.getProgress());
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());
+                        if (nextWordItem.isAddToNew()) {
+                            addOrRemove.setText(R.string.remove_from_new);
+                        } else {
+                            addOrRemove.setText(R.string.add_new);
+                        }
                     } else {
                         progressBar.setProgress(100);
                         handler.sendEmptyMessage(SUBLIST_REACH_END);
@@ -574,6 +593,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         degrade.setEnabled(nextWordItem.canDegrade());
                         viewmore.setVisibility(View.VISIBLE);
                         viewraw.setVisibility(View.GONE);
+                        if (nextWordItem.isAddToNew()) {
+                            addOrRemove.setText(R.string.remove_from_new);
+                        } else {
+                            addOrRemove.setText(R.string.add_new);
+                        }
                     } else {
                         progressBar.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);

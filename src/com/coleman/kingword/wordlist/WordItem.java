@@ -78,6 +78,10 @@ public class WordItem {
         return passMultiple;
     }
 
+    public boolean isAddToNew() {
+        return info.newword;
+    }
+
     public void setPassView() {
         passView = true;
         if (!_pvc) {
@@ -141,6 +145,11 @@ public class WordItem {
 
     public boolean addNew(Context context) {
         info.newword = true;
+        return WordInfoHelper.store(context, info);
+    }
+
+    public boolean removeFromNew(Context context) {
+        info.newword = false;
         return WordInfoHelper.store(context, info);
     }
 
