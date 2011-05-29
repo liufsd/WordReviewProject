@@ -17,8 +17,11 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.wordinfo.WordInfoVO;
+import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 
-public class SubWordList {
+public class SliceWordList {
     private SubInfo subinfo;
 
     private ArrayList<WordItem> list;
@@ -27,7 +30,7 @@ public class SubWordList {
             WordListItem.WORD, WordListItem._ID
     };
 
-    private static final String TAG = SubWordList.class.getName();
+    private static final String TAG = SliceWordList.class.getName();
 
     /**
      * the pointer of the word index in the sublist.
@@ -49,9 +52,11 @@ public class SubWordList {
      */
     static int errorCount;
 
+    private byte listType;
+
     private Random ran = new Random();
 
-    public SubWordList(SubInfo info) {
+    public SliceWordList(SubInfo info) {
         subinfo = info;
         list = new ArrayList<WordItem>();
         passViewCount = 0;
@@ -60,7 +65,29 @@ public class SubWordList {
         errorCount = 0;
     }
 
-    public void load(Context context) {
+    public SliceWordList(byte type) {
+        listType = type;
+        list = new ArrayList<WordItem>();
+        passViewCount = 0;
+        passAltCount = 0;
+        passMulCount = 0;
+        errorCount = 0;
+    }
+
+    public void loadInfoList(Context context) {
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType);
+        WordItem item;
+        for (WordInfoVO info : infoList) {
+            item = new WordItem();
+            item.word = info.word;
+            item.info = info;
+            list.add(item);
+            Log.d(TAG, "item:" + item);
+        }
+        infoList.clear();
+    }
+
+    public void loadSubList(Context context) {
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
                 WordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
@@ -110,49 +137,7 @@ public class SubWordList {
     }
 
     public ArrayList<DictData> getDictData(Context context, WordItem item) {
-        ArrayList<DictData> datalist = new ArrayList<DictData>();
-        if (!item.passView) {
-            datalist.add(item.getDictData(context));
-        } else if (!item.passAlternative) {
-            datalist.add(item.getDictData(context));
-            if (list.size() > 1) {
-                addRandomDictData(context, datalist);
-            }
-        } else if (!item.passMultiple) {
-            datalist.add(item.getDictData(context));
-            int size = list.size();
-            for (int i = 0; i < size; i++) {
-                if (i > 2) {
-                    break;
-                } else {
-                    addRandomDictData(context, datalist);
-                }
-            }
-        }
-        shuffle(datalist);
-        return datalist;
-    }
-
-    private void shuffle(ArrayList<DictData> list) {
-        if (list.size() <= 1) {
-            return;
-        } else {
-            Collections.shuffle(list);
-        }
-    }
-
-    private void addRandomDictData(Context context, ArrayList<DictData> datalist) {
-        int index = ran.nextInt(list.size());
-        int i = 0;
-        while (datalist.contains(list.get(index).getDictData(context))) {
-            index = index + 1 > list.size() - 1 ? 0 : index + 1;
-            i++;
-            // to avoid deadlock if there are two or more same words.
-            if (i == list.size()) {
-                break;
-            }
-        }
-        datalist.add(list.get(index).getDictData(context));
+        return item.getDictData(context, list);
     }
 
     /**
@@ -186,7 +171,11 @@ public class SubWordList {
         }
     }
 
-    public String computeStudyResult(Context context) {
+    public String computeInfoStudyResult(Context context) {
+        return context.getString(R.string.study_new_word_book_end);
+    }
+
+    public String computeSubListStudyResult(Context context) {
         int tmp = 0;
         String levels = context.getString(R.string.history_level);
         if (errorCount <= list.size() * 5 / 100) {
@@ -310,4 +299,5 @@ public class SubWordList {
             }
         };
     }
+
 }

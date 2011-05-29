@@ -1,12 +1,15 @@
 
 package com.coleman.kingword.wordinfo;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.coleman.kingword.activity.SubWordListActivity;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 
 /**
@@ -96,6 +99,52 @@ public class WordInfoHelper {
     }
 
     /**
+     * get a list of wordinfo
+     * 
+     * @param context
+     * @param type map the value of SubWordListActivity's type.
+     * @return
+     */
+    public static ArrayList<WordInfoVO> getWordInfoList(Context context, byte type) {
+        ArrayList<WordInfoVO> list = new ArrayList<WordInfoVO>();
+        Cursor c = null;
+        switch (type) {
+            case SubWordListActivity.NEW_WORD_BOOK_TYPE:
+                c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
+                // 2 means new word
+                        WordInfo.NEW_WORD + "= 2", null, null);
+
+                break;
+            case SubWordListActivity.IGNORE_LIST_TYPE:
+                c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
+                // 2 means new word
+                        WordInfo.IGNORE + "= 2", null, null);
+
+                break;
+            default:
+                break;
+        }
+        if (c != null && c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+                WordInfoVO wi = new WordInfoVO("");
+                wi.id = c.getLong(0);
+                wi.word = c.getString(1);
+                wi.ignore = c.getInt(2) == 2 ? true : false;
+                wi.studycount = (byte) c.getInt(3);
+                wi.errorcount = (byte) c.getInt(4);
+                wi.weight = (byte) c.getInt(5);
+                wi.newword = c.getInt(6) == 2 ? true : false;
+                list.add(wi);
+                c.moveToNext();
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+        return list;
+    }
+
+    /**
      * You must make sure the word is not empty.
      */
     public static int delete(Context context, String word) {
@@ -111,6 +160,7 @@ public class WordInfoHelper {
         if (info.id == -1) {
             Uri uri = insert(context, info);
             if (uri != null) {
+                info.id = Long.parseLong(uri.getPathSegments().get(1));
                 return true;
             }
         } else {

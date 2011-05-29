@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Message;
 import android.util.Log;
 
 import com.coleman.kingword.dict.DictManager;
@@ -12,6 +13,7 @@ import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
+import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 
 public class WordItem {
     private static final String TAG = WordItem.class.getName();
@@ -20,41 +22,13 @@ public class WordItem {
 
     public String word;
 
-    /**
-     * if viewed
-     */
-    boolean passView;
-
-    /**
-     * if pass view counted in subwordlist.
-     */
-    boolean _pvc;
-
-    /**
-     * if pass alternative
-     */
-    boolean passAlternative;
-
-    /**
-     * if pass Alternative counted in subwordlist.
-     */
-    boolean _pac;
-
-    /**
-     * if pass multiple
-     */
-    boolean passMultiple;
-
-    /**
-     * if pass Multiple counted in subwordlist.
-     */
-    boolean _pmc;
-
-    private WordInfoVO info;
+    WordInfoVO info;
 
     private DictData dictData;
 
     private DictData detailData;
+
+    private FiniteStateMachine mStateMachine = new FiniteStateMachine();
 
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
@@ -63,55 +37,30 @@ public class WordItem {
     }
 
     public boolean isComplete() {
-        return passView && passAlternative && passMultiple;
+        return mStateMachine.isComplete();
     }
 
     public boolean isPassView() {
-        return passView;
+        return mStateMachine.isPassView();
     }
 
     public boolean isPassAlternative() {
-        return passAlternative;
+        return mStateMachine.isPassAlternative();
     }
 
     public boolean isPassMultiple() {
-        return passMultiple;
+        return mStateMachine.isPassMultiple();
     }
 
     public boolean isAddToNew() {
         return info.newword;
     }
 
-    public void setPassView() {
-        passView = true;
-        if (!_pvc) {
-            _pvc = true;
-            SubWordList.passViewCount++;
-        }
-    }
-
-    public void setPassAlternative(boolean correct) {
-        if (correct) {
-            passAlternative = true;
-            if (!_pac) {
-                _pac = true;
-                SubWordList.passAltCount++;
-            }
+    public void setPass(boolean passed) {
+        if (passed) {
+            mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
         } else {
-            passView = false;
-        }
-    }
-
-    public void setPassMultiple(boolean correct) {
-        if (correct) {
-            passMultiple = true;
-            if (!_pmc) {
-                _pmc = true;
-                SubWordList.passMulCount++;
-            }
-        } else {
-            passAlternative = false;
-            passView = false;
+            mStateMachine.sendEmptyMessage(IFSMCommand.RESET);
         }
     }
 
@@ -134,12 +83,10 @@ public class WordItem {
             info = WordInfoHelper.getWordInfo(context, word);
         }
         if (info.ignore) {
-            passView = true;
-            passAlternative = true;
-            passMultiple = true;
-            SubWordList.passViewCount++;
-            SubWordList.passAltCount++;
-            SubWordList.passMulCount++;
+            mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
+            SliceWordList.passViewCount++;
+            SliceWordList.passAltCount++;
+            SliceWordList.passMulCount++;
         }
     }
 
@@ -175,9 +122,7 @@ public class WordItem {
 
     public boolean ignore(Context context) {
         info.ignore = true;
-        setPassView();
-        setPassAlternative(true);
-        setPassMultiple(true);
+        mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
         Log.d(TAG, "ignore:" + toString());
         return WordInfoHelper.store(context, info);
     }
@@ -194,7 +139,7 @@ public class WordItem {
 
     public void errorPlus(Context context) {
         info.errorcount++;
-        SubWordList.errorCount++;
+        SliceWordList.errorCount++;
         if (info.errorcount % 2 == 0) {
             info.weight++;
         }
@@ -207,5 +152,18 @@ public class WordItem {
     public String toString() {
         return "id:" + id + " word:" + word + " info:" + info + " data:" + dictData + " detail:"
                 + detailData;
+    }
+
+    public ArrayList<DictData> getDictData(Context context, ArrayList<WordItem> list) {
+        return mStateMachine.getDictData(context, this, list);
+    }
+
+    public boolean isIgnore() {
+        return info.ignore;
+    }
+
+    public boolean removeIgnore(Context context) {
+        info.ignore = false;
+        return WordInfoHelper.store(context, info);
     }
 }

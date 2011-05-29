@@ -16,7 +16,7 @@ import android.util.Log;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.wordlist.SubWordList.SubInfo;
+import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();

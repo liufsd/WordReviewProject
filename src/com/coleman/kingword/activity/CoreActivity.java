@@ -47,8 +47,9 @@ import android.widget.Toast;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
-import com.coleman.kingword.wordlist.SubWordList;
-import com.coleman.kingword.wordlist.SubWordList.SubInfo;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.wordlist.SliceWordList;
+import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.FileAccessor;
 
@@ -65,7 +66,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ParaphraseAdapter adapter;
 
-    private SubWordList wordlist;
+    private SliceWordList wordlist;
 
     private RelativeLayout container;
 
@@ -74,21 +75,40 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     /**
      * upgrade and degrade are not support by user anymore.
      */
-    private Button viewmore, viewraw, upgrade, degrade, addOrRemove, ignore;
+    private Button viewmore, viewraw, upgrade, degrade, addOrRemove, ignoreOrNot;
 
     private TextView continueView;
 
     private int continueHitCount;
 
+    private byte sliceListType;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        SubInfo info = getIntent().getParcelableExtra("subinfo");
-        Log.d(TAG, "info:" + info);
-        wordlist = new SubWordList(info);
+        Intent intent = getIntent();
         initView();
-        new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+        sliceListType = intent.getByteExtra("type", SubWordListActivity.NULL_TYPE);
+        switch (sliceListType) {
+            case SubWordListActivity.SUB_WORD_LIST_TYPE:
+                SubInfo info = getIntent().getParcelableExtra("subinfo");
+                Log.d(TAG, "info:" + info);
+                wordlist = new SliceWordList(info);
+                new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+                break;
+            case SubWordListActivity.NEW_WORD_BOOK_TYPE:
+                wordlist = new SliceWordList(sliceListType);
+                new ExpensiveTask(ExpensiveTask.INIT_NEW_BOOK_QUERY).execute();
+                break;
+            case SubWordListActivity.IGNORE_LIST_TYPE:
+                wordlist = new SliceWordList(sliceListType);
+                new ExpensiveTask(ExpensiveTask.INIT_IGNORE_LIST).execute();
+                break;
+            default:
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -104,15 +124,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (list.size() == 1) {
-            nextWordItem.setPassView();
+            nextWordItem.setPass(true);
             nextWordItem.studyPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else if (list.get(position).equals(nextWordItem.getDictData(this))) {
-            if (list.size() == 2) {
-                nextWordItem.setPassAlternative(true);
-            } else if (list.size() == 4) {
-                nextWordItem.setPassMultiple(true);
-            }
+            nextWordItem.setPass(true);
             continueHitCount++;
             if (continueHitCount >= 3) {
                 continueView.setVisibility(View.VISIBLE);
@@ -122,11 +138,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             nextWordItem.studyPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
-            if (list.size() == 2) {
-                nextWordItem.setPassAlternative(false);
-            } else if (list.size() == 4) {
-                nextWordItem.setPassMultiple(false);
-            }
+            nextWordItem.setPass(false);
             continueHitCount = 0;
             continueView.setVisibility(View.INVISIBLE);
             nextWordItem.errorPlus(this);
@@ -160,8 +172,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.degrade:
                 new ExpensiveTask(ExpensiveTask.DEGRADE).execute();
                 break;
-            case R.id.ignore:
-                new ExpensiveTask(ExpensiveTask.IGNORE).execute();
+            case R.id.ignore_or_not:
+                if (ignoreOrNot.getText().equals(getString(R.string.ignore))) {
+                    new ExpensiveTask(ExpensiveTask.IGNORE).execute();
+                } else {
+                    nextWordItem.removeIgnore(this);
+                    ignoreOrNot.setText(R.string.ignore);
+                }
                 break;
             default:
                 break;
@@ -178,7 +195,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         upgrade = (Button) findViewById(R.id.upgrade);
         degrade = (Button) findViewById(R.id.degrade);
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
-        ignore = (Button) findViewById(R.id.ignore);
+        ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         continueView = (TextView) findViewById(R.id.continueHitView);
 
@@ -194,7 +211,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         viewraw.setOnClickListener(this);
         upgrade.setOnClickListener(this);
         degrade.setOnClickListener(this);
-        ignore.setOnClickListener(this);
+        ignoreOrNot.setOnClickListener(this);
 
         adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
@@ -320,10 +337,24 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void showCompleteStudyDialog() {
-        String str1 = wordlist.getCorrectPercentage() + "%";
-        String str2 = wordlist.computeStudyResult(CoreActivity.this);
-        new AlertDialog.Builder(this)
-                .setMessage(String.format(getString(R.string.show_complete_study), str1, str2))
+        String msg = "";
+        switch (sliceListType) {
+            case SubWordListActivity.SUB_WORD_LIST_TYPE: {
+                String str1 = wordlist.getCorrectPercentage() + "%";
+                String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
+                msg = String.format(getString(R.string.show_complete_study), str1, str2);
+                break;
+            }
+            case SubWordListActivity.NEW_WORD_BOOK_TYPE:
+                msg = getString(R.string.study_new_word_book_end);
+                break;
+            case SubWordListActivity.IGNORE_LIST_TYPE:
+                msg = getString(R.string.study_ignore_list_end);
+                break;
+            default:
+                break;
+        }
+        new AlertDialog.Builder(this).setMessage(msg)
                 .setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -409,6 +440,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
 
+        public static final byte INIT_IGNORE_LIST = -7;
+
+        public static final byte INIT_NEW_BOOK_QUERY = -6;
+
         public static final byte REMOVE_FROM_NEW = -5;
 
         public static final byte ADD_NEW = -4;
@@ -427,15 +462,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         private static final byte IGNORE = 3;
 
-        private byte type;
+        private byte taskType;
 
         public ExpensiveTask(byte type) {
-            this.type = type;
+            this.taskType = type;
         }
 
         @Override
         protected void onPreExecute() {
-            switch (type) {
+            switch (taskType) {
                 case REMOVE_FROM_NEW:
                     break;
                 case ADD_NEW:
@@ -444,6 +479,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case VIEW_RAW:
                     break;
+                case INIT_IGNORE_LIST:
+                case INIT_NEW_BOOK_QUERY:
                 case INIT_QUERY:
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
@@ -472,7 +509,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         protected Bundle doInBackground(Void... params) {
             Bundle bundle = null;
-            switch (type) {
+            switch (taskType) {
                 case REMOVE_FROM_NEW: {
                     boolean b = nextWordItem.removeFromNew(CoreActivity.this);
                     bundle = new Bundle();
@@ -492,9 +529,21 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     lookupInDict(nextWordItem);
                     break;
+                case INIT_IGNORE_LIST:
+                case INIT_NEW_BOOK_QUERY:
+                    bundle = new Bundle();
+                    wordlist.loadInfoList(CoreActivity.this);
+                    if (!wordlist.allComplete()) {
+                        nextWordItem = wordlist.getCurrentWord();
+                        lookupInDict(nextWordItem);
+                        bundle.putBoolean("complete", false);
+                    } else {
+                        bundle.putBoolean("complete", true);
+                    }
+                    break;
                 case INIT_QUERY:
                     bundle = new Bundle();
-                    wordlist.load(CoreActivity.this);
+                    wordlist.loadSubList(CoreActivity.this);
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);
@@ -539,7 +588,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         @Override
         protected void onPostExecute(Bundle result) {
-            switch (type) {
+            switch (taskType) {
                 case REMOVE_FROM_NEW: {
                     boolean b = result.getBoolean("removenew");
                     Toast.makeText(
@@ -563,7 +612,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     applySlideIn();
                     break;
-                case INIT_QUERY:
+                case INIT_IGNORE_LIST:
+                case INIT_NEW_BOOK_QUERY:
+                case INIT_QUERY: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
                         list.clear();
@@ -578,6 +629,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         } else {
                             addOrRemove.setText(R.string.add_new);
                         }
+                        if (nextWordItem.isIgnore()) {
+                            ignoreOrNot.setText(R.string.remove_from_ignore);
+                        } else {
+                            ignoreOrNot.setText(R.string.ignore);
+                        }
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                     } else {
@@ -585,6 +641,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         handler.sendEmptyMessage(SUBLIST_REACH_END);
                     }
                     break;
+                }
                 case LOOKUP:
                     Log.d(TAG, "progress:" + wordlist.getProgress());
                     boolean hasNext = result.getBoolean("next");
@@ -599,6 +656,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {
                             addOrRemove.setText(R.string.add_new);
+                        }
+                        if (nextWordItem.isIgnore()) {
+                            ignoreOrNot.setText(R.string.remove_from_ignore);
+                        } else {
+                            ignoreOrNot.setText(R.string.ignore);
                         }
                     } else {
                         progressBar.setProgress(100);

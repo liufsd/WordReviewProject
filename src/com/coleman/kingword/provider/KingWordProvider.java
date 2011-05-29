@@ -188,6 +188,14 @@ public class KingWordProvider extends ContentProvider {
                 count = db.delete(SubWordsList.TABLE_NAME, whereWithId(rowId, selection), null);
                 break;
             }
+            case URI_WORDINFO:
+                count = db.delete(WordInfo.TABLE_NAME, selection, selectionArgs);
+                break;
+            case URI_WORDINFO_ID: {
+                String rowId = uri.getPathSegments().get(1);
+                count = db.delete(WordInfo.TABLE_NAME, whereWithId(rowId, selection), null);
+                break;
+            }
             default:
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }

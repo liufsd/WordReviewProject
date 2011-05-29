@@ -4,10 +4,13 @@ package com.coleman.kingword.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -16,11 +19,19 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.view.SlideTableSwitcher;
-import com.coleman.kingword.wordlist.SubWordList.SubInfo;
+import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 
 public class SubWordListActivity extends Activity {
 
     private static final String TAG = SubWordListActivity.class.getName();
+
+    public static final byte SUB_WORD_LIST_TYPE = 0;
+
+    public static final byte NEW_WORD_BOOK_TYPE = 1;
+
+    public static final byte IGNORE_LIST_TYPE = 2;
+
+    public static final byte NULL_TYPE = -1;
 
     private ProgressBar progressBar;
 
@@ -56,6 +67,33 @@ public class SubWordListActivity extends Activity {
         }
         b.putLong(WordsList._ID, wordlist_id);
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.subwordlist_option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_new_word_book: {
+                Intent intent = new Intent(this, CoreActivity.class);
+                intent.putExtra("type", NEW_WORD_BOOK_TYPE);
+                startActivity(intent);
+                break;
+            }
+            case R.id.menu_ignore_list: {
+                Intent intent = new Intent(this, CoreActivity.class);
+                intent.putExtra("type", IGNORE_LIST_TYPE);
+                startActivity(intent);
+                break;
+            }
+            default:
+                break;
+        }
+        return true;
     }
 
     private void initViews() {

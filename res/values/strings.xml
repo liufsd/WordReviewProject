@@ -12,7 +12,14 @@
 	<string name="add_new">加入生词本</string>
 	<string name="remove_from_new">移除生词本</string>
 	<string name="ignore">忽略</string>
+	<string name="remove_from_ignore">逆忽略</string>
 	<string name="begin">开始</string>
+
+	<string name="view_new_book">进入生词本</string>
+	<string name="view_ignore_list">浏览过滤列表</string>
+
+	<string name="study_new_word_book_end">你完成了生词本的学习！</string>
+	<string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
 
 	<string name="continue_hit_count">%d连击!</string>
 

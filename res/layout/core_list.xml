@@ -46,7 +46,7 @@
 		<Button android:id="@+id/add_or_remove" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
 			android:text="@string/add_new" />
-		<Button android:id="@+id/ignore" android:layout_width="wrap_content"
+		<Button android:id="@+id/ignore_or_not" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
 			android:text="@string/ignore" />
 	</LinearLayout>
