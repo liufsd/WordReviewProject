@@ -15,6 +15,11 @@
 	<string name="remove_from_ignore">逆忽略</string>
 	<string name="begin">开始</string>
 
+	<string name="enable3d">开启3D特效</string>
+	<string name="not_enable3d">关闭3D特效</string>
+	<string name="night_mode">夜晚模式</string>
+	<string name="day_mode">白天模式</string>
+
 	<string name="view_new_book">进入生词本</string>
 	<string name="view_ignore_list">浏览过滤列表</string>
 

@@ -23,6 +23,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -51,6 +53,7 @@ import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
+import com.coleman.util.AppSettings;
 import com.coleman.util.FileAccessor;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
@@ -83,12 +86,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private byte sliceListType;
 
+    private boolean enable3D;
+
+    private boolean isNightMode;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
         Intent intent = getIntent();
         initView();
+        enable3D = AppSettings.getBoolean(this, "enable3D", true);
+        isNightMode = AppSettings.getBoolean(this, "isNightMode", false);
         sliceListType = intent.getByteExtra("type", SubWordListActivity.NULL_TYPE);
         switch (sliceListType) {
             case SubWordListActivity.SUB_WORD_LIST_TYPE:
@@ -109,6 +118,42 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.core_option, menu);
+        if (enable3D) {
+            menu.findItem(R.id.menu_enable3d).setTitle(R.string.not_enable3d);
+        } else {
+            menu.findItem(R.id.menu_enable3d).setTitle(R.string.enable3d);
+        }
+        if (isNightMode) {
+            menu.findItem(R.id.menu_night_mode).setTitle(R.string.day_mode);
+        } else {
+            menu.findItem(R.id.menu_night_mode).setTitle(R.string.night_mode);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_enable3d:
+                enable3D = !enable3D;
+                AppSettings.saveBoolean(this, "enable3D", enable3D);
+                break;
+            case R.id.menu_night_mode:
+                isNightMode = !isNightMode;
+                AppSettings.saveBoolean(this, "isNightMode", isNightMode);
+                Toast.makeText(this, "not implement yet~", Toast.LENGTH_SHORT).show();
+                /** @TODO need to implement */
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -226,7 +271,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      * @param start the start angle at which the rotation must begin
      * @param end the end angle of the rotation
      */
-    private void applyRotation(float start, float end) {
+    private void apply3DAnim(float start, float end) {
         // Find the center of the container
         final float centerX = container.getWidth() / 2.0f;
         final float centerY = container.getHeight() / 2.0f;
@@ -240,6 +285,51 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         rotation.setInterpolator(new AccelerateInterpolator());
         rotation.setAnimationListener(new DisplayNextView());
         container.startAnimation(rotation);
+    }
+
+    private void apply2DAnim() {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+        anim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                list.clear();
+                list.addAll(_buflist);
+                textView.setText(nextWordItem.word);
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+
+                Animation a = AnimationUtils
+                        .loadAnimation(CoreActivity.this, R.anim.slide_right_in);
+                a.setAnimationListener(new AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
+                        listView.setEnabled(true);
+                    }
+                });
+                container.startAnimation(a);
+            }
+        });
+        container.startAnimation(anim);
     }
 
     private void applySlideIn() {
@@ -647,7 +737,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
                         progressBar.setProgress(wordlist.getProgress());
-                        applyRotation(0, 90);
+                        if (enable3D) {
+                            apply3DAnim(0, 90);
+                        } else {
+                            apply2DAnim();
+                        }
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());
                         viewmore.setVisibility(View.VISIBLE);
