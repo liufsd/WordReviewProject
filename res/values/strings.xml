@@ -15,6 +15,22 @@
 	<string name="remove_from_ignore">逆忽略</string>
 	<string name="begin">开始</string>
 
+	<string name="review">复习</string>
+	<string name="review_complete">本次复习完成！</string>
+
+	<string name="delay">延迟10分钟</string>
+	<string name="review_reminder" formatted="false">距离你上次学习已经有%s，单击进入复习模式！
+	</string>
+
+	<string name="hour">小时</string>
+	<string name="day">天</string>
+
+	<string name="backup">备份用户词库</string>
+	<string name="restore">恢复用户词库</string>
+
+	<string name="welcome">Welcome to KingWord~</string>
+	<string name="about_dev">关于开发</string>
+
 	<string name="enable3d">开启3D特效</string>
 	<string name="not_enable3d">关闭3D特效</string>
 	<string name="night_mode">夜晚模式</string>

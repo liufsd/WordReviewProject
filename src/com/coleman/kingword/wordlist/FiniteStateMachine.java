@@ -15,6 +15,7 @@ import android.os.Message;
  * input messages, some output messages, and the state transition function.
  */
 public class FiniteStateMachine {
+
     private FiniteState mCurrentState;
 
     private FiniteStateEngine mStateEngine = new FiniteStateEngine();
@@ -199,6 +200,20 @@ public class FiniteStateMachine {
         protected void exit() {
             if (!counted) {
                 SliceWordList.passMulCount++;
+                switch (SliceWordList.listType) {
+                    case SliceWordList.SUB_WORD_LIST:
+                        break;
+                    case SliceWordList.NEW_WORD_BOOK_LIST:
+                        break;
+                    case SliceWordList.SCAN_LIST:
+                        break;
+                    case SliceWordList.REVIEW_LIST:
+                        SliceWordList.passViewCount++;
+                        SliceWordList.passAltCount++;
+                        break;
+                    default:
+                        throw new RuntimeException("Not support word list type!");
+                }
             }
             super.exit();
         }
@@ -238,6 +253,10 @@ public class FiniteStateMachine {
                 case COMPLETE:
                     complete();
                     break;
+                case LAST:
+                    setInitialState(mulState);
+                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>1111");
+                    break;
                 default:
                     break;
             }
@@ -270,5 +289,7 @@ public class FiniteStateMachine {
         int RESET = 2;
 
         int COMPLETE = 3;
+
+        int LAST = 4;
     }
 }

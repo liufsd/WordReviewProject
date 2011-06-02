@@ -1,10 +1,6 @@
 
 package com.coleman.kingword.activity;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -15,20 +11,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Camera;
 import android.graphics.Matrix;
-import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -48,13 +40,12 @@ import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.provider.KingWord.SubWordsList;
-import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.AppSettings;
-import com.coleman.util.FileAccessor;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
     private static final String TAG = CoreActivity.class.getName();
@@ -90,6 +81,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private boolean isNightMode;
 
+    private byte reviewType;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,21 +91,26 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         initView();
         enable3D = AppSettings.getBoolean(this, "enable3D", true);
         isNightMode = AppSettings.getBoolean(this, "isNightMode", false);
-        sliceListType = intent.getByteExtra("type", SubWordListActivity.NULL_TYPE);
+        sliceListType = intent.getByteExtra("type", SliceWordList.NULL_TYPE);
         switch (sliceListType) {
-            case SubWordListActivity.SUB_WORD_LIST_TYPE:
+            case SliceWordList.SUB_WORD_LIST:
                 SubInfo info = getIntent().getParcelableExtra("subinfo");
                 Log.d(TAG, "info:" + info);
                 wordlist = new SliceWordList(info);
-                new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+                new ExpensiveTask(ExpensiveTask.INIT_SUB_WORD_LIST).execute();
                 break;
-            case SubWordListActivity.NEW_WORD_BOOK_TYPE:
+            case SliceWordList.NEW_WORD_BOOK_LIST:
                 wordlist = new SliceWordList(sliceListType);
-                new ExpensiveTask(ExpensiveTask.INIT_NEW_BOOK_QUERY).execute();
+                new ExpensiveTask(ExpensiveTask.INIT_NEW_WORD_BOOK_LIST).execute();
                 break;
-            case SubWordListActivity.IGNORE_LIST_TYPE:
+            case SliceWordList.SCAN_LIST:
                 wordlist = new SliceWordList(sliceListType);
-                new ExpensiveTask(ExpensiveTask.INIT_IGNORE_LIST).execute();
+                new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
+                break;
+            case SliceWordList.REVIEW_LIST:
+                wordlist = new SliceWordList(sliceListType);
+                reviewType = intent.getByteExtra("review_type", Byte.MAX_VALUE);
+                new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST, reviewType).execute();
                 break;
             default:
                 finish();
@@ -149,6 +147,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 AppSettings.saveBoolean(this, "isNightMode", isNightMode);
                 Toast.makeText(this, "not implement yet~", Toast.LENGTH_SHORT).show();
                 /** @TODO need to implement */
+                break;
+            case R.id.menu_review:
+                // new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST,
+                // WordInfoVO.REVIEW_1_HOUR)
+                // .execute();
+                EbbinghausReminder.setNotifaction(this, WordInfoVO.REVIEW_1_HOUR);
                 break;
             default:
                 break;
@@ -429,17 +433,21 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void showCompleteStudyDialog() {
         String msg = "";
         switch (sliceListType) {
-            case SubWordListActivity.SUB_WORD_LIST_TYPE: {
+            case SliceWordList.SUB_WORD_LIST: {
                 String str1 = wordlist.getCorrectPercentage() + "%";
                 String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
                 msg = String.format(getString(R.string.show_complete_study), str1, str2);
                 break;
             }
-            case SubWordListActivity.NEW_WORD_BOOK_TYPE:
+            case SliceWordList.NEW_WORD_BOOK_LIST:
                 msg = getString(R.string.study_new_word_book_end);
                 break;
-            case SubWordListActivity.IGNORE_LIST_TYPE:
+            case SliceWordList.SCAN_LIST:
                 msg = getString(R.string.study_ignore_list_end);
+                break;
+            case SliceWordList.REVIEW_LIST:
+                EbbinghausReminder.setNotifaction(this, WordInfoVO.getNextReviewType(reviewType));
+                msg = getString(R.string.review_complete);
                 break;
             default:
                 break;
@@ -530,9 +538,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
 
-        public static final byte INIT_IGNORE_LIST = -7;
+        public static final byte INIT_REVIEW_LIST = -8;
 
-        public static final byte INIT_NEW_BOOK_QUERY = -6;
+        public static final byte INIT_SCAN_LIST = -7;
+
+        public static final byte INIT_NEW_WORD_BOOK_LIST = -6;
 
         public static final byte REMOVE_FROM_NEW = -5;
 
@@ -542,7 +552,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         public static final byte VIEW_MORE = -2;
 
-        private static final byte INIT_QUERY = -1;
+        private static final byte INIT_SUB_WORD_LIST = -1;
 
         private static final byte LOOKUP = 0;
 
@@ -554,8 +564,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         private byte taskType;
 
+        private byte reviewType;
+
         public ExpensiveTask(byte type) {
             this.taskType = type;
+        }
+
+        public ExpensiveTask(byte type, byte reviewType) {
+            this.taskType = type;
+            this.reviewType = reviewType;
         }
 
         @Override
@@ -569,9 +586,17 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case VIEW_RAW:
                     break;
-                case INIT_IGNORE_LIST:
-                case INIT_NEW_BOOK_QUERY:
-                case INIT_QUERY:
+                case INIT_REVIEW_LIST:
+                    if (list != null) {
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+                    break;
+                case INIT_SCAN_LIST:
+                case INIT_NEW_WORD_BOOK_LIST:
+                case INIT_SUB_WORD_LIST:
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
                     break;
@@ -619,10 +644,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     lookupInDict(nextWordItem);
                     break;
-                case INIT_IGNORE_LIST:
-                case INIT_NEW_BOOK_QUERY:
+                case INIT_REVIEW_LIST:
                     bundle = new Bundle();
-                    wordlist.loadInfoList(CoreActivity.this);
+                    wordlist.loadReviewWordList(CoreActivity.this, reviewType);
+                    sliceListType = SliceWordList.REVIEW_LIST;
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);
@@ -631,9 +656,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         bundle.putBoolean("complete", true);
                     }
                     break;
-                case INIT_QUERY:
+                case INIT_SCAN_LIST:
+                case INIT_NEW_WORD_BOOK_LIST:
+                case INIT_SUB_WORD_LIST:
                     bundle = new Bundle();
-                    wordlist.loadSubList(CoreActivity.this);
+                    wordlist.loadWordList(CoreActivity.this);
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);
@@ -702,9 +729,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case VIEW_RAW:
                     applySlideIn();
                     break;
-                case INIT_IGNORE_LIST:
-                case INIT_NEW_BOOK_QUERY:
-                case INIT_QUERY: {
+                case INIT_REVIEW_LIST:
+                case INIT_SCAN_LIST:
+                case INIT_NEW_WORD_BOOK_LIST:
+                case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
                         list.clear();
@@ -727,6 +755,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                     } else {
+                        /** @TODO prompt that no word to be reviewed. */
                         progressBar.setProgress(100);
                         handler.sendEmptyMessage(SUBLIST_REACH_END);
                     }

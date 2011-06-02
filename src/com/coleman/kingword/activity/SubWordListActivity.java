@@ -19,19 +19,14 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.view.SlideTableSwitcher;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 
 public class SubWordListActivity extends Activity {
 
     private static final String TAG = SubWordListActivity.class.getName();
 
-    public static final byte SUB_WORD_LIST_TYPE = 0;
-
-    public static final byte NEW_WORD_BOOK_TYPE = 1;
-
-    public static final byte IGNORE_LIST_TYPE = 2;
-
-    public static final byte NULL_TYPE = -1;
 
     private ProgressBar progressBar;
 
@@ -80,16 +75,22 @@ public class SubWordListActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_new_word_book: {
                 Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", NEW_WORD_BOOK_TYPE);
+                intent.putExtra("type", SliceWordList.NEW_WORD_BOOK_LIST);
                 startActivity(intent);
                 break;
             }
             case R.id.menu_ignore_list: {
                 Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", IGNORE_LIST_TYPE);
+                intent.putExtra("type", SliceWordList.SCAN_LIST);
                 startActivity(intent);
                 break;
             }
+            case R.id.menu_backup:
+                WordInfoHelper._BACKUP_WHOLE_LIST(this);
+                break;
+            case R.id.menu_restore:
+                WordInfoHelper._RESTORE_WHOLE_LIST(this);
+                break;
             default:
                 break;
         }

@@ -88,6 +88,10 @@ public class KingWord {
         public static final String WEIGHT = "weight";
 
         public static final String NEW_WORD = "new_word";
+        
+        public static final String REVIEW_TYPE="review_type";
+        
+        public static final String REVIEW_TIME="review_time";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
@@ -102,6 +106,8 @@ public class KingWord {
             projectionMap.put(ERROR_COUNT, ERROR_COUNT);
             projectionMap.put(WEIGHT, WEIGHT);
             projectionMap.put(NEW_WORD, NEW_WORD);
+            projectionMap.put(REVIEW_TYPE, REVIEW_TYPE);
+            projectionMap.put(REVIEW_TIME, REVIEW_TIME);
         }
     }
 

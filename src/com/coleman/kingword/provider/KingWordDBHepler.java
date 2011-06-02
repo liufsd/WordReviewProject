@@ -36,7 +36,8 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
             + WordInfo._ID + " integer primary key autoincrement , " + WordInfo.WORD + " text ,"
             + WordInfo.IGNORE + " integer," + WordInfo.STUDY_COUNT + " integer,"
             + WordInfo.ERROR_COUNT + " integer," + WordInfo.WEIGHT + " integer,"
-            + WordInfo.NEW_WORD + " integer )";
+            + WordInfo.NEW_WORD + " integer," + WordInfo.REVIEW_TYPE + " integer,"
+            + WordInfo.REVIEW_TIME + " integer )";
 
     private static final String achievement_table = "create table " + Achievement.TABLE_NAME
             + " ( " + Achievement._ID + " integer primary key autoincrement , " + Achievement.TIME

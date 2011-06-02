@@ -18,6 +18,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.activity.CoreActivity;
 import com.coleman.kingword.activity.SubWordListActivity;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
+import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 
 public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener {
@@ -145,7 +146,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
             case R.id.button11:
             case R.id.button12:
                 Intent intent = new Intent(getContext(), CoreActivity.class);
-                intent.putExtra("type", SubWordListActivity.SUB_WORD_LIST_TYPE);
+                intent.putExtra("type", SliceWordList.SUB_WORD_LIST);
                 SubInfo info = (SubInfo) (v.getTag());
                 intent.putExtra("subinfo", info);
                 getContext().startActivity(intent);

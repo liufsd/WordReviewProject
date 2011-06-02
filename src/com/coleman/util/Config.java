@@ -16,6 +16,10 @@
 
 package com.coleman.util;
 
+import android.content.Context;
+import android.os.Environment;
+import android.telephony.TelephonyManager;
+
 /**
  * Build configuration. The constants in this class vary depending on release
  * vs. debug build. {@more}
@@ -25,9 +29,25 @@ public final class Config {
      * If this is a debug build, this field will be true.
      */
     public static final boolean DEBUG = true;
+
     /**
      * App read file encoding.
      */
     public static final String ENCODE = "GBK";
 
+    public static boolean isSimulator(Context context) {
+        TelephonyManager telmgr = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        String deviceID = telmgr.getDeviceId();
+        return "000000000000000".equalsIgnoreCase(deviceID);
+    }
+
+    public static boolean isExternalMediaMounted() {
+        String state = Environment.getExternalStorageState();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>"+state);
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -22,22 +25,19 @@ import android.widget.TextView;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.WordInfo;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = WelcomeActivity.class.getName();
 
     private Button startButton;
 
-    private TextView featureView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.string.welcome);
         setContentView(R.layout.welcome);
         startButton = (Button) findViewById(R.id.w_button1);
-        featureView = (TextView) findViewById(R.id.feature);
-        featureView.setText(loadFeatureList());
-        // applyAnim();
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +46,29 @@ public class WelcomeActivity extends Activity {
             }
         });
         // _DEL_REPEAT_WORDS();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.welcome_option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about_dev:
+                showAboutDev();
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    private void showAboutDev() {
+        new AlertDialog.Builder(this).setTitle(R.string.about_dev).setMessage(loadFeatureList())
+                .setPositiveButton(R.string.ok, null).show();
     }
 
     /**
@@ -97,14 +120,6 @@ public class WelcomeActivity extends Activity {
             }
         }
 
-    }
-
-    private void applyAnim() {
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.slide_top_out);
-        a.setDuration(30000);
-        a.setRepeatMode(Animation.RESTART);
-        a.setRepeatCount(Animation.INFINITE);
-        featureView.startAnimation(a);
     }
 
     private String loadFeatureList() {

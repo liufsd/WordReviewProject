@@ -52,11 +52,22 @@ public class SliceWordList {
      */
     static int errorCount;
 
-    private byte listType;
+    static byte listType;
+
+    public static final byte NULL_TYPE = -1;
+
+    public static final byte SUB_WORD_LIST = 1;
+
+    public static final byte REVIEW_LIST = 2;
+
+    public static final byte SCAN_LIST = 3;
+
+    public static final byte NEW_WORD_BOOK_LIST = 4;
 
     private Random ran = new Random();
 
     public SliceWordList(SubInfo info) {
+        listType = SUB_WORD_LIST;
         subinfo = info;
         list = new ArrayList<WordItem>();
         passViewCount = 0;
@@ -74,8 +85,54 @@ public class SliceWordList {
         errorCount = 0;
     }
 
-    public void loadInfoList(Context context) {
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType);
+    public void loadWordList(Context context) {
+        switch (listType) {
+            case SUB_WORD_LIST:
+                loadSubList(context);
+                break;
+            case NEW_WORD_BOOK_LIST:
+            case SCAN_LIST:
+                loadInfoList(context);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void loadReviewWordList(Context context, byte reviewType) {
+        listType = REVIEW_LIST;
+        
+        // reset the slice word list
+        reset();
+
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType,
+                reviewType);
+        WordItem item;
+        for (WordInfoVO info : infoList) {
+            item = new WordItem();
+            item.word = info.word;
+            item.info = info;
+            list.add(item);
+            Log.d(TAG, "item:" + item+" status:"+item.getCurrentStatus());
+        }
+        infoList.clear();
+    }
+
+    /**
+     * Could only be invoked by loadReviewWordList
+     */
+    private void reset() {
+        list.clear();
+        passViewCount = 0;
+        passAltCount = 0;
+        passMulCount = 0;
+        errorCount = 0;
+        p = 0;
+    }
+
+    private void loadInfoList(Context context) {
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType,
+                Byte.MAX_VALUE);
         WordItem item;
         for (WordInfoVO info : infoList) {
             item = new WordItem();
@@ -87,7 +144,7 @@ public class SliceWordList {
         infoList.clear();
     }
 
-    public void loadSubList(Context context) {
+    private void loadSubList(Context context) {
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
                 WordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
@@ -169,10 +226,6 @@ public class SliceWordList {
         } else {
             return getNext();
         }
-    }
-
-    public String computeInfoStudyResult(Context context) {
-        return context.getString(R.string.study_new_word_book_end);
     }
 
     public String computeSubListStudyResult(Context context) {

@@ -10,9 +10,11 @@ import android.util.Log;
 
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
+import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 
 public class WordItem {
@@ -28,7 +30,28 @@ public class WordItem {
 
     private DictData detailData;
 
-    private FiniteStateMachine mStateMachine = new FiniteStateMachine();
+    private FiniteStateMachine mStateMachine;
+
+    public WordItem() {
+        mStateMachine = new FiniteStateMachine();
+        switch (SliceWordList.listType) {
+            case SliceWordList.SUB_WORD_LIST:
+                break;
+            case SliceWordList.NEW_WORD_BOOK_LIST:
+                break;
+            case SliceWordList.SCAN_LIST:
+                break;
+            case SliceWordList.REVIEW_LIST:
+                mStateMachine.sendEmptyMessage(IFSMCommand.LAST);
+                break;
+            default:
+                throw new RuntimeException("Not support word list type!");
+        }
+    }
+
+    public FiniteState getCurrentStatus() {
+        return mStateMachine.getCurrentState();
+    }
 
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
@@ -58,7 +81,22 @@ public class WordItem {
 
     public void setPass(boolean passed) {
         if (passed) {
-            mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
+            switch (SliceWordList.listType) {
+                case SliceWordList.SUB_WORD_LIST:
+                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
+                    break;
+                case SliceWordList.NEW_WORD_BOOK_LIST:
+                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
+                    break;
+                case SliceWordList.SCAN_LIST:
+                    mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
+                    break;
+                case SliceWordList.REVIEW_LIST:
+                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
+                    break;
+                default:
+                    throw new RuntimeException("Not support word list type!");
+            }
         } else {
             mStateMachine.sendEmptyMessage(IFSMCommand.RESET);
         }
@@ -129,6 +167,13 @@ public class WordItem {
 
     public void studyPlus(Context context) {
         info.studycount++;
+        if (info.review_time == 0 && SliceWordList.listType != SliceWordList.REVIEW_LIST) {
+            info.review_type = WordInfoVO.REVIEW_1_HOUR;
+            info.review_time = System.currentTimeMillis();
+            EbbinghausReminder.setNotifaction(context, info.review_type);
+        } else if (SliceWordList.listType == SliceWordList.REVIEW_LIST) {
+            info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+        }
         if (info.studycount % 3 == 0) {
             info.weight--;
         }

@@ -20,18 +20,15 @@ package com.coleman.kingword.dict.stardict;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
-import com.coleman.util.ByteConverter;
+import com.coleman.util.ConvertUtils;
 
 /**
  * Dictionary index entry structure.
@@ -156,8 +153,8 @@ public class DictIndex {
                 for (int i = 0; i < bytes.length && wordmap.size() < numCount; i++) {
                     if (bytes[i] == 0 && i < bytes.length - 9) {
                         word = new String(bytes, mark, i - mark, "UTF-8");
-                        offset = ByteConverter.unsigned4BytesToInt(bytes, i + 1);
-                        size = ByteConverter.unsigned4BytesToInt(bytes, i + 5);
+                        offset = ConvertUtils.unsigned4BytesToInt(bytes, i + 1);
+                        size = ConvertUtils.unsigned4BytesToInt(bytes, i + 5);
                         DictIndex dictIndex = new DictIndex();
                         dictIndex.word = word;
                         dictIndex.offset = offset;

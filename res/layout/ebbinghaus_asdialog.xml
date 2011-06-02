@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:orientation="vertical">
+	<LinearLayout android:id="@+id/title_bar"
+		android:paddingLeft="10dp" android:paddingRight="10dp"
+		android:paddingTop="5dp" android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		<ImageView android:id="@+id/title_icon" android:src="@drawable/asdialog_title_icon"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
+		<TextView android:paddingLeft="10dp" android:id="@+id/title"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			style="@android:style/TextAppearance.DialogWindowTitle"></TextView>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/linearLayout2"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:orientation="vertical" android:paddingLeft="10dp"
+		android:paddingRight="10dp" android:paddingBottom="5dp">
+		<ImageView android:id="@+id/divider_line_1"
+			android:background="@drawable/title_rect_line" android:layout_width="fill_parent"
+			android:layout_height="2dp"></ImageView>
+		<TextView android:layout_width="wrap_content" android:id="@+id/message"
+			android:text="hhhhh" android:layout_height="wrap_content"
+			style="@android:style/TextAppearance.Medium" android:layout_gravity="center_vertical|left" />
+	</LinearLayout>
+	<LinearLayout android:id="@+id/LinearLayout_button"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:gravity="center" style="@android:style/ButtonBar"
+		android:orientation="horizontal">
+		<Button android:focusable="false" android:id="@+id/positive"
+			android:layout_weight="1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></Button>
+		<Button android:id="@+id/negative" android:focusable="false"
+			android:layout_width="wrap_content" android:layout_weight="1"
+			android:layout_height="wrap_content"></Button>
+	</LinearLayout>
+</LinearLayout>

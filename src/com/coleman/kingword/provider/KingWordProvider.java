@@ -111,6 +111,9 @@ public class KingWordProvider extends ContentProvider {
             case URI_WORDLISTITEM:
                 tableName = WordListItem.TABLE_NAME;
                 break;
+            case URI_WORDINFO:
+                tableName = WordInfo.TABLE_NAME;
+                break;
             default:
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }

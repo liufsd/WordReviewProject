@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.coleman.kingword.R;
+import com.coleman.util.Config;
 import com.coleman.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -177,8 +178,7 @@ public class FileExplorer extends Activity {
     }
 
     private void doEdit(final String path) {
-        String state = Environment.getExternalStorageState();
-        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+        if (!Config.isExternalMediaMounted()) {
             Toast.makeText(this, R.string.toast_media_unmounted, Toast.LENGTH_SHORT).show();
             return;
         }

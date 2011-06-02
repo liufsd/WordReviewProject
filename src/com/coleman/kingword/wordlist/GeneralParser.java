@@ -1,23 +1,16 @@
 
 package com.coleman.kingword.wordlist;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
 
-import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
-import com.coleman.util.FileAccessor;
 
 /**
  * A general parser should have the ability to parse the following format:
