@@ -61,7 +61,7 @@ public class EbbinghausActivityAsDialog extends Activity implements OnClickListe
                 finish();
                 break;
             case R.id.negative:
-                EbbinghausReminder.setNotifaction(this, reviewType, 10);
+                EbbinghausReminder.setNotifactionDelay(this, reviewType, 10);
                 finish();
                 break;
             default:

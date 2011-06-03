@@ -46,6 +46,10 @@ public class DictManager {
     /**********************************************************************
      * operate library
      **********************************************************************/
+    public boolean isInitialized() {
+        return libmap.size() > 0;
+    }
+
     /**
      * This method will do several things: 1. initial the database if not
      * initialed otherwise do nothing. 2. release the data if the database have

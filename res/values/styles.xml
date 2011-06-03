@@ -28,4 +28,10 @@
 		<item name="android:gravity">center_horizontal|top</item>
 		<item name="android:textColor">@color/black</item>
 	</style>
+	<style name="ButtonBarPadding">
+        <item name="android:paddingTop">5dip</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingRight">4dip</item>
+        <item name="android:paddingBottom">1dip</item>
+    </style>
 </resources>

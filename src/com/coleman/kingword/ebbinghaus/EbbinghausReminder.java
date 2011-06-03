@@ -19,7 +19,7 @@ public class EbbinghausReminder {
         calendar.setTimeInMillis(System.currentTimeMillis());
         switch (reviewType) {
             case WordInfoVO.REVIEW_1_HOUR:
-                calendar.add(Calendar.HOUR, 1);
+                calendar.add(Calendar.MINUTE, 40);
                 // calendar.add(Calendar.SECOND, 10);
                 if (!checkOneHourTimeUp()) {
                     return;
@@ -57,18 +57,18 @@ public class EbbinghausReminder {
      * Test if 1 hour time up, or will not set the notification.
      */
     private static boolean checkOneHourTimeUp() {
-        if (mTime == 0 || System.currentTimeMillis() - mTime > 10 * 60 * 1000) {
+        if (mTime == 0 || System.currentTimeMillis() - mTime > 40 * 60 * 1000) {
             mTime = System.currentTimeMillis();
             return true;
         }
         return false;
     }
 
-    public static void setNotifaction(Context context, byte reviewType, int minute) {
+    public static void setNotifactionDelay(Context context, byte reviewType, int delayMinute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, minute);
-        // calendar.add(Calendar.SECOND, minute);
+        calendar.add(Calendar.MINUTE, delayMinute);
+        // calendar.add(Calendar.SECOND, delayMinute);
         Intent intent = new Intent(context, EbbinghausReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);

@@ -4,11 +4,14 @@ package com.coleman.kingword.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.FeatureInfo;
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -32,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -39,7 +44,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.kingword.ebbinghaus.EbbinghausReceiver;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.SliceWordList;
@@ -50,7 +57,7 @@ import com.coleman.util.AppSettings;
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
     private static final String TAG = CoreActivity.class.getName();
 
-    private ProgressBar progressBar;
+    private ProgressBar progressBarDay, progressBarNight;
 
     private TextView textView;
 
@@ -87,10 +94,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        Intent intent = getIntent();
-        initView();
         enable3D = AppSettings.getBoolean(this, "enable3D", true);
         isNightMode = AppSettings.getBoolean(this, "isNightMode", false);
+        initView();
+        Intent intent = getIntent();
         sliceListType = intent.getByteExtra("type", SliceWordList.NULL_TYPE);
         switch (sliceListType) {
             case SliceWordList.SUB_WORD_LIST:
@@ -108,6 +115,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
             case SliceWordList.REVIEW_LIST:
+                DictManager dictm = DictManager.getInstance();
+                if (!dictm.isInitialized()) {
+                    dictm.initLibrary(this);
+                }
                 wordlist = new SliceWordList(sliceListType);
                 reviewType = intent.getByteExtra("review_type", Byte.MAX_VALUE);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST, reviewType).execute();
@@ -143,21 +154,86 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 AppSettings.saveBoolean(this, "enable3D", enable3D);
                 break;
             case R.id.menu_night_mode:
-                isNightMode = !isNightMode;
-                AppSettings.saveBoolean(this, "isNightMode", isNightMode);
-                Toast.makeText(this, "not implement yet~", Toast.LENGTH_SHORT).show();
-                /** @TODO need to implement */
+                setReadMode(!isNightMode);
                 break;
             case R.id.menu_review:
-                // new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST,
-                // WordInfoVO.REVIEW_1_HOUR)
-                // .execute();
-                EbbinghausReminder.setNotifaction(this, WordInfoVO.REVIEW_1_HOUR);
+                broadcastReview();
                 break;
             default:
                 break;
         }
         return true;
+    }
+
+    /**
+     * try to review.
+     */
+    private void broadcastReview() {
+        Intent intent = new Intent(this, EbbinghausReceiver.class);
+        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("review_type", WordInfoVO.REVIEW_1_HOUR);
+        sendBroadcast(intent);
+    }
+
+    private int dayTextColor = 0xff000000;
+
+    private int nightTextColor = 0xfffff8dc;
+
+    private int dayBgColor = 0xfffff8dc;
+
+    private int nightBgColor = 0xff000000;
+
+    private void setReadMode(boolean isNight) {
+        isNightMode = isNight;
+        AppSettings.saveBoolean(this, "isNightMode", isNightMode);
+        if (isNightMode) {
+            container.setBackgroundColor(nightBgColor);
+            textView.setTextColor(nightTextColor);
+
+            viewmore.setBackgroundResource(R.drawable.btn_bg_night);
+            viewraw.setBackgroundResource(R.drawable.btn_bg_night);
+            upgrade.setBackgroundResource(R.drawable.btn_bg_night);
+            degrade.setBackgroundResource(R.drawable.btn_bg_night);
+            addOrRemove.setBackgroundResource(R.drawable.btn_bg_night);
+            ignoreOrNot.setBackgroundResource(R.drawable.btn_bg_night);
+
+            findViewById(R.id.linearLayout2).setBackgroundResource(R.drawable.bottom_bar_night);
+
+            progressBarDay.setVisibility(View.GONE);
+            progressBarNight.setVisibility(View.VISIBLE);
+
+            viewmore.setTextColor(nightTextColor);
+            viewraw.setTextColor(nightTextColor);
+            upgrade.setTextColor(nightTextColor);
+            degrade.setTextColor(nightTextColor);
+            addOrRemove.setTextColor(nightTextColor);
+            ignoreOrNot.setTextColor(nightTextColor);
+
+        } else {
+            container.setBackgroundColor(dayBgColor);
+            textView.setTextColor(dayTextColor);
+
+            viewmore.setBackgroundResource(android.R.drawable.btn_default);
+            viewraw.setBackgroundResource(android.R.drawable.btn_default);
+            upgrade.setBackgroundResource(android.R.drawable.btn_default);
+            degrade.setBackgroundResource(android.R.drawable.btn_default);
+            addOrRemove.setBackgroundResource(android.R.drawable.btn_default);
+            ignoreOrNot.setBackgroundResource(android.R.drawable.btn_default);
+
+            findViewById(R.id.linearLayout2).setBackgroundResource(android.R.drawable.bottom_bar);
+
+            progressBarDay.setVisibility(View.VISIBLE);
+            progressBarNight.setVisibility(View.GONE);
+
+            viewmore.setTextColor(dayTextColor);
+            viewraw.setTextColor(dayTextColor);
+            upgrade.setTextColor(dayTextColor);
+            degrade.setTextColor(dayTextColor);
+            addOrRemove.setTextColor(dayTextColor);
+            ignoreOrNot.setTextColor(dayTextColor);
+        }
+        // make the list view update too
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -245,7 +321,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         degrade = (Button) findViewById(R.id.degrade);
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        progressBarDay = (ProgressBar) findViewById(R.id.progressBarDay1);
+        progressBarNight = (ProgressBar) findViewById(R.id.progressBarNight1);
         continueView = (TextView) findViewById(R.id.continueHitView);
 
         viewraw.setVisibility(View.GONE);
@@ -253,7 +330,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         degrade.setVisibility(View.GONE);
 
         listView.setOnItemClickListener(this);
-        listView.setEmptyView(findViewById(R.id.progressBar2));
+        if(isNightMode){
+            listView.setEmptyView(findViewById(R.id.progressBarNight2));
+        }
+        else{
+            listView.setEmptyView(findViewById(R.id.progressBarDay2));
+        }
 
         addOrRemove.setOnClickListener(this);
         viewmore.setOnClickListener(this);
@@ -264,6 +346,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
+
+        // set the read mode night or day
+        setReadMode(isNightMode);
 
     }
 
@@ -493,12 +578,20 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             } else {
                 v = convertView;
             }
+            LinearLayout layout = (LinearLayout) v.findViewById(R.id.itemLayout);
             TextView tv = (TextView) v.findViewById(R.id.textView1);
+            if (isNightMode) {
+                layout.setBackgroundResource(R.drawable.item_bg_night);
+                tv.setTextColor(nightTextColor);
+            } else {
+                layout.setBackgroundResource(R.drawable.item_bg_day);
+                tv.setTextColor(dayTextColor);
+            }
             tv.setTypeface(mFace);
             DictData data = list.get(position);
             Log.d(TAG, "data:" + data);
             if (data != null) {
-                if (!nextWordItem.isPassView()) {
+                if (nextWordItem.showSymbol()) {
                     tv.setText(data.getDataAndSymbol());
                 } else {
                     tv.setText(data.getDatas());
@@ -739,7 +832,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         list.addAll(_buflist);
                         textView.setText(nextWordItem.word);
                         adapter.notifyDataSetChanged();
-                        progressBar.setProgress(wordlist.getProgress());
+                        progressBarDay.setProgress(wordlist.getProgress());
+                        progressBarNight.setProgress(wordlist.getProgress());
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());
                         if (nextWordItem.isAddToNew()) {
@@ -756,7 +850,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                     } else {
                         /** @TODO prompt that no word to be reviewed. */
-                        progressBar.setProgress(100);
+                        progressBarDay.setProgress(100);
+                        progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(SUBLIST_REACH_END);
                     }
                     break;
@@ -765,7 +860,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     Log.d(TAG, "progress:" + wordlist.getProgress());
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
-                        progressBar.setProgress(wordlist.getProgress());
+                        progressBarDay.setProgress(wordlist.getProgress());
+                        progressBarNight.setProgress(wordlist.getProgress());
                         if (enable3D) {
                             apply3DAnim(0, 90);
                         } else {
@@ -786,7 +882,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             ignoreOrNot.setText(R.string.ignore);
                         }
                     } else {
-                        progressBar.setProgress(100);
+                        progressBarDay.setProgress(100);
+                        progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);
                     }
                     break;

@@ -16,6 +16,7 @@ import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 
 public class WordItem {
     private static final String TAG = WordItem.class.getName();
@@ -63,16 +64,8 @@ public class WordItem {
         return mStateMachine.isComplete();
     }
 
-    public boolean isPassView() {
-        return mStateMachine.isPassView();
-    }
-
-    public boolean isPassAlternative() {
-        return mStateMachine.isPassAlternative();
-    }
-
-    public boolean isPassMultiple() {
-        return mStateMachine.isPassMultiple();
+    public boolean showSymbol() {
+        return mStateMachine.getCurrentState() == mStateMachine.getInitState();
     }
 
     public boolean isAddToNew() {

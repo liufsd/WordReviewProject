@@ -68,6 +68,10 @@ public class FiniteStateMachine {
         return mCurrentState;
     }
 
+    public FiniteState getInitState() {
+        return initState;
+    }
+
     public void sendMessage(Message msg) {
         mStateEngine.handleMessage(msg);
     }
