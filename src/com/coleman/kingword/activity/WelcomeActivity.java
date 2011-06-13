@@ -17,15 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.WordInfo;
-import com.coleman.kingword.wordinfo.WordInfoHelper;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = WelcomeActivity.class.getName();

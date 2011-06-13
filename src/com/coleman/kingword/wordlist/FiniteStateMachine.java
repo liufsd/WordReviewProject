@@ -30,7 +30,10 @@ public class FiniteStateMachine {
 
     private FiniteState completeState = new CompleteState();
 
-    public FiniteStateMachine() {
+    private SliceWordList sliceList;
+
+    public FiniteStateMachine(SliceWordList sliceList) {
+        this.sliceList = sliceList;
 
         initState.setNext(altState);
         altState.setNext(mulState);
@@ -90,8 +93,8 @@ public class FiniteStateMachine {
         mCurrentState = state;
     }
 
-    public static class FiniteState {
-        private static Random ran = new Random();
+    public class FiniteState {
+        private Random ran = new Random();
 
         protected FiniteState nextState;
 
@@ -161,11 +164,11 @@ public class FiniteStateMachine {
 
     }
 
-    public static class InitState extends FiniteState {
+    public class InitState extends FiniteState {
         @Override
         protected void exit() {
             if (!counted) {
-                SliceWordList.passViewCount++;
+                sliceList.passViewCount++;
             }
             super.exit();
         }
@@ -178,11 +181,11 @@ public class FiniteStateMachine {
         }
     }
 
-    public static class AlternativeState extends FiniteState {
+    public class AlternativeState extends FiniteState {
         @Override
         protected void exit() {
             if (!counted) {
-                SliceWordList.passAltCount++;
+                sliceList.passAltCount++;
             }
             super.exit();
         }
@@ -199,12 +202,12 @@ public class FiniteStateMachine {
         }
     }
 
-    public static class MultipleState extends FiniteState {
+    public class MultipleState extends FiniteState {
         @Override
         protected void exit() {
             if (!counted) {
-                SliceWordList.passMulCount++;
-                switch (SliceWordList.listType) {
+                sliceList.passMulCount++;
+                switch (sliceList.listType) {
                     case SliceWordList.SUB_WORD_LIST:
                         break;
                     case SliceWordList.NEW_WORD_BOOK_LIST:
@@ -212,8 +215,8 @@ public class FiniteStateMachine {
                     case SliceWordList.SCAN_LIST:
                         break;
                     case SliceWordList.REVIEW_LIST:
-                        SliceWordList.passViewCount++;
-                        SliceWordList.passAltCount++;
+                        sliceList.passViewCount++;
+                        sliceList.passAltCount++;
                         break;
                     default:
                         throw new RuntimeException("Not support word list type!");
@@ -239,7 +242,7 @@ public class FiniteStateMachine {
         }
     }
 
-    public static class CompleteState extends FiniteState {
+    public class CompleteState extends FiniteState {
     }
 
     private class FiniteStateEngine implements IFSMCommand {

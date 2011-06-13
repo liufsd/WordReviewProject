@@ -2,15 +2,12 @@
 package com.coleman.kingword.wordlist;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 import android.util.Log;
 
 import com.coleman.kingword.R;
@@ -19,7 +16,6 @@ import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
-import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 
 public class SliceWordList {
     private SubInfo subinfo;
@@ -41,18 +37,18 @@ public class SliceWordList {
      * count the number of passed word, ignored will be passed, or meanwhile
      * passView, passAlternative, and passMultiple of WordItem will also passed.
      */
-    static int passViewCount;
+    int passViewCount;
 
-    static int passAltCount;
+    int passAltCount;
 
-    static int passMulCount;
+    int passMulCount;
 
     /**
      * count the total number of the error occuring times.
      */
-    static int errorCount;
+    int errorCount;
 
-    static byte listType;
+    byte listType;
 
     public static final byte NULL_TYPE = -1;
 
@@ -63,8 +59,6 @@ public class SliceWordList {
     public static final byte SCAN_LIST = 3;
 
     public static final byte NEW_WORD_BOOK_LIST = 4;
-
-    private Random ran = new Random();
 
     public SliceWordList(SubInfo info) {
         listType = SUB_WORD_LIST;
@@ -100,20 +94,18 @@ public class SliceWordList {
     }
 
     public void loadReviewWordList(Context context, byte reviewType) {
-        listType = REVIEW_LIST;
-        
         // reset the slice word list
         reset();
 
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType,
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST,
                 reviewType);
         WordItem item;
         for (WordInfoVO info : infoList) {
-            item = new WordItem();
+            item = new WordItem(this);
             item.word = info.word;
             item.info = info;
             list.add(item);
-            Log.d(TAG, "item:" + item+" status:"+item.getCurrentStatus());
+            Log.d(TAG, "item:" + item + " status:" + item.getCurrentStatus());
         }
         infoList.clear();
     }
@@ -135,7 +127,7 @@ public class SliceWordList {
                 Byte.MAX_VALUE);
         WordItem item;
         for (WordInfoVO info : infoList) {
-            item = new WordItem();
+            item = new WordItem(this);
             item.word = info.word;
             item.info = info;
             list.add(item);
@@ -151,7 +143,7 @@ public class SliceWordList {
         if (c.moveToFirst()) {
             WordItem item;
             while (!c.isAfterLast()) {
-                item = new WordItem();
+                item = new WordItem(this);
                 item.word = c.getString(0);
                 item.id = c.getLong(1);
                 list.add(item);

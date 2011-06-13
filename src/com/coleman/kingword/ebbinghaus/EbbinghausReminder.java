@@ -71,8 +71,8 @@ public class EbbinghausReminder {
     public static void setNotifactionDelay(Context context, byte reviewType, int delayMinute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        // calendar.add(Calendar.MINUTE, delayMinute);
-        calendar.add(Calendar.SECOND, delayMinute);
+        calendar.add(Calendar.MINUTE, delayMinute);
+        // calendar.add(Calendar.SECOND, delayMinute);
         Intent intent = new Intent(context, EbbinghausReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);

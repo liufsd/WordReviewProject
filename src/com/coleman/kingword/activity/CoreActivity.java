@@ -4,14 +4,11 @@ package com.coleman.kingword.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.FeatureInfo;
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
@@ -25,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -250,7 +246,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (list.size() == 1) {
             nextWordItem.setPass(true);
-            nextWordItem.studyPlus(this);
+            nextWordItem.studyOrReview(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else if (list.get(position).equals(nextWordItem.getDictData(this))) {
             nextWordItem.setPass(true);
@@ -260,7 +256,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 continueView.setText(String.format(getString(R.string.continue_hit_count),
                         continueHitCount));
             }
-            nextWordItem.studyPlus(this);
+            nextWordItem.studyOrReview(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
             nextWordItem.setPass(false);

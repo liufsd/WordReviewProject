@@ -1,15 +1,8 @@
 
 package com.coleman.kingword.wordlist;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
-import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 
-import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
 
 public class WordList {

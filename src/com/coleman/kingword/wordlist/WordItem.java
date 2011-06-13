@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.Message;
 import android.util.Log;
 
 import com.coleman.kingword.dict.DictManager;
@@ -16,7 +15,6 @@ import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
-import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 
 public class WordItem {
     private static final String TAG = WordItem.class.getName();
@@ -27,15 +25,20 @@ public class WordItem {
 
     WordInfoVO info;
 
+    private boolean reviewed;
+
     private DictData dictData;
 
     private DictData detailData;
 
     private FiniteStateMachine mStateMachine;
 
-    public WordItem() {
-        mStateMachine = new FiniteStateMachine();
-        switch (SliceWordList.listType) {
+    private SliceWordList sliceList;
+
+    public WordItem(SliceWordList sliceList) {
+        this.sliceList = sliceList;
+        mStateMachine = new FiniteStateMachine(sliceList);
+        switch (sliceList.listType) {
             case SliceWordList.SUB_WORD_LIST:
                 break;
             case SliceWordList.NEW_WORD_BOOK_LIST:
@@ -74,7 +77,7 @@ public class WordItem {
 
     public void setPass(boolean passed) {
         if (passed) {
-            switch (SliceWordList.listType) {
+            switch (sliceList.listType) {
                 case SliceWordList.SUB_WORD_LIST:
                     mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
                     break;
@@ -115,9 +118,9 @@ public class WordItem {
         }
         if (info.ignore) {
             mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
-            SliceWordList.passViewCount++;
-            SliceWordList.passAltCount++;
-            SliceWordList.passMulCount++;
+            sliceList.passViewCount++;
+            sliceList.passAltCount++;
+            sliceList.passMulCount++;
         }
     }
 
@@ -158,14 +161,20 @@ public class WordItem {
         return WordInfoHelper.store(context, info);
     }
 
-    public void studyPlus(Context context) {
+    public void studyOrReview(Context context) {
+        if (sliceList.listType == SliceWordList.REVIEW_LIST) {
+            reviewPlus(context);
+        } else {
+            studyPlus(context);
+        }
+    }
+
+    private void studyPlus(Context context) {
         info.studycount++;
-        if (info.review_time == 0 && SliceWordList.listType != SliceWordList.REVIEW_LIST) {
+        if (info.review_time == 0) {
             info.review_type = WordInfoVO.REVIEW_1_HOUR;
             info.review_time = System.currentTimeMillis();
             EbbinghausReminder.setNotifaction(context, info.review_type);
-        } else if (SliceWordList.listType == SliceWordList.REVIEW_LIST) {
-            info.review_type = WordInfoVO.getNextReviewType(info.review_type);
         }
         if (info.studycount % 3 == 0) {
             info.weight--;
@@ -175,9 +184,23 @@ public class WordItem {
         WordInfoHelper.store(context, info);
     }
 
+    private void reviewPlus(Context context) {
+        info.studycount++;
+        if (!reviewed) {
+            reviewed = true;
+            info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+        }
+        if (info.studycount % 3 == 0) {
+            info.weight--;
+        }
+        info.weight = info.weight < WordInfoVO.MIN_WEIGHT ? WordInfoVO.MIN_WEIGHT : info.weight;
+        Log.d(TAG, "review plus:" + toString());
+        WordInfoHelper.store(context, info);
+    }
+
     public void errorPlus(Context context) {
         info.errorcount++;
-        SliceWordList.errorCount++;
+        sliceList.errorCount++;
         if (info.errorcount % 2 == 0) {
             info.weight++;
         }
