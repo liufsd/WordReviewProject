@@ -15,7 +15,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.coleman.kingword.R;
@@ -149,7 +148,12 @@ public class FileExplorer extends Activity {
             ImageView imgView = (ImageView) convertView.findViewById(R.id.imageView1);
             if (!TextUtils.isEmpty(fileName)) {
                 if (list.get(position).isDirectory()) {
-                    imgView.setImageResource(R.drawable.folder);
+                    if(list.get(position).list().length>0){
+                        imgView.setImageResource(R.drawable.folder);
+                    }
+                    else{
+                        imgView.setImageResource(R.drawable.folder_emp);
+                    }
                 } else if (fileName.toLowerCase().endsWith(".txt")) {
                     imgView.setImageResource(R.drawable.txt_file);
                 } else {

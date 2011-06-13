@@ -7,11 +7,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.SliceWordList;
 
 public class EbbinghausReminder {
+    private static final String TAG = EbbinghausReminder.class.getName();
+
     private static long mTime;
 
     public static void setNotifaction(Context context, byte reviewType) {
@@ -51,6 +54,7 @@ public class EbbinghausReminder {
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        Log.d(TAG, "=======set alarm: " + WordInfoVO.getReviewTypeText(reviewType));
     }
 
     /**
@@ -67,8 +71,8 @@ public class EbbinghausReminder {
     public static void setNotifactionDelay(Context context, byte reviewType, int delayMinute) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.MINUTE, delayMinute);
-        // calendar.add(Calendar.SECOND, delayMinute);
+        // calendar.add(Calendar.MINUTE, delayMinute);
+        calendar.add(Calendar.SECOND, delayMinute);
         Intent intent = new Intent(context, EbbinghausReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);

@@ -1,6 +1,8 @@
 
 package com.coleman.kingword.activity;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -100,7 +102,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         public void bindView(View view, Context context, final Cursor cursor) {
             view.setTag(cursor.getLong(0));
             TextView tv = (TextView) view.findViewById(R.id.textView1);
-            String text = cursor.getLong(0) + ":" + cursor.getString(2);
+            String text = getName(cursor.getString(2));
             tv.setText(text);
             tv.setLines(3);
         }
@@ -110,6 +112,18 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             return super.newView(context, cursor, parent);
         }
 
+        private String getName(String src) {
+            String str = (src == null ? "" : src);
+            int s_idx = src.lastIndexOf(File.separator);
+            if (s_idx != -1 && s_idx < src.length() - 1) {
+                str = str.substring(s_idx + 1);
+            }
+            int e_idx = str.lastIndexOf(".");
+            if (e_idx != -1) {
+                str = str.substring(0, e_idx);
+            }
+            return str;
+        }
     }
 
     @Override

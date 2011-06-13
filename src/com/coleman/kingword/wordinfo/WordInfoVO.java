@@ -177,4 +177,30 @@ public class WordInfoVO implements Parcelable {
         return _type;
     }
 
+    public static String getReviewTypeText(byte type) {
+        String str = "";
+        switch (type) {
+            case REVIEW_1_HOUR:
+                str += REVIEW_1_HOUR;
+                break;
+            case REVIEW_12_HOUR:
+                str += REVIEW_12_HOUR;
+                break;
+            case REVIEW_1_DAY:
+                str += REVIEW_1_DAY;
+                break;
+            case REVIEW_5_DAY:
+                str += REVIEW_5_DAY;
+                break;
+            case REVIEW_20_DAY:
+                str += REVIEW_20_DAY;
+                break;
+            case REVIEW_COMPLETE:
+                str += REVIEW_COMPLETE;
+            default:
+                break;
+        }
+        return str;
+    }
+
 }
