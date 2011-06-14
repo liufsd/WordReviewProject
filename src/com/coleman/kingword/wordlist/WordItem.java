@@ -127,7 +127,6 @@ public class WordItem {
         if (info.ignore) {
             mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
             sliceList.passViewCount++;
-            sliceList.passAltCount++;
             sliceList.passMulCount++;
         }
     }

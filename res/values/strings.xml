@@ -6,7 +6,7 @@
 
 	<string name="init_word_list">词库正在进行初使化...</string>
 	<string name="view_more">详细</string>
-	<string name="view_raw">恢复</string>
+	<string name="view_raw">简略</string>
 	<string name="upgrade">升级</string>
 	<string name="degrade">降级</string>
 	<string name="add_new">加入生词本</string>

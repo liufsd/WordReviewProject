@@ -39,8 +39,6 @@ public class SliceWordList {
      */
     int passViewCount;
 
-    int passAltCount;
-
     int passMulCount;
 
     /**
@@ -65,7 +63,6 @@ public class SliceWordList {
         subinfo = info;
         list = new ArrayList<WordItem>();
         passViewCount = 0;
-        passAltCount = 0;
         passMulCount = 0;
         errorCount = 0;
     }
@@ -74,7 +71,6 @@ public class SliceWordList {
         listType = type;
         list = new ArrayList<WordItem>();
         passViewCount = 0;
-        passAltCount = 0;
         passMulCount = 0;
         errorCount = 0;
     }
@@ -115,7 +111,6 @@ public class SliceWordList {
     private void reset() {
         list.clear();
         passViewCount = 0;
-        passAltCount = 0;
         passMulCount = 0;
         errorCount = 0;
         p = 0;
@@ -168,7 +163,7 @@ public class SliceWordList {
         if (allComplete()) {
             return 100;
         }
-        return (passViewCount + passAltCount + passMulCount) * 33 / list.size();
+        return (passViewCount + passMulCount) * 50 / list.size();
     }
 
     public boolean allComplete() {

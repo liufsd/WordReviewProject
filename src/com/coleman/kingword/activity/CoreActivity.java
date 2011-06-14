@@ -46,6 +46,7 @@ import com.coleman.kingword.ebbinghaus.EbbinghausReceiver;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.SliceWordList;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.AppSettings;
@@ -246,7 +247,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             nextWordItem.studyOrReview(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else if (list.get(position).equals(nextWordItem.getDictData(this))) {
-            nextWordItem.setPass(true);
+            if (!(nextWordItem.getCurrentStatus() instanceof InitState)) {
+                nextWordItem.setPass(true);
+            }
             continueHitCount++;
             if (continueHitCount >= 3) {
                 continueView.setVisibility(View.VISIBLE);
@@ -820,6 +823,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(wordlist.getProgress());
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());
+                        if(nextWordItem.getCurrentStatus().isCounted()){
+                            viewmore.setVisibility(View.VISIBLE);
+                            viewraw.setVisibility(View.INVISIBLE);
+                        }
+                        else{
+                            viewmore.setVisibility(View.INVISIBLE);
+                            viewraw.setVisibility(View.VISIBLE);
+                        }
+                        
                         if (nextWordItem.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {

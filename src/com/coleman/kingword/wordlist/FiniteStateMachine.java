@@ -24,8 +24,6 @@ public class FiniteStateMachine {
 
     private FiniteState initState = new InitState();
 
-    private FiniteState altState = new AlternativeState();
-
     private FiniteState mulState = new MultipleState();
 
     private FiniteState completeState = new CompleteState();
@@ -35,14 +33,9 @@ public class FiniteStateMachine {
     public FiniteStateMachine(SliceWordList sliceList) {
         this.sliceList = sliceList;
 
-        initState.setNext(altState);
-        altState.setNext(mulState);
-        mulState.setNext(completeState);
-
         setInitialState(initState);
 
         addState(initState);
-        addState(altState);
         addState(mulState);
         addState(completeState);
     }
@@ -53,10 +46,6 @@ public class FiniteStateMachine {
 
     public boolean isPassView() {
         return initState.pass;
-    }
-
-    public boolean isPassAlternative() {
-        return altState.pass;
     }
 
     public boolean isPassMultiple() {
@@ -93,7 +82,7 @@ public class FiniteStateMachine {
         mCurrentState = state;
     }
 
-    public class FiniteState {
+    public abstract class FiniteState {
         private Random ran = new Random();
 
         protected FiniteState nextState;
@@ -107,13 +96,7 @@ public class FiniteStateMachine {
             pass = false;
         }
 
-        protected void setNext(FiniteState nextState) {
-            this.nextState = nextState;
-        }
-
-        protected FiniteState getNext() {
-            return nextState;
-        }
+        protected abstract FiniteState getNext();
 
         /**
          * Called when a state is entered.
@@ -162,6 +145,10 @@ public class FiniteStateMachine {
             datalist.add(list.get(index).getDictData(context));
         }
 
+        public boolean isCounted() {
+            return counted;
+        }
+
     }
 
     public class InitState extends FiniteState {
@@ -176,29 +163,25 @@ public class FiniteStateMachine {
         protected ArrayList<DictData> getDictData(Context context, WordItem item,
                 ArrayList<WordItem> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
-            datalist.add(item.getDictData(context));
+            if (counted) {
+                DictData data = item.getDetail(context);
+                if (data.getDatas().indexOf("not found!") != -1) {
+                    data = item.getDictData(context);
+                }
+                datalist.add(data);
+            } else {
+                DictData data = item.getDictData(context);
+                if (data.getDatas().indexOf("not found!") != -1) {
+                    data = item.getDetail(context);
+                }
+                datalist.add(data);
+            }
             return datalist;
         }
-    }
 
-    public class AlternativeState extends FiniteState {
         @Override
-        protected void exit() {
-            if (!counted) {
-                sliceList.passAltCount++;
-            }
-            super.exit();
-        }
-
-        protected ArrayList<DictData> getDictData(Context context, WordItem item,
-                ArrayList<WordItem> list) {
-            ArrayList<DictData> datalist = new ArrayList<DictData>();
-            datalist.add(item.getDictData(context));
-            if (list.size() > 1) {
-                addRandomDictData(context, list, datalist);
-            }
-            shuffle(datalist);
-            return datalist;
+        protected FiniteState getNext() {
+            return mulState;
         }
     }
 
@@ -216,7 +199,6 @@ public class FiniteStateMachine {
                         break;
                     case SliceWordList.REVIEW_LIST:
                         sliceList.passViewCount++;
-                        sliceList.passAltCount++;
                         break;
                     default:
                         throw new RuntimeException("Not support word list type!");
@@ -240,9 +222,18 @@ public class FiniteStateMachine {
             shuffle(datalist);
             return datalist;
         }
+
+        @Override
+        protected FiniteState getNext() {
+            return completeState;
+        }
     }
 
     public class CompleteState extends FiniteState {
+        @Override
+        protected FiniteState getNext() {
+            return null;
+        }
     }
 
     private class FiniteStateEngine implements IFSMCommand {
@@ -262,7 +253,6 @@ public class FiniteStateMachine {
                     break;
                 case LAST:
                     setInitialState(mulState);
-                    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>1111");
                     break;
                 default:
                     break;
