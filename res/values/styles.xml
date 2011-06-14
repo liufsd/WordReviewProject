@@ -16,6 +16,7 @@
 		<item name="android:layout_marginRight">15dp</item>
 		<item name="android:layout_marginBottom">5dp</item>
 	</style>
+
 	<style name="word_title">
 		<item name="android:maxLines">1</item>
 		<item name="android:scrollHorizontally">true</item>
@@ -25,6 +26,13 @@
 	<style name="wordlist_title" parent="@style/word_title">
 		<item name="android:textStyle">bold</item>
 	</style>
+
+	<style name="word_msg">
+		<item name="android:maxLines">3</item>
+		<item name="android:layout_gravity">center_vertical|left</item>
+		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+	</style>
+
 	<style name="unit_item_text">
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">20dp</item>

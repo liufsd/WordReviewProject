@@ -53,6 +53,14 @@ public class WordItem {
         }
     }
 
+    public String getWord(Context context) {
+        if (sliceList.listType == SliceWordList.REVIEW_LIST) {
+            return word + "(" + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+        } else {
+            return word;
+        }
+    }
+
     public FiniteState getCurrentStatus() {
         return mStateMachine.getCurrentState();
     }
@@ -174,7 +182,7 @@ public class WordItem {
         if (info.review_time == 0) {
             info.review_type = WordInfoVO.REVIEW_1_HOUR;
             info.review_time = System.currentTimeMillis();
-            EbbinghausReminder.setNotifaction(context, info.review_type);
+            // EbbinghausReminder.setNotifaction(context, info.review_type);
         }
         if (info.studycount % 3 == 0) {
             info.weight--;

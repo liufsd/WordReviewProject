@@ -17,11 +17,14 @@ import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
+import com.coleman.util.AppSettings;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();
 
     private static WordListManager manager;
+
+    private static final int DEFAULT_SPLIT_NUM = 200;
 
     private WordListManager() {
     }
@@ -71,7 +74,7 @@ public class WordListManager {
         }
         WordList wordlist = new WordList("", wordlistName, null);
         insertWordList(context, wordlist, notifier);
-        splitAndInsertSubWordList(context, list, wordlist, 20, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, notifier);
     }
 
     public boolean isExist(Context context, String wordlist) {
@@ -106,7 +109,7 @@ public class WordListManager {
         WordList wordlist = new WordList("", wordlistName, null);
         notifier.notify(35);
         insertWordList(context, wordlist, notifier);
-        splitAndInsertSubWordList(context, list, wordlist, 20, notifier);
+        splitAndInsertSubWordList(context, list, wordlist, notifier);
     }
 
     private void insertWordList(Context context, WordList wordlist, IProgressNotifier notifier) {
@@ -117,7 +120,8 @@ public class WordListManager {
     }
 
     private void splitAndInsertSubWordList(Context context, ArrayList<String> list,
-            WordList wordlist, int suggest, IProgressNotifier notifier) {
+            WordList wordlist, IProgressNotifier notifier) {
+        int suggest = AppSettings.getInt(context, AppSettings.SPLIT_NUM_KEY, DEFAULT_SPLIT_NUM);
         ArrayList<List<String>> sublist = new ArrayList<List<String>>();
         switch (wordlist.set_method) {
             case AVARAGE_DEVIDE: {

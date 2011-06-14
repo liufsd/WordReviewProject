@@ -36,10 +36,20 @@
 		<activity android:name=".activity.EbbinghausActivityAsDialog"
 			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog">
 		</activity>
+		<activity android:name=".activity.SettingsActivity"
+			android:label="@string/app_name">
+		</activity>
 
 		<!-- receiver -->
 		<receiver android:name=".ebbinghaus.EbbinghausReceiver"
-			android:label="@string/app_name"></receiver>
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="review_time_0"></action>
+				<action android:name="review_time_1"></action>
+				<action android:name="review_time_2"></action>
+				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+			</intent-filter>
+		</receiver>
 	</application>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.GET_TASKS" />

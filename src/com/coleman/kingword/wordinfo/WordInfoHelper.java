@@ -118,7 +118,7 @@ public class WordInfoHelper {
      * @param type map the value of SubWordListActivity's type.
      * @return
      */
-    public static ArrayList<WordInfoVO> getWordInfoList(Context context, byte type, byte reviewType) {
+    public static ArrayList<WordInfoVO> getWordInfoList(Context context, byte type) {
         ArrayList<WordInfoVO> list = new ArrayList<WordInfoVO>();
         Cursor c = null;
         switch (type) {
@@ -135,8 +135,20 @@ public class WordInfoHelper {
 
                 break;
             case SliceWordList.REVIEW_LIST:
-                c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
-                        WordInfo.REVIEW_TYPE + "= " + reviewType, null, null);
+                long ct = System.currentTimeMillis();
+                String selection = "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR
+                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")"
+                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR
+                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000) + ")"
+                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY
+                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000) + ")"
+                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY
+                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000)
+                        + ")" + " or " + "(" + WordInfo.REVIEW_TYPE + "="
+                        + WordInfoVO.REVIEW_20_DAY + " and " + WordInfo.REVIEW_TIME + "<="
+                        + (ct - 20 * 24 * 60 * 60 * 1000) + ")";
+                c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection, selection,
+                        null, null);
                 break;
             default:
                 break;

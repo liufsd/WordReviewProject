@@ -84,14 +84,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private boolean isNightMode;
 
-    private byte reviewType;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        enable3D = AppSettings.getBoolean(this, "enable3D", true);
-        isNightMode = AppSettings.getBoolean(this, "isNightMode", false);
+        enable3D = AppSettings.getBoolean(this, AppSettings.ENABLE_3D_KEY, true);
+        isNightMode = AppSettings.getBoolean(this, AppSettings.IS_NIGHT_MODE_KEY, false);
         initView();
         Intent intent = getIntent();
         sliceListType = intent.getByteExtra("type", SliceWordList.NULL_TYPE);
@@ -116,8 +114,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     dictm.initLibrary(this);
                 }
                 wordlist = new SliceWordList(sliceListType);
-                reviewType = intent.getByteExtra("review_type", Byte.MAX_VALUE);
-                new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST, reviewType).execute();
+                new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
             default:
                 finish();
@@ -147,7 +144,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         switch (item.getItemId()) {
             case R.id.menu_enable3d:
                 enable3D = !enable3D;
-                AppSettings.saveBoolean(this, "enable3D", enable3D);
+                AppSettings.saveBoolean(this, AppSettings.ENABLE_3D_KEY, enable3D);
                 break;
             case R.id.menu_night_mode:
                 setReadMode(!isNightMode);
@@ -181,7 +178,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private void setReadMode(boolean isNight) {
         isNightMode = isNight;
-        AppSettings.saveBoolean(this, "isNightMode", isNightMode);
+        AppSettings.saveBoolean(this, AppSettings.IS_NIGHT_MODE_KEY, isNightMode);
         if (isNightMode) {
             container.setBackgroundColor(nightBgColor);
             textView.setTextColor(nightTextColor);
@@ -326,10 +323,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         degrade.setVisibility(View.GONE);
 
         listView.setOnItemClickListener(this);
-        if(isNightMode){
+        if (isNightMode) {
             listView.setEmptyView(findViewById(R.id.progressBarNight2));
-        }
-        else{
+        } else {
             listView.setEmptyView(findViewById(R.id.progressBarDay2));
         }
 
@@ -387,7 +383,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             public void onAnimationEnd(Animation animation) {
                 list.clear();
                 list.addAll(_buflist);
-                textView.setText(nextWordItem.word);
+                textView.setText(nextWordItem.getWord(CoreActivity.this));
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -527,7 +523,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 msg = getString(R.string.study_ignore_list_end);
                 break;
             case SliceWordList.REVIEW_LIST:
-                EbbinghausReminder.setNotifaction(this, WordInfoVO.getNextReviewType(reviewType));
                 msg = getString(R.string.review_complete);
                 break;
             default:
@@ -614,7 +609,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         public void onAnimationEnd(Animation animation) {
             list.clear();
             list.addAll(_buflist);
-            textView.setText(nextWordItem.word);
+            textView.setText(nextWordItem.getWord(CoreActivity.this));
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
@@ -653,15 +648,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         private byte taskType;
 
-        private byte reviewType;
-
         public ExpensiveTask(byte type) {
             this.taskType = type;
-        }
-
-        public ExpensiveTask(byte type, byte reviewType) {
-            this.taskType = type;
-            this.reviewType = reviewType;
         }
 
         @Override
@@ -735,7 +723,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case INIT_REVIEW_LIST:
                     bundle = new Bundle();
-                    wordlist.loadReviewWordList(CoreActivity.this, reviewType);
+                    wordlist.loadReviewWordList(CoreActivity.this);
                     sliceListType = SliceWordList.REVIEW_LIST;
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
@@ -826,7 +814,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     if (!isCompleteStudy) {
                         list.clear();
                         list.addAll(_buflist);
-                        textView.setText(nextWordItem.word);
+                        textView.setText(nextWordItem.getWord(CoreActivity.this));
                         adapter.notifyDataSetChanged();
                         progressBarDay.setProgress(wordlist.getProgress());
                         progressBarNight.setProgress(wordlist.getProgress());

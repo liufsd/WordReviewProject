@@ -18,9 +18,16 @@
 	<string name="review">复习</string>
 	<string name="review_complete">本次复习完成！</string>
 
+	<string name="review_1_hour">1小时</string>
+	<string name="review_12_hour">12小时</string>
+	<string name="review_1_day">1天</string>
+	<string name="review_5_day">5天</string>
+	<string name="review_20_day">20天</string>
+
 	<string name="delay">延迟10分钟</string>
 	<string name="review_reminder" formatted="false">距离你上次学习已经有%s，单击进入复习模式！
 	</string>
+	<string name="review_notify">You have some new words to review!</string>
 
 	<string name="hour">小时</string>
 	<string name="day">天</string>
@@ -57,6 +64,9 @@
 	<string name="show_complete_study" formatted="false">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
 
+	<string name="set_split_num_hint">设置单元单词数量</string>
+	<string name="set_review_time">设置review时间点</string>
+
 	<string name="upgrade_success">单词升级成功</string>
 	<string name="degrade_success">单词降级成功</string>
 	<string name="ignore_success">单词忽略成功</string>
@@ -86,12 +96,10 @@
 	<string name="select_all">全部选择</string>
 	<string name="none_select">取消选择</string>
 	<string name="load">单词表加载</string>
-	<string name="delete_msg">你确定要删除这条记录吗？</string>
-	<string name="delete_all_msg">你确定要删除所有记录吗？</string>
-	<string name="sms_list">短信大全</string>
-	<string name="set_num">设置号码</string>
 	<string name="set_option">设置选项</string>
 	<string name="path">路径:%s</string>
+	<string name="settings">设置</string>
+	<string name="not_set">未设置</string>
 
 	<string name="help">帮助</string>
 	<string name="about">关于</string>
@@ -114,15 +122,7 @@
 	<string name="about_hint">献给梅子！\n\n——Coleman
 		</string>
 
-	<string name="toast_set_num_failed">设置号码失败！</string>
-	<string name="toast_set_num_successed">设置号码成功！</string>
-	<string name="toast_exit_hint">再按一次返回键退出！</string>
 	<string name="toast_media_unmounted">设备没有发现可用的外部存储卡！</string>
-	<string name="toast_insert_successed">成功导入%d条数据!</string>
-	<string name="toast_insert_failed">导入数据失败！</string>
-	<string name="toast_update_successed">成功更新%d条数据!</string>
-	<string name="toast_update_failed">更新数据失败！</string>
-	<string name="toast_delete_successed">成功删除%d条数据！</string>
 
 	<string name="editor_hint">文字编辑框</string>
 	<string name="search_hint">输入你想查找的关键字！</string>

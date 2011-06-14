@@ -21,7 +21,9 @@ import android.widget.Button;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordInfo;
+import com.coleman.util.AppSettings;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = WelcomeActivity.class.getName();
@@ -42,6 +44,19 @@ public class WelcomeActivity extends Activity {
             }
         });
         // _DEL_REPEAT_WORDS();
+        ifFirstInstalled();
+    }
+
+    private void ifFirstInstalled() {
+        boolean firstStarted = AppSettings.getBoolean(this, AppSettings.FIRST_STARTED_KEY, true);
+        int splitNum = AppSettings.getInt(this, AppSettings.SPLIT_NUM_KEY, -1);
+        if (firstStarted) {
+            AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
+            EbbinghausReminder.setNotifactionAfterInstalled(this);
+        }
+        if (splitNum == -1) {
+            AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, 200);
+        }
     }
 
     @Override
@@ -56,10 +71,18 @@ public class WelcomeActivity extends Activity {
             case R.id.menu_about_dev:
                 showAboutDev();
                 break;
+            case R.id.menu_set:
+                showSettings();
+                break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void showSettings() {
+        Intent it = new Intent(this, SettingsActivity.class);
+        startActivity(it);
     }
 
     private void showAboutDev() {

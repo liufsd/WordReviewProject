@@ -14,6 +14,19 @@ import android.content.SharedPreferences;
 public class AppSettings {
     public static final String TAG = "AppSettings";
 
+    // key fields
+    public static final String SPLIT_NUM_KEY = "split_num";
+
+    public static final String ENABLE_3D_KEY = "enable3D";
+
+    public static final String IS_NIGHT_MODE_KEY = "isNightMode";
+
+    public static final String FIRST_STARTED_KEY = "first_started";
+
+    public static final String REVIEW_TIME_KEY[] = new String[] {
+            "review_time_1", "review_time_2", "review_time_3"
+    };
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);

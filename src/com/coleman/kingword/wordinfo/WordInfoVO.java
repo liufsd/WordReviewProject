@@ -1,6 +1,9 @@
 
 package com.coleman.kingword.wordinfo;
 
+import com.coleman.kingword.R;
+
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -177,26 +180,25 @@ public class WordInfoVO implements Parcelable {
         return _type;
     }
 
-    public static String getReviewTypeText(byte type) {
+    public static String getReviewTypeText(Context context, byte type) {
         String str = "";
         switch (type) {
             case REVIEW_1_HOUR:
-                str += REVIEW_1_HOUR;
+                str += context.getString(R.string.review_1_hour);
                 break;
             case REVIEW_12_HOUR:
-                str += REVIEW_12_HOUR;
+                str += context.getString(R.string.review_12_hour);
                 break;
             case REVIEW_1_DAY:
-                str += REVIEW_1_DAY;
+                str += context.getString(R.string.review_1_day);
                 break;
             case REVIEW_5_DAY:
-                str += REVIEW_5_DAY;
+                str += context.getString(R.string.review_5_day);
                 break;
             case REVIEW_20_DAY:
-                str += REVIEW_20_DAY;
+                str += context.getString(R.string.review_20_day);
                 break;
             case REVIEW_COMPLETE:
-                str += REVIEW_COMPLETE;
             default:
                 break;
         }

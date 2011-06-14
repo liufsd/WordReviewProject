@@ -93,12 +93,11 @@ public class SliceWordList {
         }
     }
 
-    public void loadReviewWordList(Context context, byte reviewType) {
+    public void loadReviewWordList(Context context) {
         // reset the slice word list
         reset();
 
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST,
-                reviewType);
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
         WordItem item;
         for (WordInfoVO info : infoList) {
             item = new WordItem(this);
@@ -123,8 +122,7 @@ public class SliceWordList {
     }
 
     private void loadInfoList(Context context) {
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType,
-                Byte.MAX_VALUE);
+        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType);
         WordItem item;
         for (WordInfoVO info : infoList) {
             item = new WordItem(this);
