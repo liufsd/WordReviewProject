@@ -49,7 +49,7 @@
 	<string name="study_new_word_book_end">你完成了生词本的学习！</string>
 	<string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
 
-	<string name="continue_hit_count">%d连击!</string>
+	<string name="continue_hit_count">%d Hit!</string>
 
 	<string name="new_unit">新单元</string>
 	<string name="unpass_unit">未通过</string>
@@ -128,4 +128,7 @@
 	<string name="search_hint">输入你想查找的关键字！</string>
 	<!-- add a null pointer, to skip the build error -->
 	<string name="pointer">*p</string>
+	
+	<string name="remainder_time">剩余时间</string>
+	<string name="over_time">超时</string>
 </resources>

@@ -38,14 +38,19 @@
 	<ListView android:layout_height="fill_parent" android:id="@+id/listView1"
 		android:layout_below="@id/linearLayout1" android:layout_above="@+id/linearLayout2"
 		android:layout_width="fill_parent"></ListView>
+	<TextView android:id="@+id/countdown" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:background="@drawable/countdown_day"
+		android:layout_below="@id/progressBarLayout"
+		android:layout_alignParentRight="true" android:gravity="center"
+		android:textColor="@color/blue" android:textStyle="bold"></TextView>
 	<ProgressBar android:layout_width="wrap_content"
 		android:visibility="gone" android:layout_centerInParent="true"
 		style="@android:style/Widget.ProgressBar.Inverse"
 		android:layout_height="wrap_content" android:id="@+id/progressBarDay2"></ProgressBar>
 	<ProgressBar android:layout_width="wrap_content"
 		android:visibility="gone" android:layout_centerInParent="true"
-		style="@android:style/Widget.ProgressBar"
-		android:layout_height="wrap_content" android:id="@+id/progressBarNight2"></ProgressBar>
+		style="@android:style/Widget.ProgressBar" android:layout_height="wrap_content"
+		android:id="@+id/progressBarNight2"></ProgressBar>
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_alignParentBottom="true" android:id="@id/linearLayout2"
 		android:layout_height="wrap_content" android:orientation="horizontal"

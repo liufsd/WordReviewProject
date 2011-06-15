@@ -338,4 +338,8 @@ public class SliceWordList {
         };
     }
 
+    public int getCount() {
+        return list.size();
+    }
+
 }

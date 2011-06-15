@@ -40,13 +40,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.countdown.CountdownManager;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.EbbinghausReceiver;
-import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoVO;
-import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.AppSettings;
@@ -75,7 +75,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private Button viewmore, viewraw, upgrade, degrade, addOrRemove, ignoreOrNot;
 
-    private TextView continueView;
+    private TextView continueView, countdownView;
 
     private int continueHitCount;
 
@@ -85,13 +85,17 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private boolean isNightMode;
 
+    private CountdownManager countdownManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
         enable3D = AppSettings.getBoolean(this, AppSettings.ENABLE_3D_KEY, true);
         isNightMode = AppSettings.getBoolean(this, AppSettings.IS_NIGHT_MODE_KEY, false);
+
         initView();
+
         Intent intent = getIntent();
         sliceListType = intent.getByteExtra("type", SliceWordList.NULL_TYPE);
         switch (sliceListType) {
@@ -121,6 +125,22 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (countdownManager != null) {
+            countdownManager.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (countdownManager != null) {
+            countdownManager.resume();
+        }
+        super.onResume();
     }
 
     @Override
@@ -196,6 +216,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             progressBarDay.setVisibility(View.GONE);
             progressBarNight.setVisibility(View.VISIBLE);
 
+            countdownView.setBackgroundResource(R.drawable.countdown_night);
+            countdownView.setTextColor(nightTextColor);
+
             viewmore.setTextColor(nightTextColor);
             viewraw.setTextColor(nightTextColor);
             upgrade.setTextColor(nightTextColor);
@@ -218,6 +241,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
             progressBarDay.setVisibility(View.VISIBLE);
             progressBarNight.setVisibility(View.GONE);
+
+            countdownView.setBackgroundResource(R.drawable.countdown_day);
+            countdownView.setTextColor(dayTextColor);
 
             viewmore.setTextColor(dayTextColor);
             viewraw.setTextColor(dayTextColor);
@@ -320,6 +346,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         progressBarDay = (ProgressBar) findViewById(R.id.progressBarDay1);
         progressBarNight = (ProgressBar) findViewById(R.id.progressBarNight1);
         continueView = (TextView) findViewById(R.id.continueHitView);
+        countdownView = (TextView) findViewById(R.id.countdown);
 
         viewraw.setVisibility(View.GONE);
         upgrade.setVisibility(View.GONE);
@@ -475,10 +502,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     public static final byte INSPIRIT_ACHIEVEMETN_REPORT = 4;
 
+    public static final int UPDATE_REMAINDER_TIME = 5;
+
     /**
      * Used to report a subwordlist msg or an inspirit msg.
      */
-    private Handler handler = new Handler() {
+    private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case SUBLIST_REACH_END:
@@ -492,6 +521,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INSPIRIT_CONTINUE_NO_ACTION:
                     break;
                 case INSPIRIT_ACHIEVEMETN_REPORT:
+                    break;
+                case UPDATE_REMAINDER_TIME:
+                    countdownManager.update();
+                    countdownView.setText(countdownManager
+                            .getRemainderTimeShortFormatted(CoreActivity.this));
+                    // Log.d(TAG, "remainder time: " +
+                    // countdownManager.getRemainderTimeFormatted(CoreActivity.this));
                     break;
                 default:
                     break;
@@ -673,12 +709,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     }
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+                    countdownView.setVisibility(View.INVISIBLE);
                     break;
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+                    countdownView.setVisibility(View.INVISIBLE);
                     break;
                 case LOOKUP:
                     /**
@@ -815,6 +853,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
+                        countdownManager = new CountdownManager(handler, wordlist.getCount());
                         list.clear();
                         list.addAll(_buflist);
                         textView.setText(nextWordItem.getWord(CoreActivity.this));
@@ -823,15 +862,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(wordlist.getProgress());
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());
-                        if(nextWordItem.getCurrentStatus().isCounted()){
+                        if (nextWordItem.getCurrentStatus().isCounted()) {
                             viewmore.setVisibility(View.VISIBLE);
                             viewraw.setVisibility(View.GONE);
-                        }
-                        else{
+                        } else {
                             viewmore.setVisibility(View.GONE);
                             viewraw.setVisibility(View.VISIBLE);
                         }
-                        
+
                         if (nextWordItem.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {
@@ -844,6 +882,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         }
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
+                        countdownView.setVisibility(View.VISIBLE);
                     } else {
                         /** @TODO prompt that no word to be reviewed. */
                         progressBarDay.setProgress(100);

@@ -114,14 +114,6 @@ public class TextEditor extends Activity implements OnClickListener {
         startActivity(intent);
     }
 
-    private void toast(String format, Object... params) {
-        if (params != null && params.length > 0) {
-            Toast.makeText(this, String.format(format, params), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, format, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private class ExpensiveTask extends AsyncTask<Void, Void, Void> {
         private byte type;
 
@@ -151,6 +143,7 @@ public class TextEditor extends Activity implements OnClickListener {
                 case LOAD_FILE:
                     editText.setText(content);
                     setProgressBarIndeterminate(false);
+                    setProgressBarVisibility(false);
                     break;
                 default:
                     break;
