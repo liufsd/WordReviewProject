@@ -825,10 +825,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         degrade.setEnabled(nextWordItem.canDegrade());
                         if(nextWordItem.getCurrentStatus().isCounted()){
                             viewmore.setVisibility(View.VISIBLE);
-                            viewraw.setVisibility(View.INVISIBLE);
+                            viewraw.setVisibility(View.GONE);
                         }
                         else{
-                            viewmore.setVisibility(View.INVISIBLE);
+                            viewmore.setVisibility(View.GONE);
                             viewraw.setVisibility(View.VISIBLE);
                         }
                         

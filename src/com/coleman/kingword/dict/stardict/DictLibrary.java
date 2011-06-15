@@ -75,7 +75,8 @@ public class DictLibrary {
             Cursor c = context.getContentResolver().query(
                     OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
                             : StarDictIndex.CONTENT_URI, projection,
-                    IDictIndex.WORD + "='" + word + "'", null, null);
+                    IDictIndex.WORD + " in ('" + word + "','" + word.toLowerCase() + "')", null,
+                    null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
