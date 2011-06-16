@@ -163,19 +163,11 @@ public class FiniteStateMachine {
         protected ArrayList<DictData> getDictData(Context context, WordItem item,
                 ArrayList<WordItem> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
-            if (counted) {
-                DictData data = item.getDetail(context);
-                if (data.getDatas().indexOf("not found!") != -1) {
-                    data = item.getDictData(context);
-                }
-                datalist.add(data);
-            } else {
-                DictData data = item.getDictData(context);
-                if (data.getDatas().indexOf("not found!") != -1) {
-                    data = item.getDetail(context);
-                }
-                datalist.add(data);
+            DictData data = item.getDictData(context);
+            if (data.getDatas().indexOf("not found!") != -1) {
+                data = item.getDetail(context);
             }
+            datalist.add(data);
             return datalist;
         }
 

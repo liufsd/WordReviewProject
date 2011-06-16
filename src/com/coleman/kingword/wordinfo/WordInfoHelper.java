@@ -288,7 +288,8 @@ public class WordInfoHelper {
                 Log.d(TAG, "word info: id " + id + " word " + word + " ignore " + ignore
                         + " scount " + scount + " ecount " + ecount + " weight " + weight
                         + " newword " + newword);
-                // cv[i].put(WordInfo._ID, id);
+                
+                cv[i].put(WordInfo._ID, id);
                 cv[i].put(WordInfo.WORD, word);
                 cv[i].put(WordInfo.IGNORE, ignore);
                 cv[i].put(WordInfo.STUDY_COUNT, scount);

@@ -4,7 +4,7 @@
 	android:orientation="horizontal" android:background="@drawable/item_bg_day"
 	android:id="@+id/itemLayout">
 	<TextView android:text="TextView" android:id="@+id/textView1"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:maxLines="100" android:minLines="4" android:textColor="@color/black"
 		android:gravity="center_vertical"></TextView>
 </LinearLayout>

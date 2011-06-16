@@ -84,12 +84,6 @@ public class SubWordListActivity extends Activity {
                 startActivity(intent);
                 break;
             }
-            case R.id.menu_backup:
-                WordInfoHelper._BACKUP_WHOLE_LIST(this);
-                break;
-            case R.id.menu_restore:
-                WordInfoHelper._RESTORE_WHOLE_LIST(this);
-                break;
             default:
                 break;
         }

@@ -2,6 +2,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/menu_new_word_book" android:title="@string/view_new_book"></item>
 	<item android:id="@+id/menu_ignore_list" android:title="@string/view_ignore_list"></item>
-	<item android:id="@+id/menu_backup" android:title="@string/backup"></item>
-	<item android:id="@+id/menu_restore" android:title="@string/restore"></item>
 </menu>

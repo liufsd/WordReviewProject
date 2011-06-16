@@ -39,6 +39,9 @@
 		<activity android:name=".activity.SettingsActivity"
 			android:label="@string/app_name">
 		</activity>
+		<activity android:name=".activity.ColorSetActivityAsDialog"
+			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog">
+		</activity>
 
 		<!-- receiver -->
 		<receiver android:name=".ebbinghaus.EbbinghausReceiver"

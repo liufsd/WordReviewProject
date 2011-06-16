@@ -55,12 +55,9 @@
 		android:layout_alignParentBottom="true" android:id="@id/linearLayout2"
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		style="@style/ButtonBarPadding" android:background="@android:drawable/bottom_bar">
-		<Button android:id="@+id/viewmore" android:layout_width="wrap_content"
+		<Button android:id="@+id/viewWord" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
 			android:text="@string/view_more" />
-		<Button android:id="@+id/viewraw" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/view_raw" />
 		<Button android:id="@+id/upgrade" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
 			android:text="@string/upgrade" />

@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.util.AppSettings;
 
 public class SettingsActivity extends Activity implements OnItemClickListener {
@@ -65,6 +66,16 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[0], R.drawable.set_review_time);
         map.put(from[1], R.string.set_review_time);
         data.add(map);
+        // 2
+        map = new HashMap<String, Integer>();
+        map.put(from[0], R.drawable.set_backup);
+        map.put(from[1], R.string.backup);
+        data.add(map);
+        // 3
+        map = new HashMap<String, Integer>();
+        map.put(from[0], R.drawable.set_restore);
+        map.put(from[1], R.string.restore);
+        data.add(map);
     }
 
     @Override
@@ -75,6 +86,12 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 break;
             case 1:
                 showReviewTimeList();
+                break;
+            case 2:
+                WordInfoHelper._BACKUP_WHOLE_LIST(this);
+                break;
+            case 3:
+                WordInfoHelper._RESTORE_WHOLE_LIST(this);
                 break;
             default:
                 break;

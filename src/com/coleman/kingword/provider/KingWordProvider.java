@@ -119,7 +119,16 @@ public class KingWordProvider extends ContentProvider {
         }
         db.beginTransaction();
         for (ContentValues value : values) {
-            db.insert(tableName, null, value);
+            Object oid = value.get("_id");
+            long id = 0;
+            if (oid != null) {
+                id = ((Long) oid).longValue();
+            }
+            if (id > 0) {
+                db.update(tableName, value, "_id = " + id, null);
+            } else {
+                db.insert(tableName, null, value);
+            }
             count++;
         }
         db.setTransactionSuccessful();

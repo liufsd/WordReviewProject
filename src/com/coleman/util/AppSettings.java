@@ -23,6 +23,18 @@ public class AppSettings {
 
     public static final String FIRST_STARTED_KEY = "first_started";
 
+    public static final String SELECT_COLOR_MODE = "select_color_mode";
+
+    public static final String COLOR_MODE[][] = new String[][] {
+            {
+                    "day_font_color", "day_bg_color"
+            }, {
+                    "night_font_color", "night_bg_color"
+            }, {
+                    "custom_font_color", "custom_bg_color"
+            }
+    };
+
     public static final String REVIEW_TIME_KEY[] = new String[] {
             "review_time_1", "review_time_2", "review_time_3"
     };

@@ -49,13 +49,17 @@ public class WelcomeActivity extends Activity {
 
     private void ifFirstInstalled() {
         boolean firstStarted = AppSettings.getBoolean(this, AppSettings.FIRST_STARTED_KEY, true);
-        int splitNum = AppSettings.getInt(this, AppSettings.SPLIT_NUM_KEY, -1);
         if (firstStarted) {
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
             EbbinghausReminder.setNotifactionAfterInstalled(this);
-        }
-        if (splitNum == -1) {
             AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, 200);
+            int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
+            String k[][] = AppSettings.COLOR_MODE;
+            for (int i = 0; i < c.length; i++) {
+                for (int j = 0; j < c[i].length; j++) {
+                    AppSettings.saveInt(this, k[i][j], c[i][j]);
+                }
+            }
         }
     }
 

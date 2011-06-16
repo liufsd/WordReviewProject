@@ -31,6 +31,8 @@ public class WordItem {
 
     private DictData detailData;
 
+    private DictData curData;
+
     private FiniteStateMachine mStateMachine;
 
     private SliceWordList sliceList;
@@ -110,6 +112,7 @@ public class WordItem {
         if (dictData == null) {
             dictData = DictManager.getInstance().viewWord(context, word);
         }
+        curData = dictData;
         return dictData;
     }
 
@@ -117,6 +120,7 @@ public class WordItem {
         if (detailData == null) {
             detailData = DictManager.getInstance().viewMore(context, word);
         }
+        curData = detailData;
         return detailData;
     }
 

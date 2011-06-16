@@ -7,6 +7,7 @@
 	<string name="init_word_list">词库正在进行初使化...</string>
 	<string name="view_more">查看详细</string>
 	<string name="view_raw">查看简要</string>
+	<string name="view_select">查看选项</string>
 	<string name="upgrade">升级</string>
 	<string name="degrade">降级</string>
 	<string name="add_new">加入生词本</string>
@@ -134,4 +135,18 @@
 	<string name="over_time">超时</string>
 	<string name="countdown_conceal">隐藏倒计时</string>
 	<string name="countdown_show">显示倒计时</string>
+
+	<string name="color_set">顔色设置</string>
+	<string name="sbackground_color">背景</string>
+	<string name="sfont_color">文字</string>
+	<string name="sreset">重置</string>
+
+	<string name="sday">白天</string>
+	<string name="snight">夜晚</string>
+	<string name="scustom">自定义</string>
+	<string name="sfont">字体</string>
+	<string name="sred">红</string>
+	<string name="sgreen">绿</string>
+	<string name="sblue">蓝</string>
+	<string name="strans">透明度</string>
 </resources>

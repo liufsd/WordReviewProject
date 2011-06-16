@@ -25,13 +25,13 @@ public class EbbinghausReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         String action = intent.getAction();
-        Log.d(TAG, "############################" + action);
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+            Log.d(TAG, "##############ACTION_BOOT_COMPLETED##############");
             EbbinghausReminder.setNotifactionAfterReboot(context);
             return;
         }
         if (!needReview(context)) {
-            Log.d(TAG, "########there is no words need to be reviewed!");
+            Log.d(TAG, "##############there is no words need to be reviewed!");
             return;
         }
 
@@ -41,7 +41,7 @@ public class EbbinghausReceiver extends BroadcastReceiver {
 
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-        Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cn);
+        Log.d(TAG, "##############" + cn);
         if (CoreActivity.class.getName().equals(cn.getClassName())
                 || EbbinghausActivityAsDialog.class.getName().equals(cn.getClassName())) {
             Intent it = new Intent(context, EbbinghausActivityAsDialog.class);
@@ -50,7 +50,6 @@ public class EbbinghausReceiver extends BroadcastReceiver {
             it.putExtra("positive", context.getString(R.string.ok));
             it.putExtra("negative", context.getString(R.string.delay));
             it.putExtra("type", type);
-            // it.putExtra("review_type", reviewType);
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(it);
         } else {
