@@ -33,7 +33,7 @@ public class CountdownManager {
 
     private void start() {
         running = true;
-        update();
+        handler.sendEmptyMessage(CoreActivity.UPDATE_REMAINDER_TIME);
         startTime = System.currentTimeMillis();
     }
 

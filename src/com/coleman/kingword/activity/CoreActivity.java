@@ -523,9 +523,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INSPIRIT_ACHIEVEMETN_REPORT:
                     break;
                 case UPDATE_REMAINDER_TIME:
-                    countdownManager.update();
                     countdownView.setText(countdownManager
                             .getRemainderTimeShortFormatted(CoreActivity.this));
+                    countdownManager.update();
                     // Log.d(TAG, "remainder time: " +
                     // countdownManager.getRemainderTimeFormatted(CoreActivity.this));
                     break;
