@@ -128,7 +128,9 @@
 	<string name="search_hint">输入你想查找的关键字！</string>
 	<!-- add a null pointer, to skip the build error -->
 	<string name="pointer">*p</string>
-	
+
 	<string name="remainder_time">剩余时间</string>
 	<string name="over_time">超时</string>
+	<string name="countdown_conceal">隐藏倒计时</string>
+	<string name="countdown_show">显示倒计时</string>
 </resources>

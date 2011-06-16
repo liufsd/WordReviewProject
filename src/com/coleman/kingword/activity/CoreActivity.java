@@ -75,7 +75,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private Button viewmore, viewraw, upgrade, degrade, addOrRemove, ignoreOrNot;
 
-    private TextView continueView, countdownView;
+    private TextView continueView;
+
+    private Button countBtn;
 
     private int continueHitCount;
 
@@ -157,6 +159,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         } else {
             menu.findItem(R.id.menu_night_mode).setTitle(R.string.night_mode);
         }
+        if (countBtn.getVisibility() == View.VISIBLE) {
+            menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_conceal);
+        } else {
+            menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_show);
+        }
         return true;
     }
 
@@ -172,6 +179,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 break;
             case R.id.menu_review:
                 broadcastReview();
+                break;
+            case R.id.menu_countdown:
+                if (countBtn.getVisibility() == View.VISIBLE) {
+                    slideRightOut(countBtn);
+                } else {
+                    slideRightIn(countBtn);
+                }
                 break;
             default:
                 break;
@@ -216,8 +230,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             progressBarDay.setVisibility(View.GONE);
             progressBarNight.setVisibility(View.VISIBLE);
 
-            countdownView.setBackgroundResource(R.drawable.countdown_night);
-            countdownView.setTextColor(nightTextColor);
+            countBtn.setBackgroundResource(R.drawable.countdown_night);
+            countBtn.setTextColor(nightTextColor);
 
             viewmore.setTextColor(nightTextColor);
             viewraw.setTextColor(nightTextColor);
@@ -242,8 +256,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             progressBarDay.setVisibility(View.VISIBLE);
             progressBarNight.setVisibility(View.GONE);
 
-            countdownView.setBackgroundResource(R.drawable.countdown_day);
-            countdownView.setTextColor(dayTextColor);
+            countBtn.setBackgroundResource(R.drawable.countdown_day);
+            countBtn.setTextColor(dayTextColor);
 
             viewmore.setTextColor(dayTextColor);
             viewraw.setTextColor(dayTextColor);
@@ -327,10 +341,55 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     ignoreOrNot.setText(R.string.ignore);
                 }
                 break;
+            case R.id.countdown:
+                slideRightOut(countBtn);
+                break;
             default:
                 break;
         }
 
+    }
+
+    private void slideRightIn(final Button view) {
+        view.setClickable(false);
+        view.setVisibility(View.VISIBLE);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
+        anim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setClickable(true);
+            }
+        });
+        view.startAnimation(anim);
+    }
+
+    private void slideRightOut(final View view) {
+        view.setClickable(false);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
+        anim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+                view.setClickable(true);
+            }
+        });
+        view.startAnimation(anim);
     }
 
     private void initView() {
@@ -343,10 +402,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         degrade = (Button) findViewById(R.id.degrade);
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);
+        countBtn = (Button) findViewById(R.id.countdown);
+
         progressBarDay = (ProgressBar) findViewById(R.id.progressBarDay1);
         progressBarNight = (ProgressBar) findViewById(R.id.progressBarNight1);
         continueView = (TextView) findViewById(R.id.continueHitView);
-        countdownView = (TextView) findViewById(R.id.countdown);
 
         viewraw.setVisibility(View.GONE);
         upgrade.setVisibility(View.GONE);
@@ -365,6 +425,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         upgrade.setOnClickListener(this);
         degrade.setOnClickListener(this);
         ignoreOrNot.setOnClickListener(this);
+        countBtn.setOnClickListener(this);
 
         adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
@@ -523,7 +584,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INSPIRIT_ACHIEVEMETN_REPORT:
                     break;
                 case UPDATE_REMAINDER_TIME:
-                    countdownView.setText(countdownManager
+                    countBtn.setText(countdownManager
                             .getRemainderTimeShortFormatted(CoreActivity.this));
                     countdownManager.update();
                     // Log.d(TAG, "remainder time: " +
@@ -709,14 +770,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     }
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
-                    countdownView.setVisibility(View.INVISIBLE);
+                    countBtn.setVisibility(View.INVISIBLE);
                     break;
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
-                    countdownView.setVisibility(View.INVISIBLE);
+                    countBtn.setVisibility(View.INVISIBLE);
                     break;
                 case LOOKUP:
                     /**
@@ -882,7 +943,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         }
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
-                        countdownView.setVisibility(View.VISIBLE);
+                        countBtn.setVisibility(View.VISIBLE);
                     } else {
                         /** @TODO prompt that no word to be reviewed. */
                         progressBarDay.setProgress(100);
