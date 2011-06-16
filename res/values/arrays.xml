@@ -11,4 +11,9 @@
 		<item>350</item>
 		<item>400</item>
 	</string-array>
+	<string-array name="anim_select">
+		<item>3D特效</item>
+		<item>滑动特效</item>
+		<item>无特效</item>
+	</string-array>
 </resources>

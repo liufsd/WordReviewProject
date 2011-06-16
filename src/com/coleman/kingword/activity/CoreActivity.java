@@ -83,7 +83,32 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private byte sliceListType;
 
-    private boolean enable3D;
+    private Anim anim;
+
+    public static enum Anim {
+        ANIM_3D(0), ANIM_SLIDE(1), ANIM_FADE(2);
+        private final int type;
+
+        private Anim(int animType) {
+            this.type = animType;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public static Anim getAnim(int animType) {
+            switch (animType) {
+                case 1:
+                    return ANIM_SLIDE;
+                case 2:
+                    return ANIM_FADE;
+                case 0:
+                default:
+                    return ANIM_3D;
+            }
+        }
+    }
 
     private boolean isNightMode;
 
@@ -93,7 +118,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        enable3D = AppSettings.getBoolean(this, AppSettings.ENABLE_3D_KEY, true);
+        anim = Anim
+                .getAnim(AppSettings.getInt(this, AppSettings.ANIM_TYPE, Anim.ANIM_3D.getType()));
         isNightMode = AppSettings.getBoolean(this, AppSettings.IS_NIGHT_MODE_KEY, false);
 
         initView();
@@ -149,11 +175,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.core_option, menu);
-        if (enable3D) {
-            menu.findItem(R.id.menu_enable3d).setTitle(R.string.not_enable3d);
-        } else {
-            menu.findItem(R.id.menu_enable3d).setTitle(R.string.enable3d);
-        }
         if (isNightMode) {
             menu.findItem(R.id.menu_night_mode).setTitle(R.string.day_mode);
         } else {
@@ -170,9 +191,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_enable3d:
-                enable3D = !enable3D;
-                AppSettings.saveBoolean(this, AppSettings.ENABLE_3D_KEY, enable3D);
+            case R.id.menu_anim:
+                showAnimSelect();
                 break;
             case R.id.menu_night_mode:
                 setReadMode(!isNightMode);
@@ -191,6 +211,29 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 break;
         }
         return true;
+    }
+
+    private void showAnimSelect() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        anim = Anim.ANIM_3D;
+                        break;
+                    case 1:
+                        anim = Anim.ANIM_FADE;
+                        break;
+                    case 2:
+                        anim = Anim.ANIM_SLIDE;
+                        break;
+                    default:// ignore
+                        break;
+                }
+                AppSettings.saveInt(CoreActivity.this, AppSettings.ANIM_TYPE, anim.getType());
+            }
+        };
+        new AlertDialog.Builder(this).setItems(R.array.anim_select, listener).show();
     }
 
     /**
@@ -459,7 +502,53 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         container.startAnimation(rotation);
     }
 
-    private void apply2DAnim() {
+    private void applyFadeAnim() {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_fade_out);
+        anim.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                list.clear();
+                list.addAll(_buflist);
+                textView.setText(nextWordItem.getWord(CoreActivity.this));
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+
+                Animation a = AnimationUtils.loadAnimation(CoreActivity.this, R.anim.slide_fade_in);
+                a.setAnimationListener(new AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
+                        listView.setEnabled(true);
+                    }
+                });
+                textView.startAnimation(a);
+                listView.startAnimation(a);
+            }
+        });
+        textView.startAnimation(anim);
+        listView.startAnimation(anim);
+    }
+
+    private void applySlideAnim() {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
         anim.setAnimationListener(new AnimationListener() {
             @Override
@@ -958,10 +1047,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     if (hasNext) {
                         progressBarDay.setProgress(wordlist.getProgress());
                         progressBarNight.setProgress(wordlist.getProgress());
-                        if (enable3D) {
-                            apply3DAnim(0, 90);
-                        } else {
-                            apply2DAnim();
+                        switch (anim) {
+                            case ANIM_3D:
+                                apply3DAnim(0, 90);
+                                break;
+                            case ANIM_FADE:
+                                applySlideAnim();
+                                break;
+                            case ANIM_SLIDE:
+                                applyFadeAnim();
+                                break;
                         }
                         upgrade.setEnabled(nextWordItem.canUpgrade());
                         degrade.setEnabled(nextWordItem.canDegrade());

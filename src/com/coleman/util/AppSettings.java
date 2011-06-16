@@ -17,7 +17,7 @@ public class AppSettings {
     // key fields
     public static final String SPLIT_NUM_KEY = "split_num";
 
-    public static final String ENABLE_3D_KEY = "enable3D";
+    public static final String ANIM_TYPE = "anim_type";
 
     public static final String IS_NIGHT_MODE_KEY = "isNightMode";
 

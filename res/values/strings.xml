@@ -38,6 +38,7 @@
 	<string name="welcome">Welcome to KingWord~</string>
 	<string name="about_dev">关于开发</string>
 
+	<string name="anim_set">动画设置</string>
 	<string name="enable3d">开启3D特效</string>
 	<string name="not_enable3d">关闭3D特效</string>
 	<string name="night_mode">夜晚模式</string>
