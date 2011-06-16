@@ -73,7 +73,7 @@ public class CountdownManager {
                 + getSString(s)
                 + ":"
                 + getMSString(ms);
-        Log.d(TAG, "********remainder time>>>" + reStr);
+        // Log.d(TAG, "********remainder time>>>" + reStr);
         return reStr;
     }
 
@@ -90,7 +90,7 @@ public class CountdownManager {
         String reStr = !over ? context.getString(R.string.remainder_time) + "\n" + getMString(m)
                 + ":" + getSString(s) : context.getString(R.string.over_time) + "\n"
                 + getMString(m) + ":" + getSString(s);
-        Log.d(TAG, "********remainder time>>>" + reStr);
+        // Log.d(TAG, "********remainder time>>>" + reStr);
         return reStr;
     }
 

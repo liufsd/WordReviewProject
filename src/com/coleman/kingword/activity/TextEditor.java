@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
@@ -45,7 +46,6 @@ public class TextEditor extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         Intent intent = getIntent();
         setContentView(R.layout.text_editor);
         editText = (EditText) findViewById(R.id.editorText1);
@@ -56,8 +56,6 @@ public class TextEditor extends Activity implements OnClickListener {
             path = intent.getStringExtra("path");
             Log.d(TAG, "path: " + path);
             editText.setText("");
-            setProgressBarIndeterminateVisibility(true);
-            setProgressBarIndeterminate(true);
             new ExpensiveTask(ExpensiveTask.LOAD_FILE).execute();
         } else {
             Log.d(TAG, "Unknow action, exiting!");
@@ -126,6 +124,16 @@ public class TextEditor extends Activity implements OnClickListener {
         }
 
         @Override
+        protected void onPreExecute() {
+            switch (type) {
+                case LOAD_FILE:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
             switch (type) {
                 case LOAD_FILE:
@@ -142,8 +150,7 @@ public class TextEditor extends Activity implements OnClickListener {
             switch (type) {
                 case LOAD_FILE:
                     editText.setText(content);
-                    setProgressBarIndeterminate(false);
-                    setProgressBarVisibility(false);
+                    ((ProgressBar) findViewById(R.id.progressBar1)).setVisibility(View.GONE);
                     break;
                 default:
                     break;

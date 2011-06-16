@@ -148,10 +148,10 @@ public class FileExplorer extends Activity {
             ImageView imgView = (ImageView) convertView.findViewById(R.id.imageView1);
             if (!TextUtils.isEmpty(fileName)) {
                 if (list.get(position).isDirectory()) {
-                    if(list.get(position).list().length>0){
+                    String fs[] = list.get(position).list();
+                    if (fs != null && fs.length > 0) {
                         imgView.setImageResource(R.drawable.folder);
-                    }
-                    else{
+                    } else {
                         imgView.setImageResource(R.drawable.folder_emp);
                     }
                 } else if (fileName.toLowerCase().endsWith(".txt")) {

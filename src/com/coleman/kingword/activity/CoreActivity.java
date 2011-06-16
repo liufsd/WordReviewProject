@@ -10,9 +10,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Camera;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,11 +48,9 @@ import com.coleman.kingword.countdown.CountdownManager;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.EbbinghausReceiver;
-import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
-import com.coleman.kingword.wordlist.WordList.SetMethod;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.AppSettings;
 
@@ -751,12 +752,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             LinearLayout layout = (LinearLayout) v.findViewById(R.id.itemLayout);
             TextView tv = (TextView) v.findViewById(R.id.textView1);
             tv.setTextColor(textColor);
-            tv.setBackgroundColor(bgColor);
-            if (selectMode == 1) {
-                layout.setBackgroundResource(R.drawable.item_bg_night);
-            } else {
-                layout.setBackgroundResource(R.drawable.item_bg_day);
-            }
+            BGDrawable bg = new BGDrawable(layout.getBackground());
+            layout.setBackgroundDrawable(bg);
             tv.setTypeface(mFace);
             DictData data = list.get(position);
             Log.d(TAG, "data:" + data);
@@ -768,6 +765,53 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 }
             }
             return v;
+        }
+
+    }
+
+    private class BGDrawable extends Drawable {
+        private Drawable drawable;
+
+        public BGDrawable(Drawable d) {
+            this.drawable = d;
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            int status[] = drawable.getState();
+            for (int i = 0; i < status.length; i++) {
+                switch (status[i]) {
+                    case android.R.attr.state_pressed:
+                    case android.R.attr.state_selected:
+                        if (selectMode == 1) {
+                            canvas.drawColor(0xff343434);
+                        } else {
+                            canvas.drawColor(0xffaaffff);
+                        }
+                        break;
+                    default:
+                        canvas.drawColor(bgColor);
+                        break;
+                }
+            }
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter cf) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public int getOpacity() {
+            // TODO Auto-generated method stub
+            return 0;
         }
 
     }

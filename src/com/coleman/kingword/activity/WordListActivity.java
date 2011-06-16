@@ -70,11 +70,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
         loadBtn.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
         if (loadExternal) {
             external_file_path = getIntent().getStringExtra(EXTERNAL_FILE_PATH);
@@ -82,6 +77,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         } else {
             new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
