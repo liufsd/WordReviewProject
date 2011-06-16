@@ -15,6 +15,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -203,53 +205,65 @@ public class WordInfoHelper {
         return false;
     }
 
-    public static void _BACKUP_WHOLE_LIST(Context context) {
+    public static void _BACKUP_WHOLE_LIST(final Context context) {
         if (!Config.isExternalMediaMounted()) {
             Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
             return;
         }
-        final String PATH = Environment.getExternalStorageDirectory() + File.separator
-                + "/kingword/backup";
-        Log.d(TAG, "path:" + PATH);
-        try {
-            File file = new File(PATH);
-            if (!file.getParentFile().exists()) {
-                boolean s = file.getParentFile().mkdirs();
-                Log.d(TAG, file.getParent() + " success mk dir: " + s);
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Toast.makeText(context.getApplicationContext(), "Backup successful!",
+                        Toast.LENGTH_SHORT).show();
             }
-            file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
-            DataOutputStream dos = new DataOutputStream(fos);
-            Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection, null,
-                    null, null);
-            if (c != null && c.moveToFirst()) {
-                dos.writeInt(c.getCount());
-                while (!c.isAfterLast()) {
-                    dos.writeLong(c.getLong(0));
-                    dos.writeUTF(c.getString(1) == null ? "" : c.getString(1));
-                    Log.d(TAG, "word:" + c.getString(1));
-                    dos.writeInt(c.getInt(2));
-                    dos.writeInt(c.getInt(3));
-                    dos.writeInt(c.getInt(4));
-                    dos.writeInt(c.getInt(5));
-                    dos.writeInt(c.getInt(6));
-                    dos.writeInt(c.getInt(7));
-                    dos.writeLong(c.getLong(8));
-                    c.moveToNext();
+        };
+        new Thread() {
+            public void run() {
+                final String PATH = Environment.getExternalStorageDirectory() + File.separator
+                        + "/kingword/backup";
+                Log.d(TAG, "path:" + PATH);
+                try {
+                    File file = new File(PATH);
+                    if (!file.getParentFile().exists()) {
+                        boolean s = file.getParentFile().mkdirs();
+                        Log.d(TAG, file.getParent() + " success mk dir: " + s);
+                    }
+                    file.createNewFile();
+                    FileOutputStream fos = new FileOutputStream(file);
+                    DataOutputStream dos = new DataOutputStream(fos);
+                    Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
+                            null, null, null);
+                    if (c != null && c.moveToFirst()) {
+                        dos.writeInt(c.getCount());
+                        while (!c.isAfterLast()) {
+                            dos.writeLong(c.getLong(0));
+                            dos.writeUTF(c.getString(1) == null ? "" : c.getString(1));
+                            Log.d(TAG, "word:" + c.getString(1));
+                            dos.writeInt(c.getInt(2));
+                            dos.writeInt(c.getInt(3));
+                            dos.writeInt(c.getInt(4));
+                            dos.writeInt(c.getInt(5));
+                            dos.writeInt(c.getInt(6));
+                            dos.writeInt(c.getInt(7));
+                            dos.writeLong(c.getLong(8));
+                            c.moveToNext();
+                        }
+                    }
+                    c.close();
+                    dos.flush();
+                    dos.close();
+                    fos.close();
+                    handler.sendEmptyMessage(0);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-            c.close();
-            dos.flush();
-            dos.close();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }.start();
     }
 
-    public static void _RESTORE_WHOLE_LIST(Context context) {
+    public static void _RESTORE_WHOLE_LIST(final Context context) {
         if (!Config.isExternalMediaMounted()) {
             Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
             return;
@@ -258,50 +272,65 @@ public class WordInfoHelper {
                 + "kingword/backup";
         try {
 
-            File file = new File(PATH);
+            final File file = new File(PATH);
             if (!file.exists()) {
                 Toast.makeText(context, "No backup record found!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            FileInputStream fis = new FileInputStream(file);
-            DataInputStream dis = new DataInputStream(fis);
+            final FileInputStream fis = new FileInputStream(file);
+            final DataInputStream dis = new DataInputStream(fis);
             if (dis.available() < 4) {
                 Toast.makeText(context, "File is empty!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            int count = dis.readInt();
-            ContentValues cv[] = new ContentValues[count];
-            for (int i = 0; i < count; i++) {
-                cv[i] = new ContentValues();
-                // WordInfo._ID, WordInfo.WORD, WordInfo.IGNORE,
-                // WordInfo.STUDY_COUNT,
-                // WordInfo.ERROR_COUNT, WordInfo.WEIGHT, WordInfo.NEW_WORD
-                long id = dis.readLong();
-                String word = dis.readUTF();
-                int ignore = dis.readInt();
-                int scount = dis.readInt();
-                int ecount = dis.readInt();
-                int weight = dis.readInt();
-                int newword = dis.readInt();
-                int review_type = dis.readInt();
-                long review_time = dis.readLong();
-                Log.d(TAG, "word info: id " + id + " word " + word + " ignore " + ignore
-                        + " scount " + scount + " ecount " + ecount + " weight " + weight
-                        + " newword " + newword);
-                
-                cv[i].put(WordInfo._ID, id);
-                cv[i].put(WordInfo.WORD, word);
-                cv[i].put(WordInfo.IGNORE, ignore);
-                cv[i].put(WordInfo.STUDY_COUNT, scount);
-                cv[i].put(WordInfo.ERROR_COUNT, ecount);
-                cv[i].put(WordInfo.WEIGHT, weight);
-                cv[i].put(WordInfo.NEW_WORD, newword);
-                cv[i].put(WordInfo.REVIEW_TYPE, review_type);
-                cv[i].put(WordInfo.REVIEW_TIME, review_time);
-            }
-            dis.close();
-            fis.close();
-            context.getContentResolver().bulkInsert(WordInfo.CONTENT_URI, cv);
+            final Handler handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Toast.makeText(context.getApplicationContext(), "Restore successful!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            };
+            new Thread() {
+                public void run() {
+                    int count = 0;
+                    try {
+                        count = dis.readInt();
+                        ContentValues cv[] = new ContentValues[count];
+                        for (int i = 0; i < count; i++) {
+                            cv[i] = new ContentValues();
+                            long id = dis.readLong();
+                            String word = dis.readUTF();
+                            int ignore = dis.readInt();
+                            int scount = dis.readInt();
+                            int ecount = dis.readInt();
+                            int weight = dis.readInt();
+                            int newword = dis.readInt();
+                            int review_type = dis.readInt();
+                            long review_time = dis.readLong();
+                            Log.d(TAG, "word info: id " + id + " word " + word + " ignore "
+                                    + ignore + " scount " + scount + " ecount " + ecount
+                                    + " weight " + weight + " newword " + newword);
+
+                            cv[i].put(WordInfo.WORD, word);
+                            cv[i].put(WordInfo.IGNORE, ignore);
+                            cv[i].put(WordInfo.STUDY_COUNT, scount);
+                            cv[i].put(WordInfo.ERROR_COUNT, ecount);
+                            cv[i].put(WordInfo.WEIGHT, weight);
+                            cv[i].put(WordInfo.NEW_WORD, newword);
+                            cv[i].put(WordInfo.REVIEW_TYPE, review_type);
+                            cv[i].put(WordInfo.REVIEW_TIME, review_time);
+                        }
+                        dis.close();
+                        fis.close();
+                        file.delete();
+                        context.getContentResolver().delete(WordInfo.CONTENT_URI, "_id > 0", null);
+                        context.getContentResolver().bulkInsert(WordInfo.CONTENT_URI, cv);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    handler.sendEmptyMessage(0);
+                }
+            }.start();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

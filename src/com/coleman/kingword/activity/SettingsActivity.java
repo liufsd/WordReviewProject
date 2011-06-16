@@ -88,14 +88,55 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 showReviewTimeList();
                 break;
             case 2:
-                WordInfoHelper._BACKUP_WHOLE_LIST(this);
+                showConfirmDialog(2);
                 break;
             case 3:
-                WordInfoHelper._RESTORE_WHOLE_LIST(this);
+                showConfirmDialog(3);
                 break;
             default:
                 break;
         }
+    }
+
+    private void showConfirmDialog(final int position) {
+        String title = "", msg = "";
+        switch (position) {
+            case 2:
+                title = getString(R.string.backup);
+                msg = getString(R.string.backup_msg);
+                break;
+            case 3:
+                title = getString(R.string.restore);
+                msg = getString(R.string.restore_msg);
+                break;
+            default:
+                break;
+        }
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        switch (position) {
+                            case 2:
+                                WordInfoHelper._BACKUP_WHOLE_LIST(SettingsActivity.this);
+                                break;
+                            case 3:
+                                WordInfoHelper._RESTORE_WHOLE_LIST(SettingsActivity.this);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(title).setMessage(msg)
+                .setPositiveButton(R.string.ok, listener)
+                .setNegativeButton(R.string.cancel, listener).show();
     }
 
     private void showReviewTimeList() {
