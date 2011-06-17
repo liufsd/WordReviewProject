@@ -27,11 +27,11 @@ public class AppSettings {
 
     public static final String COLOR_MODE[][] = new String[][] {
             {
-                    "day_font_color", "day_bg_color"
+                    "day_font_color", "day_bg_color", "day_select_color"
             }, {
-                    "night_font_color", "night_bg_color"
+                    "night_font_color", "night_bg_color", "night_select_color"
             }, {
-                    "custom_font_color", "custom_bg_color"
+                    "custom_font_color", "custom_bg_color", "custom_select_color"
             }
     };
 

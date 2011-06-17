@@ -38,15 +38,15 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
 
     public static final int MODE_COLOR[][] = new int[][] {
             {
-                    0xff000000, 0xfffff8dc
+                    0xff000000, 0xfffff8dc, 0xffaaffff
             }, {
-                    0xff6d96c9, 0xff000000
+                    0xff6d96c9, 0xff000000, 0xff343434
             }, {
-                    Color.BLACK, Color.WHITE
+                    Color.BLACK, Color.WHITE, Color.GRAY
             }
     };
 
-    private int textColor[] = new int[3], bgColor[] = new int[3];
+    private int textColor[] = new int[3], bgColor[] = new int[3], selectColor[] = new int[3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,8 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
         for (int i = 0; i < textColor.length; i++) {
             textColor[i] = AppSettings.getInt(this, AppSettings.COLOR_MODE[i][0], MODE_COLOR[i][0]);
             bgColor[i] = AppSettings.getInt(this, AppSettings.COLOR_MODE[i][1], MODE_COLOR[i][1]);
+            selectColor[i] = AppSettings.getInt(this, AppSettings.COLOR_MODE[i][2],
+                    MODE_COLOR[i][2]);
         }
 
         sceneMode.check(getIdbyMode(selectMode));
@@ -145,6 +147,7 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
         for (int i = 0; i < MODE_COLOR.length; i++) {
             textColor[i] = MODE_COLOR[i][0];
             bgColor[i] = MODE_COLOR[i][1];
+            selectColor[i] = MODE_COLOR[i][2];
         }
         setSeekProgress();
         textFont.setTextColor(textColor[selectMode]);
@@ -156,6 +159,7 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
         for (int i = 0; i < textColor.length; i++) {
             AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][0], textColor[i]);
             AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][1], bgColor[i]);
+            AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][2], selectColor[i]);
         }
         Intent it = new Intent(this, CoreActivity.class);
         it.putExtra(AppSettings.SELECT_COLOR_MODE, selectMode);
@@ -199,15 +203,19 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
         if (((RadioButton) fontOrBgMode.findViewById(R.id.radio3)).isChecked()) {
             textColor[selectMode] = color;
             textFont.setTextColor(color);
-        } else {
+        } else if (((RadioButton) fontOrBgMode.findViewById(R.id.radio4)).isChecked()) {
             bgColor[selectMode] = color;
+            textFont.setBackgroundColor(color);
+        } else {
+            selectColor[selectMode] = color;
             textFont.setBackgroundColor(color);
         }
     }
 
     private void setSeekProgress() {
-        boolean isFontChecked = ((RadioButton) fontOrBgMode.findViewById(R.id.radio3)).isChecked();
-        int color = isFontChecked ? textColor[selectMode] : bgColor[selectMode];
+        int color = ((RadioButton) fontOrBgMode.findViewById(R.id.radio3)).isChecked() ? textColor[selectMode]
+                : (((RadioButton) fontOrBgMode.findViewById(R.id.radio4)).isChecked() ? bgColor[selectMode]
+                        : selectColor[selectMode]);
         int trans = 255 - ((color >>> 24) & 0xff);
         int red = (color >>> 16) & 0xff;
         int green = (color >>> 8) & 0xff;
@@ -246,6 +254,9 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
                         setSeekProgress();
                         break;
                     case R.id.radio4:
+                        setSeekProgress();
+                        break;
+                    case R.id.radio5:
                         setSeekProgress();
                         break;
                     default:

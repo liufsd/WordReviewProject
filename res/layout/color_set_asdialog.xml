@@ -33,7 +33,10 @@
 			android:checked="true" android:text="@string/sfont_color"></RadioButton>
 		<RadioButton android:layout_width="wrap_content"
 			android:id="@+id/radio4" android:layout_height="wrap_content"
-			android:text="@string/sbackground_color" android:layout_marginLeft="20dp"></RadioButton>
+			android:text="@string/sbackground_color"></RadioButton>
+		<RadioButton android:layout_width="wrap_content"
+			android:id="@+id/radio5" android:layout_height="wrap_content"
+			android:text="@string/sbackground_select"></RadioButton>
 		<Button android:text="@string/sreset" android:id="@+id/button1"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_marginLeft="20dp" android:minWidth="70dp"></Button>

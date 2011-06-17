@@ -141,6 +141,7 @@
 
 	<string name="color_set">顔色设置</string>
 	<string name="sbackground_color">背景</string>
+	<string name="sbackground_select">选择</string>
 	<string name="sfont_color">文字</string>
 	<string name="sreset">重置</string>
 

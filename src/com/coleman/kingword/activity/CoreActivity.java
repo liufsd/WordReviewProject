@@ -254,14 +254,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private int selectMode;// 0 day 1 night 2 custom
 
-    private int textColor;
-
-    private int bgColor;
+    private int textColor, bgColor, selectColor;
 
     private void setReadMode() {
         selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE, 0);
         textColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][0], Color.BLACK);
         bgColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
+        selectColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);
 
         container.setBackgroundColor(bgColor);
         textView.setTextColor(textColor);
@@ -773,27 +772,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class BGDrawable extends StateListDrawable {
         public BGDrawable() {
-            if (selectMode == 1) {
-                addState(new int[] {
-                    android.R.attr.state_pressed
-                }, new ColorDrawable(0xff343434));
-                addState(new int[] {
-                    android.R.attr.state_selected
-                }, new ColorDrawable(0xff343434));
-                addState(new int[] {
-                    -android.R.attr.state_selected
-                }, new ColorDrawable(bgColor));
-            } else {
-                addState(new int[] {
-                    android.R.attr.state_pressed
-                }, new ColorDrawable(0xffaaffff));
-                addState(new int[] {
-                    android.R.attr.state_selected
-                }, new ColorDrawable(0xffaaffff));
-                addState(new int[] {
-                    -android.R.attr.state_selected
-                }, new ColorDrawable(bgColor));
-            }
+            addState(new int[] {
+                android.R.attr.state_pressed
+            }, new ColorDrawable(selectColor));
+            addState(new int[] {
+                android.R.attr.state_selected
+            }, new ColorDrawable(selectColor));
+            addState(new int[] {
+                -android.R.attr.state_selected
+            }, new ColorDrawable(bgColor));
         }
     }
 
