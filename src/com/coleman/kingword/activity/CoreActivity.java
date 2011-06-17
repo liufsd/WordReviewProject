@@ -15,7 +15,9 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -752,7 +754,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             LinearLayout layout = (LinearLayout) v.findViewById(R.id.itemLayout);
             TextView tv = (TextView) v.findViewById(R.id.textView1);
             tv.setTextColor(textColor);
-            BGDrawable bg = new BGDrawable(layout.getBackground());
+            BGDrawable bg = new BGDrawable();
             layout.setBackgroundDrawable(bg);
             tv.setTypeface(mFace);
             DictData data = list.get(position);
@@ -769,51 +771,30 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     }
 
-    private class BGDrawable extends Drawable {
-        private Drawable drawable;
-
-        public BGDrawable(Drawable d) {
-            this.drawable = d;
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            int status[] = drawable.getState();
-            for (int i = 0; i < status.length; i++) {
-                switch (status[i]) {
-                    case android.R.attr.state_pressed:
-                    case android.R.attr.state_selected:
-                        if (selectMode == 1) {
-                            canvas.drawColor(0xff343434);
-                        } else {
-                            canvas.drawColor(0xffaaffff);
-                        }
-                        break;
-                    default:
-                        canvas.drawColor(bgColor);
-                        break;
-                }
+    private class BGDrawable extends StateListDrawable {
+        public BGDrawable() {
+            if (selectMode == 1) {
+                addState(new int[] {
+                    android.R.attr.state_pressed
+                }, new ColorDrawable(0xff343434));
+                addState(new int[] {
+                    android.R.attr.state_selected
+                }, new ColorDrawable(0xff343434));
+                addState(new int[] {
+                    -android.R.attr.state_selected
+                }, new ColorDrawable(bgColor));
+            } else {
+                addState(new int[] {
+                    android.R.attr.state_pressed
+                }, new ColorDrawable(0xffaaffff));
+                addState(new int[] {
+                    android.R.attr.state_selected
+                }, new ColorDrawable(0xffaaffff));
+                addState(new int[] {
+                    -android.R.attr.state_selected
+                }, new ColorDrawable(bgColor));
             }
         }
-
-        @Override
-        public void setAlpha(int alpha) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter cf) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public int getOpacity() {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
     }
 
     /**
