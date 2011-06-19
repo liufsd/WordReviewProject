@@ -57,6 +57,14 @@ public class EbbinghausReminder {
                 calendar.add(Calendar.HOUR, 24 * 20);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
+            case WordInfoVO.REVIEW_40_DAY:
+                calendar.add(Calendar.HOUR, 24 * 40);
+                // calendar.add(Calendar.SECOND, 10);
+                break;
+            case WordInfoVO.REVIEW_60_DAY:
+                calendar.add(Calendar.HOUR, 24 * 60);
+                // calendar.add(Calendar.SECOND, 10);
+                break;
             default:
                 break;
         }

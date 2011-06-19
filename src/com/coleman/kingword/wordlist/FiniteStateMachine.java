@@ -226,6 +226,10 @@ public class FiniteStateMachine {
         protected FiniteState getNext() {
             return null;
         }
+        @Override
+        protected void enter() {
+            sliceList.totalCount++;
+        }
     }
 
     private class FiniteStateEngine implements IFSMCommand {
@@ -266,9 +270,12 @@ public class FiniteStateMachine {
 
         private void complete() {
             for (FiniteState finiteState : mStateList) {
-                finiteState.exit();
+                if(finiteState!=completeState){
+                    finiteState.exit();
+                }
             }
             mCurrentState = completeState;
+            mCurrentState.enter();
         }
     }
 

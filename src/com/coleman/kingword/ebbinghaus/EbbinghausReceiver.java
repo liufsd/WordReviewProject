@@ -85,6 +85,12 @@ public class EbbinghausReceiver extends BroadcastReceiver {
             case WordInfoVO.REVIEW_20_DAY:
                 msg = String.format(msg, 20 + context.getString(R.string.day));
                 break;
+            case WordInfoVO.REVIEW_40_DAY:
+                msg = String.format(msg, 40 + context.getString(R.string.day));
+                break;
+            case WordInfoVO.REVIEW_60_DAY:
+                msg = String.format(msg, 60 + context.getString(R.string.day));
+                break;
             default:
                 break;
         }
@@ -103,7 +109,11 @@ public class EbbinghausReceiver extends BroadcastReceiver {
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000) + ")";
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000) + ")";
         Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, null, selection, null,
                 null);
         Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct));

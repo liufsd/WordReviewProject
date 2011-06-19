@@ -138,17 +138,20 @@ public class WordInfoHelper {
                 break;
             case SliceWordList.REVIEW_LIST:
                 long ct = System.currentTimeMillis();
-                String selection = "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR
-                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")"
-                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR
-                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000) + ")"
-                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY
-                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000) + ")"
-                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY
-                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000)
-                        + ")" + " or " + "(" + WordInfo.REVIEW_TYPE + "="
-                        + WordInfoVO.REVIEW_20_DAY + " and " + WordInfo.REVIEW_TIME + "<="
-                        + (ct - 20 * 24 * 60 * 60 * 1000) + ")";
+                String selection = "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000) + ")";
                 c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection, selection,
                         null, null);
                 break;

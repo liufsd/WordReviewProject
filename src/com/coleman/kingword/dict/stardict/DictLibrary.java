@@ -75,8 +75,7 @@ public class DictLibrary {
             Cursor c = context.getContentResolver().query(
                     OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
                             : StarDictIndex.CONTENT_URI, projection,
-                    IDictIndex.WORD + " in ('" + word + "','" + word.toLowerCase() + "')", null,
-                    null);
+                    IDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
@@ -84,8 +83,24 @@ public class DictLibrary {
                 c.close();
                 c = null;
             }
+
+            // if not found the word from the index databases, try to query the
+            // lower case of the word from the index database
+            if (di == null) {
+                c = context.getContentResolver().query(
+                        OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
+                                : StarDictIndex.CONTENT_URI, projection,
+                        IDictIndex.WORD + " = '" + word.toLowerCase() + "'", null, null);
+                if (c.moveToFirst()) {
+                    di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
+                }
+                if (c != null) {
+                    c.close();
+                    c = null;
+                }
+            }
             time = System.currentTimeMillis() - time;
-            System.out.println("Query the word from the database cost time: " + time);
+            Log.d(TAG, "Query the word from the database cost time: " + time);
         } else {
             di = libraryWordMap.get(word);
         }
@@ -164,8 +179,8 @@ public class DictLibrary {
             } else if (DictLibrary.OXFORD.equals(libKey)) {
                 libraryName = OXFORD_PATH;
                 libraryInfo = DictInfo.readDicInfo(context, OXFORD_PATH + ".ifo");
-                libraryWordMap = DictIndex.loadDictIndexMap(context, OXFORD_PATH + ".idx",
-                        Integer.parseInt(libraryInfo.wordCount));
+                libraryWordMap = DictIndex.loadDictIndexMap(context, OXFORD_PATH + ".idx", Integer
+                        .parseInt(libraryInfo.wordCount));
                 ready = true;
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");

@@ -48,6 +48,10 @@ public class WordInfoVO implements Parcelable {
 
     public static final byte REVIEW_20_DAY = 5;
 
+    public static final byte REVIEW_40_DAY = 6;
+
+    public static final byte REVIEW_60_DAY = 7;
+
     private static final byte REVIEW_COMPLETE = 100;
 
     /**
@@ -172,6 +176,12 @@ public class WordInfoVO implements Parcelable {
                 _type = REVIEW_20_DAY;
                 break;
             case REVIEW_20_DAY:
+                _type = REVIEW_40_DAY;
+                break;
+            case REVIEW_40_DAY:
+                _type = REVIEW_60_DAY;
+                break;
+            case REVIEW_60_DAY:
                 _type = REVIEW_COMPLETE;
                 break;
             default:
@@ -197,6 +207,12 @@ public class WordInfoVO implements Parcelable {
                 break;
             case REVIEW_20_DAY:
                 str += context.getString(R.string.review_20_day);
+                break;
+            case REVIEW_40_DAY:
+                str += context.getString(R.string.review_40_day);
+                break;
+            case REVIEW_60_DAY:
+                str += context.getString(R.string.review_60_day);
                 break;
             case REVIEW_COMPLETE:
             default:

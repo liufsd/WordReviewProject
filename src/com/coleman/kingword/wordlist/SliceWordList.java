@@ -46,6 +46,8 @@ public class SliceWordList {
      */
     int errorCount;
 
+    int totalCount;
+
     byte listType;
 
     public static final byte NULL_TYPE = -1;
@@ -170,10 +172,8 @@ public class SliceWordList {
         if (list.size() == 0) {
             return true;
         }
-        for (WordItem item : list) {
-            if (!item.isComplete()) {
-                return false;
-            }
+        if (totalCount < list.size()) {
+            return false;
         }
         return true;
     }
@@ -209,7 +209,26 @@ public class SliceWordList {
         if (!item.isComplete()) {
             return item;
         } else {
-            return getNext();
+            // if the next word is already completed, then try to find the next
+            // word after index of p
+            int tmp = p + 1 > list.size() - 1 ? 0 : p + 1;
+            for (int i = tmp; i < list.size(); i++) {
+                WordItem it = list.get(i);
+                if (!it.isComplete()) {
+                    p = i;
+                    return it;
+                }
+            }
+            // if not found next word after index p, then try to find the next
+            // word from the index 0
+            for (int i = 0; i < tmp; i++) {
+                WordItem it = list.get(i);
+                if (!it.isComplete()) {
+                    p = i;
+                    return it;
+                }
+            }
+            return list.get(tmp);
         }
     }
 
