@@ -80,7 +80,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     /**
      * upgrade and degrade are not support by user anymore.
      */
-    private Button viewWord, upgrade, degrade, addOrRemove, ignoreOrNot;
+    private Button viewWord, addOrRemove, ignoreOrNot;
 
     private TextView continueView;
 
@@ -268,15 +268,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         countBtn.setTextColor(textColor);
 
         viewWord.setTextColor(textColor);
-        upgrade.setTextColor(textColor);
-        degrade.setTextColor(textColor);
         addOrRemove.setTextColor(textColor);
         ignoreOrNot.setTextColor(textColor);
 
         if (selectMode == 1) {
             viewWord.setBackgroundResource(R.drawable.btn_bg_night);
-            upgrade.setBackgroundResource(R.drawable.btn_bg_night);
-            degrade.setBackgroundResource(R.drawable.btn_bg_night);
             addOrRemove.setBackgroundResource(R.drawable.btn_bg_night);
             ignoreOrNot.setBackgroundResource(R.drawable.btn_bg_night);
 
@@ -289,8 +285,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         } else {
             viewWord.setBackgroundResource(android.R.drawable.btn_default);
-            upgrade.setBackgroundResource(android.R.drawable.btn_default);
-            degrade.setBackgroundResource(android.R.drawable.btn_default);
             addOrRemove.setBackgroundResource(android.R.drawable.btn_default);
             ignoreOrNot.setBackgroundResource(android.R.drawable.btn_default);
 
@@ -358,18 +352,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     viewWord.setText(R.string.view_more);
                 }
                 break;
-            case R.id.upgrade:
-                new ExpensiveTask(ExpensiveTask.UPGRADE).execute();
-                break;
             case R.id.add_or_remove:
                 if (addOrRemove.getText().equals(getString(R.string.add_new))) {
                     new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
                 } else {
                     new ExpensiveTask(ExpensiveTask.REMOVE_FROM_NEW).execute();
                 }
-                break;
-            case R.id.degrade:
-                new ExpensiveTask(ExpensiveTask.DEGRADE).execute();
                 break;
             case R.id.ignore_or_not:
                 if (ignoreOrNot.getText().equals(getString(R.string.ignore))) {
@@ -435,8 +423,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         listView = (ListView) findViewById(R.id.listView1);
         container = (RelativeLayout) findViewById(R.id.container);
         viewWord = (Button) findViewById(R.id.viewWord);
-        upgrade = (Button) findViewById(R.id.upgrade);
-        degrade = (Button) findViewById(R.id.degrade);
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);
         countBtn = (Button) findViewById(R.id.countdown);
@@ -445,15 +431,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         progressBarNight = (ProgressBar) findViewById(R.id.progressBarNight1);
         continueView = (TextView) findViewById(R.id.continueHitView);
 
-        upgrade.setVisibility(View.GONE);
-        degrade.setVisibility(View.GONE);
-
         listView.setOnItemClickListener(this);
 
         addOrRemove.setOnClickListener(this);
         viewWord.setOnClickListener(this);
-        upgrade.setOnClickListener(this);
-        degrade.setOnClickListener(this);
         ignoreOrNot.setOnClickListener(this);
         countBtn.setOnClickListener(this);
 
@@ -1012,8 +993,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         adapter.notifyDataSetChanged();
                         progressBarDay.setProgress(wordlist.getProgress());
                         progressBarNight.setProgress(wordlist.getProgress());
-                        upgrade.setEnabled(nextWordItem.canUpgrade());
-                        degrade.setEnabled(nextWordItem.canDegrade());
 
                         viewWord.setText(R.string.view_more);
 
@@ -1055,8 +1034,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                                 applyFadeAnim();
                                 break;
                         }
-                        upgrade.setEnabled(nextWordItem.canUpgrade());
-                        degrade.setEnabled(nextWordItem.canDegrade());
                         if (nextWordItem.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {
@@ -1081,8 +1058,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.upgrade_success)
                                     : getString(R.string.upgrade_failed), Toast.LENGTH_SHORT)
                             .show();
-                    upgrade.setEnabled(nextWordItem.canUpgrade());
-                    degrade.setEnabled(nextWordItem.canDegrade());
                     break;
                 }
                 case DEGRADE: {
@@ -1092,8 +1067,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.degrade_success)
                                     : getString(R.string.degrade_failed), Toast.LENGTH_SHORT)
                             .show();
-                    upgrade.setEnabled(nextWordItem.canUpgrade());
-                    degrade.setEnabled(nextWordItem.canDegrade());
                     break;
                 }
                 case IGNORE: {

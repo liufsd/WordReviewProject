@@ -57,18 +57,12 @@
 		style="@style/ButtonBarPadding" android:background="@android:drawable/bottom_bar">
 		<Button android:id="@+id/viewWord" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/view_more" />
-		<Button android:id="@+id/upgrade" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/upgrade" />
-		<Button android:id="@+id/degrade" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/degrade" />
+			android:text="@string/view_more" android:minWidth="80dp" />
 		<Button android:id="@+id/add_or_remove" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/add_new" />
+			android:text="@string/add_new" android:minWidth="80dp" />
 		<Button android:id="@+id/ignore_or_not" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/ignore" />
+			android:text="@string/ignore" android:minWidth="80dp" />
 	</LinearLayout>
 </RelativeLayout>
