@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.kingword.wordlist.WordList.InternalWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
@@ -135,8 +136,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = new MenuInflater(this);
-        inflater.inflate(R.menu.wordlist_option, menu);
+        getMenuInflater().inflate(R.menu.wordlist_option, menu);
         return true;
     }
 
@@ -146,6 +146,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             case R.id.menu_load:
                 startActivity(new Intent(this, FileExplorer.class));
                 break;
+            case R.id.menu_ignore_list:
+                Intent intent = new Intent(this, CoreActivity.class);
+                intent.putExtra("type", SliceWordList.SCAN_LIST);
+                startActivity(intent);
+                break;
         }
         return true;
     }
@@ -154,7 +159,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button1:
-                startActivity(new Intent(this, FileExplorer.class));
+                Intent intent = new Intent(this, CoreActivity.class);
+                intent.putExtra("type", SliceWordList.NEW_WORD_BOOK_LIST);
+                startActivity(intent);
                 break;
             default:
                 break;

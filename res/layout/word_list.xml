@@ -19,7 +19,7 @@
 			android:layout_weight="1" android:visibility="invisible"></TextView>
 		<Button android:id="@+id/button1" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/load" />
+			android:text="@string/view_new_book" />
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:id="@+id/view_right"
 			android:layout_weight="1" android:visibility="invisible"></TextView>

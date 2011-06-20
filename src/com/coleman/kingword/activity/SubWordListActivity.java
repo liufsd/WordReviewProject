@@ -26,7 +26,6 @@ public class SubWordListActivity extends Activity {
 
     private static final String TAG = SubWordListActivity.class.getName();
 
-
     private ProgressBar progressBar;
 
     /**
@@ -61,33 +60,6 @@ public class SubWordListActivity extends Activity {
         }
         b.putLong(WordsList._ID, wordlist_id);
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.subwordlist_option, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_new_word_book: {
-                Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", SliceWordList.NEW_WORD_BOOK_LIST);
-                startActivity(intent);
-                break;
-            }
-            case R.id.menu_ignore_list: {
-                Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", SliceWordList.SCAN_LIST);
-                startActivity(intent);
-                break;
-            }
-            default:
-                break;
-        }
-        return true;
     }
 
     private void initViews() {
