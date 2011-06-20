@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
@@ -56,10 +57,17 @@ public class WordItem {
     }
 
     public String getWord(Context context) {
+        String w = word;
         if (sliceList.listType == SliceWordList.REVIEW_LIST) {
-            return word + "(" + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+            if (info.newword) {
+                w += "(" + context.getString(R.string.new_word) + ","
+                        + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+            } else {
+                w += "(" + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+            }
+            return w;
         } else {
-            return word;
+            return w + (info.newword ? "(" + context.getString(R.string.new_word) + ")" : "");
         }
     }
 

@@ -27,6 +27,8 @@
 	<string name="review_40_day">40天</string>
 	<string name="review_60_day">60天</string>
 
+	<string name="new_word">生词</string>
+
 	<string name="delay">延迟10分钟</string>
 	<string name="review_reminder" formatted="false">距离你上次学习已经有%s，单击进入复习模式！
 	</string>

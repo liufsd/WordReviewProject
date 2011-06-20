@@ -964,6 +964,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.remove_success)
                                     : getString(R.string.remove_failed), Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.add_new);
+                    textView.setText(nextWordItem.getWord(CoreActivity.this));
                     break;
                 }
                 case ADD_NEW: {
@@ -972,6 +973,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.add_success) : getString(R.string.add_failed),
                             Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.remove_from_new);
+                    textView.setText(nextWordItem.getWord(CoreActivity.this));
                     break;
                 }
                 case VIEW_MORE:
