@@ -23,6 +23,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordInfo;
+import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
 
 public class WelcomeActivity extends Activity {
@@ -52,7 +53,7 @@ public class WelcomeActivity extends Activity {
         if (firstStarted) {
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
             EbbinghausReminder.setNotifactionAfterInstalled(this);
-            AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, 200);
+            AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
             for (int i = 0; i < c.length; i++) {

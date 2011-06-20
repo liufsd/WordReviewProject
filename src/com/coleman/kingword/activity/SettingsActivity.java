@@ -27,6 +27,7 @@ import android.widget.TimePicker;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
 
 public class SettingsActivity extends Activity implements OnItemClickListener {
@@ -205,7 +206,8 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 Log.d(TAG, "set split nums: " + nums[which]);
             }
         };
-        int selectNum = AppSettings.getInt(SettingsActivity.this, AppSettings.SPLIT_NUM_KEY, 200);
+        int selectNum = AppSettings.getInt(SettingsActivity.this, AppSettings.SPLIT_NUM_KEY,
+                WordListManager.DEFAULT_SPLIT_NUM);
         int checkedIndex = getCheckedIndex(nums, selectNum);
         new AlertDialog.Builder(this).setTitle(R.string.set_split_num_hint)
                 .setSingleChoiceItems(nums, checkedIndex, listener).show();

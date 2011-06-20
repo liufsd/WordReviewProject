@@ -24,7 +24,7 @@ public class WordListManager {
 
     private static WordListManager manager;
 
-    private static final int DEFAULT_SPLIT_NUM = 200;
+    public static final int DEFAULT_SPLIT_NUM = 100;
 
     private WordListManager() {
     }
