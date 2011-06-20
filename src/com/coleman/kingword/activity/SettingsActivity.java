@@ -201,11 +201,25 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 AppSettings.saveInt(SettingsActivity.this, AppSettings.SPLIT_NUM_KEY,
                         Integer.parseInt(nums[which]));
+                dialog.dismiss();
                 Log.d(TAG, "set split nums: " + nums[which]);
             }
         };
+        int selectNum = AppSettings.getInt(SettingsActivity.this, AppSettings.SPLIT_NUM_KEY, 200);
+        int checkedIndex = getCheckedIndex(nums, selectNum);
         new AlertDialog.Builder(this).setTitle(R.string.set_split_num_hint)
-                .setItems(nums, listener).show();
+                .setSingleChoiceItems(nums, checkedIndex, listener).show();
+    }
+
+    private int getCheckedIndex(String[] nums, int selectNum) {
+        int i = 0;
+        for (String num : nums) {
+            if (Integer.parseInt(num) == selectNum) {
+                return i;
+            }
+            i++;
+        }
+        return 0;
     }
 
     /**
