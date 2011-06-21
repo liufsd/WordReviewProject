@@ -22,6 +22,7 @@ import android.widget.Button;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;

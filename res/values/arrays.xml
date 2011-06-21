@@ -15,4 +15,49 @@
 		<item>滑动特效</item>
 		<item>无特效</item>
 	</string-array>
+	<!-- 列兵、少尉、中尉、上尉、少校、中校、上校、大校、少将、中将、上将、三军统帅 -->
+	<string-array name="military_rank">
+		<item>列兵</item>
+		<item>少尉</item>
+		<item>中尉</item>
+		<item>上尉</item>
+		<item>少校</item>
+		<item>中校</item>
+		<item>上校</item>
+		<item>大校</item>
+		<item>少将</item>
+		<item>中将</item>
+		<item>上将</item>
+		<item>三军统帅</item>
+	</string-array>
+	<!-- 学童、小学生、中学生、学士、硕士、博士、博士后、学者、大学者、宗师、泰斗、圣贤 -->
+	<string-array name="leaning_level">
+		<item>学童</item>
+		<item>小学生</item>
+		<item>中学生</item>
+		<item>学士</item>
+		<item>硕士</item>
+		<item>博士</item>
+		<item>博士后</item>
+		<item>学者</item>
+		<item>大学者</item>
+		<item>宗师</item>
+		<item>泰斗</item>
+		<item>圣贤</item>
+	</string-array>
+	<!-- 入门、筑基、旋照、融合、心动、灵寂、元婴、出窍、分神、合体、度劫、大乘 -->
+	<string-array name="xiuzhen_level">
+		<item>入门</item>
+		<item>筑基</item>
+		<item>旋照</item>
+		<item>融合</item>
+		<item>心动</item>
+		<item>灵寂</item>
+		<item>元婴</item>
+		<item>出窍</item>
+		<item>分神</item>
+		<item>合体</item>
+		<item>度劫</item>
+		<item>大乘</item>
+	</string-array>
 </resources>
