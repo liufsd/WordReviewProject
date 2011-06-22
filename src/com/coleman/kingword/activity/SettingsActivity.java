@@ -79,7 +79,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         data.add(map);
         // 4
         map = new HashMap<String, Integer>();
-        map.put(from[0], R.drawable.set_restore);
+        map.put(from[0], R.drawable.set_level_type);
         map.put(from[1], R.string.learning_level_name_set);
         data.add(map);
     }
@@ -116,7 +116,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 dialog.dismiss();
             }
         };
-        int checkedIndex = AppSettings.getInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, 1);
+        int checkedIndex = AppSettings.getInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, 0);
         new AlertDialog.Builder(this).setTitle(R.string.learning_level_name_set)
                 .setSingleChoiceItems(nums, checkedIndex, listener).show();
     }
