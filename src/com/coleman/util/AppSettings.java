@@ -39,6 +39,8 @@ public class AppSettings {
             "review_time_1", "review_time_2", "review_time_3"
     };
 
+    public static final String LEVEL_TYPE = "level_type";
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);

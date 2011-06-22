@@ -60,4 +60,23 @@
 		<item>度劫</item>
 		<item>大乘</item>
 	</string-array>
+	<string-array name="level_type">
+		<item>军衔</item>
+		<item>学识</item>
+		<item>修真</item>
+	</string-array>
+	<integer-array name="level_num">
+		<item>300</item>
+		<item>1000</item>
+		<item>3000</item>
+		<item>5000</item>
+		<item>8000</item>
+		<item>12000</item>
+		<item>17000</item>
+		<item>23000</item>
+		<item>30000</item>
+		<item>38000</item>
+		<item>47000</item>
+		<item>57000</item>
+	</integer-array>
 </resources>

@@ -77,6 +77,11 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[0], R.drawable.set_restore);
         map.put(from[1], R.string.restore);
         data.add(map);
+        // 4
+        map = new HashMap<String, Integer>();
+        map.put(from[0], R.drawable.set_restore);
+        map.put(from[1], R.string.learning_level_name_set);
+        data.add(map);
     }
 
     @Override
@@ -94,9 +99,26 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             case 3:
                 showConfirmDialog(3);
                 break;
+            case 4:
+                showSelectLevelType();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showSelectLevelType() {
+        final String[] nums = getResources().getStringArray(R.array.level_type);
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AppSettings.saveInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, which);
+                dialog.dismiss();
+            }
+        };
+        int checkedIndex = AppSettings.getInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, 1);
+        new AlertDialog.Builder(this).setTitle(R.string.learning_level_name_set)
+                .setSingleChoiceItems(nums, checkedIndex, listener).show();
     }
 
     private void showConfirmDialog(final int position) {

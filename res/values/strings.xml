@@ -128,8 +128,7 @@
 	<string name="help_title">帮助信息</string>
 	<string name="about_title">关于信息</string>
 	<string name="help_hint">暂无帮助信息！\n（警告：请勿使用此软件进行任何不法活动！）</string>
-	<string name="about_hint">献给梅子！\n\n——Coleman
-		</string>
+	<string name="about_hint">献给梅子！\n\n——Coleman</string>
 
 	<string name="toast_media_unmounted">设备没有发现可用的外部存储卡！</string>
 
@@ -157,4 +156,9 @@
 	<string name="sgreen">绿</string>
 	<string name="sblue">蓝</string>
 	<string name="strans">透明度</string>
+
+	<string name="cur_leve" formatted="false">当前等级: %s(%d词)</string>
+	<string name="next_level" formatted="false">下一等级: %s(%d词)</string>
+	<string name="top_level">你已经到达最高等级！</string>
+	<string name="learning_level_name_set">设置等级称号</string>
 </resources>

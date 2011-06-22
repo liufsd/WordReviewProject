@@ -18,11 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
@@ -32,12 +32,17 @@ public class WelcomeActivity extends Activity {
 
     private Button startButton;
 
+    private TextView curTV, nextTV;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.welcome);
         setContentView(R.layout.welcome);
         startButton = (Button) findViewById(R.id.w_button1);
+        curTV = (TextView) findViewById(R.id.textView1);
+        nextTV = (TextView) findViewById(R.id.textView2);
+
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,6 +52,12 @@ public class WelcomeActivity extends Activity {
         });
         // _DEL_REPEAT_WORDS();
         ifFirstInstalled();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initLevels();
     }
 
     private void ifFirstInstalled() {
@@ -168,5 +179,44 @@ public class WelcomeActivity extends Activity {
         time = System.currentTimeMillis() - time;
         Log.d(TAG, "load feature list cost time: " + time);
         return str;
+    }
+
+    private void initLevels() {
+        int count = 0, index = 0;
+        String curLev = getString(R.string.cur_leve);
+        String nextLev = getString(R.string.next_level);
+        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE, 0);
+        int[] levelNums = getResources().getIntArray(R.array.level_num);
+        String[] levelNames = (levelType == 0 ? getResources()
+                .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
+                .getStringArray(R.array.leaning_level) : getResources().getStringArray(
+                R.array.xiuzhen_level)));
+        Cursor c = getContentResolver().query(WordInfo.CONTENT_URI, new String[] {
+            WordInfo._ID
+        }, null, null, WordInfo._ID + " desc LIMIT 1");
+        if (c.moveToFirst()) {
+            long id = c.getLong(0);
+            count = (int) id;
+            Log.d(TAG, "id:" + id);
+        }
+        if (c != null) {
+            c.close();
+            c = null;
+        }
+        for (int i = levelNums.length - 1; i >= 0; i--) {
+            if (count >= levelNums[i]) {
+                index = i;
+                break;
+            }
+        }
+        curLev = String.format(curLev, levelNames[index], count);
+        index++;
+        curTV.setText(curLev);
+        if (index >= levelNames.length) {
+            nextLev = getString(R.string.top_level);
+        } else {
+            nextLev = String.format(nextLev, levelNames[index], levelNums[index]);
+        }
+        nextTV.setText(nextLev);
     }
 }
