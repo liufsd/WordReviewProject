@@ -1,6 +1,8 @@
 
 package com.coleman.kingword.ebbinghaus;
 
+import java.util.Calendar;
+
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -100,7 +102,8 @@ public class EbbinghausReceiver extends BroadcastReceiver {
     private boolean needReview(Context context) {
         boolean needed = false;
         long ct = System.currentTimeMillis();
-        String selection = WordInfo.NEW_WORD+" = 2 or " + "(" 
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String selection = (hour >= 18 ? WordInfo.NEW_WORD + " = 2 or " : "") + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")" + " or " + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
@@ -110,10 +113,10 @@ public class EbbinghausReceiver extends BroadcastReceiver {
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000) + ")" + " or "
+                + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
+                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000) + ")" + " or "
+                + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000) + ")";
         Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, null, selection, null,
                 null);

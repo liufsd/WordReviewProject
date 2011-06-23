@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -138,7 +139,9 @@ public class WordInfoHelper {
                 break;
             case SliceWordList.REVIEW_LIST:
                 long ct = System.currentTimeMillis();
-                String selection = WordInfo.NEW_WORD+" = 2 or " + "(" 
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                Log.d(TAG, "=====current hour:" + hour);
+                String selection = (hour >= 18 ? WordInfo.NEW_WORD + " = 2 or " : "") + "(" 
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")" + " or " + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
