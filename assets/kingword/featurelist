@@ -85,3 +85,17 @@ ebbinghaus implement
 设置顔色
 ebbinghaus optimize
 设置分割数
+add the levels control
+impl backup add restore
+========page 10========
+review implement:
+	1. review point, you can set three time point during a day
+	2. review condition, when reached the set time point, a review action happened.
+	3. review avoid, if no word need review, user will not receive a message.
+	4. review new-word, if the time point after 18:00, new word will also be request for reviewing.
+	5. review new-word avoid, you can not review a new word, and you can't change a new-word's review type, unless you remove it from the new-word-book.
+	6. review delay, once if you are doing learning new unit, you can delay the review time if a review dialog pop up.
+	7. review notification, when you leaved the KingWord learning page, you will receive a notification once a review action happen.
+	8. review any time, you can enter the review mode when your are in learning page by pressing the option menu.
+========page 11========
+set TextView style by Html format.
