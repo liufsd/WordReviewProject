@@ -112,7 +112,7 @@ public class WelcomeActivity extends Activity {
         for (int i = 0; i < levelNames.length; i++) {
             sb.append(String.format(level_info_item, i, levelNames[i], levelNums[i]));
         }
-        new AlertDialog.Builder(this).setTitle(R.string.level_info).setMessage(sb.toString())
+        new AlertDialog.Builder(this).setTitle(R.string.level_info).setMessage(sb.subSequence(0, sb.length()-1))
                 .setPositiveButton(R.string.ok, null).show();
     }
 
