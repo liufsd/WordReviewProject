@@ -85,16 +85,35 @@ public class WelcomeActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_about_dev:
-                showAboutDev();
-                break;
             case R.id.menu_set:
                 showSettings();
+                break;
+            case R.id.menu_level_info:
+                showLevelInfo();
+                break;
+            case R.id.menu_about_dev:
+                showAboutDev();
                 break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void showLevelInfo() {
+        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE, 0);
+        int[] levelNums = getResources().getIntArray(R.array.level_num);
+        String[] levelNames = (levelType == 0 ? getResources()
+                .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
+                .getStringArray(R.array.leaning_level) : getResources().getStringArray(
+                R.array.xiuzhen_level)));
+        StringBuilder sb = new StringBuilder();
+        String level_info_item = getString(R.string.level_info_item);
+        for (int i = 0; i < levelNames.length; i++) {
+            sb.append(String.format(level_info_item, i, levelNames[i], levelNums[i]));
+        }
+        new AlertDialog.Builder(this).setTitle(R.string.level_info).setMessage(sb.toString())
+                .setPositiveButton(R.string.ok, null).show();
     }
 
     private void showSettings() {

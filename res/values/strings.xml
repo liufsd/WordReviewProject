@@ -161,4 +161,6 @@
 	<string name="next_level" formatted="false">下一等级: %s(%d词)</string>
 	<string name="top_level">你已经到达最高等级！</string>
 	<string name="learning_level_name_set">设置等级称号</string>
+	<string name="level_info">等级榜说明</string>
+	<string name="level_info_item" formatted="false">等级%d：%s（%d词）\n</string>
 </resources>
