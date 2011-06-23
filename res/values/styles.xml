@@ -32,7 +32,9 @@
 		<item name="android:textColor">@color/black</item>
 		<item name="android:textAppearance">@android:style/TextAppearance.Large</item>
 	</style>
-
+	<style name="dialog_title_white" parent="@android:style/TextAppearance.DialogWindowTitle">
+		<item name="android:textSize">22sp</item>
+	</style>
 	<style name="wordlist_title" parent="@style/word_title">
 		<item name="android:textStyle">bold</item>
 	</style>

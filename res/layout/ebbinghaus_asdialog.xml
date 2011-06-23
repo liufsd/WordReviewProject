@@ -3,15 +3,14 @@
 	android:layout_width="wrap_content" android:layout_height="wrap_content"
 	android:orientation="vertical">
 	<LinearLayout android:id="@+id/title_bar"
-		android:paddingLeft="10dp" android:paddingRight="10dp"
+		android:paddingLeft="5dp" android:paddingRight="10dp"
 		android:paddingTop="5dp" android:layout_width="wrap_content"
 		android:layout_height="wrap_content">
 		<ImageView android:id="@+id/title_icon" android:src="@drawable/asdialog_title_icon"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
-		<TextView android:paddingLeft="10dp" android:id="@+id/title"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			style="@android:style/TextAppearance.DialogWindowTitle"></TextView>
+		<TextView android:id="@+id/title" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center"
+			style="@style/dialog_title_white"></TextView>
 	</LinearLayout>
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
