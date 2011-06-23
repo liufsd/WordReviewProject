@@ -207,7 +207,9 @@ public class WordItem {
         info.studycount++;
         if (!reviewed) {
             reviewed = true;
-            info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+            if (!info.newword) {
+                info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+            }
         }
         if (info.studycount % 3 == 0) {
             info.weight--;
@@ -245,5 +247,9 @@ public class WordItem {
     public boolean removeIgnore(Context context) {
         info.ignore = false;
         return WordInfoHelper.store(context, info);
+    }
+
+    public boolean isNewWord() {
+        return info.newword;
     }
 }

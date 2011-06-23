@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -191,6 +193,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_conceal);
         } else {
             menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_show);
+        }
+        if (sliceListType == SliceWordList.REVIEW_LIST) {
+            menu.removeItem(R.id.menu_review);
         }
         return true;
     }
@@ -490,7 +495,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             public void onAnimationEnd(Animation animation) {
                 list.clear();
                 list.addAll(_buflist);
-                textView.setText(nextWordItem.getWord(CoreActivity.this));
+                if (nextWordItem.isNewWord()) {
+                    textView.setText(Html.fromHtml("<b><i>"
+                            + nextWordItem.getWord(CoreActivity.this) + "</b></i>"));
+                } else {
+                    textView.setText(nextWordItem.getWord(CoreActivity.this));
+                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -536,7 +546,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             public void onAnimationEnd(Animation animation) {
                 list.clear();
                 list.addAll(_buflist);
-                textView.setText(nextWordItem.getWord(CoreActivity.this));
+                if (nextWordItem.isNewWord()) {
+                    textView.setText(Html.fromHtml("<b><i>"
+                            + nextWordItem.getWord(CoreActivity.this) + "</b></i>"));
+                } else {
+                    textView.setText(nextWordItem.getWord(CoreActivity.this));
+                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -964,7 +979,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.remove_success)
                                     : getString(R.string.remove_failed), Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.add_new);
-                    textView.setText(nextWordItem.getWord(CoreActivity.this));
+                    if (nextWordItem.isNewWord()) {
+                        textView.setText(Html.fromHtml("<b><i>"
+                                + nextWordItem.getWord(CoreActivity.this) + "</b></i>"));
+                    } else {
+                        textView.setText(nextWordItem.getWord(CoreActivity.this));
+                    }
                     break;
                 }
                 case ADD_NEW: {
@@ -973,7 +993,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.add_success) : getString(R.string.add_failed),
                             Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.remove_from_new);
-                    textView.setText(nextWordItem.getWord(CoreActivity.this));
+                    if (nextWordItem.isNewWord()) {
+                        textView.setText(Html.fromHtml("<b><i>"
+                                + nextWordItem.getWord(CoreActivity.this) + "</b></i>"));
+                    } else {
+                        textView.setText(nextWordItem.getWord(CoreActivity.this));
+                    }
                     break;
                 }
                 case VIEW_MORE:
@@ -991,7 +1016,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         countdownManager = new CountdownManager(handler, wordlist.getCount());
                         list.clear();
                         list.addAll(_buflist);
-                        textView.setText(nextWordItem.getWord(CoreActivity.this));
+                        if (nextWordItem.isNewWord()) {
+                            textView.setText(Html.fromHtml("<b><i>"
+                                    + nextWordItem.getWord(CoreActivity.this) + "</b></i>"));
+                        } else {
+                            textView.setText(nextWordItem.getWord(CoreActivity.this));
+                        }
                         adapter.notifyDataSetChanged();
                         progressBarDay.setProgress(wordlist.getProgress());
                         progressBarNight.setProgress(wordlist.getProgress());

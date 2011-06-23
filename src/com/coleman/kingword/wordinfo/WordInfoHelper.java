@@ -138,7 +138,8 @@ public class WordInfoHelper {
                 break;
             case SliceWordList.REVIEW_LIST:
                 long ct = System.currentTimeMillis();
-                String selection = "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
+                String selection = WordInfo.NEW_WORD+" = 2 or " + "(" 
+                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000) + ")" + " or " + "("
                 + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
                 + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000) + ")" + " or " + "("
