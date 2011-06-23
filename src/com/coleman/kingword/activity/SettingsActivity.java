@@ -112,11 +112,11 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AppSettings.saveInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, which);
+                AppSettings.saveInt(SettingsActivity.this, AppSettings.LEVEL_TYPE_KEY, which);
                 dialog.dismiss();
             }
         };
-        int checkedIndex = AppSettings.getInt(SettingsActivity.this, AppSettings.LEVEL_TYPE, 0);
+        int checkedIndex = AppSettings.getInt(SettingsActivity.this, AppSettings.LEVEL_TYPE_KEY, 0);
         new AlertDialog.Builder(this).setTitle(R.string.learning_level_name_set)
                 .setSingleChoiceItems(nums, checkedIndex, listener).show();
     }

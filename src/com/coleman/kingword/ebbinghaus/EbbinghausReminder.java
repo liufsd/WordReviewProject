@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.TimeUtils;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.receiver.KingWordReceiver;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.util.AppSettings;
@@ -68,7 +69,7 @@ public class EbbinghausReminder {
             default:
                 break;
         }
-        Intent intent = new Intent(context, EbbinghausReceiver.class);
+        Intent intent = new Intent(context, KingWordReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -94,7 +95,7 @@ public class EbbinghausReminder {
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.MINUTE, delayMinute);
         // calendar.add(Calendar.SECOND, delayMinute);
-        Intent intent = new Intent(context, EbbinghausReceiver.class);
+        Intent intent = new Intent(context, KingWordReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -158,10 +159,10 @@ public class EbbinghausReminder {
         for (int i = 0; i < AppSettings.REVIEW_TIME_KEY.length; i++) {
             AppSettings.saveString(context, AppSettings.REVIEW_TIME_KEY[i], time[i]);
             if (!context.getString(R.string.not_set).equals(time[i])) {
-                Log.d(TAG, "=================set repeat alarm after installed!");
                 setRepeatNotifaction(context, i, time[i]);
             }
         }
+        Log.d(TAG, "=================set repeat alarm after installed!");
     }
 
     /**
@@ -176,9 +177,9 @@ public class EbbinghausReminder {
                     context.getString(R.string.not_set));
             removeRepeatNotifaction(context, i);
             if (!context.getString(R.string.not_set).equals(time[i])) {
-                Log.d(TAG, "=================reset alarm after reboot!");
                 setRepeatNotifaction(context, i, time[i]);
             }
         }
+        Log.d(TAG, "=================reset alarm after reboot!");
     }
 }

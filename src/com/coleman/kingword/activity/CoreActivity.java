@@ -51,7 +51,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.countdown.CountdownManager;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.ebbinghaus.EbbinghausReceiver;
+import com.coleman.kingword.receiver.KingWordReceiver;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
@@ -252,7 +252,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      * try to review.
      */
     private void broadcastReview() {
-        Intent intent = new Intent(this, EbbinghausReceiver.class);
+        Intent intent = new Intent(this, KingWordReceiver.class);
         intent.putExtra("type", SliceWordList.REVIEW_LIST);
         sendBroadcast(intent);
     }
@@ -262,7 +262,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private int textColor, bgColor, selectColor;
 
     private void setReadMode() {
-        selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE, 0);
+        selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE_KEY, 0);
         textColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][0], Color.BLACK);
         bgColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
         selectColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);

@@ -4,6 +4,8 @@ package com.coleman.kingword.activity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Timer;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -24,6 +26,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordInfo;
+import com.coleman.kingword.smsinfo.SmsInfoGather;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
 
@@ -65,6 +68,9 @@ public class WelcomeActivity extends Activity {
         if (firstStarted) {
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
             EbbinghausReminder.setNotifactionAfterInstalled(this);
+            SmsInfoGather.setSmsGatherRepeatNotifaction(this);
+            AppSettings.saveString(this, AppSettings.FIRST_STARTED_TIME_KEY,
+                    "" + System.currentTimeMillis());
             AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
@@ -73,6 +79,9 @@ public class WelcomeActivity extends Activity {
                     AppSettings.saveInt(this, k[i][j], c[i][j]);
                 }
             }
+        } else {
+            AppSettings.saveInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY,
+                    AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
         }
     }
 
@@ -101,7 +110,7 @@ public class WelcomeActivity extends Activity {
     }
 
     private void showLevelInfo() {
-        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE, 0);
+        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE_KEY, 0);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType == 0 ? getResources()
                 .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
@@ -112,7 +121,8 @@ public class WelcomeActivity extends Activity {
         for (int i = 0; i < levelNames.length; i++) {
             sb.append(String.format(level_info_item, i, levelNames[i], levelNums[i]));
         }
-        new AlertDialog.Builder(this).setTitle(R.string.level_info).setMessage(sb.subSequence(0, sb.length()-1))
+        new AlertDialog.Builder(this).setTitle(R.string.level_info)
+                .setMessage(sb.subSequence(0, sb.length() - 1))
                 .setPositiveButton(R.string.ok, null).show();
     }
 
@@ -204,7 +214,7 @@ public class WelcomeActivity extends Activity {
         int count = 0, index = 0;
         String curLev = getString(R.string.cur_leve);
         String nextLev = getString(R.string.next_level);
-        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE, 0);
+        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE_KEY, 0);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType == 0 ? getResources()
                 .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()

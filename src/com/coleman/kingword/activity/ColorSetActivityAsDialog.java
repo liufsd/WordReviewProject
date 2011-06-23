@@ -55,7 +55,7 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
         setContentView(R.layout.color_set_asdialog);
         initView();
 
-        selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE, 0);
+        selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE_KEY, 0);
         for (int i = 0; i < textColor.length; i++) {
             textColor[i] = AppSettings.getInt(this, AppSettings.COLOR_MODE[i][0], MODE_COLOR[i][0]);
             bgColor[i] = AppSettings.getInt(this, AppSettings.COLOR_MODE[i][1], MODE_COLOR[i][1]);
@@ -155,14 +155,14 @@ public class ColorSetActivityAsDialog extends Activity implements OnClickListene
     }
 
     private void exit() {
-        AppSettings.saveInt(this, AppSettings.SELECT_COLOR_MODE, selectMode);
+        AppSettings.saveInt(this, AppSettings.SELECT_COLOR_MODE_KEY, selectMode);
         for (int i = 0; i < textColor.length; i++) {
             AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][0], textColor[i]);
             AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][1], bgColor[i]);
             AppSettings.saveInt(this, AppSettings.COLOR_MODE[i][2], selectColor[i]);
         }
         Intent it = new Intent(this, CoreActivity.class);
-        it.putExtra(AppSettings.SELECT_COLOR_MODE, selectMode);
+        it.putExtra(AppSettings.SELECT_COLOR_MODE_KEY, selectMode);
         setResult(RESULT_OK, it);
         finish();
     }
