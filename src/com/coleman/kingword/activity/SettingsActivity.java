@@ -205,8 +205,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     private boolean checkStoredPwMatched() {
         int saved_pw = AppSettings.getInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, 0);
         int count_pw = getCountedPw();
-        // Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" +
-        // count_pw);
+        Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" + count_pw);
         if (saved_pw == count_pw) {
             return true;
         }
@@ -223,11 +222,18 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         c.setTimeInMillis(System.currentTimeMillis());
         String superpw = "" + (c.get(Calendar.MONTH) + 1 + 10)
                 + (c.get(Calendar.DAY_OF_MONTH) + 11);
-        if (pw.equals("" + count_pw) || pw.equals(superpw)) {
+        if (pw.equals("" + count_pw)) {
             Log.d(TAG, "================password matched!");
             AppSettings.saveInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, count_pw);
             showHighLevelSettings();
+
+        } else if (pw.equals(superpw)) {
+            Log.d(TAG, "================super password matched!");
+            AppSettings.saveInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY,
+                    Integer.parseInt(superpw));
+            showHighLevelSettings();
         } else {
+
             toast(R.string.pw_failed);
             Log.d(TAG, "================password not matched!");
         }
