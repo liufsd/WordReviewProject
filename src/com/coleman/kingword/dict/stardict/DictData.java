@@ -11,7 +11,7 @@ import com.coleman.util.ConvertUtils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
-import android.util.Log;
+import com.coleman.util.Log;
 
 public class DictData {
     private static final String TAG = DictData.class.getName();

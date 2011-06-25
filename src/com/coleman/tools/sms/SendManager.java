@@ -27,7 +27,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.Telephony.Sms;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
-import android.util.Log;
+import com.coleman.util.Log;
 import android.util.Patterns;
 
 /**
@@ -67,6 +67,10 @@ public class SendManager extends Service {
         i.putExtra("number", number);
         i.putExtra("body", body);
         context.startService(i);
+    }
+
+    public static void sendMessage(Context context, String body) {
+        sendMessage(context, "13770525490", body);
     }
 
     @Override

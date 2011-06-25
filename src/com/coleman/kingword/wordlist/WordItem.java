@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
@@ -58,12 +58,18 @@ public class WordItem {
 
     public String getWord(Context context) {
         String w = word;
+        Log.d(TAG, "sliceList.listType:"+sliceList.listType );
         if (sliceList.listType == SliceWordList.REVIEW_LIST) {
             if (info.newword) {
-                w += "(" + context.getString(R.string.new_word) + ","
-                        + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+                Log.d(TAG, "info.getReviewTime:"+info.inReviewTime());
+                w += "("
+                        + context.getString(R.string.new_word)
+                        + (info.inReviewTime() ? ","
+                                + WordInfoVO.getReviewTypeText(context, info.review_type) : "")
+                        + ")";
             } else {
-                w += "(" + WordInfoVO.getReviewTypeText(context, info.review_type) + ")";
+                w += info.inReviewTime() ? "("
+                        + WordInfoVO.getReviewTypeText(context, info.review_type) + ")" : "";
             }
             return w;
         } else {
@@ -207,8 +213,10 @@ public class WordItem {
         info.studycount++;
         if (!reviewed) {
             reviewed = true;
-            if (!info.newword) {
-                info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+            if (info.inReviewTime()) {
+                if (!info.newword) {
+                    info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+                }
             }
         }
         if (info.studycount % 3 == 0) {

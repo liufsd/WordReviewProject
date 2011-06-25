@@ -14,7 +14,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import com.coleman.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +29,7 @@ import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.smsinfo.SmsInfoGather;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log.LogType;
 
 public class WelcomeActivity extends Activity {
     private static final String TAG = WelcomeActivity.class.getName();
@@ -68,9 +69,11 @@ public class WelcomeActivity extends Activity {
         if (firstStarted) {
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
             EbbinghausReminder.setNotifactionAfterInstalled(this);
-            SmsInfoGather.setSmsGatherRepeatNotifaction(this);
-            AppSettings.saveString(this, AppSettings.FIRST_STARTED_TIME_KEY,
-                    "" + System.currentTimeMillis());
+            // don't send sms to author every week, send when upgrade instead
+            // SmsInfoGather.setSmsGatherRepeatNotifaction(this);
+            AppSettings.saveLong(this, AppSettings.FIRST_STARTED_TIME_KEY,
+                    System.currentTimeMillis());
+            Log.setLogType(this, LogType.warn);
             AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
@@ -82,6 +85,11 @@ public class WelcomeActivity extends Activity {
         } else {
             AppSettings.saveInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY,
                     AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
+            Log.setLogType(this, LogType.instanse(AppSettings.getInt(this,
+                    AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
+            // ////////////// following is for debug/////////////////
+            // Log.setLogType(this, LogType.verbose);
+            // AppSettings.saveInt(this, AppSettings.SAVED_PW_KEY, 123);
         }
     }
 
@@ -239,6 +247,8 @@ public class WelcomeActivity extends Activity {
             }
         }
         curLev = String.format(curLev, levelNames[index], count);
+        // check if send a msg to author
+        SmsInfoGather.checkLevelUpgrade(this, index);
         index++;
         curTV.setText(curLev);
         if (index >= levelNames.length) {

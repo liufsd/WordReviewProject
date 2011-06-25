@@ -12,23 +12,34 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.telephony.TelephonyManager;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.WordListManager;
+import com.coleman.tools.sms.SendManager;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
+import com.coleman.util.Log;
+import com.coleman.util.Log.LogType;
 
 public class SettingsActivity extends Activity implements OnItemClickListener {
     protected static final String TAG = SettingsActivity.class.getName();
@@ -82,6 +93,11 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[0], R.drawable.set_level_type);
         map.put(from[1], R.string.learning_level_name_set);
         data.add(map);
+        // 5
+        map = new HashMap<String, Integer>();
+        map.put(from[0], R.drawable.set_security);
+        map.put(from[1], R.string.security_set);
+        data.add(map);
     }
 
     @Override
@@ -102,9 +118,238 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             case 4:
                 showSelectLevelType();
                 break;
+            case 5:
+                showSecurity();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showGetPwRequest() {
+        View layout = LayoutInflater.from(this).inflate(R.layout.get_pw_fordialog, null);
+        final EditText et = (EditText) layout.findViewById(R.id.editText1);
+        DialogInterface.OnClickListener lis = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        long time = AppSettings.getLong(SettingsActivity.this,
+                                AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY, 0);
+                        if (System.currentTimeMillis() - time > 3 * 24 * 3600 * 1000) {
+                            String IEMI = Config.getDeviceId(SettingsActivity.this);
+                            String msg = IEMI.matches("0{15}") ? "time:"
+                                    + AppSettings.getLong(SettingsActivity.this,
+                                            AppSettings.FIRST_STARTED_TIME_KEY, 0) : "IEMI:" + IEMI;
+                            msg += "(" + et.getText().toString() + ")";
+                            SendManager.sendMessage(SettingsActivity.this, msg);
+                            AppSettings.saveLong(SettingsActivity.this,
+                                    AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY,
+                                    System.currentTimeMillis());
+                            dialog(R.string.get_pw_request_sent);
+                        } else {
+                            dialog(R.string.get_pw_request_send_wait);
+                        }
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.security_set).setView(layout)
+                .setPositiveButton(R.string.ok, lis).setNegativeButton(R.string.cancel, lis).show();
+    }
+
+    private void showSecurity() {
+        if (checkStoredPwMatched()) {
+            showHighLevelSettings();
+            return;
+        }
+        View layout = LayoutInflater.from(this).inflate(R.layout.security_set_fordialog, null);
+        final EditText et = (EditText) layout.findViewById(R.id.editText1);
+        CheckBox cb = (CheckBox) layout.findViewById(R.id.checkBox1);
+        cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    et.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    et.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+        DialogInterface.OnClickListener lis = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        checkPwSent(et.getText().toString());
+                        break;
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        showGetPwRequest();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.security_set).setView(layout)
+                .setPositiveButton(R.string.ok, lis).setNeutralButton(R.string.get_pw, lis)
+                .setNegativeButton(R.string.cancel, lis).show();
+    }
+
+    private boolean checkStoredPwMatched() {
+        int saved_pw = AppSettings.getInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, 0);
+        int count_pw = getCountedPw();
+        // Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" +
+        // count_pw);
+        if (saved_pw == count_pw) {
+            return true;
+        }
+        return false;
+    }
+
+    private void checkPwSent(String pw) {
+        int count_pw = getCountedPw();
+        // Log.d(TAG, "===========================count pw:" + count_pw +
+        // "  input pw:" + pw);
+        // provide a back door to enter highLevelSettings, use the back door
+        // ,you should enter it every time.
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        String superpw = "" + (c.get(Calendar.MONTH) + 1 + 10)
+                + (c.get(Calendar.DAY_OF_MONTH) + 11);
+        if (pw.equals("" + count_pw) || pw.equals(superpw)) {
+            Log.d(TAG, "================password matched!");
+            AppSettings.saveInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, count_pw);
+            showHighLevelSettings();
+        } else {
+            toast(R.string.pw_failed);
+            Log.d(TAG, "================password not matched!");
+        }
+    }
+
+    private int getCountedPw() {
+        String IMEI = Config.getDeviceId(this);
+        long pw = AppSettings.getLong(SettingsActivity.this, AppSettings.FIRST_STARTED_TIME_KEY, 0);
+        try {
+            if (!IMEI.matches("0{15}")) {
+                Log.d(TAG, "==================IMEI is not null!");
+                // cut the SNR, and compute a password
+                pw = Long.parseLong(IMEI.substring(8, 14));
+            } else {
+                Log.d(TAG, "==================IMEI is null!");
+            }
+        } catch (Exception e) {
+        }
+        return (int) (((pw >> 16) & 0xffff) + (pw & 0xffff));
+    }
+
+    private int countedPw(boolean isIEMI, String src) {
+        String IMEI = src;
+        long pw = 0;
+        if (!isIEMI) {
+            pw = Long.parseLong(src);
+        } else {
+            try {
+                if (!IMEI.matches("0{15}")) {
+                    Log.d(TAG, "==================IMEI is not null!");
+                    // cut the SNR, and compute a password
+                    pw = Long.parseLong(IMEI.substring(8, 14));
+                } else {
+                    Log.d(TAG, "==================IMEI is null!");
+                }
+            } catch (Exception e) {
+            }
+        }
+        return (int) (((pw >> 16) & 0xffff) + (pw & 0xffff));
+    }
+
+    private void showHighLevelSettings() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        showHLS_SelectDebugLevel();
+                        break;
+                    case 1:
+                        showRegeistCounted();
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.high_level_settings)
+                .setItems(R.array.high_level_settings, listener)
+                .setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void showRegeistCounted() {
+        View layout = LayoutInflater.from(this).inflate(R.layout.regeist_count_fordialog, null);
+        final EditText et = (EditText) layout.findViewById(R.id.editText1);
+        DialogInterface.OnClickListener lis = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        checkRegeistCode(et.getText().toString());
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.regeist_count_title).setView(layout)
+                .setPositiveButton(R.string.ok, lis).setNegativeButton(R.string.cancel, lis).show();
+    }
+
+    protected void checkRegeistCode(String string) {
+        if (string.startsWith("IEMI:")) {
+            int pw = countedPw(true, string.substring(5, string.indexOf("(")));
+            dialog(String.format(getString(R.string.counted_pw_is), pw));
+        } else if (string.startsWith("time:")) {
+            int pw = countedPw(false, string.substring(5, string.indexOf("(")));
+            dialog(String.format(getString(R.string.counted_pw_is), pw));
+        } else {
+            dialog(R.string.pw_src_wrong);
+        }
+    }
+
+    private void showHLS_SelectDebugLevel() {
+        int log_type = Log.getLogType().value();
+        Log.d(TAG, "====================cur log type:" + log_type);
+        final String debugLevs[] = getResources().getStringArray(R.array.debug_level);
+        final int debugLevNums[] = getResources().getIntArray(R.array.debug_level_value);
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.setLogType(SettingsActivity.this, LogType.instanse(debugLevNums[which]));
+                Log.d(TAG, "===================save log type:" + debugLevs[which] + " value:"
+                        + debugLevNums[which]);
+                toast("debug level changed to " + debugLevs[which]);
+                dialog.dismiss();
+            }
+        };
+        int select = 0;
+        for (int i = 0; i < debugLevNums.length; i++) {
+            if (log_type == debugLevNums[i]) {
+                select = i;
+                break;
+            }
+        }
+        Log.d(TAG, "======================select log type:" + select);
+        new AlertDialog.Builder(this).setTitle(R.string.learning_level_name_set)
+                .setSingleChoiceItems(debugLevs, select, listener).show();
     }
 
     private void showSelectLevelType() {
@@ -284,5 +529,23 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             return convertView;
         }
 
+    }
+
+    private void toast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void toast(int resId) {
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+    }
+
+    private void dialog(String msg) {
+        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title).setMessage(msg)
+                .setPositiveButton(R.string.ok, null).show();
+    }
+
+    private void dialog(int resId) {
+        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title).setMessage(resId)
+                .setPositiveButton(R.string.ok, null).show();
     }
 }

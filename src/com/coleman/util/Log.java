@@ -19,18 +19,19 @@ package com.coleman.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.coleman.util.Log.LogType;
+
+import android.content.Context;
+
 /**
  * API for sending log output.
- * 
  * <p>
  * Generally, use the Log.v() Log.d() Log.i() Log.w() and Log.e() methods.
- * 
  * <p>
  * The order in terms of verbosity, from least to most is ERROR, WARN, INFO,
  * DEBUG, VERBOSE. Verbose should never be compiled into an application except
  * during development. Debug logs are compiled in but stripped at runtime.
  * Error, warning and info logs are always kept.
- * 
  * <p>
  * <b>Tip:</b> A good convention is to declare a <code>TAG</code> constant in
  * your class:
@@ -41,7 +42,6 @@ import java.io.StringWriter;
  * 
  * and use that in subsequent calls to the log methods.
  * </p>
- * 
  * <p>
  * <b>Tip:</b> Don't forget that when you make a call like
  * 
@@ -57,6 +57,11 @@ import java.io.StringWriter;
  * incurring significant overhead.
  */
 public final class Log {
+
+    /**
+     * Define the log priority.
+     */
+    private static LogType logType = LogType.verbose;
 
     /**
      * Priority constant for the println method; use Log.v.
@@ -91,14 +96,21 @@ public final class Log {
     private Log() {
     }
 
+    public static LogType getLogType() {
+        return logType;
+    }
+
+    public static void setLogType(Context context, LogType logType) {
+        Log.logType = logType;
+        AppSettings.saveInt(context, AppSettings.LOG_TYPE_KEY, LogType.warn.value());
+    }
+
     /**
      * Send a {@link #VERBOSE} log message.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
+     * @param msg The message you would like logged.
      */
     public static int v(String tag, String msg) {
         return coleamnPrintln(VERBOSE, tag, msg);
@@ -107,27 +119,21 @@ public final class Log {
     /**
      * Send a {@link #VERBOSE} log message and log the exception.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
-     * @param tr
-     *            An exception to log
+     * @param msg The message you would like logged.
+     * @param tr An exception to log
      */
     public static int v(String tag, String msg, Throwable tr) {
-        return coleamnPrintln(VERBOSE, tag, msg + '\n'
-                                            + getStackTraceString(tr));
+        return coleamnPrintln(VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
     }
 
     /**
      * Send a {@link #DEBUG} log message.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
+     * @param msg The message you would like logged.
      */
     public static int d(String tag, String msg) {
         return coleamnPrintln(DEBUG, tag, msg);
@@ -136,13 +142,10 @@ public final class Log {
     /**
      * Send a {@link #DEBUG} log message and log the exception.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
-     * @param tr
-     *            An exception to log
+     * @param msg The message you would like logged.
+     * @param tr An exception to log
      */
     public static int d(String tag, String msg, Throwable tr) {
         return coleamnPrintln(DEBUG, tag, msg + '\n' + getStackTraceString(tr));
@@ -151,11 +154,9 @@ public final class Log {
     /**
      * Send an {@link #INFO} log message.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
+     * @param msg The message you would like logged.
      */
     public static int i(String tag, String msg) {
         return coleamnPrintln(INFO, tag, msg);
@@ -164,13 +165,10 @@ public final class Log {
     /**
      * Send a {@link #INFO} log message and log the exception.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
-     * @param tr
-     *            An exception to log
+     * @param msg The message you would like logged.
+     * @param tr An exception to log
      */
     public static int i(String tag, String msg, Throwable tr) {
         return coleamnPrintln(INFO, tag, msg + '\n' + getStackTraceString(tr));
@@ -179,11 +177,9 @@ public final class Log {
     /**
      * Send a {@link #WARN} log message.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
+     * @param msg The message you would like logged.
      */
     public static int w(String tag, String msg) {
         return coleamnPrintln(WARN, tag, msg);
@@ -192,13 +188,10 @@ public final class Log {
     /**
      * Send a {@link #WARN} log message and log the exception.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
-     * @param tr
-     *            An exception to log
+     * @param msg The message you would like logged.
+     * @param tr An exception to log
      */
     public static int w(String tag, String msg, Throwable tr) {
         return coleamnPrintln(WARN, tag, msg + '\n' + getStackTraceString(tr));
@@ -206,34 +199,28 @@ public final class Log {
 
     /**
      * Checks to see whether or not a log for the specified tag is loggable at
-     * the specified level.
-     * 
-     * The default level of any tag is set to INFO. This means that any level
-     * above and including INFO will be logged. Before you make any calls to a
-     * logging method you should check to see if your tag should be logged. You
-     * can change the default level by setting a system property: 'setprop
-     * log.tag.&lt;YOUR_LOG_TAG> &lt;LEVEL>' Where level is either VERBOSE,
-     * DEBUG, INFO, WARN, ERROR, ASSERT, or SUPPRESS. SUPRESS will turn off all
-     * logging for your tag. You can also create a local.prop file that with the
-     * following in it: 'log.tag.&lt;YOUR_LOG_TAG>=&lt;LEVEL>' and place that in
+     * the specified level. The default level of any tag is set to INFO. This
+     * means that any level above and including INFO will be logged. Before you
+     * make any calls to a logging method you should check to see if your tag
+     * should be logged. You can change the default level by setting a system
+     * property: 'setprop log.tag.&lt;YOUR_LOG_TAG> &lt;LEVEL>' Where level is
+     * either VERBOSE, DEBUG, INFO, WARN, ERROR, ASSERT, or SUPPRESS. SUPRESS
+     * will turn off all logging for your tag. You can also create a local.prop
+     * file that with the following in it:
+     * 'log.tag.&lt;YOUR_LOG_TAG>=&lt;LEVEL>' and place that in
      * /data/local.prop.
      * 
-     * @param tag
-     *            The tag to check.
-     * @param level
-     *            The level to check.
+     * @param tag The tag to check.
+     * @param level The level to check.
      * @return Whether or not that this is allowed to be logged.
-     * @throws IllegalArgumentException
-     *             is thrown if the tag.length() > 23.
+     * @throws IllegalArgumentException is thrown if the tag.length() > 23.
      */
     public static native boolean isLoggable(String tag, int level);
 
     /*
      * Send a {@link #WARN} log message and log the exception.
-     * 
      * @param tag Used to identify the source of a log message. It usually
      * identifies the class or activity where the log call occurs.
-     * 
      * @param tr An exception to log
      */
     public static int w(String tag, Throwable tr) {
@@ -243,11 +230,9 @@ public final class Log {
     /**
      * Send an {@link #ERROR} log message.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
+     * @param msg The message you would like logged.
      */
     public static int e(String tag, String msg) {
         return coleamnPrintln(ERROR, tag, msg);
@@ -256,13 +241,10 @@ public final class Log {
     /**
      * Send a {@link #ERROR} log message and log the exception.
      * 
-     * @param tag
-     *            Used to identify the source of a log message. It usually
+     * @param tag Used to identify the source of a log message. It usually
      *            identifies the class or activity where the log call occurs.
-     * @param msg
-     *            The message you would like logged.
-     * @param tr
-     *            An exception to log
+     * @param msg The message you would like logged.
+     * @param tr An exception to log
      */
     public static int e(String tag, String msg, Throwable tr) {
         return android.util.Log.e(tag, msg, tr);
@@ -271,8 +253,7 @@ public final class Log {
     /**
      * Handy function to get a loggable stack trace from a Throwable
      * 
-     * @param tr
-     *            An exception to log
+     * @param tr An exception to log
      */
     public static String getStackTraceString(Throwable tr) {
         if (tr == null) {
@@ -285,11 +266,50 @@ public final class Log {
     }
 
     public static int coleamnPrintln(int priority, String tag, String msg) {
-        if (Config.DEBUG) {
+        if (priority >= logType.value()) {
             return android.util.Log.println(priority, tag, msg);
         } else {
             return -1;
         }
     }
 
+    public static enum LogType {
+        verbose(VERBOSE), debug(DEBUG), info(INFO), warn(WARN), error(ERROR), asset(ASSERT);
+        private final int type;
+
+        private LogType(int type) {
+            this.type = type;
+        }
+
+        public int value() {
+            return type;
+        }
+
+        public static LogType instanse(int i) {
+            LogType type = verbose;
+            switch (i) {
+                case VERBOSE:
+                    type = verbose;
+                    break;
+                case DEBUG:
+                    type = debug;
+                    break;
+                case INFO:
+                    type = info;
+                    break;
+                case WARN:
+                    type = warn;
+                    break;
+                case ERROR:
+                    type = error;
+                    break;
+                case ASSERT:
+                    type = asset;
+                    break;
+                default:
+                    break;
+            }
+            return type;
+        }
+    }
 }

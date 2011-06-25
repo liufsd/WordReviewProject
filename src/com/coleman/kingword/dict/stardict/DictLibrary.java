@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.provider.KingWord.IDictIndex;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;

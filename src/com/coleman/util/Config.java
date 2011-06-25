@@ -25,10 +25,6 @@ import android.telephony.TelephonyManager;
  * vs. debug build. {@more}
  */
 public final class Config {
-    /**
-     * If this is a debug build, this field will be true.
-     */
-    public static final boolean DEBUG = true;
 
     /**
      * App read file encoding.
@@ -44,10 +40,16 @@ public final class Config {
 
     public static boolean isExternalMediaMounted() {
         String state = Environment.getExternalStorageState();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>"+state);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + state);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
         }
         return false;
+    }
+
+    public static String getDeviceId(Context context) {
+        TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getDeviceId();
     }
 }

@@ -10,18 +10,20 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>
 		<TextView android:id="@+id/title" android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_gravity="center"
-			style="@style/dialog_title_white"></TextView>
+			style="@style/dialog_title_white" android:paddingLeft="5dp"></TextView>
 	</LinearLayout>
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:orientation="vertical" android:paddingLeft="10dp"
-		android:paddingRight="10dp"  android:paddingBottom="10dp">
+		android:paddingRight="10dp" android:paddingBottom="10dp"
+		android:paddingTop="5dp">
 		<ImageView android:id="@+id/divider_line_1"
 			android:background="@drawable/title_rect_line" android:layout_width="fill_parent"
 			android:layout_height="2dp"></ImageView>
 		<TextView android:layout_width="wrap_content" android:id="@+id/message"
-			android:text="hhhhh" android:layout_height="wrap_content" android:paddingTop="10dp"
-			style="@android:style/TextAppearance.Medium" android:layout_gravity="center_vertical|left" />
+			android:text="hhhhh" android:layout_height="wrap_content"
+			android:paddingTop="10dp" style="@android:style/TextAppearance.Medium"
+			android:layout_gravity="center_vertical|left" />
 	</LinearLayout>
 	<LinearLayout android:id="@+id/LinearLayout_button"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"

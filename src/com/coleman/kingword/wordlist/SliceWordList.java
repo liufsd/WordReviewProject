@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;

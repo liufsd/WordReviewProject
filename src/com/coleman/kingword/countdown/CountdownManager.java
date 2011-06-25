@@ -3,7 +3,7 @@ package com.coleman.kingword.countdown;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.activity.CoreActivity;

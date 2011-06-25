@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;

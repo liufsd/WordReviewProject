@@ -26,10 +26,11 @@ public class AppSettings {
     public static final String SELECT_COLOR_MODE_KEY = "select_color_mode";
 
     public static final String LEVEL_TYPE_KEY = "level_type";
-    
+
     public static final String FIRST_STARTED_TIME_KEY = "first_started_time";
-    
+
     public static final String STARTED_TOTAL_TIMES_KEY = "started_total_times";
+
     public static final String COLOR_MODE[][] = new String[][] {
             {
                     "day_font_color", "day_bg_color", "day_select_color"
@@ -44,6 +45,16 @@ public class AppSettings {
             "review_time_1", "review_time_2", "review_time_3"
     };
 
+    public static final String LAST_SEND_GET_PW_REQUEST_TIME_KEY = "last_send_get_pw_request_time";
+
+    public static final String SAVED_PW_KEY = "saved_pw_key";
+
+    public static final String LOG_TYPE_KEY = "log_type";
+
+    /**
+     * if less than cur lev, upgrade and send a msg to author.
+     */
+    public static final String MARK_SEND_MSG_LEVEL_KEY = "mark_send_msg_level";
 
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();

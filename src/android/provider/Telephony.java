@@ -25,7 +25,7 @@ import android.net.Uri;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
 import android.util.Config;
-import android.util.Log;
+import com.coleman.util.Log;
 import android.util.Patterns;
 import java.util.HashSet;
 import java.util.Set;

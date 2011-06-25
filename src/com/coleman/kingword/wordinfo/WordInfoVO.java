@@ -7,7 +7,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
+import com.coleman.util.Log;
 
 /**
  * Should only be used by WordItem and WordInfoHelper.
@@ -36,6 +36,11 @@ public class WordInfoVO implements Parcelable {
 
     public boolean newword = false;
 
+    /**
+     * Only when first study or the time reviewing can update this value.
+     */
+    public long review_time = 0;
+
     public byte review_type = 0;
 
     public static final byte REVIEW_1_HOUR = 1;
@@ -54,15 +59,19 @@ public class WordInfoVO implements Parcelable {
 
     private static final byte REVIEW_COMPLETE = 100;
 
-    /**
-     * Only when first study or the time reviewing can update this value.
-     */
-    public long review_time = 0;
-
     public WordInfoVO(String word) {
         if (!TextUtils.isEmpty(word)) {
             this.word = word;
         }
+    }
+
+    public boolean inReviewTime() {
+        Log.d(TAG, "..................." + (review_time + getTime() - System.currentTimeMillis())
+                + " review type:" + review_type);
+        if (review_time + getTime() <= System.currentTimeMillis()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean increaseWeight() {
@@ -193,6 +202,7 @@ public class WordInfoVO implements Parcelable {
     public static String getReviewTypeText(Context context, byte type) {
         String str = "";
         switch (type) {
+            case 0:
             case REVIEW_1_HOUR:
                 str += context.getString(R.string.review_1_hour);
                 break;
@@ -221,4 +231,36 @@ public class WordInfoVO implements Parcelable {
         return str;
     }
 
+    private long getTime() {
+        long t = 0;
+        switch (review_type) {
+            case REVIEW_1_HOUR:
+                t = 2400 * 1000l;
+                break;
+            case REVIEW_12_HOUR:
+                t = 12 * 3600 * 1000l;
+                break;
+            case REVIEW_1_DAY:
+                t = 24 * 3600 * 1000l;
+                break;
+            case REVIEW_5_DAY:
+                t = 5 * 24 * 3600 * 1000l;
+                break;
+            case REVIEW_20_DAY:
+                t = 20 * 24 * 3600 * 1000l;
+                break;
+            case REVIEW_40_DAY:
+                t = 40 * 24 * 3600 * 1000l;
+                break;
+            case REVIEW_60_DAY:
+                t = 60 * 24 * 3600 * 1000l;
+                break;
+            case REVIEW_COMPLETE:
+            default:
+                t = Long.MAX_VALUE / 2;
+                break;
+        }
+        Log.d(TAG, "get time :" + t + "  review type:" + review_type);
+        return t;
+    }
 }

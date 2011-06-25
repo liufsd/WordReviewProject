@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.text.format.Time;
-import android.util.Log;
+import com.coleman.util.Log;
 import android.util.TimeUtils;
 
 import com.coleman.kingword.R;

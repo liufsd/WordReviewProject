@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.provider.KingWord.Achievement;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;

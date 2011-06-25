@@ -7,7 +7,7 @@ import android.content.Context;
 import android.os.Message;
 import android.os.Handler.Callback;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.coleman.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;

@@ -16,7 +16,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
-import android.util.Log;
+import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.WordInfo;
@@ -44,8 +44,7 @@ public class SmsInfoGather {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar calendar = Calendar.getInstance();
-        long time = Long.parseLong(AppSettings.getString(context,
-                AppSettings.FIRST_STARTED_TIME_KEY, "" + 0));
+        long time = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
         long period = 7 * 24 * 3600 * 1000;
         if (time != 0) {
             time += period;
@@ -57,27 +56,50 @@ public class SmsInfoGather {
                 + calendar.getTime().toLocaleString());
     }
 
+    /**
+     * When user start app, check if user level upgrade, true send a msg to
+     * author.
+     * 
+     * @param context
+     */
+    public static void checkLevelUpgrade(Context context, int curLevel) {
+        int markLevel = AppSettings.getInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, -1);
+        if (markLevel == -1) {
+            doGatherAndSend(context);
+            AppSettings.saveInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, 0);
+        } else {
+            if (markLevel < curLevel) {
+                doGatherAndSend(context);
+                AppSettings.saveInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, curLevel);
+            } else {
+                Log.d(TAG, "history level is " + markLevel);
+            }
+        }
+    }
+
     public static void doGatherAndSend(Context context) {
         TelephonyManager tm = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
         // 1. user phone info
         String phoneInfo = Build.MODEL;
+
         // 2. user first start application time
-        String firstTime = AppSettings.getString(context, AppSettings.FIRST_STARTED_TIME_KEY,
-                "unknow");
+        long firstTime = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(Long.parseLong(firstTime));
-        firstTime = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        c.setTimeInMillis(firstTime);
+        String firstTimeStr = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+
         // 3. user start application total times
         int totalTimes = AppSettings.getInt(context, AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
+
         // 4. user learning words' total number
         String curLevel = getCurLevelInfo(context);
 
         // send message
-        String msgNum = "13770525490";
-        String msgBody = phoneInfo + " " + firstTime + ">>>" + "run:" + totalTimes + "-" + curLevel;
+        String msgBody = phoneInfo + " " + firstTimeStr + ">>>" + "run:" + totalTimes + "-"
+                + curLevel;
         Log.d(TAG, "msgBody:" + msgBody);
-        SendManager.sendMessage(context, msgNum, msgBody);
+        SendManager.sendMessage(context, msgBody);
     }
 
     private static String getCurLevelInfo(Context context) {

@@ -163,4 +163,29 @@
 	<string name="learning_level_name_set">设置等级称号</string>
 	<string name="level_info">等级榜说明</string>
 	<string name="level_info_item" formatted="false">等级%d：%s（%d词）\n</string>
+
+	<string name="security_set">高级安全设置</string>
+	<string name="security_hint">
+		高级安全设置提供了一些作者不想公开的相对隐秘的设置，使用此设置需要认证，如果你不知道认证密码请按“获取密码”向软件作者索取。
+	</string>
+	<string name="show_pw">显示密码</string>
+	<string name="get_pw">获取密码</string>
+	<string name="input_pw">输入密码</string>
+	<string name="get_pw_hint">
+		请说明你要获取密码的原因，作者有权对你的请求不予响应。
+	</string>
+	<string name="get_pw_request_sent">
+		你已成功发送索取密码请求，请耐心等候作者回复！
+	</string>
+	<string name="get_pw_request_send_wait">
+		你距离上次发送密码请求不满三天，请满三天之后再试！
+	</string>
+	<string name="pw_failed">你输入的密码有误，认证失败！</string>
+	<string name="pw_successed">密码正确，认证成功！</string>
+	<string name="high_level_settings">高级安全设置</string>
+	<string name="msg_dialog_title">消息提示</string>
+	<string name="regeist_count_hint">请在下面输入计算注册码的源码</string>
+	<string name="regeist_count_title">计算注册码</string>
+	<string name="counted_pw_is" formatted="false">生成的密码是：%d</string>
+	<string name="pw_src_wrong">你输入的用于生成密码的Key格式错误!</string>
 </resources>
