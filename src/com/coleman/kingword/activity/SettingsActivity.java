@@ -205,7 +205,8 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     private boolean checkStoredPwMatched() {
         int saved_pw = AppSettings.getInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, 0);
         int count_pw = getCountedPw();
-        Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" + count_pw);
+        // Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" +
+        // count_pw);
         if (saved_pw == count_pw) {
             return true;
         }
