@@ -102,7 +102,7 @@ public final class Log {
 
     public static void setLogType(Context context, LogType logType) {
         Log.logType = logType;
-        AppSettings.saveInt(context, AppSettings.LOG_TYPE_KEY, LogType.warn.value());
+        AppSettings.saveInt(context, AppSettings.LOG_TYPE_KEY, logType.value());
     }
 
     /**

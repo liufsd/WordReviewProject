@@ -58,10 +58,10 @@ public class WordItem {
 
     public String getWord(Context context) {
         String w = word;
-        Log.d(TAG, "sliceList.listType:"+sliceList.listType );
+        Log.d(TAG, "sliceList.listType:" + sliceList.listType);
         if (sliceList.listType == SliceWordList.REVIEW_LIST) {
             if (info.newword) {
-                Log.d(TAG, "info.getReviewTime:"+info.inReviewTime());
+                Log.d(TAG, "info.getReviewTime:" + info.inReviewTime());
                 w += "("
                         + context.getString(R.string.new_word)
                         + (info.inReviewTime() ? ","
@@ -214,9 +214,7 @@ public class WordItem {
         if (!reviewed) {
             reviewed = true;
             if (info.inReviewTime()) {
-                if (!info.newword) {
-                    info.review_type = WordInfoVO.getNextReviewType(info.review_type);
-                }
+                info.review_type = WordInfoVO.getNextReviewType(info.review_type);
             }
         }
         if (info.studycount % 3 == 0) {
