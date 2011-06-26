@@ -4,8 +4,6 @@ package com.coleman.kingword.activity;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Timer;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -14,7 +12,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import com.coleman.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +26,10 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.smsinfo.SmsInfoGather;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
 public class WelcomeActivity extends Activity {
@@ -37,6 +38,8 @@ public class WelcomeActivity extends Activity {
     private Button startButton;
 
     private TextView curTV, nextTV;
+
+    private boolean paused = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,19 +65,34 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         initLevels();
+        paused = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        paused = true;
     }
 
     private void ifFirstInstalled() {
         boolean firstStarted = AppSettings.getBoolean(this, AppSettings.FIRST_STARTED_KEY, true);
         if (firstStarted) {
+            // mark first start app
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
+            // init ebbinghaus notification
             EbbinghausReminder.setNotifactionAfterInstalled(this);
+            // /////////////////////////////////////////////////////
             // don't send sms to author every week, send when upgrade instead
             // SmsInfoGather.setSmsGatherRepeatNotifaction(this);
+            // /////////////////////////////////////////////////////
+            // save first start app time
             AppSettings.saveLong(this, AppSettings.FIRST_STARTED_TIME_KEY,
                     System.currentTimeMillis());
-            Log.setLogType(this, LogType.warn);
+            // set default log type to warn
+            Log.init(this);
+            // set default unit split number
             AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
+            // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
             for (int i = 0; i < c.length; i++) {
@@ -82,6 +100,10 @@ public class WelcomeActivity extends Activity {
                     AppSettings.saveInt(this, k[i][j], c[i][j]);
                 }
             }
+            // ///////////////////////////////////////////////
+            // check if there is backup to restore
+            // WordInfoHelper.restoreWordInfoDB(this, false);
+            // ///////////////////////////////////////////////
         } else {
             AppSettings.saveInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY,
                     AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
@@ -218,7 +240,7 @@ public class WelcomeActivity extends Activity {
         return str;
     }
 
-    private void initLevels() {
+    private synchronized void initLevels() {
         int count = 0, index = 0;
         String curLev = getString(R.string.cur_leve);
         String nextLev = getString(R.string.next_level);

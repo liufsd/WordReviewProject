@@ -12,7 +12,6 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -78,22 +77,22 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[0], R.drawable.set_review_time);
         map.put(from[1], R.string.set_review_time);
         data.add(map);
+        // // 2
+        // map = new HashMap<String, Integer>();
+        // map.put(from[0], R.drawable.set_backup);
+        // map.put(from[1], R.string.backup);
+        // data.add(map);
+        // // 3
+        // map = new HashMap<String, Integer>();
+        // map.put(from[0], R.drawable.set_restore);
+        // map.put(from[1], R.string.restore);
+        // data.add(map);
         // 2
-        map = new HashMap<String, Integer>();
-        map.put(from[0], R.drawable.set_backup);
-        map.put(from[1], R.string.backup);
-        data.add(map);
-        // 3
-        map = new HashMap<String, Integer>();
-        map.put(from[0], R.drawable.set_restore);
-        map.put(from[1], R.string.restore);
-        data.add(map);
-        // 4
         map = new HashMap<String, Integer>();
         map.put(from[0], R.drawable.set_level_type);
         map.put(from[1], R.string.learning_level_name_set);
         data.add(map);
-        // 5
+        // 3
         map = new HashMap<String, Integer>();
         map.put(from[0], R.drawable.set_security);
         map.put(from[1], R.string.security_set);
@@ -109,16 +108,16 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             case 1:
                 showReviewTimeList();
                 break;
+            // case 2:
+            // showConfirmDialog(2);
+            // break;
+            // case 3:
+            // showConfirmDialog(3);
+            // break;
             case 2:
-                showConfirmDialog(2);
-                break;
-            case 3:
-                showConfirmDialog(3);
-                break;
-            case 4:
                 showSelectLevelType();
                 break;
-            case 5:
+            case 3:
                 showSecurity();
                 break;
             default:
@@ -287,6 +286,12 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                     case 1:
                         showRegeistCounted();
                         break;
+                    case 2:
+                        showBackupDialog();
+                        break;
+                    case 3:
+                        showRestoreDialog();
+                        break;
                     default:
                         break;
                 }
@@ -373,43 +378,38 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 .setSingleChoiceItems(nums, checkedIndex, listener).show();
     }
 
-    private void showConfirmDialog(final int position) {
-        String title = "", msg = "";
-        switch (position) {
-            case 2:
-                title = getString(R.string.backup);
-                msg = getString(R.string.backup_msg);
-                break;
-            case 3:
-                title = getString(R.string.restore);
-                msg = getString(R.string.restore_msg);
-                break;
-            default:
-                break;
-        }
+    private void showBackupDialog() {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        switch (position) {
-                            case 2:
-                                WordInfoHelper._BACKUP_WHOLE_LIST(SettingsActivity.this);
-                                break;
-                            case 3:
-                                WordInfoHelper._RESTORE_WHOLE_LIST(SettingsActivity.this);
-                                break;
-                            default:
-                                break;
-                        }
+                        WordInfoHelper.backupWordInfoDB(SettingsActivity.this, true);
                         break;
-
                     default:
                         break;
                 }
             }
         };
-        new AlertDialog.Builder(this).setTitle(title).setMessage(msg)
+        new AlertDialog.Builder(this).setTitle(R.string.backup).setMessage(R.string.backup_msg)
+                .setPositiveButton(R.string.ok, listener)
+                .setNegativeButton(R.string.cancel, listener).show();
+    }
+
+    private void showRestoreDialog() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        WordInfoHelper.restoreWordInfoDB(SettingsActivity.this, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.restore).setMessage(R.string.restore_msg)
                 .setPositiveButton(R.string.ok, listener)
                 .setNegativeButton(R.string.cancel, listener).show();
     }

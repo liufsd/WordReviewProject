@@ -100,6 +100,14 @@ public final class Log {
         return logType;
     }
 
+    public static void init(Context context) {
+        if (Config.isSimulator(context)) {
+            setLogType(context, LogType.verbose);
+        } else {
+            setLogType(context, LogType.warn);
+        }
+    }
+
     public static void setLogType(Context context, LogType logType) {
         Log.logType = logType;
         AppSettings.saveInt(context, AppSettings.LOG_TYPE_KEY, logType.value());

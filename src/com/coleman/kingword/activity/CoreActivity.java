@@ -52,6 +52,7 @@ import com.coleman.kingword.countdown.CountdownManager;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.receiver.KingWordReceiver;
+import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
@@ -311,6 +312,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onDestroy() {
+        // ///////////////////////////////////////////
+        // WordInfoHelper.backupWordInfoDB(this, false);
+        // ///////////////////////////////////////////
         super.onDestroy();
     }
 

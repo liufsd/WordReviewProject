@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -141,21 +142,22 @@ public class WordInfoHelper {
                 long ct = System.currentTimeMillis();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 Log.d(TAG, "=====current hour:" + hour);
-                String selection = (hour >= 18 ? WordInfo.NEW_WORD + " = 2 or " : "") + "(" 
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
-                + WordInfo.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+                String selection = (hour >= 18 ? WordInfo.NEW_WORD + " = 2 or " : "") + "("
+                        + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
+                        + WordInfo.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
+                        + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
+                        + WordInfo.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or "
+                        + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY + " and "
+                        + WordInfo.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or "
+                        + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
+                        + WordInfo.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")"
+                        + " or " + "(" + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY
+                        + " and " + WordInfo.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l)
+                        + ")" + " or " + "(" + WordInfo.REVIEW_TYPE + "="
+                        + WordInfoVO.REVIEW_40_DAY + " and " + WordInfo.REVIEW_TIME + "<="
+                        + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
+                        + WordInfo.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
+                        + WordInfo.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
                 c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection, selection,
                         null, null);
                 break;
@@ -212,22 +214,31 @@ public class WordInfoHelper {
         return false;
     }
 
-    public static void _BACKUP_WHOLE_LIST(final Context context) {
+    public static void backupWordInfoDB(final Context context, final boolean toast) {
         if (!Config.isExternalMediaMounted()) {
-            Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            if (toast) {
+                Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            } else {
+                System.out.println("External media not mounted!");
+            }
             return;
         }
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Toast.makeText(context.getApplicationContext(), "Backup successful!",
-                        Toast.LENGTH_SHORT).show();
+                if (toast) {
+                    Toast.makeText(context.getApplicationContext(), "Backup successful!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println("Backup successful!");
+                }
             }
         };
         new Thread() {
             public void run() {
+                long time = System.currentTimeMillis();
                 final String PATH = Environment.getExternalStorageDirectory() + File.separator
-                        + "/kingword/backup";
+                        + "kingword/backup";
                 Log.d(TAG, "path:" + PATH);
                 try {
                     File file = new File(PATH);
@@ -236,43 +247,69 @@ public class WordInfoHelper {
                         Log.d(TAG, file.getParent() + " success mk dir: " + s);
                     }
                     file.createNewFile();
-                    FileOutputStream fos = new FileOutputStream(file);
-                    DataOutputStream dos = new DataOutputStream(fos);
-                    Cursor c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
-                            null, null, null);
-                    if (c != null && c.moveToFirst()) {
-                        dos.writeInt(c.getCount());
-                        while (!c.isAfterLast()) {
-                            dos.writeLong(c.getLong(0));
-                            dos.writeUTF(c.getString(1) == null ? "" : c.getString(1));
-                            Log.d(TAG, "word:" + c.getString(1));
-                            dos.writeInt(c.getInt(2));
-                            dos.writeInt(c.getInt(3));
-                            dos.writeInt(c.getInt(4));
-                            dos.writeInt(c.getInt(5));
-                            dos.writeInt(c.getInt(6));
-                            dos.writeInt(c.getInt(7));
-                            dos.writeLong(c.getLong(8));
-                            c.moveToNext();
+                    RandomAccessFile ranfile = new RandomAccessFile(file, "rw");
+                    Cursor c = null;
+
+                    boolean first = true;
+                    long s_id = 0;
+                    int cur_count = 0;
+                    int total_count = 0;
+                    int limit = 500;
+                    String selection = null;
+                    ranfile.writeInt(0);
+
+                    while (first || cur_count == 500) {
+                        first = false;
+                        selection = "_id >" + s_id;
+                        c = context.getContentResolver().query(WordInfo.CONTENT_URI, projection,
+                                selection, null, "_id asc limit " + limit);
+                        cur_count = c.getCount();
+                        total_count += cur_count;
+                        Log.d(TAG, "cur_count:" + cur_count);
+                        if (c != null && c.moveToFirst()) {
+                            while (!c.isAfterLast()) {
+                                ranfile.writeLong(c.getLong(0));
+                                ranfile.writeUTF(c.getString(1) == null ? "" : c.getString(1));
+                                Log.d(TAG, "word:" + c.getString(1));
+                                ranfile.writeInt(c.getInt(2));
+                                ranfile.writeInt(c.getInt(3));
+                                ranfile.writeInt(c.getInt(4));
+                                ranfile.writeInt(c.getInt(5));
+                                ranfile.writeInt(c.getInt(6));
+                                ranfile.writeInt(c.getInt(7));
+                                ranfile.writeLong(c.getLong(8));
+                                if (c.isLast()) {
+                                    s_id = c.getLong(0);
+                                    System.out.println("next loop start index: " + s_id);
+                                }
+                                c.moveToNext();
+                            }
                         }
+                        c.close();
                     }
-                    c.close();
-                    dos.flush();
-                    dos.close();
-                    fos.close();
+                    ranfile.seek(0);
+                    ranfile.writeInt(total_count);
+                    System.out.println("total back word nums: " + total_count);
+                    ranfile.close();
                     handler.sendEmptyMessage(0);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                time = System.currentTimeMillis() - time;
+                System.out.println("backup cost time: " + time);
             }
         }.start();
     }
 
-    public static void _RESTORE_WHOLE_LIST(final Context context) {
+    public static void restoreWordInfoDB(final Context context, final boolean toast) {
         if (!Config.isExternalMediaMounted()) {
-            Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            if (toast) {
+                Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            } else {
+                System.out.println("External media not mounted!");
+            }
             return;
         }
         final String PATH = Environment.getExternalStorageDirectory() + File.separator
@@ -281,24 +318,37 @@ public class WordInfoHelper {
 
             final File file = new File(PATH);
             if (!file.exists()) {
-                Toast.makeText(context, "No backup record found!", Toast.LENGTH_SHORT).show();
+                if (toast) {
+                    Toast.makeText(context, "No backup record found!", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println("No backup record found!");
+                }
                 return;
             }
             final FileInputStream fis = new FileInputStream(file);
             final DataInputStream dis = new DataInputStream(fis);
             if (dis.available() < 4) {
-                Toast.makeText(context, "File is empty!", Toast.LENGTH_SHORT).show();
+                if (toast) {
+                    Toast.makeText(context, "File is empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println("File is empty!");
+                }
                 return;
             }
             final Handler handler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
-                    Toast.makeText(context.getApplicationContext(), "Restore successful!",
-                            Toast.LENGTH_SHORT).show();
+                    if (toast) {
+                        Toast.makeText(context.getApplicationContext(), "Restore successful!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        System.out.println("Restore successful!");
+                    }
                 }
             };
             new Thread() {
                 public void run() {
+                    long time = System.currentTimeMillis();
                     int count = 0;
                     try {
                         count = dis.readInt();
@@ -330,12 +380,32 @@ public class WordInfoHelper {
                         dis.close();
                         fis.close();
                         file.delete();
-                        context.getContentResolver().delete(WordInfo.CONTENT_URI, "_id > 0", null);
-                        context.getContentResolver().bulkInsert(WordInfo.CONTENT_URI, cv);
+                        context.getContentResolver().delete(WordInfo.CONTENT_URI, null, null);
+                        int slice = 500;
+                        int times = cv.length / slice;
+                        int left = cv.length % slice;
+                        ContentValues subcv[] = new ContentValues[slice];
+                        for (int i = 0; i < times; i++) {
+                            System.arraycopy(cv, i * slice, subcv, 0, slice);
+                            context.getContentResolver().bulkInsert(WordInfo.CONTENT_URI, subcv);
+                            System.out.println("insert " + (i * slice) + "-" + (i * slice + slice)
+                                    + " records to db!");
+                        }
+                        if (left > 0) {
+                            subcv = new ContentValues[left];
+                            System.arraycopy(cv, times * slice, subcv, 0, left);
+                            context.getContentResolver().bulkInsert(WordInfo.CONTENT_URI, subcv);
+                            System.out.println("insert " + (times * slice) + "-"
+                                    + (times * slice + left) + " records to db!");
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    handler.sendEmptyMessage(0);
+                    if (handler != null) {
+                        handler.sendEmptyMessage(0);
+                    }
+                    time = System.currentTimeMillis() - time;
+                    System.out.println("restore cost time: " + time);
                 }
             }.start();
         } catch (FileNotFoundException e) {

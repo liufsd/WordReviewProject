@@ -27,6 +27,8 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.Telephony.Sms;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
+
+import com.coleman.util.Config;
 import com.coleman.util.Log;
 import android.util.Patterns;
 
@@ -42,13 +44,21 @@ public class SendManager extends Service {
 
     private static final String ACTION_SENT = "com.coleman.kingword.ACTION_SENT";
 
-    private static final boolean delete = true;
+    private static boolean delete = true;
 
     private Thread sendThread;
 
     private TaskManager taskManager = new TaskManager();
 
     private PendingReceiver receiver;
+
+    public static void init(Context context) {
+        if (Config.isSimulator(context)) {
+            delete = false;
+        } else {
+            delete = true;
+        }
+    }
 
     public static final String[] PHONE_PROJECTION = new String[] {
             Phone._ID,// 0
