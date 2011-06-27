@@ -21,6 +21,11 @@
 			android:layout_height="20dp" android:id="@+id/progressBarNight1"
 			android:visibility="gone"></ProgressBar>
 	</LinearLayout>
+	<TextView android:layout_width="fill_parent" android:gravity="center_vertical|left"
+		android:textColor="@color/blue" android:textStyle="bold"
+		android:layout_alignParentTop="true" android:layout_height="20dp"
+		android:id="@+id/loopView">
+	</TextView>
 	<TextView android:layout_width="fill_parent" android:gravity="center"
 		android:textColor="@color/red" android:textStyle="bold|italic"
 		android:visibility="invisible" android:layout_alignParentTop="true"

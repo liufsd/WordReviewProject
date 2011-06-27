@@ -16,6 +16,9 @@ import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
+import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 
 public class SliceWordList {
     private SubInfo subinfo;
@@ -37,9 +40,7 @@ public class SliceWordList {
      * count the number of passed word, ignored will be passed, or meanwhile
      * passView, passAlternative, and passMultiple of WordItem will also passed.
      */
-    int passViewCount;
-
-    int passMulCount;
+    int passStateCount[];
 
     /**
      * count the total number of the error occuring times.
@@ -48,33 +49,69 @@ public class SliceWordList {
 
     int totalCount;
 
+    /**
+     * used to control loop display
+     */
+    public int loopCount;
+
+    public int loopIndex;
+
+    int ignoreCount;
+
     byte listType;
 
     public static final byte NULL_TYPE = -1;
 
     public static final byte SUB_WORD_LIST = 1;
 
+    public static int sublistState[] = new int[] {
+            InitState.TYPE, InitState.TYPE, MultipleState.TYPE, CompleteState.TYPE
+    };
+
     public static final byte REVIEW_LIST = 2;
+
+    public static int reviewlistState[] = new int[] {
+            InitState.TYPE, MultipleState.TYPE, CompleteState.TYPE
+    };
 
     public static final byte SCAN_LIST = 3;
 
+    public static int scanlistState[] = new int[] {
+            InitState.TYPE, CompleteState.TYPE
+    };
+
     public static final byte NEW_WORD_BOOK_LIST = 4;
+
+    public static int booklistState[] = new int[] {
+            MultipleState.TYPE, CompleteState.TYPE
+    };
 
     public SliceWordList(SubInfo info) {
         listType = SUB_WORD_LIST;
+        passStateCount = new int[sublistState.length];
         subinfo = info;
         list = new ArrayList<WordItem>();
-        passViewCount = 0;
-        passMulCount = 0;
-        errorCount = 0;
     }
 
     public SliceWordList(byte type) {
         listType = type;
+        switch (listType) {
+            case SUB_WORD_LIST:
+                passStateCount = new int[sublistState.length];
+                break;
+            case NEW_WORD_BOOK_LIST:
+                passStateCount = new int[booklistState.length];
+                break;
+            case SCAN_LIST:
+                passStateCount = new int[scanlistState.length];
+                break;
+            case REVIEW_LIST:
+                passStateCount = new int[reviewlistState.length];
+                break;
+            default:
+                break;
+        }
         list = new ArrayList<WordItem>();
-        passViewCount = 0;
-        passMulCount = 0;
-        errorCount = 0;
     }
 
     public void loadWordList(Context context) {
@@ -91,9 +128,11 @@ public class SliceWordList {
         }
     }
 
+    public int getListType() {
+        return listType;
+    }
+
     public void loadReviewWordList(Context context) {
-        // reset the slice word list
-        reset();
 
         ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
         WordItem item;
@@ -105,17 +144,6 @@ public class SliceWordList {
             Log.d(TAG, "item:" + item + " status:" + item.getCurrentStatus());
         }
         infoList.clear();
-    }
-
-    /**
-     * Could only be invoked by loadReviewWordList
-     */
-    private void reset() {
-        list.clear();
-        passViewCount = 0;
-        passMulCount = 0;
-        errorCount = 0;
-        p = 0;
     }
 
     private void loadInfoList(Context context) {
@@ -155,7 +183,6 @@ public class SliceWordList {
     }
 
     public int getProgress() {
-        Log.d(TAG, "p:" + p + "  list.size:" + list.size());
         if (list.size() == 0) {
             return 0;
         } else if (list.size() == 1) {
@@ -165,7 +192,14 @@ public class SliceWordList {
         if (allComplete()) {
             return 100;
         }
-        return (passViewCount + passMulCount) * 50 / list.size();
+
+        int times = passStateCount.length - 1;
+        int cur = 0;
+        for (int i = 0; i < passStateCount.length - 1; i++) {
+            cur += passStateCount[i];
+        }
+        // return (passViewCount + passMulCount) * 50 / list.size();
+        return cur * (100 / times) / list.size();
     }
 
     public boolean allComplete() {
@@ -361,4 +395,15 @@ public class SliceWordList {
         return list.size();
     }
 
+    public int getLoopIndex() {
+        return loopIndex;
+    }
+
+    public int getLoopCount() {
+        return loopCount;
+    }
+
+    public int getIgnoreCount() {
+        return ignoreCount;
+    }
 }

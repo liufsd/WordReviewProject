@@ -3,6 +3,7 @@ package com.coleman.kingword.wordlist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 
 import com.coleman.kingword.dict.stardict.DictData;
@@ -35,25 +36,50 @@ public class FiniteStateMachine {
 
         setInitialState(initState);
 
-        addState(initState);
-        addState(mulState);
-        addState(completeState);
+        addState(initState, mulState);
+        addState(mulState, completeState);
+        addState(completeState, null);
+    }
+
+    public FiniteStateMachine(SliceWordList sliceList, int types[]) {
+        this.sliceList = sliceList;
+        for (int i = 0; i < types.length; i++) {
+            switch (types[i]) {
+                case InitState.TYPE:
+                    addState(new InitState());
+                    break;
+                case MultipleState.TYPE:
+                    addState(new MultipleState());
+                    break;
+                case CompleteState.TYPE:
+                    addState(new CompleteState());
+                    break;
+                default:
+                    break;
+            }
+        }
+        setInitialState(mStateList.get(0));
+        for (int i = 0; i < mStateList.size(); i++) {
+            mStateList.get(i).index = i;
+            if (i != mStateList.size() - 1) {
+                mStateList.get(i).nextState = mStateList.get(i + 1);
+            } else {
+                mStateList.get(i).nextState = null;
+            }
+        }
     }
 
     public boolean isComplete() {
         return mCurrentState instanceof CompleteState;
     }
 
-    public boolean isPassView() {
-        return initState.pass;
+    protected void addState(FiniteState curState, FiniteState nextState) {
+        mStateList.add(curState);
+        curState.nextState = nextState;
     }
 
-    public boolean isPassMultiple() {
-        return mulState.pass;
-    }
-
-    protected void addState(FiniteState state) {
-        mStateList.add(state);
+    protected void addState(FiniteState curState) {
+        mStateList.add(curState);
     }
 
     public FiniteState getCurrentState() {
@@ -61,7 +87,7 @@ public class FiniteStateMachine {
     }
 
     public FiniteState getInitState() {
-        return initState;
+        return mStateList.get(0);
     }
 
     public void sendMessage(Message msg) {
@@ -91,12 +117,12 @@ public class FiniteStateMachine {
 
         protected boolean pass;
 
+        protected int index;
+
         protected FiniteState() {
             counted = false;
             pass = false;
         }
-
-        protected abstract FiniteState getNext();
 
         /**
          * Called when a state is entered.
@@ -152,10 +178,12 @@ public class FiniteStateMachine {
     }
 
     public class InitState extends FiniteState {
+        public static final int TYPE = 0;
+
         @Override
         protected void exit() {
             if (!counted) {
-                sliceList.passViewCount++;
+                sliceList.passStateCount[index]++;
             }
             super.exit();
         }
@@ -164,37 +192,19 @@ public class FiniteStateMachine {
                 ArrayList<WordItem> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             DictData data = item.getDictData(context);
-            if (data.getDatas().indexOf("not found!") != -1) {
-                data = item.getDetail(context);
-            }
             datalist.add(data);
             return datalist;
         }
 
-        @Override
-        protected FiniteState getNext() {
-            return mulState;
-        }
     }
 
     public class MultipleState extends FiniteState {
+        public static final int TYPE = 1;
+
         @Override
         protected void exit() {
             if (!counted) {
-                sliceList.passMulCount++;
-                switch (sliceList.listType) {
-                    case SliceWordList.SUB_WORD_LIST:
-                        break;
-                    case SliceWordList.NEW_WORD_BOOK_LIST:
-                        break;
-                    case SliceWordList.SCAN_LIST:
-                        break;
-                    case SliceWordList.REVIEW_LIST:
-                        sliceList.passViewCount++;
-                        break;
-                    default:
-                        throw new RuntimeException("Not support word list type!");
-                }
+                sliceList.passStateCount[index]++;
             }
             super.exit();
         }
@@ -215,17 +225,12 @@ public class FiniteStateMachine {
             return datalist;
         }
 
-        @Override
-        protected FiniteState getNext() {
-            return completeState;
-        }
     }
 
     public class CompleteState extends FiniteState {
-        @Override
-        protected FiniteState getNext() {
-            return null;
-        }
+
+        public static final int TYPE = 100;
+
         @Override
         protected void enter() {
             sliceList.totalCount++;
@@ -239,16 +244,13 @@ public class FiniteStateMachine {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case NEXT:
-                    transitionTo(mCurrentState.getNext());
+                    transitionTo(mCurrentState.nextState);
                     break;
                 case RESET:
                     reset();
                     break;
                 case COMPLETE:
                     complete();
-                    break;
-                case LAST:
-                    setInitialState(mulState);
                     break;
                 default:
                     break;
@@ -265,16 +267,16 @@ public class FiniteStateMachine {
             for (FiniteState finiteState : mStateList) {
                 finiteState.reset();
             }
-            mCurrentState = initState;
+            mCurrentState = mStateList.get(0);
         }
 
         private void complete() {
             for (FiniteState finiteState : mStateList) {
-                if(finiteState!=completeState){
+                if (!(finiteState instanceof CompleteState)) {
                     finiteState.exit();
                 }
             }
-            mCurrentState = completeState;
+            mCurrentState = mStateList.get(mStateList.size() - 1);
             mCurrentState.enter();
         }
     }
@@ -285,7 +287,5 @@ public class FiniteStateMachine {
         int RESET = 2;
 
         int COMPLETE = 3;
-
-        int LAST = 4;
     }
 }

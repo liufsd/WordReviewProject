@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.provider.Browser.BookmarkColumns;
+
 import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
@@ -14,8 +16,11 @@ import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordinfo.WordInfoVO;
+import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 
 public class WordItem {
     private static final String TAG = WordItem.class.getName();
@@ -32,24 +37,24 @@ public class WordItem {
 
     private DictData detailData;
 
-    private DictData curData;
-
     private FiniteStateMachine mStateMachine;
 
     private SliceWordList sliceList;
 
     public WordItem(SliceWordList sliceList) {
         this.sliceList = sliceList;
-        mStateMachine = new FiniteStateMachine(sliceList);
         switch (sliceList.listType) {
             case SliceWordList.SUB_WORD_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.sublistState);
                 break;
             case SliceWordList.NEW_WORD_BOOK_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.booklistState);
                 break;
             case SliceWordList.SCAN_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.scanlistState);
                 break;
             case SliceWordList.REVIEW_LIST:
-                mStateMachine.sendEmptyMessage(IFSMCommand.LAST);
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.reviewlistState);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -126,7 +131,6 @@ public class WordItem {
         if (dictData == null) {
             dictData = DictManager.getInstance().viewWord(context, word);
         }
-        curData = dictData;
         return dictData;
     }
 
@@ -134,7 +138,6 @@ public class WordItem {
         if (detailData == null) {
             detailData = DictManager.getInstance().viewMore(context, word);
         }
-        curData = detailData;
         return detailData;
     }
 
@@ -143,9 +146,8 @@ public class WordItem {
             info = WordInfoHelper.getWordInfo(context, word);
         }
         if (info.ignore) {
+            sliceList.ignoreCount++;
             mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
-            sliceList.passViewCount++;
-            sliceList.passMulCount++;
         }
     }
 
@@ -181,6 +183,7 @@ public class WordItem {
 
     public boolean ignore(Context context) {
         info.ignore = true;
+        sliceList.ignoreCount++;
         mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
         Log.d(TAG, "ignore:" + toString());
         return WordInfoHelper.store(context, info);
@@ -252,6 +255,7 @@ public class WordItem {
 
     public boolean removeIgnore(Context context) {
         info.ignore = false;
+        sliceList.ignoreCount--;
         return WordInfoHelper.store(context, info);
     }
 

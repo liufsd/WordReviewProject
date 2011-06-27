@@ -188,4 +188,8 @@
 	<string name="regeist_count_title">计算注册码</string>
 	<string name="counted_pw_is" formatted="false">生成的密码是：%d</string>
 	<string name="pw_src_wrong">你输入的用于生成密码的Key格式错误!</string>
+
+	<string name="loop_info" formatted="false">第%d圈（%d/%d词）</string>
+
+	<string name="enter_next_loop" formatted="false">进入第%d轮！</string>
 </resources>
