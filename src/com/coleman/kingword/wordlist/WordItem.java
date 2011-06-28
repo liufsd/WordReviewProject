@@ -45,16 +45,16 @@ public class WordItem {
         this.sliceList = sliceList;
         switch (sliceList.listType) {
             case SliceWordList.SUB_WORD_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.sublistState);
-                break;
-            case SliceWordList.NEW_WORD_BOOK_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.booklistState);
-                break;
-            case SliceWordList.SCAN_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.scanlistState);
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[0]);
                 break;
             case SliceWordList.REVIEW_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.reviewlistState);
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[1]);
+                break;
+            case SliceWordList.NEW_WORD_BOOK_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[2]);
+                break;
+            case SliceWordList.SCAN_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[3]);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -97,7 +97,7 @@ public class WordItem {
     }
 
     public boolean showSymbol() {
-        return mStateMachine.getCurrentState() == mStateMachine.getInitState();
+        return mStateMachine.getCurrentState() instanceof InitState;
     }
 
     public boolean isAddToNew() {
@@ -106,22 +106,7 @@ public class WordItem {
 
     public void setPass(boolean passed) {
         if (passed) {
-            switch (sliceList.listType) {
-                case SliceWordList.SUB_WORD_LIST:
-                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
-                    break;
-                case SliceWordList.NEW_WORD_BOOK_LIST:
-                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
-                    break;
-                case SliceWordList.SCAN_LIST:
-                    mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
-                    break;
-                case SliceWordList.REVIEW_LIST:
-                    mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
-                    break;
-                default:
-                    throw new RuntimeException("Not support word list type!");
-            }
+            mStateMachine.sendEmptyMessage(IFSMCommand.NEXT);
         } else {
             mStateMachine.sendEmptyMessage(IFSMCommand.RESET);
         }
@@ -191,7 +176,10 @@ public class WordItem {
 
     public void studyOrReview(Context context) {
         if (sliceList.listType == SliceWordList.REVIEW_LIST) {
-            reviewPlus(context);
+            if (getCurrentStatus() instanceof CompleteState) {
+                Log.d(TAG, "============review plus++");
+                reviewPlus(context);
+            }
         } else {
             studyPlus(context);
         }
@@ -202,7 +190,9 @@ public class WordItem {
         if (info.review_time == 0) {
             info.review_type = WordInfoVO.REVIEW_1_HOUR;
             info.review_time = System.currentTimeMillis();
+            // ////////////////////////////////////////////////////////////
             // EbbinghausReminder.setNotifaction(context, info.review_type);
+            // ////////////////////////////////////////////////////////////
         }
         if (info.studycount % 3 == 0) {
             info.weight--;

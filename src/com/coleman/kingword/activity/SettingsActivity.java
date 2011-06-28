@@ -12,20 +12,29 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,7 +42,10 @@ import android.widget.Toast;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
+import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.WordListManager;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.tools.sms.SendManager;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
@@ -292,6 +304,9 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                     case 3:
                         showRestoreDialog();
                         break;
+                    case 4:
+                        showViewMethodConfigDialog();
+                        break;
                     default:
                         break;
                 }
@@ -302,6 +317,189 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         new AlertDialog.Builder(this).setTitle(R.string.high_level_settings)
                 .setItems(R.array.high_level_settings, listener)
                 .setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void mapIntToStr(ArrayList<Integer> intlist, ArrayList<String> strlist) {
+        strlist.clear();
+        String[] str = getResources().getStringArray(R.array.view_methods);
+        for (int i = 0; i < intlist.size(); i++) {
+            int v = intlist.get(i);
+            if (v == InitState.TYPE) {
+                strlist.add(str[0]);
+            } else if (v == MultipleState.TYPE) {
+                strlist.add(str[1]);
+            }
+        }
+    }
+
+    private void mapStrToInt(ArrayList<String> strlist, ArrayList<Integer> intlist) {
+        intlist.clear();
+        String[] str = getResources().getStringArray(R.array.view_methods);
+        for (int i = 0; i < strlist.size(); i++) {
+            String v = strlist.get(i);
+            if (v.equals(str[0])) {
+                intlist.add(InitState.TYPE);
+            } else if (v.equals(str[1])) {
+                intlist.add(MultipleState.TYPE);
+            }
+        }
+    }
+
+    private void showViewMethodConfigDialog() {
+        final View view = LayoutInflater.from(this).inflate(R.layout.view_method_fordialog, null);
+        final RadioButton radioSub = (RadioButton) view.findViewById(R.id.radio0);
+        final RadioButton radioReview = (RadioButton) view.findViewById(R.id.radio1);
+        final RadioButton radioNewbook = (RadioButton) view.findViewById(R.id.radio2);
+        final RadioButton radioIgnore = (RadioButton) view.findViewById(R.id.radio3);
+        final ListView listview = (ListView) view.findViewById(R.id.listView1);
+        final Spinner spinner1 = (Spinner) view.findViewById(R.id.spinner1);
+        final Button addBtn = (Button) view.findViewById(R.id.button0);
+        final Button clearBtn = (Button) view.findViewById(R.id.button1);
+
+        final ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < 4; i++) {
+            result.add(new ArrayList<Integer>());
+        }
+
+        class Index {
+            int i;
+        }
+        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(this,
+                R.layout.textview_item, list);
+        final Index selectIndex = new Index();
+        String viewMtd = AppSettings.getString(this, AppSettings.VIEW_METHOD_KEY,
+                SliceWordList.DEFAULT_VIEW_METHOD);
+        String scrap[] = viewMtd.split("#");
+        for (int i = 0; i < scrap.length; i++) {
+            String ss[] = scrap[i].split(",");
+            for (int j = 0; j < ss.length; j++) {
+                result.get(i).add(Integer.parseInt(ss[j]));
+            }
+        }
+
+        OnClickListener radioLis = new OnClickListener() {
+            @Override
+            public void onClick(View buttonView) {
+                switch (buttonView.getId()) {
+                    case R.id.radio0:
+                        radioSub.setChecked(true);
+                        radioReview.setChecked(false);
+                        radioNewbook.setChecked(false);
+                        radioIgnore.setChecked(false);
+                        mapStrToInt(list, result.get(selectIndex.i));
+                        selectIndex.i = 0;
+                        mapIntToStr(result.get(selectIndex.i), list);
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    case R.id.radio1:
+                        radioSub.setChecked(false);
+                        radioReview.setChecked(true);
+                        radioNewbook.setChecked(false);
+                        radioIgnore.setChecked(false);
+                        mapStrToInt(list, result.get(selectIndex.i));
+                        selectIndex.i = 1;
+                        mapIntToStr(result.get(selectIndex.i), list);
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    case R.id.radio2:
+                        radioSub.setChecked(false);
+                        radioReview.setChecked(false);
+                        radioNewbook.setChecked(true);
+                        radioIgnore.setChecked(false);
+                        mapStrToInt(list, result.get(selectIndex.i));
+                        selectIndex.i = 2;
+                        mapIntToStr(result.get(selectIndex.i), list);
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    case R.id.radio3:
+                        radioSub.setChecked(false);
+                        radioReview.setChecked(false);
+                        radioNewbook.setChecked(false);
+                        radioIgnore.setChecked(true);
+                        mapStrToInt(list, result.get(selectIndex.i));
+                        selectIndex.i = 3;
+                        mapIntToStr(result.get(selectIndex.i), list);
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        radioSub.setOnClickListener(radioLis);
+        radioReview.setOnClickListener(radioLis);
+        radioNewbook.setOnClickListener(radioLis);
+        radioIgnore.setOnClickListener(radioLis);
+
+        mapIntToStr(result.get(selectIndex.i), list);
+        listview.setAdapter(listViewAdapter);
+
+        final String spinnerArr[] = getResources().getStringArray(R.array.view_methods);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+                R.layout.textview_item, spinnerArr);
+        spinner1.setAdapter(spinnerAdapter);
+        OnClickListener btnlis = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.button0:
+                        list.add(spinnerArr[spinner1.getSelectedItemPosition()]);
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    case R.id.button1:
+                        list.clear();
+                        listViewAdapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        addBtn.setOnClickListener(btnlis);
+        clearBtn.setOnClickListener(btnlis);
+
+        DialogInterface.OnClickListener dialis = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        mapStrToInt(list, result.get(selectIndex.i));
+                        String rstr = "";
+                        for (int i = 0; i < result.size(); i++) {
+                            ArrayList<Integer> slist = result.get(i);
+                            if (slist.size() == 0) {
+                                Toast.makeText(SettingsActivity.this,
+                                        R.string.view_method_empty_warn, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            for (int j = 0; j < slist.size(); j++) {
+                                if (j == 0) {
+                                    rstr += slist.get(j);
+                                } else {
+                                    rstr += "," + slist.get(j);
+                                }
+                            }
+                            if (i != result.size() - 1) {
+                                rstr += "#";
+                            }
+                        }
+                        Log.d(TAG, "===============set new view method: " + rstr);
+                        AppSettings.saveString(SettingsActivity.this, AppSettings.VIEW_METHOD_KEY,
+                                rstr);
+                        Toast.makeText(SettingsActivity.this,
+                                R.string.view_method_success_hint, Toast.LENGTH_SHORT).show();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.view_method_dialog_title).setView(view)
+                .setPositiveButton(R.string.ok, dialis).setNegativeButton(R.string.cancel, dialis)
+                .show();
     }
 
     private void showRegeistCounted() {

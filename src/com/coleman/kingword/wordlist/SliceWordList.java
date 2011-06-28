@@ -8,6 +8,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
@@ -62,59 +65,66 @@ public class SliceWordList {
 
     public static final byte NULL_TYPE = -1;
 
-    public static final byte SUB_WORD_LIST = 1;
+    public static int slicelistState[][] = new int[4][];
 
-    public static int sublistState[] = new int[] {
-            InitState.TYPE, InitState.TYPE, MultipleState.TYPE, CompleteState.TYPE
-    };
+    public static final byte SUB_WORD_LIST = 1;
 
     public static final byte REVIEW_LIST = 2;
 
-    public static int reviewlistState[] = new int[] {
-            InitState.TYPE, MultipleState.TYPE, CompleteState.TYPE
-    };
-
     public static final byte SCAN_LIST = 3;
-
-    public static int scanlistState[] = new int[] {
-            InitState.TYPE, CompleteState.TYPE
-    };
 
     public static final byte NEW_WORD_BOOK_LIST = 4;
 
-    public static int booklistState[] = new int[] {
-            MultipleState.TYPE, CompleteState.TYPE
-    };
+    public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
     public SliceWordList(SubInfo info) {
         listType = SUB_WORD_LIST;
-        passStateCount = new int[sublistState.length];
         subinfo = info;
         list = new ArrayList<WordItem>();
     }
 
     public SliceWordList(byte type) {
         listType = type;
+        list = new ArrayList<WordItem>();
+    }
+
+    private void loadViewMethod(Context context) {
+        String vmtd = AppSettings.getString(context, AppSettings.VIEW_METHOD_KEY,
+                DEFAULT_VIEW_METHOD);
+        String scrap[] = vmtd.split("#");
+        for (int i = 0; i < scrap.length; i++) {
+            String ss[] = scrap[i].split(",");
+            slicelistState[i] = new int[ss.length + 1];
+            for (int j = 0; j < ss.length; j++) {
+                slicelistState[i][j] = Integer.parseInt(ss[j]);
+            }
+            slicelistState[i][ss.length] = CompleteState.TYPE;
+        }
+        for (int i = 0; i < slicelistState.length; i++) {
+            for (int j = 0; j < slicelistState[i].length; j++) {
+                Log.d(TAG, "=======slice list state[" + i + "][" + j + "]=" + slicelistState[i][j]);
+            }
+        }
         switch (listType) {
             case SUB_WORD_LIST:
-                passStateCount = new int[sublistState.length];
-                break;
-            case NEW_WORD_BOOK_LIST:
-                passStateCount = new int[booklistState.length];
-                break;
-            case SCAN_LIST:
-                passStateCount = new int[scanlistState.length];
+                passStateCount = new int[slicelistState[0].length];
                 break;
             case REVIEW_LIST:
-                passStateCount = new int[reviewlistState.length];
+                passStateCount = new int[slicelistState[1].length];
+                break;
+            case NEW_WORD_BOOK_LIST:
+                passStateCount = new int[slicelistState[2].length];
+                break;
+            case SCAN_LIST:
+                passStateCount = new int[slicelistState[3].length];
                 break;
             default:
                 break;
         }
-        list = new ArrayList<WordItem>();
     }
 
     public void loadWordList(Context context) {
+        loadViewMethod(context);
         switch (listType) {
             case SUB_WORD_LIST:
                 loadSubList(context);
@@ -133,7 +143,7 @@ public class SliceWordList {
     }
 
     public void loadReviewWordList(Context context) {
-
+        loadViewMethod(context);
         ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
         WordItem item;
         for (WordInfoVO info : infoList) {

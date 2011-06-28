@@ -189,7 +189,21 @@
 	<string name="counted_pw_is" formatted="false">生成的密码是：%d</string>
 	<string name="pw_src_wrong">你输入的用于生成密码的Key格式错误!</string>
 
-	<string name="loop_info" formatted="false">第%d圈（%d/%d词）</string>
+	<string name="loop_info" formatted="false">第%d轮（%d/%d词）</string>
 
 	<string name="enter_next_loop" formatted="false">进入第%d轮！</string>
+	<string name="view_method_dialog_title">查看方式设定</string>
+
+	<string name="sub_settings">查看单元</string>
+	<string name="review_settings">查看复习</string>
+	<string name="newbook_settings">查看生词</string>
+	<string name="ignore_settings">查看过滤</string>
+	<string name="add_method">添加</string>
+	<string name="view_method_empty_warn">操作失败，查看方式列表不能为空！</string>
+	<string name="view_method_success_hint">操作成功！</string>
+
+	<string name="view_sub_complete_title">单元学习</string>
+	<string name="view_review_complete_title">复习</string>
+	<string name="view_newbook_complete_title">生词本学习</string>
+	<string name="view_ignore_complete_title">过滤列表学习</string>
 </resources>

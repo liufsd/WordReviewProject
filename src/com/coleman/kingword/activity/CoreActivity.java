@@ -8,22 +8,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Camera;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import com.coleman.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,12 +48,12 @@ import com.coleman.kingword.countdown.CountdownManager;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.receiver.KingWordReceiver;
-import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 import com.coleman.kingword.wordlist.WordItem;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
     private static final String TAG = CoreActivity.class.getName();
@@ -276,6 +272,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         viewWord.setTextColor(textColor);
         addOrRemove.setTextColor(textColor);
         ignoreOrNot.setTextColor(textColor);
+
+        continueView.setTextColor(textColor);
+        loopView.setTextColor(textColor);
 
         if (selectMode == 1) {
             viewWord.setBackgroundResource(R.drawable.btn_bg_night);
@@ -714,30 +713,39 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void showCompleteStudyDialog() {
-        String msg = "";
+        String title = "", msg = "";
         switch (sliceListType) {
             case SliceWordList.SUB_WORD_LIST: {
                 String str1 = wordlist.getCorrectPercentage() + "%";
                 String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
+                title = getString(R.string.view_sub_complete_title);
                 msg = String.format(getString(R.string.show_complete_study), str1, str2);
                 break;
             }
+            case SliceWordList.REVIEW_LIST:
+                title = getString(R.string.view_review_complete_title);
+                msg = getString(R.string.review_complete);
+                break;
             case SliceWordList.NEW_WORD_BOOK_LIST:
+                title = getString(R.string.view_newbook_complete_title);
                 msg = getString(R.string.study_new_word_book_end);
                 break;
             case SliceWordList.SCAN_LIST:
+                title = getString(R.string.view_ignore_complete_title);
                 msg = getString(R.string.study_ignore_list_end);
-                break;
-            case SliceWordList.REVIEW_LIST:
-                msg = getString(R.string.review_complete);
                 break;
             default:
                 break;
         }
-        new AlertDialog.Builder(this).setMessage(msg)
+        new AlertDialog.Builder(this).setTitle(title).setMessage(msg)
                 .setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setOnCancelListener(new OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
                         finish();
                     }
                 }).show();
@@ -1054,7 +1062,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         adapter.notifyDataSetChanged();
                         progressBarDay.setProgress(wordlist.getProgress());
                         progressBarNight.setProgress(wordlist.getProgress());
-
                         viewWord.setText(R.string.view_more);
                         if (nextWordItem.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);

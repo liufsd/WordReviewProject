@@ -56,6 +56,8 @@ public class AppSettings {
      */
     public static final String MARK_SEND_MSG_LEVEL_KEY = "mark_send_msg_level";
 
+    public static final String VIEW_METHOD_KEY = "view_method";
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);
