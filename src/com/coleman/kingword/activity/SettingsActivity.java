@@ -366,7 +366,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         }
         final ArrayList<String> list = new ArrayList<String>();
         final ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(this,
-                R.layout.textview_item, list);
+                R.layout.textview_item_white, list);
         final Index selectIndex = new Index();
         String viewMtd = AppSettings.getString(this, AppSettings.VIEW_METHOD_KEY,
                 SliceWordList.DEFAULT_VIEW_METHOD);
@@ -487,8 +487,8 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                         Log.d(TAG, "===============set new view method: " + rstr);
                         AppSettings.saveString(SettingsActivity.this, AppSettings.VIEW_METHOD_KEY,
                                 rstr);
-                        Toast.makeText(SettingsActivity.this,
-                                R.string.view_method_success_hint, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsActivity.this, R.string.view_method_success_hint,
+                                Toast.LENGTH_SHORT).show();
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;
