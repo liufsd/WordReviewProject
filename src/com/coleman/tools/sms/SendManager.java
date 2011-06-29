@@ -94,7 +94,10 @@ public class SendManager extends Service {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        String action = intent.getAction();
+        String action = "";
+        if (intent != null) {
+            action = intent.getAction();
+        }
         if (ACTION_SENT.equals(action)) {
             String number = intent.getStringExtra("number");
             String body = intent.getStringExtra("body");
