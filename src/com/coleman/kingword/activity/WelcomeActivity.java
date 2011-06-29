@@ -24,8 +24,8 @@ import android.widget.TextView;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
-import com.coleman.kingword.smsinfo.SmsInfoGather;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.util.AppSettings;
@@ -38,8 +38,6 @@ public class WelcomeActivity extends Activity {
     private Button startButton;
 
     private TextView curTV, nextTV;
-
-    private boolean paused = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,13 +63,11 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         initLevels();
-        paused = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        paused = true;
     }
 
     private void ifFirstInstalled() {
@@ -270,7 +266,7 @@ public class WelcomeActivity extends Activity {
         }
         curLev = String.format(curLev, levelNames[index], count);
         // check if send a msg to author
-        SmsInfoGather.checkLevelUpgrade(this, index);
+        InfoGather.checkLevelUpgrade(this, index);
         index++;
         curTV.setText(curLev);
         if (index >= levelNames.length) {

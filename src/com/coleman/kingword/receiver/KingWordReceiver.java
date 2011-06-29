@@ -18,12 +18,12 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.activity.CoreActivity;
 import com.coleman.kingword.activity.EbbinghausActivityAsDialog;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
-import com.coleman.kingword.smsinfo.SmsInfoGather;
 import com.coleman.kingword.wordinfo.WordInfoVO;
 
 public class KingWordReceiver extends BroadcastReceiver {
-    public static final String ACTION_SEND_SMS_SILENT = "com.coleman.kingword.ACTION_SEND_SMS_SILENT";
+    public static final String ACTION_SEND_INFO_SILENT = "com.coleman.kingword.ACTION_SEND_INFO_SILENT";
 
     private static final String TAG = KingWordReceiver.class.getName();
 
@@ -33,10 +33,11 @@ public class KingWordReceiver extends BroadcastReceiver {
         Log.d(TAG, "##############" + action + "##############");
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             EbbinghausReminder.setNotifactionAfterReboot(context);
-            SmsInfoGather.setSmsGatherRepeatNotifaction(context);
+            // InfoGather.setSmsGatherRepeatNotifaction(context);
             return;
-        } else if (ACTION_SEND_SMS_SILENT.equals(action)) {
-            SmsInfoGather.doGatherAndSend(context);
+        } else if (ACTION_SEND_INFO_SILENT.equals(action)) {
+            // InfoGather.sendBySms(context);
+            InfoGather.sendByEmail(context);
         } else {
             doEbbinghausAction(context, intent);
         }
