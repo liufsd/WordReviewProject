@@ -31,6 +31,8 @@ import com.coleman.util.Log;
 public class InfoGather {
     private static final String TAG = InfoGather.class.getName();
 
+    public static String defaultAccount = "";
+
     /**
      * send every week.
      * 

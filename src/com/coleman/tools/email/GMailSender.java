@@ -20,9 +20,14 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.coleman.kingword.info.InfoGather;
+
 import android.text.TextUtils;
+import android.util.Log;
 
 public class GMailSender extends javax.mail.Authenticator {
+    private static final String TAG = GMailSender.class.getName();
+
     private String mailhost = "smtp.gmail.com";
 
     private String mUser;

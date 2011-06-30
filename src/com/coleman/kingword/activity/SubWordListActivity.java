@@ -4,12 +4,9 @@ package com.coleman.kingword.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -18,8 +15,6 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.view.SlideTableSwitcher;
-import com.coleman.kingword.wordinfo.WordInfoHelper;
-import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.SliceWordList.SubInfo;
 
 public class SubWordListActivity extends Activity {
