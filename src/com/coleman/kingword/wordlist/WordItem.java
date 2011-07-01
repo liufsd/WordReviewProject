@@ -176,7 +176,7 @@ public class WordItem {
 
     public void studyOrReview(Context context) {
         if (sliceList.listType == SliceWordList.REVIEW_LIST) {
-            if (getCurrentStatus() instanceof CompleteState) {
+            if (getCurrentStatus() instanceof InitState) {
                 Log.d(TAG, "============review plus++");
                 reviewPlus(context);
             }
