@@ -96,7 +96,7 @@ public class InfoGather {
     public static void sendBySms(Context context) {
     }
 
-    private static String gatherDetail(Context context) {
+    public static String gatherDetail(Context context) {
         String msgBody = "";
         // 1. user phone info
         String phoneInfo = Build.MODEL;
@@ -141,7 +141,7 @@ public class InfoGather {
         return msgBody;
     }
 
-    private static String gatherSimple(Context context) {
+    public static String gatherSimple(Context context) {
         // 1. user phone info
         String phoneInfo = Build.MODEL;
 

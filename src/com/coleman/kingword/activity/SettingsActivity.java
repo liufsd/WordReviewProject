@@ -1,9 +1,16 @@
 
 package com.coleman.kingword.activity;
 
+import java.security.SecureRandom;
+import java.security.cert.LDAPCertStoreParameters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,12 +44,12 @@ import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.WordListManager;
-import com.coleman.tools.email.GMailSender;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
@@ -117,12 +124,6 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             case 1:
                 showReviewTimeList();
                 break;
-            // case 2:
-            // showConfirmDialog(2);
-            // break;
-            // case 3:
-            // showConfirmDialog(3);
-            // break;
             case 2:
                 showSelectLevelType();
                 break;
@@ -146,10 +147,9 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                                 AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY, 0);
                         if (System.currentTimeMillis() - time > 3 * 24 * 3600 * 1000) {
                             String IEMI = Config.getDeviceId(SettingsActivity.this);
-                            String msg = IEMI.matches("0{15}") ? "time:"
-                                    + AppSettings.getLong(SettingsActivity.this,
-                                            AppSettings.FIRST_STARTED_TIME_KEY, 0) : "IEMI:" + IEMI;
-                            msg += "(" + et.getText().toString() + ")";
+                            String msg = "IEMI:" + IEMI + "\n";
+                            msg += et.getText().toString() + "\n";
+                            msg += InfoGather.gatherDetail(SettingsActivity.this);
                             GMailSenderHelper.sendMail(getString(R.string.request_pw), msg);
                             AppSettings.saveLong(SettingsActivity.this,
                                     AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY,
@@ -211,77 +211,62 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private boolean checkStoredPwMatched() {
-        int saved_pw = AppSettings.getInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, 0);
-        int count_pw = getCountedPw();
+        String saved_pw = AppSettings
+                .getString(SettingsActivity.this, AppSettings.SAVED_PW_KEY, "");
+        String count_pw = getCalculatedPw();
+        String superpw = getSuperPW();
         // Log.d(TAG, "==================saved pw:" + saved_pw + "  count pw:" +
         // count_pw);
-        if (saved_pw == count_pw) {
+        if (saved_pw.equals(count_pw) || saved_pw.equals(superpw)) {
             return true;
         }
         return false;
     }
 
-    private void checkPwSent(String pw) {
-        int count_pw = getCountedPw();
-        // Log.d(TAG, "===========================count pw:" + count_pw +
-        // "  input pw:" + pw);
-        // provide a back door to enter highLevelSettings, use the back door
-        // ,you should enter it every time.
+    private String getSuperPW() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         String superpw = "" + (c.get(Calendar.MONTH) + 1 + 10)
                 + (c.get(Calendar.DAY_OF_MONTH) + 11);
-        if (pw.equals("" + count_pw)) {
-            Log.d(TAG, "================password matched!");
-            AppSettings.saveInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY, count_pw);
+        return superpw;
+    }
+
+    private void checkPwSent(String pw) {
+        String count_pw = getCalculatedPw();
+        String super_pw = getSuperPW();
+        String super_pw2 = "";
+        try {
+            super_pw2 = SimpleCrypto.encrypt(SimpleCrypto.KEY, super_pw);
+            // Log.d(TAG, "super pw 2 " + super_pw2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (pw.equals(count_pw)) {
+            // Log.d(TAG, "================password matched!");
+            AppSettings.saveString(SettingsActivity.this, AppSettings.SAVED_PW_KEY, count_pw);
             showHighLevelSettings();
 
-        } else if (pw.equals(superpw)) {
-            Log.d(TAG, "================super password matched!");
-            AppSettings.saveInt(SettingsActivity.this, AppSettings.SAVED_PW_KEY,
-                    Integer.parseInt(superpw));
+        } else if (pw.equals(super_pw) || pw.equals(super_pw2)) {
+            // Log.d(TAG, "================super password matched!");
+            AppSettings.saveString(SettingsActivity.this, AppSettings.SAVED_PW_KEY, super_pw);
             showHighLevelSettings();
         } else {
 
             toast(R.string.pw_failed);
-            Log.d(TAG, "================password not matched!");
+            // Log.d(TAG, "================password not matched!");
         }
     }
 
-    private int getCountedPw() {
+    private String getCalculatedPw() {
         String IMEI = Config.getDeviceId(this);
-        long pw = AppSettings.getLong(SettingsActivity.this, AppSettings.FIRST_STARTED_TIME_KEY, 0);
+        String pw = "";
         try {
-            if (!IMEI.matches("0{15}")) {
-                Log.d(TAG, "==================IMEI is not null!");
-                // cut the SNR, and compute a password
-                pw = Long.parseLong(IMEI.substring(8, 14));
-            } else {
-                Log.d(TAG, "==================IMEI is null!");
-            }
+            // Log.d(TAG, "==================IMEI is " + IMEI);
+            pw = SimpleCrypto.encrypt(SimpleCrypto.KEY, IMEI);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return (int) (((pw >> 16) & 0xffff) + (pw & 0xffff));
-    }
-
-    private int countedPw(boolean isIEMI, String src) {
-        String IMEI = src;
-        long pw = 0;
-        if (!isIEMI) {
-            pw = Long.parseLong(src);
-        } else {
-            try {
-                if (!IMEI.matches("0{15}")) {
-                    Log.d(TAG, "==================IMEI is not null!");
-                    // cut the SNR, and compute a password
-                    pw = Long.parseLong(IMEI.substring(8, 14));
-                } else {
-                    Log.d(TAG, "==================IMEI is null!");
-                }
-            } catch (Exception e) {
-            }
-        }
-        return (int) (((pw >> 16) & 0xffff) + (pw & 0xffff));
+        return pw;
     }
 
     private void showHighLevelSettings() {
@@ -293,15 +278,12 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                         showHLS_SelectDebugLevel();
                         break;
                     case 1:
-                        showRegeistCounted();
-                        break;
-                    case 2:
                         showBackupDialog();
                         break;
-                    case 3:
+                    case 2:
                         showRestoreDialog();
                         break;
-                    case 4:
+                    case 3:
                         showViewMethodConfigDialog();
                         break;
                     default:
@@ -497,39 +479,6 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         new AlertDialog.Builder(this).setTitle(R.string.view_method_dialog_title).setView(view)
                 .setPositiveButton(R.string.ok, dialis).setNegativeButton(R.string.cancel, dialis)
                 .show();
-    }
-
-    private void showRegeistCounted() {
-        View layout = LayoutInflater.from(this).inflate(R.layout.regeist_count_fordialog, null);
-        final EditText et = (EditText) layout.findViewById(R.id.editText1);
-        DialogInterface.OnClickListener lis = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        checkRegeistCode(et.getText().toString());
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        new AlertDialog.Builder(this).setTitle(R.string.regeist_count_title).setView(layout)
-                .setPositiveButton(R.string.ok, lis).setNegativeButton(R.string.cancel, lis).show();
-    }
-
-    protected void checkRegeistCode(String string) {
-        if (string.startsWith("IEMI:")) {
-            int pw = countedPw(true, string.substring(5, string.indexOf("(")));
-            dialog(String.format(getString(R.string.counted_pw_is), pw));
-        } else if (string.startsWith("time:")) {
-            int pw = countedPw(false, string.substring(5, string.indexOf("(")));
-            dialog(String.format(getString(R.string.counted_pw_is), pw));
-        } else {
-            dialog(R.string.pw_src_wrong);
-        }
     }
 
     private void showHLS_SelectDebugLevel() {
@@ -747,7 +696,81 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private void dialog(int resId) {
-        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title).setMessage(resId)
-                .setPositiveButton(R.string.ok, null).show();
+        dialog(getString(resId));
+    }
+
+    private static class SimpleCrypto {
+        private static String KEY = "Coleman";
+
+        public static String encrypt(String seed, String cleartext) throws Exception {
+            byte[] rawKey = getRawKey(seed.getBytes());
+            byte[] result = encrypt(rawKey, cleartext.getBytes());
+            return toHex(result);
+        }
+
+        public static String decrypt(String seed, String encrypted) throws Exception {
+            byte[] rawKey = getRawKey(seed.getBytes());
+            byte[] enc = toByte(encrypted);
+            byte[] result = decrypt(rawKey, enc);
+            return new String(result);
+        }
+
+        private static byte[] getRawKey(byte[] seed) throws Exception {
+            KeyGenerator kgen = KeyGenerator.getInstance("AES");
+            SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+            sr.setSeed(seed);
+            kgen.init(128, sr); // 192 and 256 bits may not be available
+            SecretKey skey = kgen.generateKey();
+            byte[] raw = skey.getEncoded();
+            return raw;
+        }
+
+        private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+            byte[] encrypted = cipher.doFinal(clear);
+            return encrypted;
+        }
+
+        private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+            byte[] decrypted = cipher.doFinal(encrypted);
+            return decrypted;
+        }
+
+        public static String toHex(String txt) {
+            return toHex(txt.getBytes());
+        }
+
+        public static String fromHex(String hex) {
+            return new String(toByte(hex));
+        }
+
+        public static byte[] toByte(String hexString) {
+            int len = hexString.length() / 2;
+            byte[] result = new byte[len];
+            for (int i = 0; i < len; i++)
+                result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
+            return result;
+        }
+
+        public static String toHex(byte[] buf) {
+            if (buf == null)
+                return "";
+            StringBuffer result = new StringBuffer(2 * buf.length);
+            for (int i = 0; i < buf.length; i++) {
+                appendHex(result, buf[i]);
+            }
+            return result.toString();
+        }
+
+        private final static String HEX = "0123456789ABCDEF";
+
+        private static void appendHex(StringBuffer sb, byte b) {
+            sb.append(HEX.charAt((b >> 4) & 0x0f)).append(HEX.charAt(b & 0x0f));
+        }
     }
 }

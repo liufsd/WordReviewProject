@@ -184,10 +184,6 @@
 	<string name="pw_successed">密码正确，认证成功！</string>
 	<string name="high_level_settings">高级安全设置</string>
 	<string name="msg_dialog_title">消息提示</string>
-	<string name="regeist_count_hint">请在下面输入用于计算注册码的密钥。</string>
-	<string name="regeist_count_title">计算注册码</string>
-	<string name="counted_pw_is" formatted="false">生成的密码是：%d</string>
-	<string name="pw_src_wrong">你输入的用于生成密码的Key格式错误!</string>
 
 	<string name="loop_info" formatted="false">第%d轮（%d/%d词）</string>
 
