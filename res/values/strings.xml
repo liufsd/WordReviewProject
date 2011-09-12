@@ -206,4 +206,6 @@
 	<string name="view_review_complete_title">复习</string>
 	<string name="view_newbook_complete_title">生词本学习</string>
 	<string name="view_ignore_complete_title">过滤列表学习</string>
+	
+	<string name="request_pw">申请密码</string>
 </resources>

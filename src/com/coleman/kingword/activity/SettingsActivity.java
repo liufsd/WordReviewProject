@@ -42,7 +42,8 @@ import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.wordlist.SliceWordList;
 import com.coleman.kingword.wordlist.WordListManager;
-import com.coleman.tools.sms.SendManager;
+import com.coleman.tools.email.GMailSender;
+import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.Log;
@@ -149,7 +150,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                                     + AppSettings.getLong(SettingsActivity.this,
                                             AppSettings.FIRST_STARTED_TIME_KEY, 0) : "IEMI:" + IEMI;
                             msg += "(" + et.getText().toString() + ")";
-                            SendManager.sendMessage(SettingsActivity.this, msg);
+                            GMailSenderHelper.sendMail(getString(R.string.request_pw), msg);
                             AppSettings.saveLong(SettingsActivity.this,
                                     AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY,
                                     System.currentTimeMillis());

@@ -18,7 +18,6 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.receiver.KingWordReceiver;
 import com.coleman.tools.email.GMailSenderHelper;
-import com.coleman.tools.sms.SendManager;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -90,10 +89,11 @@ public class InfoGather {
         }.start();
     }
 
+    /**
+     * @deprecated removed this implementation
+     * @param context
+     */
     public static void sendBySms(Context context) {
-        String msgBody = gatherSimple(context);
-        Log.d(TAG, "msgBody:" + msgBody);
-        SendManager.sendMessage(context, msgBody);
     }
 
     private static String gatherDetail(Context context) {
