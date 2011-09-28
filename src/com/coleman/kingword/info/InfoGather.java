@@ -15,9 +15,9 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.info.email.GMailSenderHelper;
 import com.coleman.kingword.provider.KingWord.WordInfo;
-import com.coleman.kingword.receiver.KingWordReceiver;
-import com.coleman.tools.email.GMailSenderHelper;
+import com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 

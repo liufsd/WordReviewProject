@@ -21,7 +21,7 @@ import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.provider.KingWord.WordListItem;
-import com.coleman.kingword.wordlist.WordList;
+import com.coleman.kingword.study.wordlist.model.WordList;
 
 public class KingWordProvider extends ContentProvider {
     private KingWordDBHepler dbHelper;

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:background="@color/cornsilk">
-	<com.coleman.kingword.view.SlideTableSwitcher
+	<com.coleman.kingword.study.unit.view.SlideTableSwitcher
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:id="@+id/viewSwitcher1" />
 	<View android:layout_width="wrap_content" android:layout_height="wrap_content"

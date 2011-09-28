@@ -41,7 +41,8 @@
 	<string name="backup_msg">备份后的数据保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
 	</string>
 	<string name="restore">恢复</string>
-	<string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？</string>
+	<string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？
+	</string>
 
 	<string name="welcome">Welcome to KingWord~</string>
 	<string name="about_dev">关于开发</string>
@@ -202,6 +203,10 @@
 	<string name="view_review_complete_title">复习</string>
 	<string name="view_newbook_complete_title">生词本学习</string>
 	<string name="view_ignore_complete_title">过滤列表学习</string>
-	
+
 	<string name="request_pw">申请密码</string>
+
+	<string name="version">版本号：</string>
+	<string name="mail">联系作者：</string>
+	<string name="copyright">Copyright@2009-2013 Kingword</string>
 </resources>
