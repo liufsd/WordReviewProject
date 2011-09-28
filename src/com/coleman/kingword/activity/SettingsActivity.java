@@ -1,6 +1,12 @@
 
 package com.coleman.kingword.activity;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.security.SecureRandom;
 import java.security.cert.LDAPCertStoreParameters;
 import java.util.ArrayList;
@@ -16,9 +22,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -45,6 +56,7 @@ import android.widget.Toast;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.info.InfoGather;
+import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.wordinfo.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
@@ -528,7 +540,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        WordInfoHelper.backupWordInfoDB(SettingsActivity.this, true);
+                        showBackupItems();
                         break;
                     default:
                         break;
@@ -540,13 +552,68 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 .setNegativeButton(R.string.cancel, listener).show();
     }
 
+    private void showBackupItems() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        backupDB(SettingsActivity.this, true);
+                        break;
+                    case 1:
+                        WordInfoHelper.backupWordInfoDB(SettingsActivity.this, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.backup).setItems(R.array.backup, listener)
+                .show();
+    }
+
+    private void backupDB(final Context context, final boolean toast) {
+        if (!Config.isExternalMediaMounted()) {
+            if (toast) {
+                Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            } else {
+                System.out.println("External media not mounted!");
+            }
+            return;
+        }
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (toast) {
+                    Toast.makeText(context.getApplicationContext(), "Backup successful!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println("Backup successful!");
+                }
+            }
+        };
+        new Thread() {
+            public void run() {
+                long time = System.currentTimeMillis();
+                try {
+                    Runtime.getRuntime()
+                            .exec("cp /data/data/com.coleman.kingword/databases/kingword.db /sdcard/kingword");
+                    handler.sendEmptyMessage(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("backup cost time: " + time);
+            }
+        }.start();
+    }
+
     private void showRestoreDialog() {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        WordInfoHelper.restoreWordInfoDB(SettingsActivity.this, true);
+                        showRestoreItems();
                         break;
                     default:
                         break;
@@ -556,6 +623,63 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         new AlertDialog.Builder(this).setTitle(R.string.restore).setMessage(R.string.restore_msg)
                 .setPositiveButton(R.string.ok, listener)
                 .setNegativeButton(R.string.cancel, listener).show();
+    }
+
+    private void showRestoreItems() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        restoreDB(SettingsActivity.this, true);
+                        break;
+                    case 1:
+                        WordInfoHelper.restoreWordInfoDB(SettingsActivity.this, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.restore)
+                .setItems(R.array.restore, listener).show();
+    }
+
+    public static void restoreDB(final Context context, final boolean toast) {
+        if (!Config.isExternalMediaMounted()) {
+            if (toast) {
+                Toast.makeText(context, "External media not mounted!", Toast.LENGTH_SHORT).show();
+            } else {
+                System.out.println("External media not mounted!");
+            }
+            return;
+        }
+
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (toast) {
+                    Toast.makeText(context.getApplicationContext(), "Restore successful!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println("Restore successful!");
+                }
+            }
+        };
+        new Thread() {
+            public void run() {
+                long time = System.currentTimeMillis();
+                try {
+                    Runtime.getRuntime()
+                            .exec("cp /sdcard/kingword/kingword.db /data/data/com.coleman.kingword/databases/");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                handler.sendEmptyMessage(0);
+                time = System.currentTimeMillis() - time;
+                System.out.println("restore cost time: " + time);
+            }
+        }.start();
     }
 
     private void showReviewTimeList() {

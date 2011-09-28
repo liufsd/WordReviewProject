@@ -81,8 +81,8 @@
 	</integer-array>
 	<string-array name="high_level_settings">
 		<item>调试等级</item>
-		<item>备份历史记录</item>
-		<item>恢复历史记录</item>
+		<item>备份数据</item>
+		<item>恢复数据</item>
 		<item>学习方式设定</item>
 	</string-array>
 	<string-array name="debug_level">
@@ -105,4 +105,13 @@
 		<item>查看简要</item>
 		<item>多项选择</item>
 	</string-array>
+	<string-array name="restore">
+		<item>恢复全部数据库</item>
+		<item>恢复学习历史记录</item>
+	</string-array>
+	<string-array name="backup">
+		<item>备份全部数据库</item>
+		<item>备份学习历史记录</item>
+	</string-array>
+
 </resources>

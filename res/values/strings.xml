@@ -37,11 +37,11 @@
 	<string name="hour">小时</string>
 	<string name="day">天</string>
 
-	<string name="backup">备份用户词库</string>
-	<string name="backup_msg">备份后的用户词库保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
+	<string name="backup">备份</string>
+	<string name="backup_msg">备份后的数据保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
 	</string>
-	<string name="restore">恢复用户词库</string>
-	<string name="restore_msg">恢复用户词库会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？</string>
+	<string name="restore">恢复</string>
+	<string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？</string>
 
 	<string name="welcome">Welcome to KingWord~</string>
 	<string name="about_dev">关于开发</string>

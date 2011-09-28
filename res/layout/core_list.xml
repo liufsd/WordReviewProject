@@ -40,8 +40,8 @@
 		<ImageView android:layout_width="fill_parent"
 			android:layout_height="2dp" android:background="@drawable/title_rect_line"></ImageView>
 	</LinearLayout>
-	<ListView android:layout_height="fill_parent" android:id="@+id/listView1"
-		android:layout_below="@id/linearLayout1" android:layout_above="@+id/linearLayout2"
+	<ListView android:layout_height="wrap_content" android:id="@+id/listView1"
+		android:layout_below="@id/linearLayout1"
 		android:layout_width="fill_parent" android:paddingLeft="5dp"
 		android:paddingRight="5dp"></ListView>
 	<Button android:id="@+id/countdown" android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
 		style="@android:style/Widget.ProgressBar" android:layout_height="wrap_content"
 		android:id="@+id/progressBarNight2"></ProgressBar>
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_alignParentBottom="true" android:id="@id/linearLayout2"
+		android:layout_alignParentBottom="true" android:id="@+id/linearLayout2"
 		android:layout_height="wrap_content" android:orientation="horizontal"
 		style="@style/ButtonBarPadding" android:background="@android:drawable/bottom_bar">
 		<Button android:id="@+id/viewWord" android:layout_width="wrap_content"
