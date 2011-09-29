@@ -18,16 +18,25 @@
 
 package com.coleman.kingword.dict.stardict;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.database.Cursor;
+import android.os.Environment;
+import android.util.Log;
 
+import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
+import com.coleman.kingword.provider.KingWord.IDictIndex;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
+import com.coleman.util.Config;
 import com.coleman.util.ConvertUtils;
 
 /**
@@ -45,6 +54,8 @@ import com.coleman.util.ConvertUtils;
  */
 public class DictIndex {
 
+    private static final String TAG = DictIndex.class.getName();
+
     /**
      * word string
      */
@@ -60,7 +71,7 @@ public class DictIndex {
      */
     public int size;
 
-    public DictIndex() {
+    private DictIndex() {
     }
 
     public DictIndex(String word, long offset, int size) {
@@ -74,57 +85,10 @@ public class DictIndex {
         return word + "\t" + offset + "\t" + size;
     }
 
-    static HashMap<String, DictIndex> loadDictIndexMap(Context context, String indexFileName,
+    static void loadDictIndexMap(DictLibrary lib, Context context, String indexFileName,
             int numCount) {
         HashMap<String, DictIndex> wordmap = new HashMap<String, DictIndex>();
-        readIndexFileNative(context, indexFileName, numCount, wordmap);
-        return wordmap;
-    }
-
-    /**
-     * If you try to load too many data from the database, error will happened.
-     * 
-     * @deprecated
-     */
-    static void readIndexFileDB(Context context, String indexFileName,
-            HashMap<String, DictIndex> wordmap) {
-        Cursor c = null;
-        if (indexFileName.startsWith(DictLibrary.STARDICT)) {
-            String projection[] = new String[] {
-                    StarDictIndex._ID, StarDictIndex.WORD, StarDictIndex.OFFSET, StarDictIndex.SIZE
-            };
-            c = context.getContentResolver().query(StarDictIndex.CONTENT_URI, projection, null,
-                    null, null);
-            if (c.moveToFirst()) {
-                while (!c.isAfterLast()) {
-                    DictIndex di = new DictIndex();
-                    di.word = c.getString(1);
-                    di.offset = c.getLong(2);
-                    di.size = c.getInt(3);
-                    wordmap.put(di.word, di);
-                    c.moveToNext();
-                }
-                c.close();
-            }
-        } else if (indexFileName.startsWith(DictLibrary.OXFORD_PATH)) {
-            String projection[] = new String[] {
-                    OxfordDictIndex._ID, OxfordDictIndex.WORD, OxfordDictIndex.OFFSET,
-                    OxfordDictIndex.SIZE
-            };
-            c = context.getContentResolver().query(OxfordDictIndex.CONTENT_URI, projection, null,
-                    null, null);
-            if (c.moveToFirst()) {
-                while (!c.isAfterLast()) {
-                    DictIndex di = new DictIndex();
-                    di.word = c.getString(1);
-                    di.offset = c.getLong(2);
-                    di.size = c.getInt(3);
-                    wordmap.put(di.word, di);
-                    c.moveToNext();
-                }
-                c.close();
-            }
-        }
+        readIndexFileNative(lib, context, indexFileName, numCount, wordmap);
     }
 
     /**
@@ -134,32 +98,59 @@ public class DictIndex {
      * @throws java.io.FileNotFoundException
      * @see cn.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
-    private static void readIndexFileNative(Context context, String indexFileName, int numCount,
-            HashMap<String, DictIndex> wordmap) {
+    private static void readIndexFileNative(DictLibrary lib, Context context, String indexFileName,
+            int numCount, HashMap<String, DictIndex> wordmap) {
+        long time = System.currentTimeMillis();
         InputStream reader = null;
         try {
-            reader = context.getAssets().open(indexFileName, AssetManager.ACCESS_RANDOM);
+            if (!Config.THIN_VERSION) {
+                reader = context.getAssets().open(indexFileName, AssetManager.ACCESS_RANDOM);
+            } else {
+                reader = new FileInputStream(Environment.getExternalStorageDirectory()
+                        .getAbsolutePath() + File.separator + indexFileName);
+            }
             // the maximun length of a word must less 256
             // 256 bytes(word) + 1 byte('\0') + 4 bytes(offset) + 4 bytes(def
             // size)
             byte[] bytes = new byte[256 + 1 + 4 + 4];
             int mark = 0;
+            String word = null;
+            long offset = 0; // offset of a word in data file
+            long size = 0; // size of word's definition
+            // the num of records inserted to the DB
+            final int INSERT_NUMBER = 500;
+            // count the total number insert to the DB.
+            int count = 0;
             while ((mark != 0 ? reader.read(bytes, bytes.length - mark, mark) : reader.read(bytes,
                     0, bytes.length)) != -1) {
-                String word = null;
-                long offset = 0; // offset of a word in data file
-                long size = 0; // size of word's definition
                 mark = 0;
+                word = null;
+                offset = 0;
+                size = 0;
+                DictIndex dictIndex;
                 for (int i = 0; i < bytes.length && wordmap.size() < numCount; i++) {
                     if (bytes[i] == 0 && i < bytes.length - 9) {
                         word = new String(bytes, mark, i - mark, "UTF-8");
                         offset = ConvertUtils.unsigned4BytesToInt(bytes, i + 1);
                         size = ConvertUtils.unsigned4BytesToInt(bytes, i + 5);
-                        DictIndex dictIndex = new DictIndex();
+                        dictIndex = new DictIndex();
                         dictIndex.word = word;
                         dictIndex.offset = offset;
                         dictIndex.size = (int) size;
                         wordmap.put(word, dictIndex);
+                        if (wordmap.size() % INSERT_NUMBER == 0) {
+                            Log.d(TAG,
+                                    "============insert "
+                                            + count
+                                            + " ~ "
+                                            + (count + INSERT_NUMBER)
+                                            + " records of "
+                                            + indexFileName.substring(indexFileName
+                                                    .lastIndexOf("/")) + " to the DB ");
+                            count += INSERT_NUMBER;
+                            doInsert(context, indexFileName, wordmap);
+                            wordmap.clear();
+                        }
                         mark = i + 9;
                         i += 9;
                     }
@@ -172,7 +163,17 @@ public class DictIndex {
 
                 }
             }
+            if (wordmap.size() > 0) {
+                Log.d(TAG, "============insert " + count + " ~ " + (count + wordmap.size())
+                        + " records of " + indexFileName.substring(indexFileName.lastIndexOf("/"))
+                        + " to the DB ");
+                count += wordmap.size();
+                doInsert(context, indexFileName, wordmap);
+                wordmap.clear();
+            }
             reader.close();
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
@@ -181,6 +182,34 @@ public class DictIndex {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+
+        // save the settings preference.
+        lib.setComplete(context);
+
+        time = System.currentTimeMillis() - time;
+        System.out
+                .println(indexFileName + " insert dict indexs to the database cost time: " + time);
+    }
+
+    private static void doInsert(Context context, String indexFileName,
+            HashMap<String, DictIndex> wordmap) {
+        Collection<DictIndex> col = wordmap.values();
+        int i = 0;
+        ContentValues[] values = new ContentValues[col.size()];
+        for (DictIndex dictIndex : col) {
+            values[i] = new ContentValues();
+            values[i].put(IDictIndex.WORD, dictIndex.word);
+            values[i].put(IDictIndex.OFFSET, dictIndex.offset);
+            values[i].put(IDictIndex.SIZE, dictIndex.size);
+            i++;
+        }
+        if (indexFileName.startsWith(DictLibrary.STARDICT_PATH)) {
+            context.getContentResolver().bulkInsert(StarDictIndex.CONTENT_URI, values);
+        } else if (indexFileName.startsWith(DictLibrary.OXFORD_PATH)) {
+            context.getContentResolver().bulkInsert(OxfordDictIndex.CONTENT_URI, values);
+        } else if (indexFileName.startsWith(DictLibrary.BABYLON_PATH)) {
+            context.getContentResolver().bulkInsert(BabylonEnglishIndex.CONTENT_URI, values);
         }
     }
 }

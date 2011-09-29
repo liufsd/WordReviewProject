@@ -58,6 +58,8 @@ public class AppSettings {
 
     public static final String VIEW_METHOD_KEY = "view_method";
 
+    public static final String LANGUAGE_TYPE = "explain_language_type";
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);

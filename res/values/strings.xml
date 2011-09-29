@@ -209,4 +209,6 @@
 	<string name="version">版本号：</string>
 	<string name="mail">联系作者：</string>
 	<string name="copyright">Copyright@2009-2013 Kingword</string>
+	
+	<string name="language_settings">释义语言</string>
 </resources>

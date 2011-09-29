@@ -1,14 +1,8 @@
 
 package com.coleman.kingword.study;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.security.SecureRandom;
-import java.security.cert.LDAPCertStoreParameters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,12 +16,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.HideReturnsTransformationMethod;
@@ -54,13 +45,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.info.email.GMailSenderHelper;
-import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.study.unit.model.SliceWordList;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.InitState;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.MultipleState;
+import com.coleman.kingword.study.unit.model.SliceWordList;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordlist.model.WordListManager;
 import com.coleman.util.AppSettings;
@@ -298,6 +290,9 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                     case 3:
                         showViewMethodConfigDialog();
                         break;
+                    case 4:
+                        showLanguageDialog();
+                        break;
                     default:
                         break;
                 }
@@ -307,6 +302,32 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         };
         new AlertDialog.Builder(this).setTitle(R.string.high_level_settings)
                 .setItems(R.array.high_level_settings, listener)
+                .setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void showLanguageDialog() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        DictManager.getInstance().setCurLibrary(DictLibrary.STARDICT);
+                        AppSettings.saveInt(SettingsActivity.this, AppSettings.LANGUAGE_TYPE, 0);
+                        break;
+                    case 1:
+                        DictManager.getInstance().setCurLibrary(DictLibrary.BABYLON_ENG);
+                        AppSettings.saveInt(SettingsActivity.this, AppSettings.LANGUAGE_TYPE, 1);
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+
+        };
+        int index = AppSettings.getInt(this, AppSettings.LANGUAGE_TYPE, 0);
+        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
+                .setSingleChoiceItems(R.array.language_settings, index, listener)
                 .setNegativeButton(R.string.cancel, null).show();
     }
 

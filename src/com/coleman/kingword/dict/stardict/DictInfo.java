@@ -19,12 +19,17 @@
 package com.coleman.kingword.dict.stardict;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.coleman.util.Config;
+
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 
 /**
  * Dictionary information
@@ -85,9 +90,14 @@ public class DictInfo {
     public static DictInfo readDicInfo(Context context, String ifoFileName) {
         InputStream is = null;
         try {
-            is = context.getAssets().open(ifoFileName, AssetManager.ACCESS_RANDOM);
-            InputStreamReader reader= new InputStreamReader(is);
-            BufferedReader br= new BufferedReader(reader);
+            if (!Config.THIN_VERSION) {
+                is = context.getAssets().open(ifoFileName, AssetManager.ACCESS_RANDOM);
+            } else {
+                is = new FileInputStream(Environment.getExternalStorageDirectory()
+                        .getAbsolutePath() + File.separator + ifoFileName);
+            }
+            InputStreamReader reader = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(reader);
             String line;
             String bookName = null;
             String wordCount = null;

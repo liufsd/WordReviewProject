@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Context;
+
+import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 import com.coleman.kingword.dict.stardict.DictData;
@@ -12,6 +14,7 @@ import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.dict.stardict.DictLibraryFactory;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
+import com.coleman.kingword.study.SettingsActivity;
 
 /**
  * Manager the dictionary, there are two kinds of files 1.the stardict
@@ -56,11 +59,29 @@ public class DictManager {
      * been initialed.
      */
     public void initLibrary(Context context) {
+
+        // initial the current library
+        int type = AppSettings.getInt(context, AppSettings.LANGUAGE_TYPE, 0);
+        Log.d(TAG, "===========Dict type: "+type);
+        switch (type) {
+            case 0:
+                setCurLibrary(DictLibrary.STARDICT);
+                break;
+            case 1:
+                setCurLibrary(DictLibrary.BABYLON_ENG);
+                break;
+            default:
+                // ignore
+                break;
+        }
+
+        // load library
         long time = System.currentTimeMillis();
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
             factory.loadLibrary(context, DictLibrary.STARDICT, libmap);
             factory.loadLibrary(context, DictLibrary.OXFORD, libmap);
+            factory.loadLibrary(context, DictLibrary.BABYLON_ENG, libmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,48 +89,17 @@ public class DictManager {
         System.out.println("Load library cost time: " + time);
     }
 
-    public void chooseLibrary(long id) {
+    public void setCurLibrary(String libKey) {
+        curLib = libKey;
     }
 
-    public void cutLibrary(CutMethod method) {
-    }
-
-    public void deleteLibrary(long id) {
-    }
-
-    public void viewLibraryAchievement(long id) {
-    }
-
-    public void viewLibrarySummaryInfo(long id) {
-    }
-
-    /**********************************************************************
-     * operate unit
-     **********************************************************************/
-    public void initUnit(long id) {
-    }
-
-    /**
-     * @param id unit id
-     * @param viewType default type is not involving skip list
-     */
-    public void viewUnit(long id, ViewType type) {
-    }
-
-    public void viewUnitAchievement(long id) {
-    }
-
-    public void viewUnitSummaryInfo(long id) {
+    public boolean isBabylonEn() {
+        return DictLibrary.BABYLON_ENG.equals(curLib);
     }
 
     /**********************************************************************
      * operate word
      **********************************************************************/
-    public void moveToSkipList(DictIndex dici) {
-    }
-
-    public void moveToNewWordList(DictIndex dici) {
-    }
 
     public DictData viewWord(Context context, String word) {
         DictLibrary library = libmap.get(curLib);
@@ -122,10 +112,9 @@ public class DictManager {
             Log.w(TAG, "not found!");
             return DictData.constructData(word + ": not found!");
         }
-        Log.d(TAG, word + ":" + index + ":");
         DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
                 library.getLibraryName());
-        Log.d(TAG, "" + wordData);
+        Log.d(TAG, word + " >>> " + wordData);
         return wordData;
     }
 

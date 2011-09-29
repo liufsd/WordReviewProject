@@ -3,13 +3,16 @@ package com.coleman.kingword.dict.stardict;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import com.coleman.util.Config;
 import com.coleman.util.ConvertUtils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.text.TextUtils;
 import com.coleman.util.Log;
 
@@ -112,7 +115,12 @@ public class DictData {
         DataInputStream reader;
         try {
             bytes = new byte[size];
-            is = context.getAssets().open(fileName, AssetManager.ACCESS_RANDOM);
+            if (!Config.THIN_VERSION) {
+                is = context.getAssets().open(fileName, AssetManager.ACCESS_RANDOM);
+            } else {
+                is = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                        + fileName);
+            }
             reader = new DataInputStream(is);
             // System.out.println("size:" + reader.available() + "   data size:"
             // + size);

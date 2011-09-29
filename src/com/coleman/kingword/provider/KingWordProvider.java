@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import com.coleman.util.Log;
 
 import com.coleman.kingword.provider.KingWord.Achievement;
+import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
@@ -57,6 +58,10 @@ public class KingWordProvider extends ContentProvider {
 
     private static final int URI_WORDLISTITEM_ID = 14;
 
+    private static final int URI_BABYLONENGLISH = 15;
+
+    private static final int URI_BABYLONENGLISH_ID = 16;
+
     private static final String TAG = KingWordProvider.class.getName();
 
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -64,6 +69,10 @@ public class KingWordProvider extends ContentProvider {
 
         matcher.addURI(AUTHORITY, StarDictIndex.TABLE_NAME, URI_STARDICT);
         matcher.addURI(AUTHORITY, StarDictIndex.TABLE_NAME + File.separator + "#", URI_STARDICT_ID);
+
+        matcher.addURI(AUTHORITY, BabylonEnglishIndex.TABLE_NAME, URI_BABYLONENGLISH);
+        matcher.addURI(AUTHORITY, BabylonEnglishIndex.TABLE_NAME + File.separator + "#",
+                URI_BABYLONENGLISH_ID);
 
         matcher.addURI(AUTHORITY, OxfordDictIndex.TABLE_NAME, URI_OXFORDDICT);
         matcher.addURI(AUTHORITY, OxfordDictIndex.TABLE_NAME + File.separator + "#",
@@ -101,6 +110,9 @@ public class KingWordProvider extends ContentProvider {
         switch (matcher.match(uri)) {
             case URI_STARDICT:
                 tableName = StarDictIndex.TABLE_NAME;
+                break;
+            case URI_BABYLONENGLISH:
+                tableName = BabylonEnglishIndex.TABLE_NAME;
                 break;
             case URI_OXFORDDICT:
                 tableName = OxfordDictIndex.TABLE_NAME;
@@ -220,6 +232,15 @@ public class KingWordProvider extends ContentProvider {
                 qb.setTables(StarDictIndex.TABLE_NAME);
                 qb.setProjectionMap(StarDictIndex.projectionMap);
                 qb.appendWhere(StarDictIndex._ID + "=" + uri.getPathSegments().get(1));
+                break;
+            case URI_BABYLONENGLISH:
+                qb.setTables(BabylonEnglishIndex.TABLE_NAME);
+                qb.setProjectionMap(BabylonEnglishIndex.projectionMap);
+                break;
+            case URI_BABYLONENGLISH_ID:
+                qb.setTables(BabylonEnglishIndex.TABLE_NAME);
+                qb.setProjectionMap(BabylonEnglishIndex.projectionMap);
+                qb.appendWhere(BabylonEnglishIndex._ID + "=" + uri.getPathSegments().get(1));
                 break;
             case URI_OXFORDDICT:
                 qb.setTables(OxfordDictIndex.TABLE_NAME);

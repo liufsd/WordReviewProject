@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
@@ -144,10 +145,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
             case SliceWordList.REVIEW_LIST:
-                DictManager dictm = DictManager.getInstance();
-                if (!dictm.isInitialized()) {
-                    dictm.initLibrary(this);
-                }
+                startService(new Intent(this, DictLoadService.class));
                 wordlist = new SliceWordList(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
@@ -790,9 +788,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             layout.setBackgroundDrawable(bg);
             tv.setTypeface(mFace);
             DictData data = list.get(position);
-            Log.d(TAG, "data:" + data);
             if (data != null) {
-                if (nextWordItem.showSymbol()) {
+                if (DictManager.getInstance().isBabylonEn()) {
+                    tv.setText(Html.fromHtml(data.getDatas()));
+                } else if (nextWordItem.showSymbol()) {
                     tv.setText(data.getDataAndSymbol());
                 } else {
                     tv.setText(data.getDatas());
@@ -800,7 +799,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             }
             return v;
         }
-
     }
 
     private class BGDrawable extends StateListDrawable {

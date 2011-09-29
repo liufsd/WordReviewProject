@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
@@ -54,10 +55,11 @@ public class WelcomeActivity extends Activity {
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                DictManager.getInstance().initLibrary(WelcomeActivity.this);
                 startActivity(new Intent(WelcomeActivity.this, WordListActivity.class));
             }
         });
+        // start a service to load library.
+        startService(new Intent(this, DictLoadService.class));
         // _DEL_REPEAT_WORDS();
         ifFirstInstalled();
     }
@@ -166,7 +168,8 @@ public class WelcomeActivity extends Activity {
         TextView tv5 = (TextView) view.findViewById(R.id.textView5);
         tv3.setText(Build.VERSION.RELEASE);
         tv5.setText("zouyuefu@gmail.com");
-        new AlertDialog.Builder(this).setTitle(R.string.about).setView(view).setPositiveButton(R.string.ok, null).show();
+        new AlertDialog.Builder(this).setTitle(R.string.about).setView(view)
+                .setPositiveButton(R.string.ok, null).show();
     }
 
     /**

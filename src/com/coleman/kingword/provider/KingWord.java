@@ -45,6 +45,28 @@ public class KingWord {
         }
     }
 
+    public static final class BabylonEnglishIndex implements BaseColumns, IDictIndex {
+
+        // table name
+        public static final String TABLE_NAME = "babylon_english_index";
+
+        // content uri
+        public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
+                + File.separator + TABLE_NAME);
+
+        // default sort order
+        public static final String DEFAULT_SORT_ORDER = WORD + " asc";
+
+        // projection map , used for query builder
+        public static HashMap<String, String> projectionMap = new HashMap<String, String>();
+        static {
+            projectionMap.put(_ID, _ID);
+            projectionMap.put(WORD, WORD);
+            projectionMap.put(OFFSET, OFFSET);
+            projectionMap.put(SIZE, SIZE);
+        }
+    }
+
     public static final class OxfordDictIndex implements BaseColumns, IDictIndex {
 
         // table name
@@ -88,10 +110,10 @@ public class KingWord {
         public static final String WEIGHT = "weight";
 
         public static final String NEW_WORD = "new_word";
-        
-        public static final String REVIEW_TYPE="review_type";
-        
-        public static final String REVIEW_TIME="review_time";
+
+        public static final String REVIEW_TYPE = "review_type";
+
+        public static final String REVIEW_TIME = "review_time";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";

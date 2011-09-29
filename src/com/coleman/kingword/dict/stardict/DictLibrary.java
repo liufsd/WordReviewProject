@@ -8,35 +8,36 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import com.coleman.util.Log;
 
+import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
 import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
 import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 public class DictLibrary {
+    private static final String TAG = DictLibrary.class.getName();
+
     public static final String OXFORD = "oxford";
 
     public static final String STARDICT = "stardict";
+
+    public static final String BABYLON_ENG = "babylon";
 
     public static final String OXFORD_PATH = "kingword/dicts/oxford-gb-formated";
 
     public static final String STARDICT_PATH = "kingword/dicts/stardict1.3";
 
-    private static final String TAG = DictLibrary.class.getName();
+    public static final String BABYLON_PATH = "kingword/dicts/Babylon_English";
 
     private DictInfo libraryInfo;
 
-    private HashMap<String, DictIndex> libraryWordMap;
+    private String mLibKey;
 
     private String libraryName;
 
     private boolean dbInitialed;
-
-    private boolean ready;
-
-    private WorkNotifier notifier;
 
     /**
      * If a DictLibrary is constructed, it will do inserting data to database
@@ -44,13 +45,13 @@ public class DictLibrary {
      * after all these thing done, a mark will be set to indicate database
      * initialed.
      */
-    DictLibrary(final Context context, final String libKey, WorkNotifier notifier) {
+    DictLibrary(final Context context, final String libKey) {
+        this.mLibKey = libKey;
         this.dbInitialed = AppSettings.getBoolean(context, libKey, false);
-        this.notifier = notifier;
         if (!dbInitialed) {
-            new LoadAndInsert(context, libKey).execute();
+            new LoadAndInsert().doWork(this, context, libKey);
         } else {
-            new LoadInfo(context, libKey).execute();
+            new LoadInfo().doWork(context, libKey);
         }
     }
 
@@ -58,15 +59,8 @@ public class DictLibrary {
         return libraryInfo;
     }
 
-    public boolean isReady() {
-        return ready;
-    }
-
     public DictIndex getDictIndex(Context context, String word) {
         DictIndex di = null;
-        if (!ready) {
-            return null;
-        }
         String[] projection = new String[] {
                 IDictIndex.WORD, IDictIndex.OFFSET, IDictIndex.SIZE
         };
@@ -74,7 +68,8 @@ public class DictLibrary {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
                     OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
-                            : StarDictIndex.CONTENT_URI, projection,
+                            : (STARDICT_PATH.equals(libraryName) ? StarDictIndex.CONTENT_URI
+                                    : BabylonEnglishIndex.CONTENT_URI), projection,
                     IDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
@@ -101,8 +96,6 @@ public class DictLibrary {
             }
             time = System.currentTimeMillis() - time;
             Log.d(TAG, "Query the word from the database cost time: " + time);
-        } else {
-            di = libraryWordMap.get(word);
         }
         return di;
     }
@@ -111,138 +104,59 @@ public class DictLibrary {
         return libraryName;
     }
 
-    private boolean isExist(Context context, String libKey) {
-        boolean exist = false;
-        Cursor c = context.getContentResolver().query(
-                STARDICT.equals(libKey) ? StarDictIndex.CONTENT_URI : OxfordDictIndex.CONTENT_URI,
-                null, "_id = 1", null, null);
-        if (c.moveToFirst()) {
-            exist = true;
-        }
-        if (c != null) {
-            c.close();
-            c = null;
-        }
-        return exist;
+    public void setComplete(Context context) {
+        dbInitialed = true;
+        AppSettings.saveBoolean(context, mLibKey, true);
     }
 
-    private class LoadInfo extends AsyncTask<Void, Void, Void> {
-        private Context context;
+    private class LoadInfo {
 
-        private String libKey;
-
-        public LoadInfo(Context context, String libKey) {
-            this.context = context;
-            this.libKey = libKey;
+        private LoadInfo() {
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
+        protected void doWork(Context context, String libKey) {
             if (DictLibrary.STARDICT.equals(libKey)) {
                 libraryName = STARDICT_PATH;
                 libraryInfo = DictInfo.readDicInfo(context, STARDICT_PATH + ".ifo");
             } else if (DictLibrary.OXFORD.equals(libKey)) {
                 libraryName = OXFORD_PATH;
                 libraryInfo = DictInfo.readDicInfo(context, OXFORD_PATH + ".ifo");
+            } else if (DictLibrary.BABYLON_ENG.equals(libKey)) {
+                libraryName = BABYLON_PATH;
+                libraryInfo = DictInfo.readDicInfo(context, BABYLON_PATH + ".ifo");
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }
             Log.d(TAG, "lib info:" + libraryInfo);
-            return null;
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            ready = true;
-            notifier.done(true);
-        }
     }
 
-    private class LoadAndInsert extends AsyncTask<Void, Void, Void> {
-        private Context context;
+    private class LoadAndInsert {
 
-        private String libKey;
-
-        public LoadAndInsert(Context context, String libKey) {
-            this.context = context;
-            this.libKey = libKey;
+        private LoadAndInsert() {
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
+        protected void doWork(DictLibrary diclib, Context context, String libKey) {
             if (DictLibrary.STARDICT.equals(libKey)) {
                 libraryName = STARDICT_PATH;
                 libraryInfo = DictInfo.readDicInfo(context, STARDICT_PATH + ".ifo");
-                libraryWordMap = DictIndex.loadDictIndexMap(context, STARDICT_PATH + ".idx",
+                DictIndex.loadDictIndexMap(diclib, context, STARDICT_PATH + ".idx",
                         Integer.parseInt(libraryInfo.wordCount));
-                ready = true;
             } else if (DictLibrary.OXFORD.equals(libKey)) {
                 libraryName = OXFORD_PATH;
                 libraryInfo = DictInfo.readDicInfo(context, OXFORD_PATH + ".ifo");
-                libraryWordMap = DictIndex.loadDictIndexMap(context, OXFORD_PATH + ".idx", Integer
-                        .parseInt(libraryInfo.wordCount));
-                ready = true;
+                DictIndex.loadDictIndexMap(diclib, context, OXFORD_PATH + ".idx",
+                        Integer.parseInt(libraryInfo.wordCount));
+            } else if (DictLibrary.BABYLON_ENG.equals(libKey)) {
+                libraryName = BABYLON_PATH;
+                libraryInfo = DictInfo.readDicInfo(context, BABYLON_PATH + ".ifo");
+                DictIndex.loadDictIndexMap(diclib, context, BABYLON_PATH + ".idx",
+                        Integer.parseInt(libraryInfo.wordCount));
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }
-            doInsert();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            dbInitialed = true;
-            libraryWordMap.clear();
-            AppSettings.saveBoolean(context, libKey, true);
-            notifier.done(true);
-        }
-
-        private void doInsert() {
-            long time = System.currentTimeMillis();
-            if (isExist(context, libKey)) {
-                AppSettings.saveBoolean(context, libKey, true);
-                return;
-            }
-            Collection<DictIndex> col = libraryWordMap.values();
-            int size = col.size();
-            Log.d(TAG, "total word list size: " + size);
-            int count = 0;
-            int i = 0;
-            int left = 0;
-            ContentValues[] values = new ContentValues[500];
-            for (DictIndex dictIndex : col) {
-                values[i] = new ContentValues();
-                values[i].put(StarDictIndex.WORD, dictIndex.word);
-                values[i].put(StarDictIndex.OFFSET, dictIndex.offset);
-                values[i].put(StarDictIndex.SIZE, dictIndex.size);
-                i++;
-                count++;
-                if (i == 500) {
-                    i = 0;
-                    if (libKey.equals(DictLibrary.STARDICT)) {
-                        context.getContentResolver().bulkInsert(StarDictIndex.CONTENT_URI, values);
-                    } else if (libKey.equals(DictLibrary.OXFORD)) {
-                        context.getContentResolver()
-                                .bulkInsert(OxfordDictIndex.CONTENT_URI, values);
-                    }
-                    continue;
-                }
-                if (count == size && (left = count % 500) != 0) {
-                    ContentValues[] copy = new ContentValues[left];
-                    System.arraycopy(values, 0, copy, 0, left);
-                    if (libKey.equals(DictLibrary.STARDICT)) {
-                        context.getContentResolver().bulkInsert(StarDictIndex.CONTENT_URI, copy);
-                    } else if (libKey.equals(DictLibrary.OXFORD)) {
-                        context.getContentResolver().bulkInsert(OxfordDictIndex.CONTENT_URI, copy);
-                    }
-                }
-            }
-            time = System.currentTimeMillis() - time;
-            System.out.println(libKey + " insert dict indexs to the database cost time: " + time);
         }
     }
 
-    public static interface WorkNotifier {
-        void done(boolean done);
-    }
 }
