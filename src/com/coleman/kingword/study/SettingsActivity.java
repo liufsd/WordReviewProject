@@ -290,9 +290,6 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                     case 3:
                         showViewMethodConfigDialog();
                         break;
-                    case 4:
-                        showLanguageDialog();
-                        break;
                     default:
                         break;
                 }
@@ -305,31 +302,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 .setNegativeButton(R.string.cancel, null).show();
     }
 
-    private void showLanguageDialog() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        DictManager.getInstance().setCurLibrary(DictLibrary.STARDICT);
-                        AppSettings.saveInt(SettingsActivity.this, AppSettings.LANGUAGE_TYPE, 0);
-                        break;
-                    case 1:
-                        DictManager.getInstance().setCurLibrary(DictLibrary.BABYLON_ENG);
-                        AppSettings.saveInt(SettingsActivity.this, AppSettings.LANGUAGE_TYPE, 1);
-                        break;
-                    default:
-                        break;
-                }
-                dialog.dismiss();
-            }
-
-        };
-        int index = AppSettings.getInt(this, AppSettings.LANGUAGE_TYPE, 0);
-        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
-                .setSingleChoiceItems(R.array.language_settings, index, listener)
-                .setNegativeButton(R.string.cancel, null).show();
-    }
+   
 
     private void mapIntToStr(ArrayList<Integer> intlist, ArrayList<String> strlist) {
         strlist.clear();

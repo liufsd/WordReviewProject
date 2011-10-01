@@ -118,7 +118,7 @@ public class DictIndex {
             long offset = 0; // offset of a word in data file
             long size = 0; // size of word's definition
             // the num of records inserted to the DB
-            final int INSERT_NUMBER = 500;
+            final int INSERT_NUMBER = 1000;
             // count the total number insert to the DB.
             int count = 0;
             while ((mark != 0 ? reader.read(bytes, bytes.length - mark, mark) : reader.read(bytes,

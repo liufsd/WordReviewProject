@@ -28,11 +28,6 @@ public class SubWordListActivity extends Activity {
      */
     private ProgressBar preProgress;
 
-    /**
-     * This view do nothing, just to occupy the residual space.
-     */
-    private View emptyView;
-
     private SlideTableSwitcher mSwitcher;
 
     private PageControl pageControl;
@@ -61,7 +56,6 @@ public class SubWordListActivity extends Activity {
         mSwitcher = (SlideTableSwitcher) findViewById(R.id.viewSwitcher1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         preProgress = (ProgressBar) findViewById(R.id.progressBar2);
-        emptyView = findViewById(R.id.view1);
     }
 
     private class ExpensiveTask extends AsyncTask<Bundle, Void, Void> {
@@ -78,7 +72,6 @@ public class SubWordListActivity extends Activity {
             switch (type) {
                 case INIT_QUERY:
                     progressBar.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
                     preProgress.setVisibility(View.VISIBLE);
                     break;
                 default:// ignore
@@ -122,7 +115,6 @@ public class SubWordListActivity extends Activity {
             switch (type) {
                 case INIT_QUERY:
                     progressBar.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
                     preProgress.setVisibility(View.GONE);
                     SubInfo[] sub_ids = pageControl.getPageInfo();
                     mSwitcher.showCurrentScreen(sub_ids);

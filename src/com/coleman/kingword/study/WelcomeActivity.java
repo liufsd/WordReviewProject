@@ -1,18 +1,17 @@
 
 package com.coleman.kingword.study;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
-import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
@@ -166,8 +164,16 @@ public class WelcomeActivity extends Activity {
         View view = LayoutInflater.from(this).inflate(R.layout.about, null);
         TextView tv3 = (TextView) view.findViewById(R.id.textView3);
         TextView tv5 = (TextView) view.findViewById(R.id.textView5);
-        tv3.setText(Build.VERSION.RELEASE);
-        tv5.setText("zouyuefu@gmail.com");
+        String version = "1";
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            Log.d(TAG, info.toString());
+            version = info.versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        tv3.setText(version);
+        tv5.setText("zouyf_1984@hotmail.com");
         new AlertDialog.Builder(this).setTitle(R.string.about).setView(view)
                 .setPositiveButton(R.string.ok, null).show();
     }

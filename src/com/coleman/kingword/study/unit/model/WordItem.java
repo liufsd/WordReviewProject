@@ -249,4 +249,8 @@ public class WordItem {
     public boolean isNewWord() {
         return info.newword;
     }
+
+    public void clear() {
+        dictData = null;
+    }
 }

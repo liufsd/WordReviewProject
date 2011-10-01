@@ -4,6 +4,7 @@ package com.coleman.kingword.study.wordlist;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +25,7 @@ import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.study.CoreActivity;
 import com.coleman.kingword.study.unit.SubWordListActivity;
@@ -130,9 +132,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
-        i.putExtra(WordsList._ID, (Long) view.getTag());
-        startActivity(i);
+        if (!DictManager.getInstance().isCurLibInitialized()) {
+            new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+                    .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
+        } else {
+            Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
+            i.putExtra(WordsList._ID, (Long) view.getTag());
+            startActivity(i);
+        }
     }
 
     @Override

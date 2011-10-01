@@ -4,4 +4,5 @@
 	<item android:id="@+id/menu_review" android:title="@string/review"></item>
 	<item android:id="@+id/menu_countdown" android:title="@string/countdown_conceal"></item>
 	<item android:id="@+id/menu_color_set" android:title="@string/color_set"></item>
+	<item android:id="@+id/menu_language_set" android:title="@string/language_settings"></item>
 </menu>

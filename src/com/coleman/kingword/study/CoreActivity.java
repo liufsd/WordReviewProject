@@ -47,6 +47,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.study.unit.model.SliceWordList;
@@ -214,10 +215,41 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.menu_color_set:
                 startActivityForResult(new Intent(this, ColorSetActivityAsDialog.class), SET_COLOR);
                 break;
+            case R.id.menu_language_set:
+                showLanguageDialog();
+                break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void showLanguageDialog() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        DictManager.getInstance().setCurLibrary(DictLibrary.STARDICT);
+                        AppSettings.saveInt(CoreActivity.this, AppSettings.LANGUAGE_TYPE, 0);
+                        new ExpensiveTask(ExpensiveTask.UPDATE).execute();
+                        break;
+                    case 1:
+                        DictManager.getInstance().setCurLibrary(DictLibrary.BABYLON_ENG);
+                        AppSettings.saveInt(CoreActivity.this, AppSettings.LANGUAGE_TYPE, 1);
+                        new ExpensiveTask(ExpensiveTask.UPDATE).execute();
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+
+        };
+        int index = AppSettings.getInt(this, AppSettings.LANGUAGE_TYPE, 0);
+        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
+                .setSingleChoiceItems(R.array.language_settings, index, listener)
+                .setNegativeButton(R.string.cancel, null).show();
     }
 
     private void showAnimSelect() {
@@ -790,7 +822,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             DictData data = list.get(position);
             if (data != null) {
                 if (DictManager.getInstance().isBabylonEn()) {
-                    tv.setText(Html.fromHtml(data.getDatas()));
+                    if (data.isDetail) {
+                        tv.setText(data.getDatas());
+                    } else {
+                        tv.setText(Html.fromHtml(data.getDatas()));
+                    }
                 } else if (nextWordItem.showSymbol()) {
                     tv.setText(data.getDataAndSymbol());
                 } else {
@@ -868,6 +904,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         private static final byte IGNORE = 3;
 
+        private static final byte UPDATE = 4;
+
         private byte taskType;
 
         public ExpensiveTask(byte type) {
@@ -901,6 +939,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
                     countBtn.setVisibility(View.INVISIBLE);
                     break;
+                case UPDATE:
                 case LOOKUP:
                     /**
                      * make sure if double clicked, ui operation will not run on
@@ -968,6 +1007,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         bundle.putBoolean("complete", false);
                     } else {
                         bundle.putBoolean("complete", true);
+                    }
+                    break;
+                case UPDATE:
+                    bundle = new Bundle();
+                    if (!wordlist.allComplete()) {
+                        nextWordItem.clear();
+                        lookupInDict(nextWordItem);
+                        bundle.putBoolean("next", true);
+                    } else {
+                        bundle.putBoolean("next", false);
                     }
                     break;
                 case LOOKUP:
@@ -1087,6 +1136,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     }
                     break;
                 }
+                case UPDATE:
                 case LOOKUP:
                     Log.d(TAG, "progress:" + wordlist.getProgress());
                     boolean hasNext = result.getBoolean("next");

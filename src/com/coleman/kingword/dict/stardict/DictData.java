@@ -23,7 +23,7 @@ public class DictData {
 
     public String data;
 
-    private boolean isDetail;
+    public boolean isDetail;
 
     DictData() {
     }
@@ -34,7 +34,7 @@ public class DictData {
         dici.symbol = "";
         return dici;
     }
-
+    
     public static DictData readData(Context context, DictInfo info, DictIndex index, String fileName) {
         DictData dici = new DictData();
 
@@ -77,8 +77,10 @@ public class DictData {
             }
         }
 
-        if (!info.sameTypeSequence.equals("tm")) {
-            dici.isDetail = true;
+        if (!"tm".equals(info.sameTypeSequence)) {
+            if("m".equals(info.sameTypeSequence)){
+                dici.isDetail = true;
+            }
             // one word's data can't be larger than Integer's value
             try {
                 dici.data = new String(bytes, 0, bytes.length, "UTF-8");

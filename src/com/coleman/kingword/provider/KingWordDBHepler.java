@@ -110,5 +110,4 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
         db.execSQL("drop trigger if exists delete_word_list_item_trigger");
         onCreate(db);
     }
-
 }

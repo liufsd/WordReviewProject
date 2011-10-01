@@ -49,8 +49,8 @@ public class DictManager {
     /**********************************************************************
      * operate library
      **********************************************************************/
-    public boolean isInitialized() {
-        return libmap.size() > 0;
+    public boolean isCurLibInitialized() {
+        return libmap.get(curLib) != null && libmap.get(curLib).isInitialed();
     }
 
     /**
@@ -62,7 +62,7 @@ public class DictManager {
 
         // initial the current library
         int type = AppSettings.getInt(context, AppSettings.LANGUAGE_TYPE, 0);
-        Log.d(TAG, "===========Dict type: "+type);
+        Log.d(TAG, "===========Dict type: " + type);
         switch (type) {
             case 0:
                 setCurLibrary(DictLibrary.STARDICT);
@@ -103,6 +103,7 @@ public class DictManager {
 
     public DictData viewWord(Context context, String word) {
         DictLibrary library = libmap.get(curLib);
+        Log.d(TAG, "---------------------library: " + curLib);
         if (library == null) {
             Log.w(TAG, "library has not been initialed!");
             return DictData.constructData(word + ": library has not been initialed!");
@@ -134,18 +135,6 @@ public class DictManager {
                 library.getLibraryName());
         Log.d(TAG, "" + wordData);
         return wordData;
-    }
-
-    /**
-     * Increase the importance of specified word.
-     */
-    public void addPower(DictIndex dici) {
-    }
-
-    public class CutMethod {
-    }
-
-    public class Library {
     }
 
     public enum ViewType {

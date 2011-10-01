@@ -59,6 +59,10 @@ public class DictLibrary {
         return libraryInfo;
     }
 
+    public boolean isInitialed() {
+        return dbInitialed;
+    }
+
     public DictIndex getDictIndex(Context context, String word) {
         DictIndex di = null;
         String[] projection = new String[] {

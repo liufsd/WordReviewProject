@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="@color/cornsilk">
+	android:background="@color/cornsilk">
 	<com.coleman.kingword.study.unit.view.SlideTableSwitcher
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:id="@+id/viewSwitcher1" />
-	<View android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_weight="1" android:id="@+id/view1"></View>
+		android:id="@+id/viewSwitcher1" android:layout_alignParentTop="true" />
 	<ProgressBar android:layout_width="fill_parent"
 		android:layout_height="15dp" android:id="@+id/progressBar1"
-		style="@android:style/Widget.ProgressBar.Horizontal"></ProgressBar>
+		style="@android:style/Widget.ProgressBar.Horizontal"
+		android:layout_alignParentBottom="true"></ProgressBar>
 	<ProgressBar android:layout_width="wrap_content"
 		android:visibility="gone" android:layout_height="wrap_content"
-		android:id="@+id/progressBar2" android:layout_gravity="center"></ProgressBar>
-</LinearLayout>
+		android:id="@+id/progressBar2" android:layout_gravity="center"
+		android:layout_centerInParent="true"></ProgressBar>
+</RelativeLayout>
