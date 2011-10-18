@@ -2,6 +2,8 @@
 package com.coleman.kingword.provider;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.List;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -14,10 +16,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import com.coleman.util.Log;
 
+import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.kingword.provider.KingWord.Achievement;
-import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
-import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
-import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.provider.KingWord.WordsList;
@@ -30,13 +30,6 @@ public class KingWordProvider extends ContentProvider {
     public static final String AUTHORITY = "kingword";
 
     // table cat match id
-    private static final int URI_STARDICT = 1;
-
-    private static final int URI_STARDICT_ID = 2;
-
-    private static final int URI_OXFORDDICT = 3;
-
-    private static final int URI_OXFORDDICT_ID = 4;
 
     private static final int URI_WORDINFO = 5;
 
@@ -58,25 +51,10 @@ public class KingWordProvider extends ContentProvider {
 
     private static final int URI_WORDLISTITEM_ID = 14;
 
-    private static final int URI_BABYLONENGLISH = 15;
-
-    private static final int URI_BABYLONENGLISH_ID = 16;
-
     private static final String TAG = KingWordProvider.class.getName();
 
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
-
-        matcher.addURI(AUTHORITY, StarDictIndex.TABLE_NAME, URI_STARDICT);
-        matcher.addURI(AUTHORITY, StarDictIndex.TABLE_NAME + File.separator + "#", URI_STARDICT_ID);
-
-        matcher.addURI(AUTHORITY, BabylonEnglishIndex.TABLE_NAME, URI_BABYLONENGLISH);
-        matcher.addURI(AUTHORITY, BabylonEnglishIndex.TABLE_NAME + File.separator + "#",
-                URI_BABYLONENGLISH_ID);
-
-        matcher.addURI(AUTHORITY, OxfordDictIndex.TABLE_NAME, URI_OXFORDDICT);
-        matcher.addURI(AUTHORITY, OxfordDictIndex.TABLE_NAME + File.separator + "#",
-                URI_OXFORDDICT_ID);
 
         matcher.addURI(AUTHORITY, WordInfo.TABLE_NAME, URI_WORDINFO);
         matcher.addURI(AUTHORITY, WordInfo.TABLE_NAME + File.separator + "#", URI_WORDINFO_ID);
@@ -94,6 +72,21 @@ public class KingWordProvider extends ContentProvider {
         matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME, URI_WORDLISTITEM);
         matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME + File.separator + "#",
                 URI_WORDLISTITEM_ID);
+
+        updateUriMatcher(DictIndexManager.getInstance().getHashMap().values());
+
+    }
+
+    /**
+     * Used for load dictionary dynamically
+     * 
+     * @param col
+     */
+    public static void updateUriMatcher(Collection<DictIndexTable> col) {
+        for (DictIndexTable dictIndexTable : col) {
+            matcher.addURI(AUTHORITY, dictIndexTable.TABLE_NAME, dictIndexTable.URI);
+            matcher.addURI(AUTHORITY, dictIndexTable.TABLE_NAME, dictIndexTable.URI_ID);
+        }
     }
 
     @Override
@@ -108,15 +101,6 @@ public class KingWordProvider extends ContentProvider {
         String tableName = null;
         int count = 0;
         switch (matcher.match(uri)) {
-            case URI_STARDICT:
-                tableName = StarDictIndex.TABLE_NAME;
-                break;
-            case URI_BABYLONENGLISH:
-                tableName = BabylonEnglishIndex.TABLE_NAME;
-                break;
-            case URI_OXFORDDICT:
-                tableName = OxfordDictIndex.TABLE_NAME;
-                break;
             case URI_SUB_WORDLIST:
                 tableName = SubWordsList.TABLE_NAME;
                 break;
@@ -127,6 +111,20 @@ public class KingWordProvider extends ContentProvider {
                 tableName = WordInfo.TABLE_NAME;
                 break;
             default:
+                boolean find = false;
+                Collection<DictIndexTable> col = DictIndexManager.getInstance().getHashMap()
+                        .values();
+                for (DictIndexTable dictIndexTable : col) {
+                    if (uri.getLastPathSegment().equals(dictIndexTable.TABLE_NAME)) {
+                        tableName = dictIndexTable.TABLE_NAME;
+                        find = true;
+                        break;
+                    }
+                }
+                if (find) {
+                    Log.d(TAG, "##################find the table");
+                    break;
+                }
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }
         db.beginTransaction();
@@ -224,33 +222,6 @@ public class KingWordProvider extends ContentProvider {
         // set query builder for the query
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         switch (matcher.match(uri)) {
-            case URI_STARDICT:
-                qb.setTables(StarDictIndex.TABLE_NAME);
-                qb.setProjectionMap(StarDictIndex.projectionMap);
-                break;
-            case URI_STARDICT_ID:
-                qb.setTables(StarDictIndex.TABLE_NAME);
-                qb.setProjectionMap(StarDictIndex.projectionMap);
-                qb.appendWhere(StarDictIndex._ID + "=" + uri.getPathSegments().get(1));
-                break;
-            case URI_BABYLONENGLISH:
-                qb.setTables(BabylonEnglishIndex.TABLE_NAME);
-                qb.setProjectionMap(BabylonEnglishIndex.projectionMap);
-                break;
-            case URI_BABYLONENGLISH_ID:
-                qb.setTables(BabylonEnglishIndex.TABLE_NAME);
-                qb.setProjectionMap(BabylonEnglishIndex.projectionMap);
-                qb.appendWhere(BabylonEnglishIndex._ID + "=" + uri.getPathSegments().get(1));
-                break;
-            case URI_OXFORDDICT:
-                qb.setTables(OxfordDictIndex.TABLE_NAME);
-                qb.setProjectionMap(OxfordDictIndex.projectionMap);
-                break;
-            case URI_OXFORDDICT_ID:
-                qb.setTables(OxfordDictIndex.TABLE_NAME);
-                qb.setProjectionMap(OxfordDictIndex.projectionMap);
-                qb.appendWhere(OxfordDictIndex._ID + "=" + uri.getPathSegments().get(1));
-                break;
             case URI_WORDINFO:
                 qb.setTables(WordInfo.TABLE_NAME);
                 qb.setProjectionMap(WordInfo.projectionMap);
@@ -297,6 +268,31 @@ public class KingWordProvider extends ContentProvider {
                 qb.appendWhere(WordListItem._ID + "=" + uri.getPathSegments().get(1));
                 break;
             default:
+                boolean find = false;
+                Collection<DictIndexTable> col = DictIndexManager.getInstance().getHashMap()
+                        .values();
+                for (DictIndexTable dictIndexTable : col) {
+                    List<String> list = uri.getPathSegments();
+                    if (list.size() == 1) {
+                        if (list.get(0).equals(dictIndexTable.TABLE_NAME)) {
+                            qb.setTables(dictIndexTable.TABLE_NAME);
+                            qb.setProjectionMap(DictIndexTable.projectionMap);
+                            find = true;
+                            break;
+                        }
+                    } else if (list.size() == 2) {
+                        if (list.get(0).equals(dictIndexTable.TABLE_NAME)) {
+                            qb.setTables(dictIndexTable.TABLE_NAME);
+                            qb.setProjectionMap(DictIndexTable.projectionMap);
+                            qb.appendWhere(DictIndexTable._ID + "=" + list.get(1));
+                            find = true;
+                            break;
+                        }
+                    }
+                }
+                if (find) {
+                    break;
+                }
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }
 
@@ -317,8 +313,21 @@ public class KingWordProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // store the data
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (uri.getLastPathSegment().equals("upgrade")) {
+            Collection<DictIndexTable> dropList = DictIndexManager.getInstance().getDropList();
+            for (DictIndexTable dictIndexTable : dropList) {
+                db.execSQL("drop table if exists " + dictIndexTable.TABLE_NAME);
+            }
+            Collection<DictIndexTable> createList = DictIndexManager.getInstance().getCreateList();
+            for (DictIndexTable dictIndexTable : createList) {
+                db.execSQL(dictIndexTable.CREATE_TABLE_SQL);
+            }
+            return 0;
+        }
+        
+        // store the data
         switch (matcher.match(uri)) {
             case URI_WORDINFO:
                 return db.update(WordInfo.TABLE_NAME, values, selection, selectionArgs);

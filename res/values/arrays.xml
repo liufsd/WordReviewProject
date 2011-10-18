@@ -84,6 +84,7 @@
 		<item>备份数据</item>
 		<item>恢复数据</item>
 		<item>学习方式设定</item>
+		<item>数据库设定</item>
 	</string-array>
 	<string-array name="debug_level">
 		<item>VERBOSE</item>
@@ -114,7 +115,7 @@
 		<item>备份学习历史记录</item>
 	</string-array>
 	<string-array name="language_settings">
-		<item>英文－中文释义</item>
-		<item>英文－英文释义</item>
+		<item>选择简明数据库</item>
+		<item>选择详情数据库</item>
 	</string-array>
 </resources>

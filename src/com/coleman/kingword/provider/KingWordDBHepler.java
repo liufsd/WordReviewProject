@@ -6,37 +6,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.coleman.kingword.provider.KingWord.Achievement;
-import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
-import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
-import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.util.Log;
 
 public class KingWordDBHepler extends SQLiteOpenHelper {
     private static final String DB_NAME = "kingword.db";
+
+    private static final String TAG = KingWordDBHepler.class.getName();
 
     private static final int DB_VERSION = 1;
 
     public KingWordDBHepler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
-
-    private static final String star_dict_index_table = "create table " + StarDictIndex.TABLE_NAME
-            + " ( " + StarDictIndex._ID + " integer primary key autoincrement , "
-            + StarDictIndex.WORD + " text ," + StarDictIndex.OFFSET + " integer,"
-            + StarDictIndex.SIZE + " integer )";
-
-    private static final String babylon_english_index_table = "create table "
-            + BabylonEnglishIndex.TABLE_NAME + " ( " + BabylonEnglishIndex._ID
-            + " integer primary key autoincrement , " + BabylonEnglishIndex.WORD + " text ,"
-            + BabylonEnglishIndex.OFFSET + " integer," + BabylonEnglishIndex.SIZE + " integer )";
-
-    private static final String oxford_dict_index_table = "create table "
-            + OxfordDictIndex.TABLE_NAME + " ( " + OxfordDictIndex._ID
-            + " integer primary key autoincrement , " + OxfordDictIndex.WORD + " text ,"
-            + OxfordDictIndex.OFFSET + " integer," + OxfordDictIndex.SIZE + " integer )";
 
     private static final String word_info_table = "create table " + WordInfo.TABLE_NAME + " ( "
             + WordInfo._ID + " integer primary key autoincrement , " + WordInfo.WORD + " text ,"
@@ -84,9 +69,6 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(star_dict_index_table);
-        db.execSQL(babylon_english_index_table);
-        db.execSQL(oxford_dict_index_table);
         db.execSQL(word_info_table);
         db.execSQL(achievement_table);
         db.execSQL(word_list_table);
@@ -94,13 +76,11 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
         db.execSQL(word_list_item_table);
         db.execSQL(delete_sub_word_list_trigger);
         db.execSQL(delete_word_list_item_trigger);
+        Log.d(TAG, "=========================db onCreate");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists " + StarDictIndex.TABLE_NAME);
-        db.execSQL("drop table if exists " + BabylonEnglishIndex.TABLE_NAME);
-        db.execSQL("drop table if exists " + OxfordDictIndex.TABLE_NAME);
         db.execSQL("drop table if exists " + WordInfo.TABLE_NAME);
         db.execSQL("drop table if exists " + Achievement.TABLE_NAME);
         db.execSQL("drop table if exists " + WordsList.TABLE_NAME);
@@ -109,5 +89,7 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
         db.execSQL("drop trigger if exists delete_sub_word_list_trigger");
         db.execSQL("drop trigger if exists delete_word_list_item_trigger");
         onCreate(db);
+        Log.d(TAG, "=========================db onUpgrade");
     }
+
 }

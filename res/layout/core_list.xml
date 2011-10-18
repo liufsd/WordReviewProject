@@ -1,74 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:id="@+id/container"
-	android:background="@color/cornsilk">
-	<!-- <style name="Widget.ProgressBar.Horizontal"> <item name="android:indeterminateOnly">false</item> 
-		<item name="android:progressDrawable">@android:drawable/progress_horizontal</item> 
-		<item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item> 
-		<item name="android:minHeight">20dip</item> <item name="android:maxHeight">20dip</item> 
-		</style> -->
+	android:layout_height="fill_parent">
+	<RelativeLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="0dp"
+		android:layout_weight="1" android:id="@+id/container"
+		android:background="@color/cornsilk">
+		<!-- <style name="Widget.ProgressBar.Horizontal"> <item name="android:indeterminateOnly">false</item> 
+			<item name="android:progressDrawable">@android:drawable/progress_horizontal</item> 
+			<item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item> 
+			<item name="android:minHeight">20dip</item> <item name="android:maxHeight">20dip</item> 
+			</style> -->
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_alignParentTop="true"
+			android:id="@+id/progressBarLayout">
+			<ProgressBar android:layout_width="fill_parent"
+				android:indeterminateOnly="false" android:progressDrawable="@android:drawable/progress_horizontal"
+				android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+				android:layout_height="20dp" android:id="@+id/progressBarDay1"></ProgressBar>
+			<ProgressBar android:layout_width="fill_parent"
+				android:indeterminateOnly="false" android:progressDrawable="@drawable/progress_horizontal_night"
+				android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+				android:layout_height="20dp" android:id="@+id/progressBarNight1"
+				android:visibility="gone"></ProgressBar>
+		</LinearLayout>
+		<TextView android:layout_width="fill_parent" android:gravity="center_vertical|left"
+			android:textColor="@color/blue" android:textStyle="bold"
+			android:layout_alignParentTop="true" android:layout_height="20dp"
+			android:id="@+id/loopView">
+		</TextView>
+		<TextView android:layout_width="fill_parent" android:gravity="center"
+			android:textColor="@color/red" android:textStyle="bold|italic"
+			android:visibility="invisible" android:layout_alignParentTop="true"
+			android:layout_height="20dp" android:id="@+id/continueHitView">
+		</TextView>
+		<LinearLayout android:id="@+id/linearLayout1"
+			android:layout_below="@id/progressBarLayout" android:layout_width="fill_parent"
+			android:layout_height="55dp" android:orientation="vertical">
+			<TextView android:layout_width="wrap_content" android:text="TextView"
+				android:id="@+id/textView1" android:layout_height="wrap_content"
+				style="@style/word_title" android:layout_weight="1" android:gravity="center_vertical"></TextView>
+			<ImageView android:layout_width="fill_parent"
+				android:layout_height="2dp" android:background="@drawable/title_rect_line"></ImageView>
+		</LinearLayout>
+		<ListView android:layout_height="wrap_content" android:id="@+id/listView1"
+			android:layout_below="@id/linearLayout1"
+			android:layout_width="fill_parent" android:paddingLeft="5dp"
+			android:paddingRight="5dp"></ListView>
+		<Button android:id="@+id/countdown" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:background="@drawable/countdown_day"
+			android:layout_below="@id/progressBarLayout"
+			android:layout_alignParentRight="true" android:gravity="center"
+			android:textColor="@color/blue" android:textStyle="bold"></Button>
+		<ProgressBar android:layout_width="wrap_content"
+			android:visibility="gone" android:layout_centerInParent="true"
+			style="@android:style/Widget.ProgressBar.Inverse"
+			android:layout_height="wrap_content" android:id="@+id/progressBarDay2"></ProgressBar>
+		<ProgressBar android:layout_width="wrap_content"
+			android:visibility="gone" android:layout_centerInParent="true"
+			style="@android:style/Widget.ProgressBar" android:layout_height="wrap_content"
+			android:id="@+id/progressBarNight2"></ProgressBar>
+	</RelativeLayout>
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_alignParentTop="true"
-		android:id="@+id/progressBarLayout">
-		<ProgressBar android:layout_width="fill_parent"
-			android:indeterminateOnly="false" android:progressDrawable="@android:drawable/progress_horizontal"
-			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
-			android:layout_height="20dp" android:id="@+id/progressBarDay1"></ProgressBar>
-		<ProgressBar android:layout_width="fill_parent"
-			android:indeterminateOnly="false" android:progressDrawable="@drawable/progress_horizontal_night"
-			android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
-			android:layout_height="20dp" android:id="@+id/progressBarNight1"
-			android:visibility="gone"></ProgressBar>
-	</LinearLayout>
-	<TextView android:layout_width="fill_parent" android:gravity="center_vertical|left"
-		android:textColor="@color/blue" android:textStyle="bold"
-		android:layout_alignParentTop="true" android:layout_height="20dp"
-		android:id="@+id/loopView">
-	</TextView>
-	<TextView android:layout_width="fill_parent" android:gravity="center"
-		android:textColor="@color/red" android:textStyle="bold|italic"
-		android:visibility="invisible" android:layout_alignParentTop="true"
-		android:layout_height="20dp" android:id="@+id/continueHitView">
-	</TextView>
-	<LinearLayout android:id="@+id/linearLayout1"
-		android:layout_below="@id/progressBarLayout" android:layout_width="fill_parent"
-		android:layout_height="55dp" android:orientation="vertical">
-		<TextView android:layout_width="wrap_content" android:text="TextView"
-			android:id="@+id/textView1" android:layout_height="wrap_content"
-			style="@style/word_title" android:layout_weight="1" android:gravity="center_vertical"></TextView>
-		<ImageView android:layout_width="fill_parent"
-			android:layout_height="2dp" android:background="@drawable/title_rect_line"></ImageView>
-	</LinearLayout>
-	<ListView android:layout_height="wrap_content" android:id="@+id/listView1"
-		android:layout_below="@id/linearLayout1" android:layout_above="@+id/linearLayout2"
-		android:layout_width="fill_parent" android:paddingLeft="5dp"
-		android:paddingRight="5dp"></ListView>
-	<Button android:id="@+id/countdown" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:background="@drawable/countdown_day"
-		android:layout_below="@id/progressBarLayout"
-		android:layout_alignParentRight="true" android:gravity="center"
-		android:textColor="@color/blue" android:textStyle="bold"></Button>
-	<ProgressBar android:layout_width="wrap_content"
-		android:visibility="gone" android:layout_centerInParent="true"
-		style="@android:style/Widget.ProgressBar.Inverse"
-		android:layout_height="wrap_content" android:id="@+id/progressBarDay2"></ProgressBar>
-	<ProgressBar android:layout_width="wrap_content"
-		android:visibility="gone" android:layout_centerInParent="true"
-		style="@android:style/Widget.ProgressBar" android:layout_height="wrap_content"
-		android:id="@+id/progressBarNight2"></ProgressBar>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_alignParentBottom="true" android:id="@id/linearLayout2"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		style="@style/ButtonBarPadding" android:background="@android:drawable/bottom_bar">
-		<Button android:id="@+id/viewWord" android:layout_width="wrap_content"
+	android:id="@+id/linearLayout2" android:layout_height="wrap_content"
+	android:orientation="horizontal" style="@style/ButtonBarPadding"
+	android:background="@android:drawable/bottom_bar">
+		<Button android:id="@+id/viewWord" android:layout_width="0dp"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/view_more" android:minWidth="80dp" />
-		<Button android:id="@+id/add_or_remove" android:layout_width="wrap_content"
+			android:text="@string/view_more" />
+		<Button android:id="@+id/add_or_remove" android:layout_width="0dp"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/add_new" android:minWidth="80dp" />
-		<Button android:id="@+id/ignore_or_not" android:layout_width="wrap_content"
+			android:text="@string/add_new" />
+		<Button android:id="@+id/ignore_or_not" android:layout_width="0dp"
 			android:layout_height="wrap_content" android:layout_weight="2"
-			android:text="@string/ignore" android:minWidth="80dp" />
+			android:text="@string/ignore" />
 	</LinearLayout>
-</RelativeLayout>
+</LinearLayout>

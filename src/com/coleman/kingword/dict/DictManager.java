@@ -1,20 +1,24 @@
 
 package com.coleman.kingword.dict;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import android.content.Context;
-
-import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
+import android.os.Environment;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.dict.stardict.DictLibraryFactory;
-import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
-import com.coleman.kingword.study.SettingsActivity;
+import com.coleman.kingword.provider.DictIndexManager;
+import com.coleman.kingword.provider.UpgradeManager;
+import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
+import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 /**
  * Manager the dictionary, there are two kinds of files 1.the stardict
@@ -26,6 +30,9 @@ import com.coleman.kingword.study.SettingsActivity;
 public class DictManager {
     private static final String TAG = DictManager.class.getName();
 
+    private static final String EXT_DIC_PATH = Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + File.separator + "kingword/dicts";
+
     private static DictManager manager;
 
     /**
@@ -34,7 +41,9 @@ public class DictManager {
      */
     private HashMap<String, DictLibrary> libmap = new HashMap<String, DictLibrary>();
 
-    private String curLib = DictLibrary.STARDICT;
+    private String curLib = "a49_stardict_1_3";
+
+    private String moreLib = "a50_oxford_gb_formated";
 
     private DictManager() {
     }
@@ -61,27 +70,27 @@ public class DictManager {
     public void initLibrary(Context context) {
 
         // initial the current library
-        int type = AppSettings.getInt(context, AppSettings.LANGUAGE_TYPE, 0);
-        Log.d(TAG, "===========Dict type: " + type);
-        switch (type) {
-            case 0:
-                setCurLibrary(DictLibrary.STARDICT);
-                break;
-            case 1:
-                setCurLibrary(DictLibrary.BABYLON_ENG);
-                break;
-            default:
-                // ignore
-                break;
-        }
+        // int type = AppSettings.getInt(context, AppSettings.LANGUAGE_TYPE, 0);
+        // Log.d(TAG, "===========Dict type: " + type);
+        // switch (type) {
+        // case 0:
+        // setCurLibrary(DictLibrary.STARDICT);
+        // break;
+        // case 1:
+        // setCurLibrary(DictLibrary.BABYLON_ENG);
+        // break;
+        // default:
+        // // ignore
+        // break;
+        // }
 
         // load library
         long time = System.currentTimeMillis();
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
-            factory.loadLibrary(context, DictLibrary.STARDICT, libmap);
-            factory.loadLibrary(context, DictLibrary.OXFORD, libmap);
-            factory.loadLibrary(context, DictLibrary.BABYLON_ENG, libmap);
+            for (DictIndexTable table : DictIndexManager.getInstance().getHashMap().values()) {
+                factory.loadLibrary(context, table.TABLE_NAME, libmap);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,12 +98,14 @@ public class DictManager {
         System.out.println("Load library cost time: " + time);
     }
 
-    public void setCurLibrary(String libKey) {
-        curLib = libKey;
+    public void setCurLibrary(String lib) {
+        curLib = lib;
+        Log.d(TAG, ">>>>>>>>>>>>>>>curLib: " + curLib);
     }
 
-    public boolean isBabylonEn() {
-        return DictLibrary.BABYLON_ENG.equals(curLib);
+    public void setMoreLibrary(String lib) {
+        moreLib = lib;
+        Log.d(TAG, ">>>>>>>>>>>>>>>moreLib: " + moreLib);
     }
 
     /**********************************************************************
@@ -120,7 +131,7 @@ public class DictManager {
     }
 
     public DictData viewMore(Context context, String word) {
-        DictLibrary library = libmap.get(DictLibrary.OXFORD);
+        DictLibrary library = libmap.get(moreLib);
         if (library == null) {
             Log.w(TAG, "library has not been initialed!");
             return DictData.constructData(word + ": library has not been initialed!");

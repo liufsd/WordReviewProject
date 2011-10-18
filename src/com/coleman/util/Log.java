@@ -101,7 +101,7 @@ public final class Log {
     }
 
     public static void init(Context context) {
-        if (Config.isSimulator(context) || "355299034873256".equals(Config.getDeviceId(context))) {// 355299034873256
+        if (Config.isSimulator(context) || "A0000022C343AF".equals(Config.getDeviceId(context))) {// A0000022C343AF
             setLogType(context, LogType.verbose);
         } else {
             setLogType(context, LogType.warn);

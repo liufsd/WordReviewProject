@@ -132,14 +132,15 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (!DictManager.getInstance().isCurLibInitialized()) {
-            new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
-                    .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
-        } else {
-            Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
-            i.putExtra(WordsList._ID, (Long) view.getTag());
-            startActivity(i);
-        }
+        // if (!DictManager.getInstance().isCurLibInitialized()) {
+        // new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+        // .setMessage(R.string.init_db).setPositiveButton(R.string.ok,
+        // null).show();
+        // } else {
+        Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
+        i.putExtra(WordsList._ID, (Long) view.getTag());
+        startActivity(i);
+        // }
     }
 
     @Override

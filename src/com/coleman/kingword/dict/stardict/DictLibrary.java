@@ -1,41 +1,37 @@
 
 package com.coleman.kingword.dict.stardict;
 
-import java.util.Collection;
-import java.util.HashMap;
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
+import android.text.TextUtils;
 
-import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
+import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
-import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
-import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 public class DictLibrary {
     private static final String TAG = DictLibrary.class.getName();
 
-    public static final String OXFORD = "oxford";
-
-    public static final String STARDICT = "stardict";
-
-    public static final String BABYLON_ENG = "babylon";
-
-    public static final String OXFORD_PATH = "kingword/dicts/oxford-gb-formated";
-
-    public static final String STARDICT_PATH = "kingword/dicts/stardict1.3";
-
-    public static final String BABYLON_PATH = "kingword/dicts/Babylon_English";
+    // public static final String OXFORD = "oxford";
+    //
+    // public static final String STARDICT = "stardict";
+    //
+    // public static final String BABYLON_ENG = "babylon";
+    //
+    // public static final String OXFORD_PATH =
+    // "kingword/dicts/oxford-gb-formated";
+    //
+    // public static final String STARDICT_PATH = "kingword/dicts/stardict1.3";
+    //
+    // public static final String BABYLON_PATH =
+    // "kingword/dicts/Babylon_English";
 
     private DictInfo libraryInfo;
 
     private String mLibKey;
 
-    private String libraryName;
+    private String mLibPath;
 
     private boolean dbInitialed;
 
@@ -47,7 +43,9 @@ public class DictLibrary {
      */
     DictLibrary(final Context context, final String libKey) {
         this.mLibKey = libKey;
+        this.mLibPath = "kingword/dicts/" + libKey;
         this.dbInitialed = AppSettings.getBoolean(context, libKey, false);
+        Log.d(TAG, ">>>>>>>>>>>>>>>>dbInitialed: "+dbInitialed);
         if (!dbInitialed) {
             new LoadAndInsert().doWork(this, context, libKey);
         } else {
@@ -71,9 +69,7 @@ public class DictLibrary {
         if (dbInitialed) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
-                            : (STARDICT_PATH.equals(libraryName) ? StarDictIndex.CONTENT_URI
-                                    : BabylonEnglishIndex.CONTENT_URI), projection,
+                    DictIndexManager.getInstance().getTable(mLibKey).CONTENT_URI, projection,
                     IDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
@@ -87,8 +83,7 @@ public class DictLibrary {
             // lower case of the word from the index database
             if (di == null) {
                 c = context.getContentResolver().query(
-                        OXFORD_PATH.equals(libraryName) ? OxfordDictIndex.CONTENT_URI
-                                : StarDictIndex.CONTENT_URI, projection,
+                        DictIndexManager.getInstance().getTable(mLibKey).CONTENT_URI, projection,
                         IDictIndex.WORD + " = '" + word.toLowerCase() + "'", null, null);
                 if (c.moveToFirst()) {
                     di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
@@ -105,7 +100,7 @@ public class DictLibrary {
     }
 
     public String getLibraryName() {
-        return libraryName;
+        return mLibPath;
     }
 
     public void setComplete(Context context) {
@@ -119,15 +114,8 @@ public class DictLibrary {
         }
 
         protected void doWork(Context context, String libKey) {
-            if (DictLibrary.STARDICT.equals(libKey)) {
-                libraryName = STARDICT_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, STARDICT_PATH + ".ifo");
-            } else if (DictLibrary.OXFORD.equals(libKey)) {
-                libraryName = OXFORD_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, OXFORD_PATH + ".ifo");
-            } else if (DictLibrary.BABYLON_ENG.equals(libKey)) {
-                libraryName = BABYLON_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, BABYLON_PATH + ".ifo");
+            if (!TextUtils.isEmpty(libKey)) {
+                libraryInfo = DictInfo.readDicInfo(context, mLibPath + ".ifo");
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }
@@ -142,20 +130,9 @@ public class DictLibrary {
         }
 
         protected void doWork(DictLibrary diclib, Context context, String libKey) {
-            if (DictLibrary.STARDICT.equals(libKey)) {
-                libraryName = STARDICT_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, STARDICT_PATH + ".ifo");
-                DictIndex.loadDictIndexMap(diclib, context, STARDICT_PATH + ".idx",
-                        Integer.parseInt(libraryInfo.wordCount));
-            } else if (DictLibrary.OXFORD.equals(libKey)) {
-                libraryName = OXFORD_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, OXFORD_PATH + ".ifo");
-                DictIndex.loadDictIndexMap(diclib, context, OXFORD_PATH + ".idx",
-                        Integer.parseInt(libraryInfo.wordCount));
-            } else if (DictLibrary.BABYLON_ENG.equals(libKey)) {
-                libraryName = BABYLON_PATH;
-                libraryInfo = DictInfo.readDicInfo(context, BABYLON_PATH + ".ifo");
-                DictIndex.loadDictIndexMap(diclib, context, BABYLON_PATH + ".idx",
+            if (!TextUtils.isEmpty(libKey)) {
+                libraryInfo = DictInfo.readDicInfo(context, mLibPath + ".ifo");
+                DictIndex.loadDictIndexMap(diclib, context, mLibPath + ".idx",
                         Integer.parseInt(libraryInfo.wordCount));
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");

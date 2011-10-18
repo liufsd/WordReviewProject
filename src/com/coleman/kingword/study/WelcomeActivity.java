@@ -22,12 +22,15 @@ import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.study.wordlist.WordListActivity;
 import com.coleman.kingword.study.wordlist.model.WordListManager;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -56,10 +59,13 @@ public class WelcomeActivity extends Activity {
                 startActivity(new Intent(WelcomeActivity.this, WordListActivity.class));
             }
         });
-        // start a service to load library.
-        startService(new Intent(this, DictLoadService.class));
         // _DEL_REPEAT_WORDS();
         ifFirstInstalled();
+        // init DictIndex list
+        // DictManager.getInstance().initDictIndexList(this);
+        DynamicTableManager.getInstance().initTables(this);
+        // start a service to load library.
+        startService(new Intent(this, DictLoadService.class));
     }
 
     @Override
@@ -99,15 +105,20 @@ public class WelcomeActivity extends Activity {
                     AppSettings.saveInt(this, k[i][j], c[i][j]);
                 }
             }
+            // set default lib
+            AppSettings.saveString(this, AppSettings.DICTS_KEY,
+                    "a49_startdict_1_3,false,1000,1;a50_oxford_gb_formated,false,1002,2");
             // ///////////////////////////////////////////////
             // check if there is backup to restore
             // WordInfoHelper.restoreWordInfoDB(this, false);
-            // ///////////////////////////////////////////////
+            // ///////////////////////////////////////////////d
         } else {
             AppSettings.saveInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY,
                     AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
             Log.setLogType(this, LogType.instanse(AppSettings.getInt(this,
                     AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
+            DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
+            DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
             // ////////////// following is for debug/////////////////
             // Log.setLogType(this, LogType.verbose);
             // AppSettings.saveInt(this, AppSettings.SAVED_PW_KEY, 123);

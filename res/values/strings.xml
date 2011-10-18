@@ -210,9 +210,9 @@
 	<string name="mail">联系作者：</string>
 	<string name="copyright">Copyright@2009-2013 Coleman</string>
 
-	<string name="language_settings">释义语言</string>
+	<string name="language_settings">数据库设定</string>
 
-	<string name="auth_introduce">作者感言：有感于市面上的背单词的软件良莠不齐，好点的不是需要联网查词就是有植入广告，于是我萌生了自己设计的念头，后来便有了这个软件。希望这个软件可以帮助到大家，大家有什么批评或者建议，欢迎联系我!
+	<string name="auth_introduce">免责声明：本软件仅供学习研究使用，所涉及的资源系网上搜集所得，如有涉嫌侵权请联系软件作者，在未收到相关通知前使用本软件所造成的相关法律责任一概与软件作者无关。
 	</string>
 	
 	<string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！</string>

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.crypto.Cipher;
@@ -46,7 +47,8 @@ import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.stardict.DictLibrary;
+import com.coleman.kingword.dict.DynamicTableManager;
+import com.coleman.kingword.dict.DynamicTableManager.DynamicTable;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.info.email.GMailSenderHelper;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
@@ -290,6 +292,9 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                     case 3:
                         showViewMethodConfigDialog();
                         break;
+                    case 4:
+                        showLanguageDialog();
+                        break;
                     default:
                         break;
                 }
@@ -302,7 +307,116 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 .setNegativeButton(R.string.cancel, null).show();
     }
 
-   
+    private void showLanguageDialog() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        showSummaryInfoDB();
+                        break;
+                    case 1:
+                        showDetailedInfoDB();
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
+                .setItems(R.array.language_settings, listener)
+                .setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void showSummaryInfoDB() {
+        final Collection<DynamicTable> c = DynamicTableManager.getInstance().getTables();
+        final String[] names = new String[c.size()];
+        int i = 0;
+        int index = -1;
+        for (DynamicTable dynamicTable : c) {
+            names[i] = dynamicTable.name;
+            if (dynamicTable.type == 1 || dynamicTable.type == 3) {
+                index = i;
+            }
+            i++;
+        }
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (DynamicTable dynamicTable : c) {
+                    if (dynamicTable.type == 1) {
+                        dynamicTable.type = 0;
+                    } else if (dynamicTable.type == 3) {
+                        dynamicTable.type = 2;
+                    }
+                }
+                for (DynamicTable dynamicTable : c) {
+                    if (dynamicTable.name.equals(names[which])) {
+                        if (dynamicTable.type == 0) {
+                            dynamicTable.type = 1;
+                        } else if (dynamicTable.type == 2) {
+                            dynamicTable.type = 3;
+                        }
+                        break;
+                    }
+                }
+                DictManager.getInstance().setCurLibrary(names[which]);
+                AppSettings.saveString(SettingsActivity.this, AppSettings.DICTS_KEY,
+                        DynamicTableManager.getInstance().toString());
+                dialog.dismiss();
+            }
+
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
+                .setSingleChoiceItems(names, index, listener)
+                .setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void showDetailedInfoDB() {
+        final Collection<DynamicTable> c = DynamicTableManager.getInstance().getTables();
+        final String[] names = new String[c.size()];
+        int i = 0;
+        int index = -1;
+        for (DynamicTable dynamicTable : c) {
+            names[i] = dynamicTable.name;
+            if (dynamicTable.type == 2 || dynamicTable.type == 3) {
+                index = i;
+            }
+            i++;
+        }
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (DynamicTable dynamicTable : c) {
+                    if (dynamicTable.type == 2) {
+                        dynamicTable.type = 0;
+                    } else if (dynamicTable.type == 3) {
+                        dynamicTable.type = 1;
+                    }
+                }
+                for (DynamicTable dynamicTable : c) {
+                    if (dynamicTable.name.equals(names[which])) {
+                        if (dynamicTable.type == 0) {
+                            dynamicTable.type = 2;
+                        } else if (dynamicTable.type == 1) {
+                            dynamicTable.type = 3;
+                        }
+                        break;
+                    }
+                }
+                DictManager.getInstance().setMoreLibrary(names[which]);
+                AppSettings.saveString(SettingsActivity.this, AppSettings.DICTS_KEY,
+                        DynamicTableManager.getInstance().toString());
+                dialog.dismiss();
+            }
+
+        };
+        new AlertDialog.Builder(this).setTitle(R.string.language_settings)
+                .setSingleChoiceItems(names, index, listener)
+                .setNegativeButton(R.string.cancel, null).show();
+    }
 
     private void mapIntToStr(ArrayList<Integer> intlist, ArrayList<String> strlist) {
         strlist.clear();

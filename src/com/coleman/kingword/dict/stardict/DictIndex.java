@@ -32,10 +32,9 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
-import com.coleman.kingword.provider.KingWord.BabylonEnglishIndex;
+import com.coleman.kingword.provider.DictIndexManager;
+import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
-import com.coleman.kingword.provider.KingWord.OxfordDictIndex;
-import com.coleman.kingword.provider.KingWord.StarDictIndex;
 import com.coleman.util.Config;
 import com.coleman.util.ConvertUtils;
 
@@ -96,7 +95,7 @@ public class DictIndex {
      * {@link #dictIndexList}
      * 
      * @throws java.io.FileNotFoundException
-     * @see cn.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
+     * @see DictIndexTable.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
     private static void readIndexFileNative(DictLibrary lib, Context context, String indexFileName,
             int numCount, HashMap<String, DictIndex> wordmap) {
@@ -112,7 +111,7 @@ public class DictIndex {
             // the maximun length of a word must less 256
             // 256 bytes(word) + 1 byte('\0') + 4 bytes(offset) + 4 bytes(def
             // size)
-            byte[] bytes = new byte[256 + 1 + 4 + 4];
+            byte[] bytes = new byte[16 * 1024];// 256 + 1 + 4 + 4
             int mark = 0;
             String word = null;
             long offset = 0; // offset of a word in data file
@@ -183,10 +182,9 @@ public class DictIndex {
                 ex.printStackTrace();
             }
         }
-
         // save the settings preference.
         lib.setComplete(context);
-
+        
         time = System.currentTimeMillis() - time;
         System.out
                 .println(indexFileName + " insert dict indexs to the database cost time: " + time);
@@ -204,12 +202,14 @@ public class DictIndex {
             values[i].put(IDictIndex.SIZE, dictIndex.size);
             i++;
         }
-        if (indexFileName.startsWith(DictLibrary.STARDICT_PATH)) {
-            context.getContentResolver().bulkInsert(StarDictIndex.CONTENT_URI, values);
-        } else if (indexFileName.startsWith(DictLibrary.OXFORD_PATH)) {
-            context.getContentResolver().bulkInsert(OxfordDictIndex.CONTENT_URI, values);
-        } else if (indexFileName.startsWith(DictLibrary.BABYLON_PATH)) {
-            context.getContentResolver().bulkInsert(BabylonEnglishIndex.CONTENT_URI, values);
+        String fileName = indexFileName.substring(indexFileName.lastIndexOf("/") + 1,
+                indexFileName.lastIndexOf("."));
+        Collection<DictIndexTable> col2 = DictIndexManager.getInstance().getHashMap().values();
+        for (DictIndexTable dictIndexTable : col2) {
+            if (fileName.equals(dictIndexTable.TABLE_NAME)) {
+                context.getContentResolver().bulkInsert(dictIndexTable.CONTENT_URI, values);
+                break;
+            }
         }
     }
 }

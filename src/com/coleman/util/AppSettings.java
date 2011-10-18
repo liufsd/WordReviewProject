@@ -60,6 +60,14 @@ public class AppSettings {
 
     public static final String LANGUAGE_TYPE = "explain_language_type";
 
+    public static final String DB_VERSION_KEY = "db_version";
+
+    public static final String DICTS_KEY = "dicts";
+
+    public static final String VIEW_SUMMARY_INFO_KEY = "view_summary_info";
+
+    public static final String VIEW_DETAILED_INFO_KEY = "view_detailed_info";
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);
@@ -152,5 +160,31 @@ public class AppSettings {
      */
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+    }
+
+    public static String getCurLibraryString(Context context) {
+        String str = getString(context, DICTS_KEY, "");
+        String temps[] = str.split(";");
+        for (String string : temps) {
+            String subs[] = string.split(",");
+            int type = Integer.parseInt(subs[3]);
+            if (type == 1 || type == 3) {
+                return subs[0];
+            }
+        }
+        return null;
+    }
+
+    public static String getMoreLibraryString(Context context) {
+        String str = getString(context, DICTS_KEY, "");
+        String temps[] = str.split(";");
+        for (String string : temps) {
+            String subs[] = string.split(",");
+            int type = Integer.parseInt(subs[3]);
+            if (type == 2 || type == 3) {
+                return subs[0];
+            }
+        }
+        return null;
     }
 }
