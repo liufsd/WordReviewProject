@@ -314,6 +314,7 @@ public class KingWordProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
+        //dynamically create dict index table or delete dict index table
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (uri.getLastPathSegment().equals("upgrade")) {
             Collection<DictIndexTable> dropList = DictIndexManager.getInstance().getDropList();
@@ -344,6 +345,11 @@ public class KingWordProvider extends ContentProvider {
                 long id = Long.parseLong(uri.getPathSegments().get(1));
                 return db.update(SubWordsList.TABLE_NAME, values, WordInfo._ID + "=" + id, null);
             }
+            case URI_WORDLIST:
+                return db.update(WordsList.TABLE_NAME, values, selection, selectionArgs);
+            case URI_WORDLIST_ID:
+                long id = Long.parseLong(uri.getPathSegments().get(1));
+                return db.update(WordsList.TABLE_NAME, values, WordInfo._ID + "=" + id, null);
             default:
                 throw new IllegalArgumentException("Unknow uri: " + uri);
         }

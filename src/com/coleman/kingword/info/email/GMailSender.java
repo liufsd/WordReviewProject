@@ -85,7 +85,7 @@ public class GMailSender extends javax.mail.Authenticator {
                 message.setContent(allMultipart);
                 message.saveChanges();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
             }
         }
         // judge multi-recipient or one recipient
@@ -97,7 +97,7 @@ public class GMailSender extends javax.mail.Authenticator {
             session.setDebug(false);
             Transport.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 

@@ -68,11 +68,12 @@ public class DynamicTableManager {
         }
 
         // compare storagelist and preflist
+        ArrayList<String> removelist = new ArrayList<String>();
         boolean upgrade = false;
         for (DynamicTable t : map.values()) {
             if (!storagelist.contains(t.name)) {
                 DictIndexManager.getInstance().getDropList().add(new DictIndexTable(t.name, t.id));
-                map.remove(t.name);
+                removelist.add(t.name);
                 upgrade = true;
             } else {
                 if (!t.loaded) {
@@ -84,6 +85,10 @@ public class DynamicTableManager {
                         .put(t.name, new DictIndexTable(t.name, t.id));
             }
         }
+        for (String string : removelist) {
+            map.remove(string);
+        }
+
         int max = 1000;
         for (DynamicTable t : map.values()) {
             if (t.id > max) {

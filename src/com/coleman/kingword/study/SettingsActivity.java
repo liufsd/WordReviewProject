@@ -99,16 +99,6 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[0], R.drawable.set_review_time);
         map.put(from[1], R.string.set_review_time);
         data.add(map);
-        // // 2
-        // map = new HashMap<String, Integer>();
-        // map.put(from[0], R.drawable.set_backup);
-        // map.put(from[1], R.string.backup);
-        // data.add(map);
-        // // 3
-        // map = new HashMap<String, Integer>();
-        // map.put(from[0], R.drawable.set_restore);
-        // map.put(from[1], R.string.restore);
-        // data.add(map);
         // 2
         map = new HashMap<String, Integer>();
         map.put(from[0], R.drawable.set_level_type);
@@ -153,10 +143,10 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                                 AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY, 0);
                         if (System.currentTimeMillis() - time > 3 * 24 * 3600 * 1000) {
                             String IEMI = Config.getDeviceId(SettingsActivity.this);
-                            String msg = "IEMI:" + IEMI + "\n";
+                            String msg = "IEMI:" + IEMI + "\n\n";
                             msg += et.getText().toString() + "\n";
-                            msg += InfoGather.gatherDetail(SettingsActivity.this);
-                            GMailSenderHelper.sendMail(getString(R.string.request_pw), msg);
+                            InfoGather.sendEmailWithInfo(SettingsActivity.this,
+                                    getString(R.string.request_pw), msg);
                             AppSettings.saveLong(SettingsActivity.this,
                                     AppSettings.LAST_SEND_GET_PW_REQUEST_TIME_KEY,
                                     System.currentTimeMillis());
@@ -172,7 +162,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 }
             }
         };
-        new AlertDialog.Builder(this).setTitle(R.string.security_set).setView(layout)
+        new AlertDialog.Builder(this).setTitle(R.string.request_pw).setView(layout)
                 .setPositiveButton(R.string.ok, lis).setNegativeButton(R.string.cancel, lis).show();
     }
 

@@ -173,7 +173,7 @@
 	<string name="get_pw">获取密码</string>
 	<string name="input_pw">输入密码</string>
 	<string name="get_pw_hint">
-		请说明你要获取密码的原因，作者有权对你的请求不予响应。
+		请输入你的邮箱地址，并评价此软件，以获取高级设置认证密码，一般的你的申请会在七个工作日内得到处理，请耐心等候。
 	</string>
 	<string name="get_pw_request_sent">
 		你已成功发送索取密码请求，请耐心等候作者回复！
@@ -214,6 +214,12 @@
 
 	<string name="auth_introduce">免责声明：本软件仅供学习研究使用，所涉及的资源系网上搜集所得，如有涉嫌侵权请联系软件作者，在未收到相关通知前使用本软件所造成的相关法律责任一概与软件作者无关。
 	</string>
-	
-	<string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！</string>
+
+	<string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！
+	</string>
+
+	<string name="rename">重命名</string>
+	<string name="input_dialog_title">输入框</string>
+	<string name="warning_dialog_title">警告</string>
+	<string name="delete_warning" formatted="false">你确定要删除单词表%s吗？</string>
 </resources>

@@ -896,14 +896,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         adapter.notifyDataSetChanged();
                     }
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.linearLayout2).setVisibility(View.GONE);
                     countBtn.setVisibility(View.INVISIBLE);
                     break;
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
                     findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.linearLayout2).setVisibility(View.GONE);
                     countBtn.setVisibility(View.INVISIBLE);
                     break;
                 case UPDATE:

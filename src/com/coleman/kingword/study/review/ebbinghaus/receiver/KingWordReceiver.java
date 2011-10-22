@@ -33,10 +33,9 @@ public class KingWordReceiver extends BroadcastReceiver {
         Log.d(TAG, "##############" + action + "##############");
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             EbbinghausReminder.setNotifactionAfterReboot(context);
-            // InfoGather.setSmsGatherRepeatNotifaction(context);
+            // InfoGather.setWeeklyGatherNotifaction(context);
             return;
         } else if (ACTION_SEND_INFO_SILENT.equals(action)) {
-            // InfoGather.sendBySms(context);
             InfoGather.sendByEmail(context);
         } else {
             doEbbinghausAction(context, intent);

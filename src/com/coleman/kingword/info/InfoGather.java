@@ -1,11 +1,8 @@
 
 package com.coleman.kingword.info;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -30,14 +27,12 @@ import com.coleman.util.Log;
 public class InfoGather {
     private static final String TAG = InfoGather.class.getName();
 
-    public static String defaultAccount = "";
-
     /**
      * send every week.
      * 
      * @param context
      */
-    public static void setSmsGatherRepeatNotifaction(Context context) {
+    public static void setWeeklyGatherNotifaction(Context context) {
         Intent intent = new Intent(KingWordReceiver.ACTION_SEND_INFO_SILENT);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -51,7 +46,7 @@ public class InfoGather {
         calendar.setTimeInMillis(time);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), period, sender);
-        Log.d(TAG, "================set sms gather repeat alarm at "
+        Log.d(TAG, "================set gather repeat alarm at "
                 + calendar.getTime().toLocaleString());
     }
 
@@ -78,88 +73,97 @@ public class InfoGather {
         }
     }
 
-    public static void sendByEmail(Context context) {
-        final String msgBody = gatherDetail(context);
-        Log.d(TAG, "msgBody:" + msgBody);
-        // System.out.println("msg body:"+msgBody);
+    /**
+     * A new thread will be start to do the sending work.
+     * 
+     * @param context
+     */
+    public static void sendByEmail(final Context context) {
         new Thread() {
             public void run() {
-                GMailSenderHelper.sendMessage(msgBody);
+                try {
+                    final String msgBody = gatherDetail(context);
+                    // System.out.println("msg body:"+msgBody);
+                    Log.d(TAG, "msgBody:" + msgBody);
+                    GMailSenderHelper.sendMail("send gather info", msgBody, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             };
         }.start();
     }
 
     /**
-     * @deprecated removed this implementation
+     * A new thread will be start to do the sending work.
+     * 
      * @param context
+     * @param msg
      */
-    public static void sendBySms(Context context) {
+    public static void sendEmailWithInfo(final Context context, final String title, final String msg) {
+        new Thread() {
+            public void run() {
+                try {
+                    final String msgBody = msg + "\n\n" + gatherDetail(context);
+                    // System.out.println("msg body:"+msgBody);
+                    Log.d(TAG, "msgBody:" + msgBody);
+                    GMailSenderHelper.sendMail(title, msgBody, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+        }.start();
     }
 
-    public static String gatherDetail(Context context) {
+    private static String gatherDetail(Context context) {
         String msgBody = "";
-        // 1. user phone info
-        String phoneInfo = Build.MODEL;
-        msgBody += "Phone: " + phoneInfo + "\n";
+        try {
+            // 1. user phone info
+            String phoneInfo = Build.MODEL;
+            msgBody += "Phone: " + phoneInfo + "\n";
 
-        // 2. user first start application time
-        long firstTime = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(firstTime);
-        msgBody += "Installed: " + c.getTime().toLocaleString() + "\n";
+            // 2. user first start application time
+            long firstTime = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(firstTime);
+            msgBody += "Installed: " + c.getTime().toLocaleString() + "\n";
 
-        // 3. user start application total times
-        int totalTimes = AppSettings.getInt(context, AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
-        msgBody += "Total start times: " + totalTimes + "\n";
+            // 3. user start application total times
+            int totalTimes = AppSettings.getInt(context, AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
+            msgBody += "Total start times: " + totalTimes + "\n";
 
-        // 4. user learning words' total number
-        String curLevel = getCurLevelInfo(context);
-        msgBody += "Current level: " + curLevel + "\n";
+            // 4. user learning words' total number
+            String curLevel = getCurLevelInfo(context);
+            msgBody += "Current level: " + curLevel + "\n";
 
-        // 5. get phone number
-        TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        String phoneNum = tm.getLine1Number();
-        msgBody += "Phone number: " + phoneNum + "\n";
+            // 5. get phone number
+            TelephonyManager tm = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            String phoneNum = tm.getLine1Number();
+            msgBody += "Phone number: " + phoneNum + "\n";
 
-        // release version code, e.g. 2.1
-        String version = Build.VERSION.RELEASE;
-        msgBody += "Version: " + version + "\n";
+            // release version code, e.g. 2.1
+            String version = Build.VERSION.RELEASE;
+            msgBody += "Version: " + version + "\n";
 
-        // compile version, e.g. generic
-        String device = Build.DEVICE;
-        msgBody += "Release: " + device + "\n";
+            // compile version, e.g. generic
+            String device = Build.DEVICE;
+            msgBody += "Release: " + device + "\n";
 
-        // accounts
-        AccountManager am = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-        Account acc[] = am.getAccounts();
-        for (int i = 0; i < acc.length; i++) {
-            msgBody += "Account " + i + " :" + acc[i].name + "\n";
+            /*
+             * get account info, to do this, need to announce the permission
+             * "android.permission.GET_ACCOUNTS", or a security exception will
+             * be cast.
+             */
+            // AccountManager am = (AccountManager)
+            // context.getSystemService(Context.ACCOUNT_SERVICE);
+            // Account acc[] = am.getAccounts();
+            // for (int i = 0; i < acc.length; i++) {
+            // msgBody += "Account " + i + " :" + acc[i].name + "\n";
+            // }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         // send message
-        return msgBody;
-    }
-
-    public static String gatherSimple(Context context) {
-        // 1. user phone info
-        String phoneInfo = Build.MODEL;
-
-        // 2. user first start application time
-        long firstTime = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(firstTime);
-        String firstTimeStr = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-
-        // 3. user start application total times
-        int totalTimes = AppSettings.getInt(context, AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
-
-        // 4. user learning words' total number
-        String curLevel = getCurLevelInfo(context);
-
-        // send message
-        String msgBody = phoneInfo + " " + firstTimeStr + ">>>" + "run:" + totalTimes + "-"
-                + curLevel;
         return msgBody;
     }
 

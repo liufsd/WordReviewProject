@@ -5,11 +5,17 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -17,8 +23,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ResourceCursorAdapter;
@@ -30,8 +38,8 @@ import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.study.CoreActivity;
 import com.coleman.kingword.study.unit.SubWordListActivity;
 import com.coleman.kingword.study.unit.model.SliceWordList;
-import com.coleman.kingword.study.wordlist.model.WordListManager;
 import com.coleman.kingword.study.wordlist.model.WordList.InternalWordList;
+import com.coleman.kingword.study.wordlist.model.WordListManager;
 import com.coleman.kingword.study.wordlist.model.WordListManager.IProgressNotifier;
 import com.coleman.util.Log;
 
@@ -64,6 +72,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     private View emptyView;
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
@@ -73,19 +86,27 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         loadBtn = (Button) findViewById(R.id.button1);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
+        registerForContextMenu(listView);
         loadBtn.setOnClickListener(this);
-        boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
-        if (loadExternal) {
-            external_file_path = getIntent().getStringExtra(EXTERNAL_FILE_PATH);
-            new ExpensiveTask(ExpensiveTask.LOAD_EXTERNAL).execute();
-        } else {
-            new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
-        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
+        if (loadExternal) {
+            external_file_path = getIntent().getStringExtra(EXTERNAL_FILE_PATH);
+            Log.d(TAG, "external_file_path:" + external_file_path);
+            new ExpensiveTask(ExpensiveTask.LOAD_EXTERNAL).execute();
+        } else {
+            new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+        }
     }
 
     @Override
@@ -132,15 +153,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // if (!DictManager.getInstance().isCurLibInitialized()) {
-        // new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
-        // .setMessage(R.string.init_db).setPositiveButton(R.string.ok,
-        // null).show();
-        // } else {
-        Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
-        i.putExtra(WordsList._ID, (Long) view.getTag());
-        startActivity(i);
-        // }
+        if (!DictManager.getInstance().isCurLibInitialized()) {
+            new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+                    .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
+        } else {
+            Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
+            i.putExtra(WordsList._ID, (Long) view.getTag());
+            startActivity(i);
+        }
     }
 
     @Override
@@ -162,6 +182,66 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle(R.string.option);
+        getMenuInflater().inflate(R.menu.wordlist_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        TextView tv = (TextView) info.targetView.findViewById(R.id.textView1);
+        switch (item.getItemId()) {
+            case R.id.menu_rename:
+                showRenameDialog(info.id);
+                break;
+            case R.id.menu_delete:
+                showDeleteDialog(info.id, tv.getText().toString());
+                break;
+            default:
+                break;
+        }
+        Log.d(TAG, "info position:" + info.position);
+        Log.d(TAG, "info id: " + info.id);
+        Log.d(TAG, "item db id: " + adapter.getItemId(info.position));
+        return true;
+    }
+
+    private void showDeleteDialog(final long id, String name) {
+        String msg = String.format(getString(R.string.delete_warning), name);
+        new AlertDialog.Builder(this).setTitle(R.string.warning_dialog_title).setMessage(msg)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getContentResolver().delete(WordsList.CONTENT_URI,
+                                WordsList._ID + " = " + id, null);
+                        c.requery();
+                        adapter.notifyDataSetChanged();
+                    }
+                }).setNegativeButton(R.string.cancel, null).show();
+    }
+
+    private void showRenameDialog(final long id) {
+        View view = LayoutInflater.from(this).inflate(R.layout.input_dialog, null);
+        final EditText et = (EditText) view.findViewById(R.id.editText1);
+        new AlertDialog.Builder(this).setTitle(R.string.input_dialog_title).setView(view)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String str = et.getText().toString();
+                        if (!TextUtils.isEmpty(str)) {
+                            ContentValues value = new ContentValues();
+                            value.put(WordsList.PATH_NAME, str);
+                            getContentResolver().update(WordsList.CONTENT_URI, value,
+                                    WordsList._ID + " = " + id, null);
+                            c.requery();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }).setNegativeButton(R.string.cancel, null).show();
     }
 
     @Override
@@ -293,4 +373,5 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             }
         }
     }
+
 }
