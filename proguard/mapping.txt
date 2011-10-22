@@ -1,0 +1,2002 @@
+com.coleman.kingword.dict.DictLoadService -> com.coleman.kingword.dict.DictLoadService:
+    java.lang.String TAG -> a
+    void onCreate() -> onCreate
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    void onDestroy() -> onDestroy
+com.coleman.kingword.dict.DictLoadService$1 -> com.coleman.kingword.dict.b:
+    com.coleman.kingword.dict.DictLoadService this$0 -> a
+    void run() -> run
+com.coleman.kingword.dict.DictManager -> com.coleman.kingword.dict.c:
+    java.lang.String TAG -> a
+    java.lang.String EXT_DIC_PATH -> b
+    com.coleman.kingword.dict.DictManager manager -> c
+    java.util.HashMap libmap -> d
+    java.lang.String curLib -> e
+    java.lang.String moreLib -> f
+    com.coleman.kingword.dict.DictManager getInstance() -> a
+    void initLibrary(android.content.Context) -> a
+    void setCurLibrary(java.lang.String) -> a
+    void setMoreLibrary(java.lang.String) -> b
+    com.coleman.kingword.dict.stardict.DictData viewWord(android.content.Context,java.lang.String) -> a
+    com.coleman.kingword.dict.stardict.DictData viewMore(android.content.Context,java.lang.String) -> b
+com.coleman.kingword.dict.DynamicTableManager -> com.coleman.kingword.dict.a:
+    com.coleman.kingword.dict.DynamicTableManager mg -> a
+    java.lang.String EXT_DIC_PATH -> b
+    java.lang.String TAG -> c
+    java.util.HashMap map -> d
+    com.coleman.kingword.dict.DynamicTableManager getInstance() -> a
+    void parsePrefs(java.lang.String) -> a
+    void initTables(android.content.Context) -> a
+    java.util.Collection getTables() -> b
+    java.lang.String toString() -> toString
+com.coleman.kingword.dict.DynamicTableManager$DynamicTable -> com.coleman.kingword.dict.d:
+    java.lang.String name -> a
+    boolean loaded -> b
+    int id -> c
+    int type -> d
+    java.lang.String toString() -> toString
+com.coleman.kingword.dict.stardict.DictData -> com.coleman.kingword.dict.a.c:
+    java.lang.String TAG -> d
+    java.lang.String symbol -> a
+    java.lang.String data -> b
+    boolean isDetail -> c
+    com.coleman.kingword.dict.stardict.DictData constructData(java.lang.String) -> a
+    com.coleman.kingword.dict.stardict.DictData readData(android.content.Context,com.coleman.kingword.dict.stardict.DictInfo,com.coleman.kingword.dict.stardict.DictIndex,java.lang.String) -> a
+    byte[] readData(android.content.Context,com.coleman.kingword.dict.stardict.DictInfo,java.lang.String,int,int) -> a
+    java.lang.String getDatas() -> a
+    java.lang.String getSymbol() -> b
+    java.lang.String getDataAndSymbol() -> c
+    java.lang.String toString() -> toString
+com.coleman.kingword.dict.stardict.DictIndex -> com.coleman.kingword.dict.a.d:
+    java.lang.String TAG -> d
+    java.lang.String word -> a
+    long offset -> b
+    int size -> c
+    java.lang.String toString() -> toString
+    void loadDictIndexMap(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String,int) -> a
+    void readIndexFileNative(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String,int,java.util.HashMap) -> a
+    void doInsert(android.content.Context,java.lang.String,java.util.HashMap) -> a
+com.coleman.kingword.dict.stardict.DictInfo -> com.coleman.kingword.dict.a.f:
+    java.lang.String bookName -> a
+    java.lang.String wordCount -> b
+    java.lang.String idxFileSize -> c
+    java.lang.String sameTypeSequence -> d
+    java.lang.String toString() -> toString
+    com.coleman.kingword.dict.stardict.DictInfo readDicInfo(android.content.Context,java.lang.String) -> a
+com.coleman.kingword.dict.stardict.DictLibrary -> com.coleman.kingword.dict.a.b:
+    java.lang.String TAG -> a
+    com.coleman.kingword.dict.stardict.DictInfo libraryInfo -> b
+    java.lang.String mLibKey -> c
+    java.lang.String mLibPath -> d
+    boolean dbInitialed -> e
+    com.coleman.kingword.dict.stardict.DictInfo getLibraryInfo() -> a
+    com.coleman.kingword.dict.stardict.DictIndex getDictIndex(android.content.Context,java.lang.String) -> a
+    java.lang.String getLibraryName() -> b
+    void setComplete(android.content.Context) -> a
+    java.lang.String access$0(com.coleman.kingword.dict.stardict.DictLibrary) -> a
+    void access$1(com.coleman.kingword.dict.stardict.DictLibrary,com.coleman.kingword.dict.stardict.DictInfo) -> a
+    java.lang.String access$2() -> c
+    com.coleman.kingword.dict.stardict.DictInfo access$3(com.coleman.kingword.dict.stardict.DictLibrary) -> b
+com.coleman.kingword.dict.stardict.DictLibrary$LoadAndInsert -> com.coleman.kingword.dict.a.e:
+    com.coleman.kingword.dict.stardict.DictLibrary this$0 -> a
+    void doWork(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String) -> a
+com.coleman.kingword.dict.stardict.DictLibrary$LoadInfo -> com.coleman.kingword.dict.a.g:
+    com.coleman.kingword.dict.stardict.DictLibrary this$0 -> a
+    void doWork(android.content.Context,java.lang.String) -> a
+com.coleman.kingword.dict.stardict.DictLibraryFactory -> com.coleman.kingword.dict.a.a:
+    void loadLibrary(android.content.Context,java.lang.String,java.util.HashMap) -> a
+com.coleman.kingword.info.InfoGather -> com.coleman.kingword.a.a:
+    java.lang.String TAG -> b
+    java.lang.String defaultAccount -> a
+    void checkLevelUpgrade(android.content.Context,int) -> a
+    void sendByEmail(android.content.Context) -> a
+    java.lang.String gatherDetail(android.content.Context) -> b
+    java.lang.String getCurLevelInfo(android.content.Context) -> c
+com.coleman.kingword.info.InfoGather$1 -> com.coleman.kingword.a.b:
+    java.lang.String val$msgBody -> a
+    void run() -> run
+com.coleman.kingword.info.email.GMailSender -> com.coleman.kingword.a.a.b:
+    java.lang.String TAG -> a
+    java.lang.String mailhost -> b
+    java.lang.String mUser -> c
+    java.lang.String mPassword -> d
+    javax.mail.Session session -> e
+    java.lang.String attachFilePath -> f
+    void setAttachment(java.lang.String) -> a
+    void sendMail(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    javax.mail.internet.MimeBodyPart createAttachment(java.lang.String) -> b
+    java.lang.String access$0(com.coleman.kingword.info.email.GMailSender) -> a
+    java.lang.String access$1(com.coleman.kingword.info.email.GMailSender) -> b
+com.coleman.kingword.info.email.GMailSender$1 -> com.coleman.kingword.a.a.c:
+    com.coleman.kingword.info.email.GMailSender this$0 -> a
+    javax.mail.PasswordAuthentication getPasswordAuthentication() -> a
+com.coleman.kingword.info.email.GMailSenderHelper -> com.coleman.kingword.a.a.a:
+    void sendMail(java.lang.String,java.lang.String) -> a
+    void sendMessage(java.lang.String) -> a
+com.coleman.kingword.inspirit.countdown.CountdownManager -> com.coleman.kingword.b.a.a:
+    long TOTAL_TIME -> a
+    java.lang.String TAG -> b
+    long startTime -> c
+    long pauseTime -> d
+    boolean running -> e
+    android.os.Handler handler -> f
+    void start() -> e
+    void pause() -> a
+    void resume() -> b
+    long getSpentTime() -> c
+    java.lang.String getRemainderTimeShortFormatted(android.content.Context) -> a
+    java.lang.String getMString(int) -> a
+    java.lang.String getSString(int) -> b
+    void update() -> d
+com.coleman.kingword.provider.DictIndexManager -> com.coleman.kingword.provider.i:
+    java.lang.String TAG -> a
+    com.coleman.kingword.provider.DictIndexManager instance -> b
+    java.util.HashMap map -> c
+    java.util.ArrayList droplist -> d
+    java.util.ArrayList createlist -> e
+    com.coleman.kingword.provider.DictIndexManager getInstance() -> a
+    java.util.HashMap getHashMap() -> b
+    java.util.ArrayList getDropList() -> c
+    java.util.ArrayList getCreateList() -> d
+    com.coleman.kingword.provider.DictIndexManager$DictIndexTable getTable(java.lang.String) -> a
+    void print() -> e
+com.coleman.kingword.provider.DictIndexManager$DictIndexTable -> com.coleman.kingword.provider.e:
+    java.lang.String TABLE_NAME -> a
+    android.net.Uri CONTENT_URI -> b
+    int URI -> c
+    int URI_ID -> d
+    java.lang.String CREATE_TABLE_SQL -> e
+    java.util.HashMap projectionMap -> f
+    java.lang.String toString() -> toString
+com.coleman.kingword.provider.KingWord -> com.coleman.kingword.provider.c:
+com.coleman.kingword.provider.KingWord$Achievement -> com.coleman.kingword.provider.f:
+    android.net.Uri CONTENT_URI -> a
+    java.util.HashMap projectionMap -> b
+com.coleman.kingword.provider.KingWord$SubWordsList -> com.coleman.kingword.provider.a:
+    android.net.Uri CONTENT_URI -> a
+    java.util.HashMap projectionMap -> b
+com.coleman.kingword.provider.KingWord$WordInfo -> com.coleman.kingword.provider.h:
+    android.net.Uri CONTENT_URI -> a
+    java.util.HashMap projectionMap -> b
+com.coleman.kingword.provider.KingWord$WordListItem -> com.coleman.kingword.provider.g:
+    android.net.Uri CONTENT_URI -> a
+    java.util.HashMap projectionMap -> b
+com.coleman.kingword.provider.KingWord$WordsList -> com.coleman.kingword.provider.d:
+    android.net.Uri CONTENT_URI -> a
+    java.util.HashMap projectionMap -> b
+com.coleman.kingword.provider.KingWordDBHepler -> com.coleman.kingword.provider.j:
+    java.lang.String TAG -> a
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+com.coleman.kingword.provider.KingWordProvider -> com.coleman.kingword.provider.KingWordProvider:
+    com.coleman.kingword.provider.KingWordDBHepler dbHelper -> a
+    java.lang.String TAG -> b
+    android.content.UriMatcher matcher -> c
+    void updateUriMatcher(java.util.Collection) -> a
+    boolean onCreate() -> onCreate
+    int bulkInsert(android.net.Uri,android.content.ContentValues[]) -> bulkInsert
+    android.net.Uri insert(android.net.Uri,android.content.ContentValues) -> insert
+    int delete(android.net.Uri,java.lang.String,java.lang.String[]) -> delete
+    android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> query
+    int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[]) -> update
+    java.lang.String getType(android.net.Uri) -> getType
+    java.lang.String whereWithId(java.lang.String,java.lang.String) -> a
+com.coleman.kingword.provider.UpgradeManager -> com.coleman.kingword.provider.b:
+    com.coleman.kingword.provider.UpgradeManager manager -> a
+    com.coleman.kingword.provider.UpgradeManager getInstance() -> a
+    void upgrade(android.content.Context) -> a
+com.coleman.kingword.study.ColorSetActivityAsDialog -> com.coleman.kingword.study.ColorSetActivityAsDialog:
+    java.lang.String TAG -> b
+    android.widget.TextView textFont -> c
+    android.widget.RadioGroup sceneMode -> d
+    android.widget.RadioGroup fontOrBgMode -> e
+    android.widget.TextView textRed -> f
+    android.widget.TextView textGreen -> g
+    android.widget.TextView textBlue -> h
+    android.widget.TextView textTrans -> i
+    android.widget.SeekBar seekRed -> j
+    android.widget.SeekBar seekGreen -> k
+    android.widget.SeekBar seekBlue -> l
+    android.widget.SeekBar seekTrans -> m
+    android.widget.Button btnOk -> n
+    android.widget.Button btnCancel -> o
+    android.widget.Button btnReset -> p
+    int selectMode -> q
+    int[][] MODE_COLOR -> a
+    int[] textColor -> r
+    int[] bgColor -> s
+    int[] selectColor -> t
+    void onCreate(android.os.Bundle) -> onCreate
+    int getIdbyMode(int) -> a
+    void initView() -> b
+    void onClick(android.view.View) -> onClick
+    void reset() -> c
+    void exit() -> d
+    void onProgressChanged(android.widget.SeekBar,int,boolean) -> onProgressChanged
+    void onStartTrackingTouch(android.widget.SeekBar) -> onStartTrackingTouch
+    void onStopTrackingTouch(android.widget.SeekBar) -> onStopTrackingTouch
+    void setColor() -> a
+    void setSeekProgress() -> e
+    void onCheckedChanged(android.widget.RadioGroup,int) -> onCheckedChanged
+    void setSelectMode(int) -> b
+com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivity:
+    java.lang.String TAG -> a
+    android.widget.ProgressBar progressBarDay -> b
+    android.widget.ProgressBar progressBarNight -> c
+    android.widget.TextView textView -> d
+    android.widget.ListView listView -> e
+    java.util.ArrayList list -> f
+    com.coleman.kingword.study.CoreActivity$ParaphraseAdapter adapter -> g
+    com.coleman.kingword.study.unit.model.SliceWordList wordlist -> h
+    android.widget.RelativeLayout container -> i
+    com.coleman.kingword.study.unit.model.WordItem nextWordItem -> j
+    android.widget.Button viewWord -> k
+    android.widget.Button addOrRemove -> l
+    android.widget.Button ignoreOrNot -> m
+    android.widget.TextView continueView -> n
+    android.widget.TextView loopView -> o
+    android.widget.Button countBtn -> p
+    int continueHitCount -> q
+    byte sliceListType -> r
+    com.coleman.kingword.study.CoreActivity$Anim anim -> s
+    com.coleman.kingword.inspirit.countdown.CountdownManager countdownManager -> t
+    int selectMode -> u
+    int textColor -> v
+    int bgColor -> w
+    int selectColor -> x
+    java.util.ArrayList _buflist -> y
+    android.os.Handler handler -> z
+    void onCreate(android.os.Bundle) -> onCreate
+    void onPause() -> onPause
+    void onResume() -> onResume
+    void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void showAnimSelect() -> b
+    void broadcastReview() -> c
+    void setReadMode() -> d
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void onDestroy() -> onDestroy
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    void updateLoopCount() -> e
+    void onClick(android.view.View) -> onClick
+    void slideRightIn(android.widget.Button) -> a
+    void slideRightOut(android.view.View) -> a
+    void initView() -> f
+    void apply3DAnim(float,float) -> a
+    void applyFadeAnim() -> g
+    void applySlideAnim() -> h
+    void applySlideIn() -> i
+    void lookupInDict(com.coleman.kingword.study.unit.model.WordItem) -> a
+    void showSubListReachEndDialog() -> j
+    void showCompleteStudyDialog() -> k
+    void access$0(com.coleman.kingword.study.CoreActivity) -> a
+    void access$1(com.coleman.kingword.study.CoreActivity) -> b
+    android.widget.Button access$2(com.coleman.kingword.study.CoreActivity) -> c
+    com.coleman.kingword.inspirit.countdown.CountdownManager access$3(com.coleman.kingword.study.CoreActivity) -> d
+    java.util.ArrayList access$4(com.coleman.kingword.study.CoreActivity) -> e
+    int access$5(com.coleman.kingword.study.CoreActivity) -> f
+    com.coleman.kingword.study.unit.model.WordItem access$6(com.coleman.kingword.study.CoreActivity) -> g
+    int access$7(com.coleman.kingword.study.CoreActivity) -> h
+    int access$8(com.coleman.kingword.study.CoreActivity) -> i
+    java.util.ArrayList access$9(com.coleman.kingword.study.CoreActivity) -> j
+    android.widget.TextView access$10(com.coleman.kingword.study.CoreActivity) -> k
+    com.coleman.kingword.study.CoreActivity$ParaphraseAdapter access$11(com.coleman.kingword.study.CoreActivity) -> l
+    android.widget.RelativeLayout access$12(com.coleman.kingword.study.CoreActivity) -> m
+    android.widget.ListView access$13(com.coleman.kingword.study.CoreActivity) -> n
+    void access$14(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.unit.model.WordItem) -> a
+    com.coleman.kingword.study.unit.model.SliceWordList access$15(com.coleman.kingword.study.CoreActivity) -> o
+    void access$16(com.coleman.kingword.study.CoreActivity,byte) -> a
+    void access$17(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.unit.model.WordItem) -> b
+    android.widget.Button access$18(com.coleman.kingword.study.CoreActivity) -> p
+    void access$19(com.coleman.kingword.study.CoreActivity) -> q
+    android.os.Handler access$20(com.coleman.kingword.study.CoreActivity) -> r
+    void access$21(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.inspirit.countdown.CountdownManager) -> a
+    android.widget.ProgressBar access$22(com.coleman.kingword.study.CoreActivity) -> s
+    android.widget.ProgressBar access$23(com.coleman.kingword.study.CoreActivity) -> t
+    android.widget.Button access$24(com.coleman.kingword.study.CoreActivity) -> u
+    android.widget.Button access$25(com.coleman.kingword.study.CoreActivity) -> v
+    android.widget.TextView access$26(com.coleman.kingword.study.CoreActivity) -> w
+    java.lang.String access$27() -> a
+    com.coleman.kingword.study.CoreActivity$Anim access$28(com.coleman.kingword.study.CoreActivity) -> x
+    void access$29(com.coleman.kingword.study.CoreActivity,float,float) -> a
+    void access$30(com.coleman.kingword.study.CoreActivity) -> y
+    void access$31(com.coleman.kingword.study.CoreActivity) -> z
+    void access$32(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.CoreActivity$Anim) -> a
+com.coleman.kingword.study.CoreActivity$1 -> com.coleman.kingword.study.ac:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+com.coleman.kingword.study.CoreActivity$10 -> com.coleman.kingword.study.ad:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onCancel(android.content.DialogInterface) -> onCancel
+com.coleman.kingword.study.CoreActivity$2 -> com.coleman.kingword.study.z:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.CoreActivity$3 -> com.coleman.kingword.study.y:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    android.widget.Button val$view -> b
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.CoreActivity$4 -> com.coleman.kingword.study.ab:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    android.view.View val$view -> b
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.CoreActivity$5 -> com.coleman.kingword.study.aa:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    com.coleman.kingword.study.CoreActivity access$0(com.coleman.kingword.study.CoreActivity$5) -> a
+com.coleman.kingword.study.CoreActivity$5$1 -> com.coleman.kingword.study.au:
+    com.coleman.kingword.study.CoreActivity$5 this$1 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.CoreActivity$6 -> com.coleman.kingword.study.v:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    com.coleman.kingword.study.CoreActivity access$0(com.coleman.kingword.study.CoreActivity$6) -> a
+com.coleman.kingword.study.CoreActivity$6$1 -> com.coleman.kingword.study.at:
+    com.coleman.kingword.study.CoreActivity$6 this$1 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.CoreActivity$7 -> com.coleman.kingword.study.u:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    com.coleman.kingword.study.CoreActivity access$0(com.coleman.kingword.study.CoreActivity$7) -> a
+com.coleman.kingword.study.CoreActivity$7$1 -> com.coleman.kingword.study.as:
+    com.coleman.kingword.study.CoreActivity$7 this$1 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.CoreActivity$8 -> com.coleman.kingword.study.x:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.CoreActivity$9 -> com.coleman.kingword.study.w:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.CoreActivity$Anim -> com.coleman.kingword.study.o:
+    com.coleman.kingword.study.CoreActivity$Anim ANIM_3D -> a
+    com.coleman.kingword.study.CoreActivity$Anim ANIM_SLIDE -> b
+    com.coleman.kingword.study.CoreActivity$Anim ANIM_FADE -> c
+    int type -> d
+    com.coleman.kingword.study.CoreActivity$Anim[] ENUM$VALUES -> e
+    int getType() -> a
+    com.coleman.kingword.study.CoreActivity$Anim getAnim(int) -> a
+    com.coleman.kingword.study.CoreActivity$Anim[] values() -> values
+    com.coleman.kingword.study.CoreActivity$Anim valueOf(java.lang.String) -> valueOf
+com.coleman.kingword.study.CoreActivity$BGDrawable -> com.coleman.kingword.study.t:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+com.coleman.kingword.study.CoreActivity$DisplayNextView -> com.coleman.kingword.study.aq:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+com.coleman.kingword.study.CoreActivity$ExpensiveTask -> com.coleman.kingword.study.q:
+    byte taskType -> b
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    int[] $SWITCH_TABLE$com$coleman$kingword$study$CoreActivity$Anim -> c
+    void onPreExecute() -> onPreExecute
+    android.os.Bundle doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(android.os.Bundle) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+    int[] $SWITCH_TABLE$com$coleman$kingword$study$CoreActivity$Anim() -> a
+com.coleman.kingword.study.CoreActivity$ParaphraseAdapter -> com.coleman.kingword.study.aj:
+    android.view.LayoutInflater inflater -> a
+    android.graphics.Typeface mFace -> b
+    com.coleman.kingword.study.CoreActivity this$0 -> c
+    int getCount() -> getCount
+    java.lang.Object getItem(int) -> getItem
+    long getItemId(int) -> getItemId
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+com.coleman.kingword.study.CoreActivity$Rotate3dAnimation -> com.coleman.kingword.study.s:
+    float mFromDegrees -> b
+    float mToDegrees -> c
+    float mCenterX -> d
+    float mCenterY -> e
+    float mDepthZ -> f
+    boolean mReverse -> g
+    android.graphics.Camera mCamera -> h
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void initialize(int,int,int,int) -> initialize
+    void applyTransformation(float,android.view.animation.Transformation) -> applyTransformation
+com.coleman.kingword.study.CoreActivity$SwapViews -> com.coleman.kingword.study.ap:
+    com.coleman.kingword.study.CoreActivity this$0 -> a
+    void run() -> run
+    com.coleman.kingword.study.CoreActivity access$0(com.coleman.kingword.study.CoreActivity$SwapViews) -> a
+com.coleman.kingword.study.CoreActivity$SwapViews$1 -> com.coleman.kingword.study.ao:
+    com.coleman.kingword.study.CoreActivity$SwapViews this$1 -> a
+    void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
+    void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
+    void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.study.SettingsActivity -> com.coleman.kingword.study.SettingsActivity:
+    java.lang.String TAG -> a
+    android.widget.ListView listView -> b
+    com.coleman.kingword.study.SettingsActivity$SettingsAdapter adapter -> c
+    java.util.ArrayList data -> d
+    java.lang.String[] from -> e
+    void onCreate(android.os.Bundle) -> onCreate
+    void prepareData() -> b
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    void showGetPwRequest() -> c
+    void showSecurity() -> d
+    boolean checkStoredPwMatched() -> e
+    java.lang.String getSuperPW() -> f
+    void checkPwSent(java.lang.String) -> a
+    java.lang.String getCalculatedPw() -> g
+    void showHighLevelSettings() -> h
+    void showLanguageDialog() -> i
+    void showSummaryInfoDB() -> j
+    void showDetailedInfoDB() -> k
+    void mapIntToStr(java.util.ArrayList,java.util.ArrayList) -> a
+    void mapStrToInt(java.util.ArrayList,java.util.ArrayList) -> b
+    void showViewMethodConfigDialog() -> l
+    void showHLS_SelectDebugLevel() -> m
+    void showSelectLevelType() -> n
+    void showBackupDialog() -> o
+    void showBackupItems() -> p
+    void backupDB(android.content.Context,boolean) -> b
+    void showRestoreDialog() -> q
+    void showRestoreItems() -> r
+    void restoreDB(android.content.Context,boolean) -> a
+    void showReviewTimeList() -> s
+    void showSetReviewTime(int,java.lang.String) -> a
+    void showSelectSplitNum() -> t
+    int getCheckedIndex(java.lang.String[],int) -> a
+    void toast(java.lang.String) -> b
+    void toast(int) -> a
+    void dialog(java.lang.String) -> c
+    void dialog(int) -> b
+    java.util.ArrayList access$0(com.coleman.kingword.study.SettingsActivity) -> a
+    java.lang.String[] access$1() -> a
+    void access$2(com.coleman.kingword.study.SettingsActivity,int) -> a
+    void access$3(com.coleman.kingword.study.SettingsActivity,java.lang.String) -> a
+    void access$4(com.coleman.kingword.study.SettingsActivity) -> b
+    void access$5(com.coleman.kingword.study.SettingsActivity) -> c
+    void access$6(com.coleman.kingword.study.SettingsActivity) -> d
+    void access$7(com.coleman.kingword.study.SettingsActivity) -> e
+    void access$8(com.coleman.kingword.study.SettingsActivity) -> f
+    void access$9(com.coleman.kingword.study.SettingsActivity) -> g
+    void access$10(com.coleman.kingword.study.SettingsActivity) -> h
+    void access$11(com.coleman.kingword.study.SettingsActivity) -> i
+    void access$12(com.coleman.kingword.study.SettingsActivity,java.util.ArrayList,java.util.ArrayList) -> a
+    void access$13(com.coleman.kingword.study.SettingsActivity,java.util.ArrayList,java.util.ArrayList) -> b
+    void access$14(com.coleman.kingword.study.SettingsActivity,java.lang.String) -> b
+    void access$15(com.coleman.kingword.study.SettingsActivity) -> j
+    void access$16(com.coleman.kingword.study.SettingsActivity,android.content.Context,boolean) -> a
+    void access$17(com.coleman.kingword.study.SettingsActivity) -> k
+    void access$18(com.coleman.kingword.study.SettingsActivity,int,java.lang.String) -> a
+com.coleman.kingword.study.SettingsActivity$1 -> com.coleman.kingword.study.ae:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    android.widget.EditText val$et -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$10 -> com.coleman.kingword.study.a:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.util.ArrayList val$list -> b
+    java.util.ArrayList val$result -> c
+    com.coleman.kingword.study.SettingsActivity$1Index val$selectIndex -> d
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$11 -> com.coleman.kingword.study.b:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    int[] val$debugLevNums -> b
+    java.lang.String[] val$debugLevs -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$12 -> com.coleman.kingword.study.c:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$13 -> com.coleman.kingword.study.d:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$14 -> com.coleman.kingword.study.e:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$15 -> com.coleman.kingword.study.f:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    boolean val$toast -> b
+    android.content.Context val$context -> c
+    void handleMessage(android.os.Message) -> handleMessage
+com.coleman.kingword.study.SettingsActivity$16 -> com.coleman.kingword.study.g:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    android.os.Handler val$handler -> b
+    void run() -> run
+com.coleman.kingword.study.SettingsActivity$17 -> com.coleman.kingword.study.h:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$18 -> com.coleman.kingword.study.i:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$19 -> com.coleman.kingword.study.j:
+    boolean val$toast -> a
+    android.content.Context val$context -> b
+    void handleMessage(android.os.Message) -> handleMessage
+com.coleman.kingword.study.SettingsActivity$1Index -> com.coleman.kingword.study.r:
+    int i -> a
+    com.coleman.kingword.study.SettingsActivity this$0 -> b
+com.coleman.kingword.study.SettingsActivity$2 -> com.coleman.kingword.study.ai:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    android.widget.EditText val$et -> b
+    void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+com.coleman.kingword.study.SettingsActivity$20 -> com.coleman.kingword.study.m:
+    android.os.Handler val$handler -> a
+    void run() -> run
+com.coleman.kingword.study.SettingsActivity$21 -> com.coleman.kingword.study.n:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.lang.String[] val$time -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$22 -> com.coleman.kingword.study.k:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    int val$which -> b
+    void onTimeSet(android.widget.TimePicker,int,int) -> onTimeSet
+com.coleman.kingword.study.SettingsActivity$23 -> com.coleman.kingword.study.l:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.lang.String[] val$nums -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$3 -> com.coleman.kingword.study.ah:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    android.widget.EditText val$et -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$4 -> com.coleman.kingword.study.ag:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$5 -> com.coleman.kingword.study.af:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$6 -> com.coleman.kingword.study.am:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.util.Collection val$c -> b
+    java.lang.String[] val$names -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$7 -> com.coleman.kingword.study.an:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.util.Collection val$c -> b
+    java.lang.String[] val$names -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.SettingsActivity$8 -> com.coleman.kingword.study.ak:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    android.widget.RadioButton val$radioSub -> b
+    android.widget.RadioButton val$radioReview -> c
+    android.widget.RadioButton val$radioNewbook -> d
+    android.widget.RadioButton val$radioIgnore -> e
+    java.util.ArrayList val$list -> f
+    java.util.ArrayList val$result -> g
+    com.coleman.kingword.study.SettingsActivity$1Index val$selectIndex -> h
+    android.widget.ArrayAdapter val$listViewAdapter -> i
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.SettingsActivity$9 -> com.coleman.kingword.study.al:
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    java.util.ArrayList val$list -> b
+    java.lang.String[] val$spinnerArr -> c
+    android.widget.Spinner val$spinner1 -> d
+    android.widget.ArrayAdapter val$listViewAdapter -> e
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.SettingsActivity$SettingsAdapter -> com.coleman.kingword.study.ar:
+    android.view.LayoutInflater inflater -> b
+    com.coleman.kingword.study.SettingsActivity this$0 -> a
+    int getCount() -> getCount
+    java.lang.Object getItem(int) -> getItem
+    long getItemId(int) -> getItemId
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+com.coleman.kingword.study.SettingsActivity$SimpleCrypto -> com.coleman.kingword.study.p:
+    java.lang.String KEY -> a
+    java.lang.String encrypt(java.lang.String,java.lang.String) -> a
+    byte[] getRawKey(byte[]) -> b
+    byte[] encrypt(byte[],byte[]) -> a
+    java.lang.String toHex(byte[]) -> a
+    void appendHex(java.lang.StringBuffer,byte) -> a
+    java.lang.String access$0() -> a
+com.coleman.kingword.study.WelcomeActivity -> com.coleman.kingword.study.WelcomeActivity:
+    java.lang.String TAG -> a
+    android.widget.Button startButton -> b
+    android.widget.TextView curTV -> c
+    android.widget.TextView nextTV -> d
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
+    void onPause() -> onPause
+    void ifFirstInstalled() -> a
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void showLevelInfo() -> b
+    void showSettings() -> c
+    void showAboutDev() -> d
+    void initLevels() -> e
+com.coleman.kingword.study.WelcomeActivity$1 -> com.coleman.kingword.study.av:
+    com.coleman.kingword.study.WelcomeActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.review.ebbinghaus.EbbinghausActivityAsDialog -> com.coleman.kingword.study.review.ebbinghaus.EbbinghausActivityAsDialog:
+    android.widget.TextView title -> a
+    android.widget.TextView msg -> b
+    android.widget.Button btn1 -> c
+    android.widget.Button btn2 -> d
+    byte type -> e
+    byte reviewType -> f
+    void onCreate(android.os.Bundle) -> onCreate
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder -> com.coleman.kingword.study.review.ebbinghaus.a:
+    java.lang.String TAG -> a
+    void setNotifactionDelay(android.content.Context,byte,int) -> a
+    void removeRepeatNotifaction(android.content.Context,int) -> a
+    void setRepeatNotifaction(android.content.Context,int,java.lang.String) -> a
+    void setNotifactionAfterInstalled(android.content.Context) -> a
+    void setNotifactionAfterReboot(android.content.Context) -> b
+com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver -> com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver:
+    java.lang.String TAG -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    void doEbbinghausAction(android.content.Context,android.content.Intent) -> a
+    boolean needReview(android.content.Context) -> a
+com.coleman.kingword.study.unit.SubWordListActivity -> com.coleman.kingword.study.unit.SubWordListActivity:
+    java.lang.String TAG -> c
+    android.widget.ProgressBar progressBar -> d
+    android.widget.ProgressBar preProgress -> e
+    com.coleman.kingword.study.unit.view.SlideTableSwitcher mSwitcher -> f
+    com.coleman.kingword.study.unit.SubWordListActivity$PageControl pageControl -> g
+    long wordlist_id -> h
+    int d_x -> a
+    int u_x -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onStart() -> onStart
+    void initViews() -> a
+    boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    android.widget.ProgressBar access$0(com.coleman.kingword.study.unit.SubWordListActivity) -> a
+    android.widget.ProgressBar access$1(com.coleman.kingword.study.unit.SubWordListActivity) -> b
+    void access$2(com.coleman.kingword.study.unit.SubWordListActivity,com.coleman.kingword.study.unit.SubWordListActivity$PageControl) -> a
+    com.coleman.kingword.study.unit.SubWordListActivity$PageControl access$3(com.coleman.kingword.study.unit.SubWordListActivity) -> c
+    com.coleman.kingword.study.unit.view.SlideTableSwitcher access$4(com.coleman.kingword.study.unit.SubWordListActivity) -> d
+com.coleman.kingword.study.unit.SubWordListActivity$ExpensiveTask -> com.coleman.kingword.study.unit.a:
+    byte type -> b
+    com.coleman.kingword.study.unit.SubWordListActivity this$0 -> a
+    void onPreExecute() -> onPreExecute
+    java.lang.Void doInBackground(android.os.Bundle[]) -> a
+    void onPostExecute(java.lang.Void) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.coleman.kingword.study.unit.SubWordListActivity$PageControl -> com.coleman.kingword.study.unit.b:
+    java.util.ArrayList mlist -> a
+    int curIndex -> b
+    int MAX_PAGE_ITEM -> c
+    int getProgress() -> a
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] getPageInfo() -> b
+    boolean hasNextPage() -> c
+    boolean hasPreviousPage() -> d
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToNextPage() -> e
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToPrePage() -> f
+com.coleman.kingword.study.unit.model.FiniteStateMachine -> com.coleman.kingword.study.unit.model.g:
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState mCurrentState -> a
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteStateEngine mStateEngine -> b
+    java.util.ArrayList mStateList -> c
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState initState -> d
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState mulState -> e
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState completeState -> f
+    com.coleman.kingword.study.unit.model.SliceWordList sliceList -> g
+    boolean isComplete() -> a
+    void addState(com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState) -> a
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState getCurrentState() -> b
+    void sendEmptyMessage(int) -> a
+    java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.study.unit.model.WordItem,java.util.ArrayList) -> a
+    void setInitialState(com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState) -> b
+    com.coleman.kingword.study.unit.model.SliceWordList access$0(com.coleman.kingword.study.unit.model.FiniteStateMachine) -> a
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState access$1(com.coleman.kingword.study.unit.model.FiniteStateMachine) -> b
+    void access$2(com.coleman.kingword.study.unit.model.FiniteStateMachine,com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState) -> a
+    java.util.ArrayList access$3(com.coleman.kingword.study.unit.model.FiniteStateMachine) -> c
+com.coleman.kingword.study.unit.model.FiniteStateMachine$CompleteState -> com.coleman.kingword.study.unit.model.b:
+    com.coleman.kingword.study.unit.model.FiniteStateMachine this$0 -> a
+    void enter() -> a
+com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState -> com.coleman.kingword.study.unit.model.c:
+    java.util.Random ran -> a
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState nextState -> b
+    boolean counted -> c
+    boolean pass -> d
+    int index -> e
+    com.coleman.kingword.study.unit.model.FiniteStateMachine this$0 -> f
+    void enter() -> a
+    void exit() -> b
+    void reset() -> c
+    java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.study.unit.model.WordItem,java.util.ArrayList) -> a
+    void shuffle(java.util.ArrayList) -> a
+    void addRandomDictData(android.content.Context,java.util.ArrayList,java.util.ArrayList) -> a
+com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteStateEngine -> com.coleman.kingword.study.unit.model.a:
+    com.coleman.kingword.study.unit.model.FiniteStateMachine this$0 -> a
+    void handleMessage(android.os.Message) -> a
+    void transitionTo(com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState) -> a
+    void reset() -> a
+    void complete() -> b
+com.coleman.kingword.study.unit.model.FiniteStateMachine$InitState -> com.coleman.kingword.study.unit.model.h:
+    com.coleman.kingword.study.unit.model.FiniteStateMachine this$0 -> a
+    void exit() -> b
+    java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.study.unit.model.WordItem,java.util.ArrayList) -> a
+com.coleman.kingword.study.unit.model.FiniteStateMachine$MultipleState -> com.coleman.kingword.study.unit.model.e:
+    com.coleman.kingword.study.unit.model.FiniteStateMachine this$0 -> a
+    void exit() -> b
+    java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.study.unit.model.WordItem,java.util.ArrayList) -> a
+com.coleman.kingword.study.unit.model.SliceWordList -> com.coleman.kingword.study.unit.model.SliceWordList:
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo subinfo -> i
+    java.util.ArrayList list -> j
+    java.lang.String[] projection -> k
+    java.lang.String TAG -> l
+    int p -> m
+    int[] passStateCount -> a
+    int errorCount -> b
+    int totalCount -> c
+    int loopCount -> d
+    int loopIndex -> e
+    int ignoreCount -> f
+    byte listType -> g
+    int[][] slicelistState -> h
+    void loadViewMethod(android.content.Context) -> d
+    void loadWordList(android.content.Context) -> a
+    int getListType() -> a
+    void loadReviewWordList(android.content.Context) -> b
+    void loadInfoList(android.content.Context) -> e
+    void loadSubList(android.content.Context) -> f
+    int getProgress() -> b
+    boolean allComplete() -> c
+    java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.study.unit.model.WordItem) -> a
+    com.coleman.kingword.study.unit.model.WordItem getCurrentWord() -> d
+    com.coleman.kingword.study.unit.model.WordItem getNext() -> e
+    java.lang.String computeSubListStudyResult(android.content.Context) -> c
+    int getCorrectPercentage() -> f
+    void update(android.content.Context) -> g
+    int getCount() -> g
+    int getLoopIndex() -> h
+    int getLoopCount() -> i
+    int getIgnoreCount() -> j
+com.coleman.kingword.study.unit.model.SliceWordList$SubInfo -> com.coleman.kingword.study.unit.model.SliceWordList$SubInfo:
+    int index -> a
+    long id -> b
+    long word_list_id -> c
+    int level -> d
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    android.content.ContentValues toContentValues() -> a
+    java.lang.String toString() -> toString
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+com.coleman.kingword.study.unit.model.SliceWordList$SubInfo$1 -> com.coleman.kingword.study.unit.model.f:
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo createFromParcel(android.os.Parcel) -> a
+    com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] newArray(int) -> a
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.coleman.kingword.study.unit.model.WordItem -> com.coleman.kingword.study.unit.model.d:
+    java.lang.String TAG -> d
+    long id -> a
+    java.lang.String word -> b
+    com.coleman.kingword.study.wordinfo.WordInfoVO info -> c
+    boolean reviewed -> e
+    com.coleman.kingword.dict.stardict.DictData dictData -> f
+    com.coleman.kingword.dict.stardict.DictData detailData -> g
+    com.coleman.kingword.study.unit.model.FiniteStateMachine mStateMachine -> h
+    com.coleman.kingword.study.unit.model.SliceWordList sliceList -> i
+    java.lang.String getWord(android.content.Context) -> a
+    com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState getCurrentStatus() -> a
+    boolean isComplete() -> b
+    boolean showSymbol() -> c
+    boolean isAddToNew() -> d
+    void setPass(boolean) -> a
+    com.coleman.kingword.dict.stardict.DictData getDictData(android.content.Context) -> b
+    com.coleman.kingword.dict.stardict.DictData getDetail(android.content.Context) -> c
+    void loadInfo(android.content.Context) -> d
+    boolean addNew(android.content.Context) -> e
+    boolean removeFromNew(android.content.Context) -> f
+    boolean upgrade(android.content.Context) -> g
+    boolean degrade(android.content.Context) -> h
+    boolean ignore(android.content.Context) -> i
+    void studyOrReview(android.content.Context) -> j
+    void studyPlus(android.content.Context) -> m
+    void reviewPlus(android.content.Context) -> n
+    void errorPlus(android.content.Context) -> k
+    java.lang.String toString() -> toString
+    java.util.ArrayList getDictData(android.content.Context,java.util.ArrayList) -> a
+    boolean isIgnore() -> e
+    boolean removeIgnore(android.content.Context) -> l
+    boolean isNewWord() -> f
+    void clear() -> g
+com.coleman.kingword.study.unit.view.SlideTableSwitcher -> com.coleman.kingword.study.unit.view.SlideTableSwitcher:
+    java.lang.String TAG -> c
+    android.widget.Button[] btns -> a
+    android.widget.TextView[] tvs -> b
+    void initViews(android.widget.TableLayout) -> a
+    int getTextId(int) -> a
+    void setData(com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[]) -> a
+    void showNextScreen(com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[]) -> b
+    void showPreviousScreen(com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[]) -> c
+    void showCurrentScreen(com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[]) -> d
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.unit.view.SlideTableSwitcher$SlideTableFactory -> com.coleman.kingword.study.unit.view.a:
+    android.view.LayoutInflater mInflater -> a
+    com.coleman.kingword.study.unit.view.SlideTableSwitcher this$0 -> b
+    android.view.View makeView() -> makeView
+com.coleman.kingword.study.wordinfo.WordInfoHelper -> com.coleman.kingword.study.wordinfo.a:
+    java.lang.String[] projection -> a
+    java.lang.String TAG -> b
+    com.coleman.kingword.study.wordinfo.WordInfoVO getWordInfo(android.content.Context,java.lang.String) -> a
+    java.util.ArrayList getWordInfoList(android.content.Context,byte) -> a
+    boolean store(android.content.Context,com.coleman.kingword.study.wordinfo.WordInfoVO) -> a
+    void backupWordInfoDB(android.content.Context,boolean) -> a
+    void restoreWordInfoDB(android.content.Context,boolean) -> b
+    android.net.Uri insert(android.content.Context,com.coleman.kingword.study.wordinfo.WordInfoVO) -> b
+    int update(android.content.Context,com.coleman.kingword.study.wordinfo.WordInfoVO) -> c
+    java.lang.String access$0() -> a
+    java.lang.String[] access$1() -> b
+com.coleman.kingword.study.wordinfo.WordInfoHelper$1 -> com.coleman.kingword.study.wordinfo.c:
+    boolean val$toast -> a
+    android.content.Context val$context -> b
+    void handleMessage(android.os.Message) -> handleMessage
+com.coleman.kingword.study.wordinfo.WordInfoHelper$2 -> com.coleman.kingword.study.wordinfo.d:
+    android.content.Context val$context -> a
+    android.os.Handler val$handler -> b
+    void run() -> run
+com.coleman.kingword.study.wordinfo.WordInfoHelper$3 -> com.coleman.kingword.study.wordinfo.f:
+    boolean val$toast -> a
+    android.content.Context val$context -> b
+    void handleMessage(android.os.Message) -> handleMessage
+com.coleman.kingword.study.wordinfo.WordInfoHelper$4 -> com.coleman.kingword.study.wordinfo.e:
+    java.io.DataInputStream val$dis -> a
+    java.io.FileInputStream val$fis -> b
+    java.io.File val$file -> c
+    android.content.Context val$context -> d
+    android.os.Handler val$handler -> e
+    void run() -> run
+com.coleman.kingword.study.wordinfo.WordInfoVO -> com.coleman.kingword.study.wordinfo.WordInfoVO:
+    java.lang.String TAG -> j
+    long id -> a
+    java.lang.String word -> b
+    boolean ignore -> c
+    byte studycount -> d
+    byte errorcount -> e
+    byte weight -> f
+    boolean newword -> g
+    long review_time -> h
+    byte review_type -> i
+    android.os.Parcelable$Creator CREATOR -> CREATOR
+    boolean inReviewTime() -> a
+    java.lang.String toString() -> toString
+    boolean equals(java.lang.Object) -> equals
+    int describeContents() -> describeContents
+    void writeToParcel(android.os.Parcel,int) -> writeToParcel
+    byte getNextReviewType(byte) -> a
+    java.lang.String getReviewTypeText(android.content.Context,byte) -> a
+    long getTime() -> b
+com.coleman.kingword.study.wordinfo.WordInfoVO$1 -> com.coleman.kingword.study.wordinfo.b:
+    com.coleman.kingword.study.wordinfo.WordInfoVO createFromParcel(android.os.Parcel) -> a
+    com.coleman.kingword.study.wordinfo.WordInfoVO[] newArray(int) -> a
+    java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    java.lang.Object[] newArray(int) -> newArray
+com.coleman.kingword.study.wordlist.FileExplorer -> com.coleman.kingword.study.wordlist.FileExplorer:
+    java.lang.String TAG -> a
+    java.util.ArrayList list -> b
+    java.io.File root -> c
+    android.widget.ListView listView -> d
+    com.coleman.kingword.study.wordlist.FileExplorer$FileAdapter adapter -> e
+    android.widget.TextView pathView -> f
+    void onCreate(android.os.Bundle) -> onCreate
+    void listFiles(java.util.ArrayList,java.io.File) -> a
+    void onBackPressed() -> onBackPressed
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void doEdit(java.lang.String) -> a
+    void access$0(com.coleman.kingword.study.wordlist.FileExplorer,java.io.File) -> a
+    java.io.File access$1(com.coleman.kingword.study.wordlist.FileExplorer) -> a
+    void access$2(com.coleman.kingword.study.wordlist.FileExplorer,java.util.ArrayList,java.io.File) -> a
+    void access$3(com.coleman.kingword.study.wordlist.FileExplorer,java.lang.String) -> a
+    java.lang.String access$4() -> a
+com.coleman.kingword.study.wordlist.FileExplorer$1 -> com.coleman.kingword.study.wordlist.a:
+    com.coleman.kingword.study.wordlist.FileExplorer this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.study.wordlist.FileExplorer$FileAdapter -> com.coleman.kingword.study.wordlist.d:
+    android.view.LayoutInflater inflater -> b
+    java.util.ArrayList list -> c
+    com.coleman.kingword.study.wordlist.FileExplorer this$0 -> a
+    int getCount() -> getCount
+    java.io.File getItem(int) -> a
+    long getItemId(int) -> getItemId
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    java.lang.Object getItem(int) -> getItem
+com.coleman.kingword.study.wordlist.TextEditor -> com.coleman.kingword.study.wordlist.TextEditor:
+    java.lang.String TAG -> a
+    android.widget.EditText editText -> b
+    java.lang.String path -> c
+    android.widget.Button btnSave -> d
+    void onCreate(android.os.Bundle) -> onCreate
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onClick(android.view.View) -> onClick
+    void onDestroy() -> onDestroy
+    void doSave() -> b
+    java.lang.String access$0(com.coleman.kingword.study.wordlist.TextEditor) -> a
+    android.widget.EditText access$1(com.coleman.kingword.study.wordlist.TextEditor) -> b
+    java.lang.String access$2() -> a
+com.coleman.kingword.study.wordlist.TextEditor$ExpensiveTask -> com.coleman.kingword.study.wordlist.b:
+    byte type -> b
+    java.lang.String content -> c
+    com.coleman.kingword.study.wordlist.TextEditor this$0 -> a
+    void onPreExecute() -> onPreExecute
+    java.lang.Void doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.Void) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.coleman.kingword.study.wordlist.TextEditor$FileLoader -> com.coleman.kingword.study.wordlist.f:
+    java.lang.String content -> b
+    com.coleman.kingword.study.wordlist.TextEditor this$0 -> a
+    java.lang.String getContent() -> a
+    void doLoad(java.io.InputStream) -> a
+com.coleman.kingword.study.wordlist.WordListActivity -> com.coleman.kingword.study.wordlist.WordListActivity:
+    java.lang.String TAG -> a
+    com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter adapter -> b
+    android.database.Cursor c -> c
+    java.lang.String[] projection -> d
+    java.lang.String external_file_path -> e
+    android.widget.ListView listView -> f
+    android.widget.Button loadBtn -> g
+    android.widget.ProgressBar progressBar -> h
+    android.view.View loadLayout -> i
+    android.view.View emptyView -> j
+    void onCreate(android.os.Bundle) -> onCreate
+    void onStart() -> onStart
+    void onDestroy() -> onDestroy
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onClick(android.view.View) -> onClick
+    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
+    android.widget.ProgressBar access$0(com.coleman.kingword.study.wordlist.WordListActivity) -> a
+    android.view.View access$1(com.coleman.kingword.study.wordlist.WordListActivity) -> b
+    android.view.View access$2(com.coleman.kingword.study.wordlist.WordListActivity) -> c
+    android.widget.ListView access$3(com.coleman.kingword.study.wordlist.WordListActivity) -> d
+    java.lang.String[] access$4() -> a
+    void access$5(com.coleman.kingword.study.wordlist.WordListActivity,android.database.Cursor) -> a
+    android.database.Cursor access$6(com.coleman.kingword.study.wordlist.WordListActivity) -> e
+    java.lang.String access$7() -> b
+    java.lang.String access$8(com.coleman.kingword.study.wordlist.WordListActivity) -> f
+    void access$9(com.coleman.kingword.study.wordlist.WordListActivity,com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter) -> a
+    com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter access$10(com.coleman.kingword.study.wordlist.WordListActivity) -> g
+com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask -> com.coleman.kingword.study.wordlist.e:
+    byte type -> b
+    com.coleman.kingword.study.wordlist.WordListActivity this$0 -> a
+    void onPreExecute() -> onPreExecute
+    java.lang.Void doInBackground(java.lang.Void[]) -> a
+    void onProgressUpdate(java.lang.Integer[]) -> a
+    void onPostExecute(java.lang.Void) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+    void onProgressUpdate(java.lang.Object[]) -> onProgressUpdate
+    void access$3(com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask,java.lang.Object[]) -> a
+com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$1 -> com.coleman.kingword.study.wordlist.h:
+    com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask this$1 -> a
+    void notify(int) -> a
+com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$2 -> com.coleman.kingword.study.wordlist.g:
+    com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask this$1 -> a
+    void notify(int) -> a
+com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter -> com.coleman.kingword.study.wordlist.c:
+    com.coleman.kingword.study.wordlist.WordListActivity this$0 -> a
+    void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
+    android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
+    java.lang.String getName(java.lang.String) -> a
+com.coleman.kingword.study.wordlist.model.GeneralParser -> com.coleman.kingword.study.wordlist.a.g:
+    java.lang.String TAG -> a
+    java.util.ArrayList parseFile(android.content.Context,java.lang.String,boolean,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> a
+com.coleman.kingword.study.wordlist.model.WordList -> com.coleman.kingword.study.wordlist.a.f:
+    java.lang.String TAG -> e
+    long id -> a
+    java.lang.String describe -> b
+    java.lang.String path_name -> c
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod set_method -> d
+    android.content.ContentValues toContentValues() -> a
+com.coleman.kingword.study.wordlist.model.WordList$SetMethod -> com.coleman.kingword.study.wordlist.a.h:
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod DEFAULT_DEVIDE -> a
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod AVARAGE_DEVIDE -> b
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod CHARACTER_DEVIDER -> c
+    int value -> d
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod[] ENUM$VALUES -> e
+    int getValue() -> a
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod[] values() -> values
+    com.coleman.kingword.study.wordlist.model.WordList$SetMethod valueOf(java.lang.String) -> valueOf
+com.coleman.kingword.study.wordlist.model.WordListManager -> com.coleman.kingword.study.wordlist.a.a:
+    java.lang.String TAG -> a
+    com.coleman.kingword.study.wordlist.model.WordListManager manager -> b
+    int[] $SWITCH_TABLE$com$coleman$kingword$study$wordlist$model$WordList$SetMethod -> c
+    com.coleman.kingword.study.wordlist.model.WordListManager getInstance() -> a
+    void loadWordListFromAsset(android.content.Context,java.lang.String,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> a
+    void loadWordListFromFile(android.content.Context,java.lang.String,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> b
+    boolean isExist(android.content.Context,java.lang.String) -> a
+    void loadWordList(android.content.Context,java.lang.String,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> c
+    void insertWordList(android.content.Context,com.coleman.kingword.study.wordlist.model.WordList,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> a
+    void splitAndInsertSubWordList(android.content.Context,java.util.ArrayList,com.coleman.kingword.study.wordlist.model.WordList,com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier) -> a
+    void doInsertSubWordList(android.content.Context,com.coleman.kingword.study.unit.model.SliceWordList$SubInfo) -> a
+    void doInsertWords(android.content.Context,com.coleman.kingword.study.unit.model.SliceWordList$SubInfo,java.util.List) -> a
+    void sort(java.util.ArrayList) -> a
+    java.lang.String access$0() -> b
+    int[] $SWITCH_TABLE$com$coleman$kingword$study$wordlist$model$WordList$SetMethod() -> c
+com.coleman.kingword.study.wordlist.model.WordListManager$1 -> com.coleman.kingword.study.wordlist.a.d:
+    com.coleman.kingword.study.wordlist.model.WordListManager this$0 -> a
+    void notify(int) -> a
+com.coleman.kingword.study.wordlist.model.WordListManager$2 -> com.coleman.kingword.study.wordlist.a.b:
+    com.coleman.kingword.study.wordlist.model.WordListManager this$0 -> a
+    void notify(int) -> a
+com.coleman.kingword.study.wordlist.model.WordListManager$3 -> com.coleman.kingword.study.wordlist.a.c:
+    com.coleman.kingword.study.wordlist.model.WordListManager this$0 -> a
+    int compare(java.lang.String,java.lang.String) -> a
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.coleman.kingword.study.wordlist.model.WordListManager$IProgressNotifier -> com.coleman.kingword.study.wordlist.a.e:
+    void notify(int) -> a
+com.coleman.util.AppSettings -> com.coleman.a.a:
+    java.lang.String[][] COLOR_MODE -> a
+    java.lang.String[] REVIEW_TIME_KEY -> b
+    void saveBoolean(android.content.Context,java.lang.String,boolean) -> a
+    boolean getBoolean(android.content.Context,java.lang.String,boolean) -> b
+    void saveString(android.content.Context,java.lang.String,java.lang.String) -> a
+    java.lang.String getString(android.content.Context,java.lang.String,java.lang.String) -> b
+    void saveInt(android.content.Context,java.lang.String,int) -> a
+    int getInt(android.content.Context,java.lang.String,int) -> b
+    void saveLong(android.content.Context,java.lang.String,long) -> a
+    long getLong(android.content.Context,java.lang.String,long) -> b
+    android.content.SharedPreferences getSharedPreferences(android.content.Context) -> c
+    java.lang.String getCurLibraryString(android.content.Context) -> a
+    java.lang.String getMoreLibraryString(android.content.Context) -> b
+com.coleman.util.Config -> com.coleman.a.b:
+    boolean isSimulator(android.content.Context) -> a
+    boolean isExternalMediaMounted() -> a
+    java.lang.String getDeviceId(android.content.Context) -> b
+com.coleman.util.ConvertUtils -> com.coleman.a.e:
+    int unsignedByteToInt(byte) -> a
+    long unsigned4BytesToInt(byte[],int) -> a
+com.coleman.util.Log -> com.coleman.a.d:
+    com.coleman.util.Log$LogType logType -> a
+    com.coleman.util.Log$LogType getLogType() -> a
+    void init(android.content.Context) -> a
+    void setLogType(android.content.Context,com.coleman.util.Log$LogType) -> a
+    int d(java.lang.String,java.lang.String) -> a
+    int w(java.lang.String,java.lang.String) -> b
+    int e(java.lang.String,java.lang.String) -> c
+    int coleamnPrintln(int,java.lang.String,java.lang.String) -> a
+com.coleman.util.Log$LogType -> com.coleman.a.c:
+    com.coleman.util.Log$LogType verbose -> a
+    com.coleman.util.Log$LogType debug -> b
+    com.coleman.util.Log$LogType info -> c
+    com.coleman.util.Log$LogType warn -> d
+    com.coleman.util.Log$LogType error -> e
+    com.coleman.util.Log$LogType asset -> f
+    int type -> g
+    com.coleman.util.Log$LogType[] ENUM$VALUES -> h
+    int value() -> a
+    com.coleman.util.Log$LogType instanse(int) -> a
+    com.coleman.util.Log$LogType[] values() -> values
+    com.coleman.util.Log$LogType valueOf(java.lang.String) -> valueOf
+com.sun.activation.registries.LineTokenizer -> com.a.b.a.b:
+    int currentPosition -> a
+    int maxPosition -> b
+    java.lang.String str -> c
+    java.util.Vector stack -> d
+    void skipWhiteSpace() -> c
+    boolean hasMoreTokens() -> a
+    java.lang.String nextToken() -> b
+com.sun.activation.registries.LogSupport -> com.a.b.a.f:
+    boolean debug -> a
+    java.util.logging.Logger logger -> b
+    java.util.logging.Level level -> c
+    void log(java.lang.String) -> a
+    void log(java.lang.String,java.lang.Throwable) -> a
+    boolean isLoggable() -> a
+com.sun.activation.registries.MailcapFile -> com.a.b.a.a:
+    java.util.Map type_hash -> a
+    java.util.Map fallback_hash -> b
+    java.util.Map native_commands -> c
+    boolean addReverse -> d
+    java.util.Map getMailcapList(java.lang.String) -> a
+    java.util.Map getMailcapFallbackList(java.lang.String) -> b
+    java.util.Map mergeResults(java.util.Map,java.util.Map) -> a
+    void parse(java.io.Reader) -> a
+    void parseLine(java.lang.String) -> c
+    void reportParseError(int,int,java.lang.String) -> a
+    void reportParseError(int,int,int,java.lang.String) -> a
+    void reportParseError(int,int,int,int,java.lang.String) -> a
+com.sun.activation.registries.MailcapParseException -> com.a.b.a.d:
+com.sun.activation.registries.MailcapTokenizer -> com.a.b.a.c:
+    java.lang.String data -> a
+    int dataIndex -> b
+    int dataLength -> c
+    int currentToken -> d
+    java.lang.String currentTokenValue -> e
+    boolean isAutoquoting -> f
+    char autoquoteChar -> g
+    void setIsAutoquoting(boolean) -> a
+    java.lang.String nameForToken(int) -> a
+    java.lang.String getCurrentTokenValue() -> a
+    int nextToken() -> b
+    void processStringToken() -> c
+    void processAutoquoteToken() -> d
+    boolean isSpecialChar(char) -> a
+    boolean isControlChar(char) -> b
+    boolean isWhiteSpaceChar(char) -> c
+    boolean isStringTokenChar(char) -> d
+    java.lang.String fixEscapeSequences(java.lang.String) -> a
+com.sun.activation.registries.MimeTypeEntry -> com.a.b.a.g:
+    java.lang.String type -> a
+    java.lang.String extension -> b
+    java.lang.String getMIMEType() -> a
+    java.lang.String toString() -> toString
+com.sun.activation.registries.MimeTypeFile -> com.a.b.a.e:
+    java.lang.String fname -> a
+    java.util.Hashtable type_hash -> b
+    com.sun.activation.registries.MimeTypeEntry getMimeTypeEntry(java.lang.String) -> a
+    java.lang.String getMIMETypeString(java.lang.String) -> b
+    void parse(java.io.BufferedReader) -> a
+    void parseEntry(java.lang.String) -> c
+com.sun.mail.util.ASCIIUtility -> com.a.a.a.f:
+    int parseInt(byte[],int,int,int) -> a
+    java.lang.String toString(byte[],int,int) -> a
+    byte[] getBytes(java.lang.String) -> a
+    byte[] getBytes(java.io.InputStream) -> a
+com.sun.mail.util.BASE64DecoderStream -> com.a.a.a.b:
+    byte[] buffer -> a
+    int bufsize -> b
+    int index -> c
+    byte[] input_buffer -> d
+    int input_pos -> e
+    int input_len -> f
+    boolean ignoreErrors -> g
+    char[] pem_array -> h
+    byte[] pem_convert_array -> i
+    int read() -> read
+    int read(byte[],int,int) -> read
+    boolean markSupported() -> markSupported
+    int available() -> available
+    int decode(byte[],int,int) -> a
+    int getByte() -> a
+    java.lang.String recentChars() -> b
+com.sun.mail.util.BASE64EncoderStream -> com.a.a.a.d:
+    byte[] buffer -> a
+    int bufsize -> b
+    byte[] outbuf -> c
+    int count -> d
+    int bytesPerLine -> e
+    int lineLimit -> f
+    boolean noCRLF -> g
+    byte[] newline -> h
+    char[] pem_array -> i
+    void write(byte[],int,int) -> write
+    void write(byte[]) -> write
+    void write(int) -> write
+    void flush() -> flush
+    void close() -> close
+    void encode() -> a
+    byte[] encode(byte[],int,int,byte[]) -> a
+    int encodedSize(int) -> a
+com.sun.mail.util.BEncoderStream -> com.a.a.a.g:
+    int encodedLength(byte[]) -> a
+com.sun.mail.util.LineInputStream -> com.a.a.a.a:
+    char[] lineBuffer -> a
+    java.lang.String readLine() -> a
+com.sun.mail.util.QDecoderStream -> com.a.a.a.j:
+    int read() -> read
+com.sun.mail.util.QEncoderStream -> com.a.a.a.h:
+    java.lang.String specials -> a
+    java.lang.String WORD_SPECIALS -> b
+    java.lang.String TEXT_SPECIALS -> c
+    void write(int) -> write
+    int encodedLength(byte[],boolean) -> a
+com.sun.mail.util.QPDecoderStream -> com.a.a.a.i:
+    byte[] ba -> a
+    int spaces -> b
+    int read() -> read
+    int read(byte[],int,int) -> read
+    boolean markSupported() -> markSupported
+    int available() -> available
+com.sun.mail.util.QPEncoderStream -> com.a.a.a.e:
+    int count -> a
+    int bytesPerLine -> b
+    boolean gotSpace -> c
+    boolean gotCR -> d
+    char[] hex -> e
+    void write(byte[],int,int) -> write
+    void write(byte[]) -> write
+    void write(int) -> write
+    void flush() -> flush
+    void close() -> close
+    void outputCRLF() -> a
+    void output(int,boolean) -> a
+com.sun.mail.util.UUDecoderStream -> com.a.a.a.c:
+    java.lang.String name -> a
+    int mode -> b
+    byte[] buffer -> c
+    int bufsize -> d
+    int index -> e
+    boolean gotPrefix -> f
+    boolean gotEnd -> g
+    com.sun.mail.util.LineInputStream lin -> h
+    int read() -> read
+    int read(byte[],int,int) -> read
+    boolean markSupported() -> markSupported
+    int available() -> available
+    void readPrefix() -> a
+    boolean decode() -> b
+javax.activation.CommandMap -> a.b.n:
+    javax.activation.CommandMap defaultCommandMap -> a
+    javax.activation.CommandMap getDefaultCommandMap() -> a
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String,javax.activation.DataSource) -> a
+javax.activation.DataContentHandler -> a.b.b:
+    java.lang.Object getContent(javax.activation.DataSource) -> a
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
+javax.activation.DataContentHandlerFactory -> a.b.d:
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
+javax.activation.DataHandler -> a.b.p:
+    javax.activation.DataSource dataSource -> a
+    javax.activation.DataSource objDataSource -> b
+    java.lang.Object object -> c
+    java.lang.String objectMimeType -> d
+    javax.activation.CommandMap currentCommandMap -> e
+    myjava.awt.datatransfer.DataFlavor[] emptyFlavors -> f
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> g
+    javax.activation.DataContentHandler dataContentHandler -> h
+    javax.activation.DataContentHandler factoryDCH -> i
+    javax.activation.DataContentHandlerFactory factory -> j
+    javax.activation.DataContentHandlerFactory oldFactory -> k
+    java.lang.String shortType -> l
+    javax.activation.CommandMap getCommandMap() -> f
+    javax.activation.DataSource getDataSource() -> a
+    java.lang.String getName() -> b
+    java.lang.String getContentType() -> c
+    java.io.InputStream getInputStream() -> d
+    void writeTo(java.io.OutputStream) -> a
+    java.lang.Object getContent() -> e
+    javax.activation.DataContentHandler getDataContentHandler() -> g
+    java.lang.String getBaseType() -> h
+    java.lang.Object access$0(javax.activation.DataHandler) -> a
+    java.lang.String access$1(javax.activation.DataHandler) -> b
+javax.activation.DataHandler$1 -> a.b.g:
+    javax.activation.DataHandler this$0 -> a
+    java.io.PipedOutputStream val$pos -> b
+    javax.activation.DataContentHandler val$fdch -> c
+    void run() -> run
+javax.activation.DataHandlerDataSource -> a.b.h:
+    javax.activation.DataHandler dataHandler -> a
+    java.io.InputStream getInputStream() -> a
+    java.lang.String getContentType() -> b
+    java.lang.String getName() -> c
+javax.activation.DataSource -> a.b.f:
+    java.io.InputStream getInputStream() -> a
+    java.lang.String getContentType() -> b
+    java.lang.String getName() -> c
+javax.activation.DataSourceDataContentHandler -> a.b.u:
+    javax.activation.DataSource ds -> a
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> b
+    javax.activation.DataContentHandler dch -> c
+    java.lang.Object getContent(javax.activation.DataSource) -> a
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
+javax.activation.FileDataSource -> a.b.s:
+    java.io.File _file -> a
+    javax.activation.FileTypeMap typeMap -> b
+    java.io.InputStream getInputStream() -> a
+    java.lang.String getContentType() -> b
+    java.lang.String getName() -> c
+javax.activation.FileTypeMap -> a.b.q:
+    javax.activation.FileTypeMap defaultMap -> a
+    java.lang.String getContentType(java.io.File) -> a
+    javax.activation.FileTypeMap getDefaultFileTypeMap() -> a
+javax.activation.MailcapCommandMap -> a.b.v:
+    com.sun.activation.registries.MailcapFile defDB -> a
+    com.sun.activation.registries.MailcapFile[] DB -> b
+    com.sun.activation.registries.MailcapFile loadResource(java.lang.String) -> b
+    void loadAllResources(java.util.List,java.lang.String) -> a
+    com.sun.activation.registries.MailcapFile loadFile(java.lang.String) -> c
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
+    javax.activation.DataContentHandler getDataContentHandler(java.lang.String) -> d
+javax.activation.MimeType -> a.b.m:
+    java.lang.String primaryType -> a
+    java.lang.String subType -> b
+    javax.activation.MimeTypeParameterList parameters -> c
+    void parse(java.lang.String) -> a
+    java.lang.String toString() -> toString
+    java.lang.String getBaseType() -> a
+    void writeExternal(java.io.ObjectOutput) -> writeExternal
+    void readExternal(java.io.ObjectInput) -> readExternal
+    boolean isTokenChar(char) -> a
+    boolean isValidToken(java.lang.String) -> b
+javax.activation.MimeTypeParameterList -> a.b.t:
+    java.util.Hashtable parameters -> a
+    void parse(java.lang.String) -> a
+    java.lang.String toString() -> toString
+    boolean isTokenChar(char) -> a
+    int skipWhiteSpace(java.lang.String,int) -> a
+    java.lang.String quote(java.lang.String) -> b
+    java.lang.String unquote(java.lang.String) -> c
+javax.activation.MimeTypeParseException -> a.b.o:
+javax.activation.MimetypesFileTypeMap -> a.b.w:
+    com.sun.activation.registries.MimeTypeFile defDB -> a
+    com.sun.activation.registries.MimeTypeFile[] DB -> b
+    java.lang.String defaultType -> c
+    com.sun.activation.registries.MimeTypeFile loadResource(java.lang.String) -> b
+    void loadAllResources(java.util.Vector,java.lang.String) -> a
+    com.sun.activation.registries.MimeTypeFile loadFile(java.lang.String) -> c
+    java.lang.String getContentType(java.io.File) -> a
+    java.lang.String getContentType(java.lang.String) -> a
+javax.activation.ObjectDataContentHandler -> a.b.a:
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> a
+    java.lang.Object obj -> b
+    java.lang.String mimeType -> c
+    javax.activation.DataContentHandler dch -> d
+    javax.activation.DataContentHandler getDCH() -> a
+    java.lang.Object getContent(javax.activation.DataSource) -> a
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
+javax.activation.SecuritySupport -> a.b.r:
+    java.lang.ClassLoader getContextClassLoader() -> a
+    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> a
+    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> a
+    java.net.URL[] getSystemResources(java.lang.String) -> a
+    java.io.InputStream openStream(java.net.URL) -> a
+javax.activation.SecuritySupport$1 -> a.b.i:
+    java.lang.Object run() -> run
+javax.activation.SecuritySupport$2 -> a.b.j:
+    java.lang.Class val$c -> a
+    java.lang.String val$name -> b
+    java.lang.Object run() -> run
+javax.activation.SecuritySupport$3 -> a.b.k:
+    java.lang.ClassLoader val$cl -> a
+    java.lang.String val$name -> b
+    java.lang.Object run() -> run
+javax.activation.SecuritySupport$4 -> a.b.l:
+    java.lang.String val$name -> a
+    java.lang.Object run() -> run
+javax.activation.SecuritySupport$5 -> a.b.e:
+    java.net.URL val$url -> a
+    java.lang.Object run() -> run
+javax.activation.UnsupportedDataTypeException -> a.b.c:
+javax.mail.Address -> a.a.af:
+    java.lang.String getType() -> a
+    java.lang.String toString() -> toString
+javax.mail.AuthenticationFailedException -> a.a.t:
+javax.mail.Authenticator -> a.a.ab:
+    java.net.InetAddress requestingSite -> a
+    int requestingPort -> b
+    java.lang.String requestingProtocol -> c
+    java.lang.String requestingPrompt -> d
+    java.lang.String requestingUserName -> e
+    void reset() -> b
+    javax.mail.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String) -> a
+    javax.mail.PasswordAuthentication getPasswordAuthentication() -> a
+javax.mail.BodyPart -> a.a.a:
+    javax.mail.Multipart parent -> a
+    void setParent(javax.mail.Multipart) -> a
+javax.mail.EventQueue -> a.a.e:
+    javax.mail.EventQueue$QueueElement head -> a
+    javax.mail.EventQueue$QueueElement tail -> b
+    java.lang.Thread qThread -> c
+    void enqueue(javax.mail.event.MailEvent,java.util.Vector) -> a
+    javax.mail.EventQueue$QueueElement dequeue() -> a
+    void run() -> run
+javax.mail.EventQueue$QueueElement -> a.a.h:
+    javax.mail.EventQueue$QueueElement next -> a
+    javax.mail.EventQueue$QueueElement prev -> b
+    javax.mail.event.MailEvent event -> c
+    java.util.Vector vector -> d
+javax.mail.Flags -> a.a.g:
+    int system_flags -> a
+    java.util.Hashtable user_flags -> b
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.Object clone() -> clone
+javax.mail.Flags$Flag -> a.a.b:
+    javax.mail.Flags$Flag ANSWERED -> a
+    javax.mail.Flags$Flag DELETED -> b
+    javax.mail.Flags$Flag DRAFT -> c
+    javax.mail.Flags$Flag FLAGGED -> d
+    javax.mail.Flags$Flag RECENT -> e
+    javax.mail.Flags$Flag SEEN -> f
+    javax.mail.Flags$Flag USER -> g
+    int bit -> h
+    int access$0(javax.mail.Flags$Flag) -> a
+javax.mail.Folder -> a.a.s:
+    javax.mail.EventQueue q -> a
+    java.lang.Object qLock -> b
+    java.lang.String getFullName() -> a
+    void terminateQueue() -> b
+    void finalize() -> finalize
+    java.lang.String toString() -> toString
+javax.mail.Folder$TerminatorEvent -> a.a.ac:
+    void dispatch(java.lang.Object) -> a
+javax.mail.Header -> a.a.f:
+    java.lang.String name -> a
+    java.lang.String value -> b
+    java.lang.String getName() -> a
+    java.lang.String getValue() -> b
+javax.mail.Message -> a.a.c:
+    int msgnum -> a
+    boolean expunged -> b
+    javax.mail.Folder folder -> c
+    javax.mail.Session session -> d
+    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> a
+    javax.mail.Address[] getAllRecipients() -> b
+    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> a
+    void setRecipient(javax.mail.Message$RecipientType,javax.mail.Address) -> a
+    void saveChanges() -> c
+javax.mail.Message$RecipientType -> a.a.w:
+    javax.mail.Message$RecipientType TO -> b
+    javax.mail.Message$RecipientType CC -> c
+    javax.mail.Message$RecipientType BCC -> d
+    java.lang.String type -> e
+    java.lang.String toString() -> toString
+javax.mail.MessagingException -> a.a.u:
+    java.lang.Exception next -> a
+    java.lang.Throwable getCause() -> getCause
+    boolean setNextException(java.lang.Exception) -> a
+    java.lang.String toString() -> toString
+    java.lang.String superToString() -> a
+javax.mail.Multipart -> a.a.z:
+    java.util.Vector parts -> c
+    java.lang.String contentType -> d
+    javax.mail.Part parent -> e
+    java.lang.String getContentType() -> c
+    void addBodyPart(javax.mail.BodyPart) -> a
+    void setParent(javax.mail.Part) -> a
+javax.mail.NoSuchProviderException -> a.a.ag:
+javax.mail.Part -> a.a.r:
+    java.lang.String getContentType() -> a_
+    javax.activation.DataHandler getDataHandler() -> e
+    void setContent(java.lang.Object,java.lang.String) -> a
+    java.lang.String[] getHeader(java.lang.String) -> b
+    void setHeader(java.lang.String,java.lang.String) -> b
+    void removeHeader(java.lang.String) -> c
+javax.mail.PasswordAuthentication -> a.a.ae:
+    java.lang.String userName -> a
+    java.lang.String password -> b
+    java.lang.String getUserName() -> a
+    java.lang.String getPassword() -> b
+javax.mail.Provider -> a.a.x:
+    javax.mail.Provider$Type type -> a
+    java.lang.String protocol -> b
+    java.lang.String className -> c
+    java.lang.String vendor -> d
+    java.lang.String version -> e
+    javax.mail.Provider$Type getType() -> a
+    java.lang.String getProtocol() -> b
+    java.lang.String getClassName() -> c
+    java.lang.String toString() -> toString
+javax.mail.Provider$Type -> a.a.j:
+    javax.mail.Provider$Type STORE -> a
+    javax.mail.Provider$Type TRANSPORT -> b
+    java.lang.String type -> c
+    java.lang.String toString() -> toString
+javax.mail.SendFailedException -> a.a.aa:
+    javax.mail.Address[] invalid -> a
+    javax.mail.Address[] validSent -> b
+    javax.mail.Address[] validUnsent -> c
+    javax.mail.Address[] getValidSentAddresses() -> a
+    javax.mail.Address[] getValidUnsentAddresses() -> b
+    javax.mail.Address[] getInvalidAddresses() -> c
+javax.mail.Service -> a.a.ad:
+    javax.mail.Session session -> a
+    javax.mail.URLName url -> b
+    boolean debug -> c
+    boolean connected -> d
+    java.util.Vector connectionListeners -> e
+    javax.mail.EventQueue q -> f
+    java.lang.Object qLock -> g
+    void connect() -> a
+    void connect(java.lang.String,java.lang.String,java.lang.String) -> a
+    void connect(java.lang.String,int,java.lang.String,java.lang.String) -> a
+    boolean protocolConnect(java.lang.String,int,java.lang.String,java.lang.String) -> b
+    boolean isConnected() -> b
+    void setConnected(boolean) -> a
+    void close() -> c
+    javax.mail.URLName getURLName() -> d
+    void setURLName(javax.mail.URLName) -> a
+    void notifyConnectionListeners(int) -> a
+    java.lang.String toString() -> toString
+    void queueEvent(javax.mail.event.MailEvent,java.util.Vector) -> a
+    void terminateQueue() -> e
+    void finalize() -> finalize
+javax.mail.Service$TerminatorEvent -> a.a.d:
+    void dispatch(java.lang.Object) -> a
+javax.mail.Session -> a.a.ah:
+    java.util.Properties props -> a
+    javax.mail.Authenticator authenticator -> b
+    java.util.Hashtable authTable -> c
+    boolean debug -> d
+    java.io.PrintStream out -> e
+    java.util.Vector providers -> f
+    java.util.Hashtable providersByProtocol -> g
+    java.util.Hashtable providersByClassName -> h
+    java.util.Properties addressMap -> i
+    javax.mail.Session defaultSession -> j
+    javax.mail.Session getDefaultInstance(java.util.Properties,javax.mail.Authenticator) -> a
+    java.io.PrintStream getDebugOut() -> a
+    javax.mail.Provider getProvider(java.lang.String) -> a
+    javax.mail.Transport getTransport(java.lang.String) -> b
+    javax.mail.Transport getTransport(javax.mail.URLName) -> a
+    javax.mail.Transport getTransport(javax.mail.Address) -> a
+    javax.mail.Transport getTransport(javax.mail.Provider,javax.mail.URLName) -> a
+    java.lang.Object getService(javax.mail.Provider,javax.mail.URLName) -> b
+    void setPasswordAuthentication(javax.mail.URLName,javax.mail.PasswordAuthentication) -> a
+    javax.mail.PasswordAuthentication getPasswordAuthentication(javax.mail.URLName) -> b
+    javax.mail.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String) -> a
+    java.lang.String getProperty(java.lang.String) -> c
+    void loadProviders(java.lang.Class) -> a
+    void loadProvidersFromStream(java.io.InputStream) -> a
+    void addProvider(javax.mail.Provider) -> a
+    void loadAddressMap(java.lang.Class) -> b
+    void loadFile(java.lang.String,javax.mail.StreamLoader) -> a
+    void loadResource(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> a
+    void loadAllResources(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> b
+    void pr(java.lang.String) -> d
+    java.lang.ClassLoader getContextClassLoader() -> b
+    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> a
+    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> a
+    java.net.URL[] getSystemResources(java.lang.String) -> e
+    java.io.InputStream openStream(java.net.URL) -> a
+    void access$0(javax.mail.Session,java.io.InputStream) -> a
+    java.util.Properties access$1(javax.mail.Session) -> a
+javax.mail.Session$1 -> a.a.q:
+    javax.mail.Session this$0 -> a
+    void load(java.io.InputStream) -> a
+javax.mail.Session$2 -> a.a.p:
+    javax.mail.Session this$0 -> a
+    void load(java.io.InputStream) -> a
+javax.mail.Session$3 -> a.a.o:
+    java.lang.Object run() -> run
+javax.mail.Session$4 -> a.a.n:
+    java.lang.Class val$c -> a
+    java.lang.String val$name -> b
+    java.lang.Object run() -> run
+javax.mail.Session$5 -> a.a.m:
+    java.lang.ClassLoader val$cl -> a
+    java.lang.String val$name -> b
+    java.lang.Object run() -> run
+javax.mail.Session$6 -> a.a.l:
+    java.lang.String val$name -> a
+    java.lang.Object run() -> run
+javax.mail.Session$7 -> a.a.k:
+    java.net.URL val$url -> a
+    java.lang.Object run() -> run
+javax.mail.StreamLoader -> a.a.y:
+    void load(java.io.InputStream) -> a
+javax.mail.Transport -> a.a.i:
+    void send(javax.mail.Message) -> a
+    void send0(javax.mail.Message,javax.mail.Address[]) -> b
+    void sendMessage(javax.mail.Message,javax.mail.Address[]) -> a
+javax.mail.URLName -> a.a.v:
+    java.lang.String fullURL -> a
+    java.lang.String protocol -> c
+    java.lang.String username -> d
+    java.lang.String password -> e
+    java.lang.String host -> f
+    java.net.InetAddress hostAddress -> g
+    boolean hostAddressKnown -> h
+    int port -> i
+    java.lang.String file -> j
+    java.lang.String ref -> k
+    int hashCode -> l
+    boolean doEncode -> m
+    java.util.BitSet dontNeedEncoding -> b
+    java.lang.String toString() -> toString
+    int getPort() -> a
+    java.lang.String getProtocol() -> b
+    java.lang.String getFile() -> c
+    java.lang.String getHost() -> d
+    java.lang.String getUsername() -> e
+    java.lang.String getPassword() -> f
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.net.InetAddress getHostAddress() -> g
+    java.lang.String encode(java.lang.String) -> a
+    java.lang.String _encode(java.lang.String) -> c
+    java.lang.String decode(java.lang.String) -> b
+    int indexOfAny(java.lang.String,java.lang.String) -> a
+    int indexOfAny(java.lang.String,java.lang.String,int) -> a
+javax.mail.event.ConnectionEvent -> a.a.b.c:
+    int type -> a
+    void dispatch(java.lang.Object) -> a
+javax.mail.event.ConnectionListener -> a.a.b.b:
+    void opened(javax.mail.event.ConnectionEvent) -> a
+    void disconnected(javax.mail.event.ConnectionEvent) -> b
+    void closed(javax.mail.event.ConnectionEvent) -> c
+javax.mail.event.MailEvent -> a.a.b.a:
+    void dispatch(java.lang.Object) -> a
+javax.mail.internet.AddressException -> a.a.a.y:
+    java.lang.String ref -> a
+    int pos -> b
+    java.lang.String toString() -> toString
+javax.mail.internet.AsciiOutputStream -> a.a.a.n:
+    boolean breakOnNonAscii -> a
+    int ascii -> b
+    int non_ascii -> c
+    int linelen -> d
+    boolean longLine -> e
+    boolean badEOL -> f
+    boolean checkEOL -> g
+    int lastb -> h
+    int ret -> i
+    void write(int) -> write
+    void write(byte[]) -> write
+    void write(byte[],int,int) -> write
+    void check(int) -> a
+    int getAscii() -> a
+javax.mail.internet.ContentDisposition -> a.a.a.l:
+    java.lang.String disposition -> a
+    javax.mail.internet.ParameterList list -> b
+    java.lang.String getParameter(java.lang.String) -> a
+    void setParameter(java.lang.String,java.lang.String) -> a
+    java.lang.String toString() -> toString
+javax.mail.internet.ContentType -> a.a.a.w:
+    java.lang.String primaryType -> a
+    java.lang.String subType -> b
+    javax.mail.internet.ParameterList list -> c
+    java.lang.String getPrimaryType() -> a
+    java.lang.String getSubType() -> b
+    java.lang.String getParameter(java.lang.String) -> a
+    void setParameter(java.lang.String,java.lang.String) -> a
+    java.lang.String toString() -> toString
+    boolean match(javax.mail.internet.ContentType) -> a
+    boolean match(java.lang.String) -> b
+javax.mail.internet.HeaderTokenizer -> a.a.a.q:
+    java.lang.String string -> a
+    boolean skipComments -> b
+    java.lang.String delimiters -> c
+    int currentPos -> d
+    int maxPos -> e
+    int nextPos -> f
+    int peekPos -> g
+    javax.mail.internet.HeaderTokenizer$Token EOFToken -> h
+    javax.mail.internet.HeaderTokenizer$Token next() -> a
+    java.lang.String getRemainder() -> b
+    javax.mail.internet.HeaderTokenizer$Token getNext() -> c
+    int skipWhiteSpace() -> d
+    java.lang.String filterToken(java.lang.String,int,int) -> a
+javax.mail.internet.HeaderTokenizer$Token -> a.a.a.z:
+    int type -> a
+    java.lang.String value -> b
+    int getType() -> a
+    java.lang.String getValue() -> b
+javax.mail.internet.InternetAddress -> a.a.a.j:
+    java.lang.String address -> a
+    java.lang.String personal -> b
+    java.lang.String encodedPersonal -> c
+    java.lang.String rfc822phrase -> d
+    java.lang.Object clone() -> clone
+    java.lang.String getType() -> a
+    void setAddress(java.lang.String) -> a
+    java.lang.String getAddress() -> b
+    java.lang.String toString() -> toString
+    java.lang.String quotePhrase(java.lang.String) -> c
+    java.lang.String unquote(java.lang.String) -> d
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString(javax.mail.Address[]) -> a
+    java.lang.String toString(javax.mail.Address[],int) -> a
+    int lengthOfFirstSegment(java.lang.String) -> e
+    int lengthOfLastSegment(java.lang.String,int) -> a
+    javax.mail.internet.InternetAddress getLocalAddress(javax.mail.Session) -> a
+    javax.mail.internet.InternetAddress[] parse(java.lang.String) -> b
+    javax.mail.internet.InternetAddress[] parse(java.lang.String,boolean) -> a
+    javax.mail.internet.InternetAddress[] parseHeader(java.lang.String,boolean) -> b
+    javax.mail.internet.InternetAddress[] parse(java.lang.String,boolean,boolean) -> a
+    void checkAddress(java.lang.String,boolean,boolean) -> b
+    boolean isSimple() -> d
+    boolean isGroup() -> c
+    int indexOfAny(java.lang.String,java.lang.String) -> a
+    int indexOfAny(java.lang.String,java.lang.String,int) -> a
+javax.mail.internet.InternetHeaders -> a.a.a.aa:
+    java.util.List headers -> a
+    void load(java.io.InputStream) -> a
+    java.lang.String[] getHeader(java.lang.String) -> a
+    java.lang.String getHeader(java.lang.String,java.lang.String) -> a
+    void setHeader(java.lang.String,java.lang.String) -> b
+    void addHeader(java.lang.String,java.lang.String) -> c
+    void removeHeader(java.lang.String) -> b
+    void addHeaderLine(java.lang.String) -> c
+javax.mail.internet.InternetHeaders$InternetHeader -> a.a.a.g:
+    java.lang.String line -> c
+    java.lang.String getValue() -> b
+javax.mail.internet.MailDateFormat -> a.a.a.x:
+    boolean debug -> a
+    java.util.TimeZone tz -> b
+    java.util.Calendar cal -> c
+    java.lang.StringBuffer format(java.util.Date,java.lang.StringBuffer,java.text.FieldPosition) -> format
+    java.util.Date parse(java.lang.String,java.text.ParsePosition) -> parse
+    java.util.Date parseDate(char[],java.text.ParsePosition,boolean) -> a
+    java.util.Date ourUTC(int,int,int,int,int,int,int,boolean) -> a
+    void setCalendar(java.util.Calendar) -> setCalendar
+    void setNumberFormat(java.text.NumberFormat) -> setNumberFormat
+javax.mail.internet.MailDateParser -> a.a.a.u:
+    int index -> a
+    char[] orig -> b
+    void skipUntilNumber() -> a
+    void skipWhiteSpace() -> b
+    void skipChar(char) -> a
+    boolean skipIfChar(char) -> b
+    int parseNumber() -> c
+    int parseMonth() -> d
+    int parseTimeZone() -> e
+    int parseNumericTimeZone() -> f
+    int parseAlphaTimeZone() -> g
+    int getIndex() -> h
+javax.mail.internet.MimeBodyPart -> a.a.a.d:
+    boolean setDefaultTextCharset -> g
+    boolean setContentTypeFileName -> h
+    boolean encodeFileName -> i
+    boolean decodeFileName -> j
+    boolean cacheMultipart -> b
+    javax.activation.DataHandler dh -> c
+    byte[] content -> d
+    java.io.InputStream contentStream -> e
+    javax.mail.internet.InternetHeaders headers -> f
+    java.lang.Object cachedContent -> k
+    java.lang.String getContentType() -> a_
+    java.lang.String getEncoding() -> a
+    java.lang.String getFileName() -> c
+    void setFileName(java.lang.String) -> a
+    java.io.InputStream getContentStream() -> d
+    javax.activation.DataHandler getDataHandler() -> e
+    void setDataHandler(javax.activation.DataHandler) -> a
+    void setContent(java.lang.Object,java.lang.String) -> a
+    void setContent(javax.mail.Multipart) -> b
+    java.lang.String[] getHeader(java.lang.String) -> b
+    java.lang.String getHeader(java.lang.String,java.lang.String) -> a
+    void setHeader(java.lang.String,java.lang.String) -> b
+    void removeHeader(java.lang.String) -> c
+    void updateHeaders() -> f
+    void setText(javax.mail.internet.MimePart,java.lang.String,java.lang.String,java.lang.String) -> a
+    java.lang.String getFileName(javax.mail.internet.MimePart) -> a
+    void setFileName(javax.mail.internet.MimePart,java.lang.String) -> a
+    java.lang.String getEncoding(javax.mail.internet.MimePart) -> b
+    void setEncoding(javax.mail.internet.MimePart,java.lang.String) -> b
+    void updateHeaders(javax.mail.internet.MimePart) -> c
+    void invalidateContentHeaders(javax.mail.internet.MimePart) -> d
+javax.mail.internet.MimeMessage -> a.a.a.m:
+    javax.activation.DataHandler dh -> e
+    byte[] content -> f
+    java.io.InputStream contentStream -> g
+    javax.mail.internet.InternetHeaders headers -> h
+    javax.mail.Flags flags -> i
+    boolean modified -> j
+    boolean saved -> k
+    java.lang.Object cachedContent -> l
+    javax.mail.internet.MailDateFormat mailDateFormat -> m
+    boolean strict -> n
+    javax.mail.Flags answeredFlag -> o
+    void initStrict() -> h
+    void setSender(javax.mail.Address) -> a
+    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> a
+    javax.mail.Address[] getAllRecipients() -> b
+    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> a
+    javax.mail.Address[] getAddressHeader(java.lang.String) -> e
+    void setAddressHeader(java.lang.String,javax.mail.Address[]) -> a
+    void setSubject(java.lang.String) -> a
+    void setSubject(java.lang.String,java.lang.String) -> c
+    java.lang.String getContentType() -> a_
+    java.lang.String getEncoding() -> a
+    java.lang.String getHeaderName(javax.mail.Message$RecipientType) -> b
+    java.io.InputStream getContentStream() -> d
+    javax.activation.DataHandler getDataHandler() -> e
+    void setDataHandler(javax.activation.DataHandler) -> a
+    void setContent(java.lang.Object,java.lang.String) -> a
+    void setText(java.lang.String) -> d
+    void setText(java.lang.String,java.lang.String) -> d
+    void setContent(javax.mail.Multipart) -> a
+    java.lang.String[] getHeader(java.lang.String) -> b
+    java.lang.String getHeader(java.lang.String,java.lang.String) -> a
+    void setHeader(java.lang.String,java.lang.String) -> b
+    void removeHeader(java.lang.String) -> c
+    void saveChanges() -> c
+    void updateMessageID() -> f
+    void updateHeaders() -> g
+javax.mail.internet.MimeMessage$RecipientType -> a.a.a.f:
+    javax.mail.internet.MimeMessage$RecipientType NEWSGROUPS -> a
+javax.mail.internet.MimeMultipart -> a.a.a.b:
+    boolean ignoreMissingEndBoundary -> f
+    boolean ignoreMissingBoundaryParameter -> g
+    boolean bmparse -> h
+    javax.activation.DataSource ds -> a
+    boolean parsed -> b
+    boolean complete -> i
+    java.lang.String preamble -> j
+    void addBodyPart(javax.mail.BodyPart) -> a
+    void updateHeaders() -> a
+    void parse() -> b
+    void parsebm() -> d
+    int readFully(java.io.InputStream,byte[],int,int) -> a
+    void skipFully(java.io.InputStream,long) -> a
+    javax.mail.internet.InternetHeaders createInternetHeaders(java.io.InputStream) -> a
+    javax.mail.internet.MimeBodyPart createMimeBodyPart(javax.mail.internet.InternetHeaders,byte[]) -> a
+    javax.mail.internet.MimeBodyPart createMimeBodyPart(java.io.InputStream) -> b
+javax.mail.internet.MimePart -> a.a.a.a:
+    java.lang.String getHeader(java.lang.String,java.lang.String) -> a
+    java.lang.String getEncoding() -> a
+javax.mail.internet.MimePartDataSource -> a.a.a.h:
+    javax.mail.internet.MimePart part -> a
+    boolean ignoreMultipartEncoding -> b
+    java.io.InputStream getInputStream() -> a
+    java.lang.String restrictEncoding(java.lang.String,javax.mail.internet.MimePart) -> a
+    java.lang.String getContentType() -> b
+    java.lang.String getName() -> c
+javax.mail.internet.MimeUtility -> a.a.a.k:
+    boolean decodeStrict -> a
+    boolean encodeEolStrict -> b
+    boolean foldEncodedWords -> c
+    boolean foldText -> d
+    java.lang.String defaultJavaCharset -> e
+    java.lang.String defaultMIMECharset -> f
+    java.util.Hashtable mime2java -> g
+    java.util.Hashtable java2mime -> h
+    java.lang.String getEncoding(javax.activation.DataSource) -> a
+    java.lang.String getEncoding(javax.activation.DataHandler) -> a
+    java.io.InputStream decode(java.io.InputStream,java.lang.String) -> a
+    java.lang.String encodeText(java.lang.String) -> a
+    java.lang.String encodeText(java.lang.String,java.lang.String,java.lang.String) -> a
+    java.lang.String decodeText(java.lang.String) -> b
+    java.lang.String encodeWord(java.lang.String) -> c
+    java.lang.String encodeWord(java.lang.String,java.lang.String,java.lang.String) -> b
+    java.lang.String encodeWord(java.lang.String,java.lang.String,java.lang.String,boolean) -> a
+    void doEncode(java.lang.String,boolean,java.lang.String,int,java.lang.String,boolean,boolean,java.lang.StringBuffer) -> a
+    java.lang.String decodeWord(java.lang.String) -> d
+    java.lang.String decodeInnerWords(java.lang.String) -> h
+    java.lang.String quote(java.lang.String,java.lang.String) -> a
+    java.lang.String fold(int,java.lang.String) -> a
+    java.lang.String javaCharset(java.lang.String) -> e
+    java.lang.String mimeCharset(java.lang.String) -> f
+    java.lang.String getDefaultJavaCharset() -> a
+    java.lang.String getDefaultMIMECharset() -> b
+    void loadMappings(com.sun.mail.util.LineInputStream,java.util.Hashtable) -> a
+    int checkAscii(java.lang.String) -> g
+    int checkAscii(java.io.InputStream,int,boolean) -> a
+    boolean nonascii(int) -> a
+javax.mail.internet.MimeUtility$1NullInputStream -> a.a.a.i:
+    int read() -> read
+javax.mail.internet.NewsAddress -> a.a.a.v:
+    java.lang.String newsgroup -> a
+    java.lang.String host -> b
+    java.lang.String getType() -> a
+    java.lang.String toString() -> toString
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString(javax.mail.Address[]) -> a
+    javax.mail.internet.NewsAddress[] parse(java.lang.String) -> a
+javax.mail.internet.ParameterList -> a.a.a.o:
+    java.util.Map list -> a
+    java.util.Set multisegmentNames -> b
+    java.util.Map slist -> c
+    java.lang.String lastName -> d
+    boolean encodeParameters -> e
+    boolean decodeParameters -> f
+    boolean decodeParametersStrict -> g
+    boolean applehack -> h
+    char[] hex -> i
+    void putEncodedName(java.lang.String,java.lang.String) -> b
+    void combineMultisegmentNames(boolean) -> a
+    java.lang.String get(java.lang.String) -> a
+    void set(java.lang.String,java.lang.String) -> a
+    java.lang.String toString() -> toString
+    java.lang.String toString(int) -> a
+    java.lang.String quote(java.lang.String) -> c
+    javax.mail.internet.ParameterList$Value decodeValue(java.lang.String) -> d
+    java.lang.String decodeBytes(java.lang.String,java.lang.String) -> c
+    java.lang.String access$0(java.lang.String) -> b
+javax.mail.internet.ParameterList$MultiValue -> a.a.a.p:
+    java.lang.String value -> a
+javax.mail.internet.ParameterList$ToStringBuffer -> a.a.a.e:
+    int used -> a
+    java.lang.StringBuffer sb -> b
+    void addNV(java.lang.String,java.lang.String) -> a
+    java.lang.String toString() -> toString
+javax.mail.internet.ParameterList$Value -> a.a.a.c:
+    java.lang.String value -> a
+    java.lang.String charset -> b
+    java.lang.String encodedValue -> c
+javax.mail.internet.ParseException -> a.a.a.t:
+javax.mail.internet.SharedInputStream -> a.a.a.s:
+    long getPosition() -> a
+    java.io.InputStream newStream(long,long) -> a
+javax.mail.internet.UniqueValue -> a.a.a.r:
+    int id -> a
+    java.lang.String getUniqueBoundaryValue() -> a
+    java.lang.String getUniqueMessageIDValue(javax.mail.Session) -> a
+    int getUniqueId() -> b
+javax.mail.util.SharedByteArrayInputStream -> a.a.c.a:
+    int start -> a
+    long getPosition() -> a
+    java.io.InputStream newStream(long,long) -> a
+myjava.awt.datatransfer.DataFlavor -> b.a.a.a:
+    myjava.awt.datatransfer.DataFlavor plainTextFlavor -> a
+    myjava.awt.datatransfer.DataFlavor stringFlavor -> b
+    myjava.awt.datatransfer.DataFlavor javaFileListFlavor -> c
+    java.lang.String[] sortedTextFlavors -> d
+    myjava.awt.datatransfer.DataFlavor plainUnicodeFlavor -> e
+    java.lang.String humanPresentableName -> f
+    java.lang.Class representationClass -> g
+    myjava.awt.datatransfer.MimeTypeProcessor$MimeType mimeInfo -> h
+    boolean isCharsetSupported(java.lang.String) -> a
+    void init(java.lang.String,java.lang.String,java.lang.ClassLoader) -> a
+    java.lang.String getCharset() -> b
+    boolean isCharsetRequired() -> c
+    boolean isCharsetRedundant() -> d
+    java.lang.String getMimeType() -> a
+    void writeExternal(java.io.ObjectOutput) -> writeExternal
+    void readExternal(java.io.ObjectInput) -> readExternal
+    java.lang.Object clone() -> clone
+    java.lang.String toString() -> toString
+    boolean equals(java.lang.Object) -> equals
+    boolean equals(myjava.awt.datatransfer.DataFlavor) -> a
+    int hashCode() -> hashCode
+    java.lang.String getKeyInfo() -> e
+    boolean isUnicodeFlavor() -> f
+myjava.awt.datatransfer.MimeTypeProcessor -> b.a.a.c:
+    myjava.awt.datatransfer.MimeTypeProcessor instance -> a
+    myjava.awt.datatransfer.MimeTypeProcessor$MimeType parse(java.lang.String) -> a
+    java.lang.String assemble(myjava.awt.datatransfer.MimeTypeProcessor$MimeType) -> a
+    void retrieveType(java.lang.String,myjava.awt.datatransfer.MimeTypeProcessor$MimeType,myjava.awt.datatransfer.MimeTypeProcessor$StringPosition) -> a
+    void retrieveParams(java.lang.String,myjava.awt.datatransfer.MimeTypeProcessor$MimeType,myjava.awt.datatransfer.MimeTypeProcessor$StringPosition) -> b
+    void retrieveParam(java.lang.String,myjava.awt.datatransfer.MimeTypeProcessor$MimeType,myjava.awt.datatransfer.MimeTypeProcessor$StringPosition) -> c
+    java.lang.String retrieveQuoted(java.lang.String,myjava.awt.datatransfer.MimeTypeProcessor$StringPosition) -> a
+    java.lang.String retrieveToken(java.lang.String,myjava.awt.datatransfer.MimeTypeProcessor$StringPosition) -> b
+    int getNextMeaningfulIndex(java.lang.String,int) -> a
+    boolean isTSpecialChar(char) -> a
+    boolean isMeaningfulChar(char) -> b
+myjava.awt.datatransfer.MimeTypeProcessor$MimeType -> b.a.a.d:
+    java.lang.String primaryType -> a
+    java.lang.String subType -> b
+    java.util.Hashtable parameters -> c
+    java.util.Hashtable systemParameters -> d
+    boolean equals(myjava.awt.datatransfer.MimeTypeProcessor$MimeType) -> a
+    java.lang.String getPrimaryType() -> a
+    java.lang.String getSubType() -> b
+    java.lang.String getFullType() -> c
+    java.lang.String getParameter(java.lang.String) -> a
+    void addParameter(java.lang.String,java.lang.String) -> a
+    java.lang.Object clone() -> clone
+    java.util.Hashtable access$0(myjava.awt.datatransfer.MimeTypeProcessor$MimeType) -> b
+    void access$1(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.lang.String) -> a
+    void access$2(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.lang.String) -> b
+    void access$3(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.util.Hashtable) -> a
+    void access$4(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.util.Hashtable) -> b
+myjava.awt.datatransfer.MimeTypeProcessor$StringPosition -> b.a.a.b:
+    int i -> a
+org.apache.harmony.awt.ContextStorage -> c.a.a.a.b:
+    boolean shutdownPending -> a
+    org.apache.harmony.awt.ContextStorage globalContext -> b
+    org.apache.harmony.awt.datatransfer.DTK dtk -> c
+    java.lang.Object contextLock -> d
+    void setDTK(org.apache.harmony.awt.datatransfer.DTK) -> a
+    org.apache.harmony.awt.datatransfer.DTK getDTK() -> a
+    java.lang.Object getContextLock() -> b
+    org.apache.harmony.awt.ContextStorage getCurrentContext() -> d
+    boolean shutdownPending() -> c
+org.apache.harmony.awt.ContextStorage$ContextLock -> c.a.a.a.a:
+    org.apache.harmony.awt.ContextStorage this$0 -> a
+org.apache.harmony.awt.datatransfer.DTK -> c.a.a.a.b.c:
+    org.apache.harmony.awt.datatransfer.NativeClipboard nativeClipboard -> b
+    org.apache.harmony.awt.datatransfer.NativeClipboard nativeSelection -> c
+    org.apache.harmony.awt.datatransfer.DataTransferThread dataTransferThread -> a
+    org.apache.harmony.awt.datatransfer.DTK getDTK() -> a
+    void initDragAndDrop() -> b
+    void runEventLoop() -> c
+    org.apache.harmony.awt.datatransfer.DTK createDTK() -> e
+    java.lang.String getDefaultCharset() -> d
+org.apache.harmony.awt.datatransfer.DataTransferThread -> c.a.a.a.b.a:
+    org.apache.harmony.awt.datatransfer.DTK dtk -> a
+    void run() -> run
+    void start() -> start
+org.apache.harmony.awt.datatransfer.NativeClipboard -> c.a.a.a.b.b:
+org.apache.harmony.awt.internal.nls.Messages -> c.a.a.a.a.a.a:
+    java.util.ResourceBundle bundle -> a
+    java.lang.String getString(java.lang.String) -> a
+    java.lang.String getString(java.lang.String,java.lang.Object) -> a
+    java.lang.String getString(java.lang.String,java.lang.Object[]) -> a
+    java.lang.String format(java.lang.String,java.lang.Object[]) -> b
+    java.util.ResourceBundle setLocale(java.util.Locale,java.lang.String) -> a
+org.apache.harmony.awt.internal.nls.Messages$1 -> c.a.a.a.a.a.b:
+    java.lang.String val$resource -> a
+    java.util.Locale val$locale -> b
+    java.lang.ClassLoader val$loader -> c
+    java.lang.Object run() -> run
+org.apache.harmony.misc.SystemUtils -> c.a.a.b.a:
+    int os -> a
+    int arc -> b
+    int getOS() -> a

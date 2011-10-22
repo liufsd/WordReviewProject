@@ -105,9 +105,11 @@ public class WelcomeActivity extends Activity {
                     AppSettings.saveInt(this, k[i][j], c[i][j]);
                 }
             }
+            
             // set default lib
             AppSettings.saveString(this, AppSettings.DICTS_KEY,
-                    "a49_startdict_1_3,false,1000,1;a50_oxford_gb_formated,false,1002,2");
+                    "a49_stardict_1_3,false,1000,1;a50_oxford_gb_formated,false,1002,2");
+            System.out.println("...");
             // ///////////////////////////////////////////////
             // check if there is backup to restore
             // WordInfoHelper.restoreWordInfoDB(this, false);
