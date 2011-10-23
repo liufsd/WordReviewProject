@@ -30,9 +30,6 @@ import com.coleman.util.Log;
 public class DictManager {
     private static final String TAG = DictManager.class.getName();
 
-    private static final String EXT_DIC_PATH = Environment.getExternalStorageDirectory()
-            .getAbsolutePath() + File.separator + "kingword/dicts";
-
     private static DictManager manager;
 
     /**
@@ -41,9 +38,13 @@ public class DictManager {
      */
     private HashMap<String, DictLibrary> libmap = new HashMap<String, DictLibrary>();
 
-    private String curLib = "a49_stardict_1_3";
+    public static final String DEFAULT_CUR_LIB = "a49_stardict_1_3";
 
-    private String moreLib = "a50_oxford_gb_formated";
+    public static final String DEFAULT_MORE_LIB = "a50_oxford_gb_formated";
+
+    private String curLib = DEFAULT_CUR_LIB;
+
+    private String moreLib = DEFAULT_MORE_LIB;
 
     private DictManager() {
     }
@@ -89,7 +90,8 @@ public class DictManager {
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
             for (DictIndexTable table : DictIndexManager.getInstance().getHashMap().values()) {
-                factory.loadLibrary(context, table.TABLE_NAME, libmap);
+                factory.loadLibrary(context, table.TABLE_NAME, DynamicTableManager.getInstance()
+                        .isInternal(table.TABLE_NAME), libmap);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,8 +126,8 @@ public class DictManager {
             Log.w(TAG, "not found!");
             return DictData.constructData(word + ": not found!");
         }
-        DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
-                library.getLibraryName());
+        DictData wordData = DictData.readData(context, library.isInternal(),
+                library.getLibraryInfo(), index, library.getLibraryName());
         Log.d(TAG, word + " >>> " + wordData);
         return wordData;
     }
@@ -142,8 +144,8 @@ public class DictManager {
             return DictData.constructData(word + ": not found!");
         }
         Log.d(TAG, word + ":" + index + ":");
-        DictData wordData = DictData.readData(context, library.getLibraryInfo(), index,
-                library.getLibraryName());
+        DictData wordData = DictData.readData(context, library.isInternal(),
+                library.getLibraryInfo(), index, library.getLibraryName());
         Log.d(TAG, "" + wordData);
         return wordData;
     }

@@ -2,17 +2,15 @@
 package com.coleman.kingword.provider;
 
 import java.io.File;
-import java.security.cert.LDAPCertStoreParameters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
-import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
+import com.coleman.util.Log;
 
 /**
  * Used for load dictionaries or delete dictionaries dynamically.
@@ -32,6 +30,15 @@ public class DictIndexManager {
 
     public static DictIndexManager getInstance() {
         return instance;
+    }
+
+    public void init() {
+        // @coding-skill
+        // init the DictIndexManager's collections, because android will not
+        // kill the static instance if memory is enough
+        map.clear();
+        droplist.clear();
+        createlist.clear();
     }
 
     public HashMap<String, DictIndexTable> getHashMap() {

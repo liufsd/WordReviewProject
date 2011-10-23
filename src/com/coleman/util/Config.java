@@ -31,12 +31,6 @@ public final class Config {
      */
     public static final String ENCODE = "GBK";
 
-    /**
-     * True if reading datas from external memory. otherwise the datas should be
-     * placed under dir "assets/kingword/dicts"
-     */
-    public static final boolean THIN_VERSION = true;
-
     public static boolean isSimulator(Context context) {
         TelephonyManager telmgr = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);

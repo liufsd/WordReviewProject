@@ -16,9 +16,9 @@ public class DictLibraryFactory {
      * @param dictmap
      * @throws IOException
      */
-    public void loadLibrary(Context context, String libKey, HashMap<String, DictLibrary> dictmap)
-            throws IOException {
-        DictLibrary lib = new DictLibrary(context, libKey);
+    public void loadLibrary(Context context, String libKey, boolean isInternal,
+            HashMap<String, DictLibrary> dictmap) throws IOException {
+        DictLibrary lib = new DictLibrary(context, libKey, isInternal);
         dictmap.put(libKey, lib);
     }
 

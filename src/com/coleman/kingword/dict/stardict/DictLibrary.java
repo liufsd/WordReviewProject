@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
 import com.coleman.util.AppSettings;
@@ -13,19 +14,7 @@ import com.coleman.util.Log;
 public class DictLibrary {
     private static final String TAG = DictLibrary.class.getName();
 
-    // public static final String OXFORD = "oxford";
-    //
-    // public static final String STARDICT = "stardict";
-    //
-    // public static final String BABYLON_ENG = "babylon";
-    //
-    // public static final String OXFORD_PATH =
-    // "kingword/dicts/oxford-gb-formated";
-    //
-    // public static final String STARDICT_PATH = "kingword/dicts/stardict1.3";
-    //
-    // public static final String BABYLON_PATH =
-    // "kingword/dicts/Babylon_English";
+    private static final String DICTS_DIR = "kingword/dicts/";
 
     private DictInfo libraryInfo;
 
@@ -36,20 +25,26 @@ public class DictLibrary {
     private boolean dbInitialed;
 
     /**
+     * describe the library internal or external.
+     */
+    private boolean internal;
+
+    /**
      * If a DictLibrary is constructed, it will do inserting data to database
      * background, after the work done, the libraryWordMap will be cleared,
      * after all these thing done, a mark will be set to indicate database
      * initialed.
      */
-    DictLibrary(final Context context, final String libKey) {
+    DictLibrary(final Context context, final String libKey, boolean isInternal) {
         this.mLibKey = libKey;
-        this.mLibPath = "kingword/dicts/" + libKey;
-        this.dbInitialed = AppSettings.getBoolean(context, libKey, false);
-        Log.d(TAG, ">>>>>>>>>>>>>>>>dbInitialed: "+dbInitialed);
+        this.mLibPath = DICTS_DIR + libKey;
+        this.dbInitialed = DynamicTableManager.getInstance().isInitialed(libKey);
+        this.internal = isInternal;
+        Log.d(TAG, ">>>>>>>>>>>>>>>>dbInitialed: " + dbInitialed);
         if (!dbInitialed) {
-            new LoadAndInsert().doWork(this, context, libKey);
+            new LoadAndInsert().doWork(context);
         } else {
-            new LoadInfo().doWork(context, libKey);
+            new LoadInfo().doWork(context);
         }
     }
 
@@ -59,6 +54,10 @@ public class DictLibrary {
 
     public boolean isInitialed() {
         return dbInitialed;
+    }
+
+    public boolean isInternal() {
+        return internal;
     }
 
     public DictIndex getDictIndex(Context context, String word) {
@@ -103,9 +102,21 @@ public class DictLibrary {
         return mLibPath;
     }
 
+    public String getIfoFileName() {
+        return mLibPath + ".ifo";
+    }
+
+    public String getIdxFileName() {
+        return mLibPath + ".idx";
+    }
+
+    public int getNumCount() {
+        return Integer.parseInt(libraryInfo.wordCount);
+    }
+
     public void setComplete(Context context) {
         dbInitialed = true;
-        AppSettings.saveBoolean(context, mLibKey, true);
+        DynamicTableManager.getInstance().setComplete(context, mLibKey);
     }
 
     private class LoadInfo {
@@ -113,9 +124,9 @@ public class DictLibrary {
         private LoadInfo() {
         }
 
-        protected void doWork(Context context, String libKey) {
-            if (!TextUtils.isEmpty(libKey)) {
-                libraryInfo = DictInfo.readDicInfo(context, mLibPath + ".ifo");
+        protected void doWork(Context context) {
+            if (!TextUtils.isEmpty(mLibKey)) {
+                libraryInfo = DictInfo.readDicInfo(context, DictLibrary.this);
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }
@@ -129,11 +140,10 @@ public class DictLibrary {
         private LoadAndInsert() {
         }
 
-        protected void doWork(DictLibrary diclib, Context context, String libKey) {
-            if (!TextUtils.isEmpty(libKey)) {
-                libraryInfo = DictInfo.readDicInfo(context, mLibPath + ".ifo");
-                DictIndex.loadDictIndexMap(diclib, context, mLibPath + ".idx",
-                        Integer.parseInt(libraryInfo.wordCount));
+        protected void doWork(Context context) {
+            if (!TextUtils.isEmpty(mLibKey)) {
+                libraryInfo = DictInfo.readDicInfo(context, DictLibrary.this);
+                DictIndex.loadDictIndexMap(context, DictLibrary.this);
             } else {
                 Log.e(TAG, "The library to be loaded is not exist!");
             }

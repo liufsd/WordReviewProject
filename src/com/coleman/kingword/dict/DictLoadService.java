@@ -4,7 +4,7 @@ package com.coleman.kingword.dict;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+import com.coleman.util.Log;
 
 public class DictLoadService extends Service {
     private static final String TAG = DictLoadService.class.getName();

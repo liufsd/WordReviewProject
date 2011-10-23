@@ -87,14 +87,14 @@ public class DictInfo {
                 + idxFileSize + "\tSame Type Sequence:" + this.sameTypeSequence;
     }
 
-    public static DictInfo readDicInfo(Context context, String ifoFileName) {
+    public static DictInfo readDicInfo(Context context,DictLibrary lib) {
         InputStream is = null;
         try {
-            if (!Config.THIN_VERSION) {
-                is = context.getAssets().open(ifoFileName, AssetManager.ACCESS_RANDOM);
+            if (lib.isInternal()) {
+                is = context.getAssets().open(lib.getIfoFileName(), AssetManager.ACCESS_RANDOM);
             } else {
                 is = new FileInputStream(Environment.getExternalStorageDirectory()
-                        .getAbsolutePath() + File.separator + ifoFileName);
+                        .getAbsolutePath() + File.separator + lib.getIfoFileName());
             }
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(reader);

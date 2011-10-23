@@ -9,6 +9,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.os.Environment;
 
+import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.UpgradeManager;
 import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
@@ -23,7 +24,7 @@ public class DynamicTableManager {
 
     private static final String TAG = DynamicTableManager.class.getName();
 
-    private HashMap<String, DynamicTable> map = new HashMap<String, DynamicTable>();
+    private HashMap<String, DictIndexDescribeTable> map = new HashMap<String, DictIndexDescribeTable>();
 
     private DynamicTableManager() {
     }
@@ -35,7 +36,7 @@ public class DynamicTableManager {
     public void parsePrefs(String prefs) {
         String temps[] = prefs.split(";");
         for (String string : temps) {
-            DynamicTable t = new DynamicTable(string);
+            DictIndexDescribeTable t = new DictIndexDescribeTable(string);
             map.put(t.name, t);
         }
     }
@@ -46,13 +47,17 @@ public class DynamicTableManager {
      * @param context
      */
     public void initTables(Context context) {
-        ArrayList<String> storagelist = null;
+
+        // initial the collections of the dict index manager
+        DictIndexManager.getInstance().init();
+        map.clear();
+
         // get the storage dict list
-        if (storagelist == null) {
-            storagelist = new ArrayList<String>();
-            String path = EXT_DIC_PATH;
-            File dir = new File(path);
-            String fs[] = dir.list();
+        ArrayList<String> storagelist = new ArrayList<String>();
+        String path = EXT_DIC_PATH;
+        File dir = new File(path);
+        String fs[] = dir.list();
+        if (fs != null) {
             for (String string : fs) {
                 if (string.endsWith(".ifo")) {
                     storagelist.add(string.substring(0, string.lastIndexOf(".")));
@@ -70,8 +75,8 @@ public class DynamicTableManager {
         // compare storagelist and preflist
         ArrayList<String> removelist = new ArrayList<String>();
         boolean upgrade = false;
-        for (DynamicTable t : map.values()) {
-            if (!storagelist.contains(t.name)) {
+        for (DictIndexDescribeTable t : map.values()) {
+            if (!t.internal && !storagelist.contains(t.name)) {
                 DictIndexManager.getInstance().getDropList().add(new DictIndexTable(t.name, t.id));
                 removelist.add(t.name);
                 upgrade = true;
@@ -79,33 +84,38 @@ public class DynamicTableManager {
                 if (!t.loaded) {
                     DictIndexManager.getInstance().getCreateList()
                             .add(new DictIndexTable(t.name, t.id));
-                    t.loaded = true;
+                    upgrade = true;
                 }
                 DictIndexManager.getInstance().getHashMap()
                         .put(t.name, new DictIndexTable(t.name, t.id));
             }
         }
         for (String string : removelist) {
+            // @coding-skill
+            // you can not remove the element of the collection directly in its
+            // for-each loop.
             map.remove(string);
         }
 
         int max = 1000;
-        for (DynamicTable t : map.values()) {
+        for (DictIndexDescribeTable t : map.values()) {
             if (t.id > max) {
                 max = t.id;
             }
         }
 
+        // handle external dicts
         for (String s : storagelist) {
             if (!map.containsKey(s)) {
                 max += 2;
                 DictIndexTable table = new DictIndexTable(s, max);
                 DictIndexManager.getInstance().getCreateList().add(table);
                 DictIndexManager.getInstance().getHashMap().put(s, table);
-                map.put(s, new DynamicTable(s, true, max, 0));
+                map.put(s, new DictIndexDescribeTable(s, false, false, max, 0));
                 upgrade = true;
             }
         }
+
         if (upgrade) {
             // update preference list
             AppSettings.saveString(context, AppSettings.DICTS_KEY, toString());
@@ -118,14 +128,34 @@ public class DynamicTableManager {
         DictIndexManager.getInstance().print();
     }
 
-    public Collection<DynamicTable> getTables() {
+    public Collection<DictIndexDescribeTable> getTables() {
         return map.values();
+    }
+
+    public boolean isInternal(String tableName) {
+        return map.get(tableName).internal;
+    }
+
+    public boolean isInitialed(String libKey) {
+        DictIndexDescribeTable t = map.get(libKey);
+        if (t != null) {
+            return t.loaded;
+        }
+        return false;
+    }
+
+    public void setComplete(Context context, String mLibKey) {
+        DictIndexDescribeTable table = map.get(mLibKey);
+        if (table != null) {
+            table.loaded = true;
+        }
+        AppSettings.saveString(context, AppSettings.DICTS_KEY, toString());
     }
 
     @Override
     public String toString() {
         String str = "";
-        for (DynamicTable t : map.values()) {
+        for (DictIndexDescribeTable t : map.values()) {
             str += t.toString() + ";";
         }
         if (str.length() > 1) {
@@ -134,18 +164,20 @@ public class DynamicTableManager {
         return str;
     }
 
-    public static class DynamicTable {
-        public DynamicTable(String s) {
+    public static class DictIndexDescribeTable {
+        public DictIndexDescribeTable(String s) {
             String sub[] = s.split(",");
             name = sub[0];
             loaded = Boolean.parseBoolean(sub[1]);
-            id = Integer.parseInt(sub[2]);
-            type = Integer.parseInt(sub[3]);
+            internal = Boolean.parseBoolean(sub[2]);
+            id = Integer.parseInt(sub[3]);
+            type = Integer.parseInt(sub[4]);
         }
 
-        public DynamicTable(String s, boolean b, int max, int i) {
+        public DictIndexDescribeTable(String s, boolean isLoaded, boolean isInternal, int max, int i) {
             this.name = s;
-            this.loaded = b;
+            this.loaded = isLoaded;
+            this.internal = isInternal;
             this.id = max;
             this.type = i;
         }
@@ -154,13 +186,15 @@ public class DynamicTableManager {
 
         public boolean loaded = false;
 
+        public boolean internal = false;
+
         public int id = 1000;
 
         public int type = 0;// 1 cur lib, 2 more lib, 3 cur lib & more lib
 
         @Override
         public String toString() {
-            return name + "," + loaded + "," + id + "," + type;
+            return name + "," + loaded + "," + internal + "," + id + "," + type;
         }
     }
 }

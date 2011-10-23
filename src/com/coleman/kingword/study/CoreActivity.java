@@ -75,7 +75,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private SliceWordList wordlist;
 
-    private RelativeLayout container;
+    private LinearLayout container;
 
     private WordItem nextWordItem;
 
@@ -120,7 +120,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private CountdownManager countdownManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -265,7 +264,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         bgColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
         selectColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);
 
-        container.setBackgroundColor(bgColor);
+        findViewById(R.id.container).setBackgroundColor(bgColor);
         textView.setTextColor(textColor);
 
         countBtn.setTextColor(textColor);
@@ -454,7 +453,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void initView() {
         textView = (TextView) findViewById(R.id.textView1);
         listView = (ListView) findViewById(R.id.listView1);
-        container = (RelativeLayout) findViewById(R.id.container);
+        container = (LinearLayout) findViewById(R.id.root_container);
         viewWord = (Button) findViewById(R.id.viewWord);
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);

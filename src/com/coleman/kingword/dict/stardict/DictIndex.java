@@ -30,13 +30,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.util.Log;
 
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.kingword.provider.KingWord.IDictIndex;
-import com.coleman.util.Config;
 import com.coleman.util.ConvertUtils;
+import com.coleman.util.Log;
 
 /**
  * Dictionary index entry structure.
@@ -84,10 +83,9 @@ public class DictIndex {
         return word + "\t" + offset + "\t" + size;
     }
 
-    static void loadDictIndexMap(DictLibrary lib, Context context, String indexFileName,
-            int numCount) {
+    static void loadDictIndexMap(Context context, DictLibrary lib) {
         HashMap<String, DictIndex> wordmap = new HashMap<String, DictIndex>();
-        readIndexFileNative(lib, context, indexFileName, numCount, wordmap);
+        readIndexFileNative(context, lib, wordmap);
     }
 
     /**
@@ -97,12 +95,14 @@ public class DictIndex {
      * @throws java.io.FileNotFoundException
      * @see DictIndexTable.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
-    private static void readIndexFileNative(DictLibrary lib, Context context, String indexFileName,
-            int numCount, HashMap<String, DictIndex> wordmap) {
+    private static void readIndexFileNative(Context context, DictLibrary lib,
+            HashMap<String, DictIndex> wordmap) {
         long time = System.currentTimeMillis();
         InputStream reader = null;
+        int numCount = lib.getNumCount();
+        String indexFileName = lib.getIdxFileName();
         try {
-            if (!Config.THIN_VERSION) {
+            if (lib.isInternal()) {
                 reader = context.getAssets().open(indexFileName, AssetManager.ACCESS_RANDOM);
             } else {
                 reader = new FileInputStream(Environment.getExternalStorageDirectory()
@@ -184,7 +184,7 @@ public class DictIndex {
         }
         // save the settings preference.
         lib.setComplete(context);
-        
+
         time = System.currentTimeMillis() - time;
         System.out
                 .println(indexFileName + " insert dict indexs to the database cost time: " + time);

@@ -48,7 +48,7 @@ import android.widget.Toast;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.DynamicTableManager;
-import com.coleman.kingword.dict.DynamicTableManager.DynamicTable;
+import com.coleman.kingword.dict.DynamicTableManager.DictIndexDescribeTable;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.info.email.GMailSenderHelper;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
@@ -321,11 +321,11 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private void showSummaryInfoDB() {
-        final Collection<DynamicTable> c = DynamicTableManager.getInstance().getTables();
+        final Collection<DictIndexDescribeTable> c = DynamicTableManager.getInstance().getTables();
         final String[] names = new String[c.size()];
         int i = 0;
         int index = -1;
-        for (DynamicTable dynamicTable : c) {
+        for (DictIndexDescribeTable dynamicTable : c) {
             names[i] = dynamicTable.name;
             if (dynamicTable.type == 1 || dynamicTable.type == 3) {
                 index = i;
@@ -335,14 +335,14 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for (DynamicTable dynamicTable : c) {
+                for (DictIndexDescribeTable dynamicTable : c) {
                     if (dynamicTable.type == 1) {
                         dynamicTable.type = 0;
                     } else if (dynamicTable.type == 3) {
                         dynamicTable.type = 2;
                     }
                 }
-                for (DynamicTable dynamicTable : c) {
+                for (DictIndexDescribeTable dynamicTable : c) {
                     if (dynamicTable.name.equals(names[which])) {
                         if (dynamicTable.type == 0) {
                             dynamicTable.type = 1;
@@ -365,11 +365,11 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private void showDetailedInfoDB() {
-        final Collection<DynamicTable> c = DynamicTableManager.getInstance().getTables();
+        final Collection<DictIndexDescribeTable> c = DynamicTableManager.getInstance().getTables();
         final String[] names = new String[c.size()];
         int i = 0;
         int index = -1;
-        for (DynamicTable dynamicTable : c) {
+        for (DictIndexDescribeTable dynamicTable : c) {
             names[i] = dynamicTable.name;
             if (dynamicTable.type == 2 || dynamicTable.type == 3) {
                 index = i;
@@ -379,14 +379,14 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for (DynamicTable dynamicTable : c) {
+                for (DictIndexDescribeTable dynamicTable : c) {
                     if (dynamicTable.type == 2) {
                         dynamicTable.type = 0;
                     } else if (dynamicTable.type == 3) {
                         dynamicTable.type = 1;
                     }
                 }
-                for (DynamicTable dynamicTable : c) {
+                for (DictIndexDescribeTable dynamicTable : c) {
                     if (dynamicTable.name.equals(names[which])) {
                         if (dynamicTable.type == 0) {
                             dynamicTable.type = 2;

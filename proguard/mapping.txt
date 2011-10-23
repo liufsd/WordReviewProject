@@ -9,12 +9,12 @@ com.coleman.kingword.dict.DictLoadService$1 -> com.coleman.kingword.dict.b:
     void run() -> run
 com.coleman.kingword.dict.DictManager -> com.coleman.kingword.dict.c:
     java.lang.String TAG -> a
-    java.lang.String EXT_DIC_PATH -> b
-    com.coleman.kingword.dict.DictManager manager -> c
-    java.util.HashMap libmap -> d
-    java.lang.String curLib -> e
-    java.lang.String moreLib -> f
+    com.coleman.kingword.dict.DictManager manager -> b
+    java.util.HashMap libmap -> c
+    java.lang.String curLib -> d
+    java.lang.String moreLib -> e
     com.coleman.kingword.dict.DictManager getInstance() -> a
+    boolean isCurLibInitialized() -> b
     void initLibrary(android.content.Context) -> a
     void setCurLibrary(java.lang.String) -> a
     void setMoreLibrary(java.lang.String) -> b
@@ -29,12 +29,16 @@ com.coleman.kingword.dict.DynamicTableManager -> com.coleman.kingword.dict.a:
     void parsePrefs(java.lang.String) -> a
     void initTables(android.content.Context) -> a
     java.util.Collection getTables() -> b
+    boolean isInternal(java.lang.String) -> b
+    boolean isInitialed(java.lang.String) -> c
+    void setComplete(android.content.Context,java.lang.String) -> a
     java.lang.String toString() -> toString
-com.coleman.kingword.dict.DynamicTableManager$DynamicTable -> com.coleman.kingword.dict.d:
+com.coleman.kingword.dict.DynamicTableManager$DictIndexDescribeTable -> com.coleman.kingword.dict.d:
     java.lang.String name -> a
     boolean loaded -> b
-    int id -> c
-    int type -> d
+    boolean internal -> c
+    int id -> d
+    int type -> e
     java.lang.String toString() -> toString
 com.coleman.kingword.dict.stardict.DictData -> com.coleman.kingword.dict.a.c:
     java.lang.String TAG -> d
@@ -42,8 +46,8 @@ com.coleman.kingword.dict.stardict.DictData -> com.coleman.kingword.dict.a.c:
     java.lang.String data -> b
     boolean isDetail -> c
     com.coleman.kingword.dict.stardict.DictData constructData(java.lang.String) -> a
-    com.coleman.kingword.dict.stardict.DictData readData(android.content.Context,com.coleman.kingword.dict.stardict.DictInfo,com.coleman.kingword.dict.stardict.DictIndex,java.lang.String) -> a
-    byte[] readData(android.content.Context,com.coleman.kingword.dict.stardict.DictInfo,java.lang.String,int,int) -> a
+    com.coleman.kingword.dict.stardict.DictData readData(android.content.Context,boolean,com.coleman.kingword.dict.stardict.DictInfo,com.coleman.kingword.dict.stardict.DictIndex,java.lang.String) -> a
+    byte[] readData(android.content.Context,boolean,com.coleman.kingword.dict.stardict.DictInfo,java.lang.String,int,int) -> a
     java.lang.String getDatas() -> a
     java.lang.String getSymbol() -> b
     java.lang.String getDataAndSymbol() -> c
@@ -54,8 +58,8 @@ com.coleman.kingword.dict.stardict.DictIndex -> com.coleman.kingword.dict.a.d:
     long offset -> b
     int size -> c
     java.lang.String toString() -> toString
-    void loadDictIndexMap(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String,int) -> a
-    void readIndexFileNative(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String,int,java.util.HashMap) -> a
+    void loadDictIndexMap(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary) -> a
+    void readIndexFileNative(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary,java.util.HashMap) -> a
     void doInsert(android.content.Context,java.lang.String,java.util.HashMap) -> a
 com.coleman.kingword.dict.stardict.DictInfo -> com.coleman.kingword.dict.a.f:
     java.lang.String bookName -> a
@@ -63,46 +67,58 @@ com.coleman.kingword.dict.stardict.DictInfo -> com.coleman.kingword.dict.a.f:
     java.lang.String idxFileSize -> c
     java.lang.String sameTypeSequence -> d
     java.lang.String toString() -> toString
-    com.coleman.kingword.dict.stardict.DictInfo readDicInfo(android.content.Context,java.lang.String) -> a
+    com.coleman.kingword.dict.stardict.DictInfo readDicInfo(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary) -> a
 com.coleman.kingword.dict.stardict.DictLibrary -> com.coleman.kingword.dict.a.b:
     java.lang.String TAG -> a
     com.coleman.kingword.dict.stardict.DictInfo libraryInfo -> b
     java.lang.String mLibKey -> c
     java.lang.String mLibPath -> d
     boolean dbInitialed -> e
+    boolean internal -> f
     com.coleman.kingword.dict.stardict.DictInfo getLibraryInfo() -> a
+    boolean isInitialed() -> b
+    boolean isInternal() -> c
     com.coleman.kingword.dict.stardict.DictIndex getDictIndex(android.content.Context,java.lang.String) -> a
-    java.lang.String getLibraryName() -> b
+    java.lang.String getLibraryName() -> d
+    java.lang.String getIfoFileName() -> e
+    java.lang.String getIdxFileName() -> f
+    int getNumCount() -> g
     void setComplete(android.content.Context) -> a
     java.lang.String access$0(com.coleman.kingword.dict.stardict.DictLibrary) -> a
     void access$1(com.coleman.kingword.dict.stardict.DictLibrary,com.coleman.kingword.dict.stardict.DictInfo) -> a
-    java.lang.String access$2() -> c
+    java.lang.String access$2() -> h
     com.coleman.kingword.dict.stardict.DictInfo access$3(com.coleman.kingword.dict.stardict.DictLibrary) -> b
 com.coleman.kingword.dict.stardict.DictLibrary$LoadAndInsert -> com.coleman.kingword.dict.a.e:
     com.coleman.kingword.dict.stardict.DictLibrary this$0 -> a
-    void doWork(com.coleman.kingword.dict.stardict.DictLibrary,android.content.Context,java.lang.String) -> a
+    void doWork(android.content.Context) -> a
 com.coleman.kingword.dict.stardict.DictLibrary$LoadInfo -> com.coleman.kingword.dict.a.g:
     com.coleman.kingword.dict.stardict.DictLibrary this$0 -> a
-    void doWork(android.content.Context,java.lang.String) -> a
+    void doWork(android.content.Context) -> a
 com.coleman.kingword.dict.stardict.DictLibraryFactory -> com.coleman.kingword.dict.a.a:
-    void loadLibrary(android.content.Context,java.lang.String,java.util.HashMap) -> a
+    void loadLibrary(android.content.Context,java.lang.String,boolean,java.util.HashMap) -> a
 com.coleman.kingword.info.InfoGather -> com.coleman.kingword.a.a:
-    java.lang.String TAG -> b
-    java.lang.String defaultAccount -> a
+    java.lang.String TAG -> a
     void checkLevelUpgrade(android.content.Context,int) -> a
     void sendByEmail(android.content.Context) -> a
-    java.lang.String gatherDetail(android.content.Context) -> b
-    java.lang.String getCurLevelInfo(android.content.Context) -> c
+    void sendEmailWithInfo(android.content.Context,java.lang.String,java.lang.String) -> a
+    java.lang.String gatherDetail(android.content.Context) -> c
+    java.lang.String getCurLevelInfo(android.content.Context) -> d
+    java.lang.String access$0(android.content.Context) -> b
+    java.lang.String access$1() -> a
 com.coleman.kingword.info.InfoGather$1 -> com.coleman.kingword.a.b:
-    java.lang.String val$msgBody -> a
+    android.content.Context val$context -> a
+    void run() -> run
+com.coleman.kingword.info.InfoGather$2 -> com.coleman.kingword.a.c:
+    java.lang.String val$msg -> a
+    android.content.Context val$context -> b
+    java.lang.String val$title -> c
     void run() -> run
 com.coleman.kingword.info.email.GMailSender -> com.coleman.kingword.a.a.b:
-    java.lang.String TAG -> a
-    java.lang.String mailhost -> b
-    java.lang.String mUser -> c
-    java.lang.String mPassword -> d
-    javax.mail.Session session -> e
-    java.lang.String attachFilePath -> f
+    java.lang.String mailhost -> a
+    java.lang.String mUser -> b
+    java.lang.String mPassword -> c
+    javax.mail.Session session -> d
+    java.lang.String attachFilePath -> e
     void setAttachment(java.lang.String) -> a
     void sendMail(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
     javax.mail.internet.MimeBodyPart createAttachment(java.lang.String) -> b
@@ -110,10 +126,9 @@ com.coleman.kingword.info.email.GMailSender -> com.coleman.kingword.a.a.b:
     java.lang.String access$1(com.coleman.kingword.info.email.GMailSender) -> b
 com.coleman.kingword.info.email.GMailSender$1 -> com.coleman.kingword.a.a.c:
     com.coleman.kingword.info.email.GMailSender this$0 -> a
-    javax.mail.PasswordAuthentication getPasswordAuthentication() -> a
+    javax.mail.PasswordAuthentication getPasswordAuthentication() -> getPasswordAuthentication
 com.coleman.kingword.info.email.GMailSenderHelper -> com.coleman.kingword.a.a.a:
-    void sendMail(java.lang.String,java.lang.String) -> a
-    void sendMessage(java.lang.String) -> a
+    void sendMail(java.lang.String,java.lang.String,java.lang.String) -> a
 com.coleman.kingword.inspirit.countdown.CountdownManager -> com.coleman.kingword.b.a.a:
     long TOTAL_TIME -> a
     java.lang.String TAG -> b
@@ -136,11 +151,12 @@ com.coleman.kingword.provider.DictIndexManager -> com.coleman.kingword.provider.
     java.util.ArrayList droplist -> d
     java.util.ArrayList createlist -> e
     com.coleman.kingword.provider.DictIndexManager getInstance() -> a
-    java.util.HashMap getHashMap() -> b
-    java.util.ArrayList getDropList() -> c
-    java.util.ArrayList getCreateList() -> d
+    void init() -> b
+    java.util.HashMap getHashMap() -> c
+    java.util.ArrayList getDropList() -> d
+    java.util.ArrayList getCreateList() -> e
     com.coleman.kingword.provider.DictIndexManager$DictIndexTable getTable(java.lang.String) -> a
-    void print() -> e
+    void print() -> f
 com.coleman.kingword.provider.DictIndexManager$DictIndexTable -> com.coleman.kingword.provider.e:
     java.lang.String TABLE_NAME -> a
     android.net.Uri CONTENT_URI -> b
@@ -229,7 +245,7 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     java.util.ArrayList list -> f
     com.coleman.kingword.study.CoreActivity$ParaphraseAdapter adapter -> g
     com.coleman.kingword.study.unit.model.SliceWordList wordlist -> h
-    android.widget.RelativeLayout container -> i
+    android.widget.LinearLayout container -> i
     com.coleman.kingword.study.unit.model.WordItem nextWordItem -> j
     android.widget.Button viewWord -> k
     android.widget.Button addOrRemove -> l
@@ -283,7 +299,7 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     java.util.ArrayList access$9(com.coleman.kingword.study.CoreActivity) -> j
     android.widget.TextView access$10(com.coleman.kingword.study.CoreActivity) -> k
     com.coleman.kingword.study.CoreActivity$ParaphraseAdapter access$11(com.coleman.kingword.study.CoreActivity) -> l
-    android.widget.RelativeLayout access$12(com.coleman.kingword.study.CoreActivity) -> m
+    android.widget.LinearLayout access$12(com.coleman.kingword.study.CoreActivity) -> m
     android.widget.ListView access$13(com.coleman.kingword.study.CoreActivity) -> n
     void access$14(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.unit.model.WordItem) -> a
     com.coleman.kingword.study.unit.model.SliceWordList access$15(com.coleman.kingword.study.CoreActivity) -> o
@@ -669,7 +685,7 @@ com.coleman.kingword.study.unit.SubWordListActivity$PageControl -> com.coleman.k
     boolean hasPreviousPage() -> d
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToNextPage() -> e
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToPrePage() -> f
-com.coleman.kingword.study.unit.model.FiniteStateMachine -> com.coleman.kingword.study.unit.model.g:
+com.coleman.kingword.study.unit.model.FiniteStateMachine -> com.coleman.kingword.study.unit.model.f:
     com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState mCurrentState -> a
     com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteStateEngine mStateEngine -> b
     java.util.ArrayList mStateList -> c
@@ -759,7 +775,7 @@ com.coleman.kingword.study.unit.model.SliceWordList$SubInfo -> com.coleman.kingw
     java.lang.String toString() -> toString
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.coleman.kingword.study.unit.model.SliceWordList$SubInfo$1 -> com.coleman.kingword.study.unit.model.f:
+com.coleman.kingword.study.unit.model.SliceWordList$SubInfo$1 -> com.coleman.kingword.study.unit.model.g:
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo createFromParcel(android.os.Parcel) -> a
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] newArray(int) -> a
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
@@ -939,12 +955,18 @@ com.coleman.kingword.study.wordlist.WordListActivity -> com.coleman.kingword.stu
     android.widget.ProgressBar progressBar -> h
     android.view.View loadLayout -> i
     android.view.View emptyView -> j
+    void onNewIntent(android.content.Intent) -> onNewIntent
     void onCreate(android.os.Bundle) -> onCreate
     void onStart() -> onStart
+    void onResume() -> onResume
     void onDestroy() -> onDestroy
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void showDeleteDialog(long,java.lang.String) -> a
+    void showRenameDialog(long) -> a
     void onClick(android.view.View) -> onClick
     boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
     android.widget.ProgressBar access$0(com.coleman.kingword.study.wordlist.WordListActivity) -> a
@@ -958,6 +980,15 @@ com.coleman.kingword.study.wordlist.WordListActivity -> com.coleman.kingword.stu
     java.lang.String access$8(com.coleman.kingword.study.wordlist.WordListActivity) -> f
     void access$9(com.coleman.kingword.study.wordlist.WordListActivity,com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter) -> a
     com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter access$10(com.coleman.kingword.study.wordlist.WordListActivity) -> g
+com.coleman.kingword.study.wordlist.WordListActivity$1 -> com.coleman.kingword.study.wordlist.g:
+    com.coleman.kingword.study.wordlist.WordListActivity this$0 -> a
+    long val$id -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.study.wordlist.WordListActivity$2 -> com.coleman.kingword.study.wordlist.h:
+    com.coleman.kingword.study.wordlist.WordListActivity this$0 -> a
+    android.widget.EditText val$et -> b
+    long val$id -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
 com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask -> com.coleman.kingword.study.wordlist.e:
     byte type -> b
     com.coleman.kingword.study.wordlist.WordListActivity this$0 -> a
@@ -969,10 +1000,10 @@ com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask -> com.colema
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
     void onProgressUpdate(java.lang.Object[]) -> onProgressUpdate
     void access$3(com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask,java.lang.Object[]) -> a
-com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$1 -> com.coleman.kingword.study.wordlist.h:
+com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$1 -> com.coleman.kingword.study.wordlist.j:
     com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask this$1 -> a
     void notify(int) -> a
-com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$2 -> com.coleman.kingword.study.wordlist.g:
+com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask$2 -> com.coleman.kingword.study.wordlist.i:
     com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask this$1 -> a
     void notify(int) -> a
 com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter -> com.coleman.kingword.study.wordlist.c:
@@ -1056,6 +1087,7 @@ com.coleman.util.Log -> com.coleman.a.d:
     int d(java.lang.String,java.lang.String) -> a
     int w(java.lang.String,java.lang.String) -> b
     int e(java.lang.String,java.lang.String) -> c
+    int e(java.lang.String,java.lang.String,java.lang.Throwable) -> a
     int coleamnPrintln(int,java.lang.String,java.lang.String) -> a
 com.coleman.util.Log$LogType -> com.coleman.a.c:
     com.coleman.util.Log$LogType verbose -> a
@@ -1070,7 +1102,7 @@ com.coleman.util.Log$LogType -> com.coleman.a.c:
     com.coleman.util.Log$LogType instanse(int) -> a
     com.coleman.util.Log$LogType[] values() -> values
     com.coleman.util.Log$LogType valueOf(java.lang.String) -> valueOf
-com.sun.activation.registries.LineTokenizer -> com.a.b.a.b:
+com.sun.activation.registries.LineTokenizer -> com.sun.a.a.b:
     int currentPosition -> a
     int maxPosition -> b
     java.lang.String str -> c
@@ -1078,28 +1110,31 @@ com.sun.activation.registries.LineTokenizer -> com.a.b.a.b:
     void skipWhiteSpace() -> c
     boolean hasMoreTokens() -> a
     java.lang.String nextToken() -> b
-com.sun.activation.registries.LogSupport -> com.a.b.a.f:
+com.sun.activation.registries.LogSupport -> com.sun.a.a.f:
     boolean debug -> a
     java.util.logging.Logger logger -> b
     java.util.logging.Level level -> c
     void log(java.lang.String) -> a
     void log(java.lang.String,java.lang.Throwable) -> a
     boolean isLoggable() -> a
-com.sun.activation.registries.MailcapFile -> com.a.b.a.a:
+com.sun.activation.registries.MailcapFile -> com.sun.a.a.a:
     java.util.Map type_hash -> a
     java.util.Map fallback_hash -> b
     java.util.Map native_commands -> c
     boolean addReverse -> d
     java.util.Map getMailcapList(java.lang.String) -> a
     java.util.Map getMailcapFallbackList(java.lang.String) -> b
+    java.lang.String[] getMimeTypes() -> a
+    java.lang.String[] getNativeCommands(java.lang.String) -> c
     java.util.Map mergeResults(java.util.Map,java.util.Map) -> a
+    void appendToMailcap(java.lang.String) -> d
     void parse(java.io.Reader) -> a
-    void parseLine(java.lang.String) -> c
+    void parseLine(java.lang.String) -> e
     void reportParseError(int,int,java.lang.String) -> a
     void reportParseError(int,int,int,java.lang.String) -> a
     void reportParseError(int,int,int,int,java.lang.String) -> a
-com.sun.activation.registries.MailcapParseException -> com.a.b.a.d:
-com.sun.activation.registries.MailcapTokenizer -> com.a.b.a.c:
+com.sun.activation.registries.MailcapParseException -> com.sun.a.a.d:
+com.sun.activation.registries.MailcapTokenizer -> com.sun.a.a.c:
     java.lang.String data -> a
     int dataIndex -> b
     int dataLength -> c
@@ -1118,24 +1153,134 @@ com.sun.activation.registries.MailcapTokenizer -> com.a.b.a.c:
     boolean isWhiteSpaceChar(char) -> c
     boolean isStringTokenChar(char) -> d
     java.lang.String fixEscapeSequences(java.lang.String) -> a
-com.sun.activation.registries.MimeTypeEntry -> com.a.b.a.g:
+com.sun.activation.registries.MimeTypeEntry -> com.sun.a.a.g:
     java.lang.String type -> a
     java.lang.String extension -> b
     java.lang.String getMIMEType() -> a
     java.lang.String toString() -> toString
-com.sun.activation.registries.MimeTypeFile -> com.a.b.a.e:
+com.sun.activation.registries.MimeTypeFile -> com.sun.a.a.e:
     java.lang.String fname -> a
     java.util.Hashtable type_hash -> b
     com.sun.activation.registries.MimeTypeEntry getMimeTypeEntry(java.lang.String) -> a
     java.lang.String getMIMETypeString(java.lang.String) -> b
+    void appendToRegistry(java.lang.String) -> c
     void parse(java.io.BufferedReader) -> a
-    void parseEntry(java.lang.String) -> c
-com.sun.mail.util.ASCIIUtility -> com.a.a.a.f:
+    void parseEntry(java.lang.String) -> d
+com.sun.mail.smtp.DigestMD5 -> com.sun.mail.smtp.c:
+    java.io.PrintStream debugout -> a
+    java.security.MessageDigest md5 -> b
+    java.lang.String uri -> c
+    java.lang.String clientResponse -> d
+    char[] digits -> e
+    byte[] authClient(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    boolean authServer(java.lang.String) -> a
+    java.util.Hashtable tokenize(java.lang.String) -> b
+    java.lang.String toHex(byte[]) -> a
+com.sun.mail.smtp.SMTPAddressFailedException -> com.sun.mail.smtp.a:
+    javax.mail.internet.InternetAddress addr -> a
+    java.lang.String cmd -> b
+    int rc -> c
+com.sun.mail.smtp.SMTPAddressSucceededException -> com.sun.mail.smtp.f:
+    javax.mail.internet.InternetAddress addr -> a
+    java.lang.String cmd -> b
+    int rc -> c
+com.sun.mail.smtp.SMTPMessage -> com.sun.mail.smtp.e:
+    java.lang.String[] returnOptionString -> i
+    java.lang.String envelopeFrom -> j
+    int notifyOptions -> k
+    int returnOption -> l
+    boolean sendPartial -> m
+    boolean allow8bitMIME -> n
+    java.lang.String submitter -> o
+    java.lang.String extension -> p
+    java.lang.String getEnvelopeFrom() -> e
+    java.lang.String getDSNNotify() -> f
+    java.lang.String getDSNRet() -> g
+    boolean getAllow8bitMIME() -> h
+    boolean getSendPartial() -> i
+    java.lang.String getSubmitter() -> j
+    java.lang.String getMailExtension() -> k
+com.sun.mail.smtp.SMTPOutputStream -> com.sun.mail.smtp.d:
+    void write(int) -> write
+    void write(byte[],int,int) -> write
+    void flush() -> flush
+    void ensureAtBOL() -> a
+com.sun.mail.smtp.SMTPSSLTransport -> com.sun.mail.smtp.SMTPSSLTransport:
+com.sun.mail.smtp.SMTPSendFailedException -> com.sun.mail.smtp.b:
+    java.lang.String cmd -> a
+    int rc -> b
+com.sun.mail.smtp.SMTPTransport -> com.sun.mail.smtp.SMTPTransport:
+    java.lang.String name -> b
+    int defaultPort -> c
+    boolean isSSL -> d
+    javax.mail.internet.MimeMessage message -> e
+    javax.mail.Address[] addresses -> f
+    javax.mail.Address[] validSentAddr -> g
+    javax.mail.Address[] validUnsentAddr -> h
+    javax.mail.Address[] invalidAddr -> i
+    boolean sendPartiallyFailed -> j
+    javax.mail.MessagingException exception -> k
+    com.sun.mail.smtp.SMTPOutputStream dataStream -> l
+    java.util.Hashtable extMap -> m
+    boolean quitWait -> n
+    java.lang.String saslRealm -> o
+    boolean reportSuccess -> p
+    boolean useStartTLS -> q
+    boolean useRset -> r
+    java.io.PrintStream out -> s
+    java.lang.String localHostName -> t
+    java.lang.String lastServerResponse -> u
+    int lastReturnCode -> v
+    java.lang.String[] ignoreList -> w
+    byte[] CRLF -> x
+    com.sun.mail.smtp.DigestMD5 md5support -> y
+    java.io.BufferedInputStream serverInput -> z
+    com.sun.mail.util.LineInputStream lineInputStream -> A
+    java.io.OutputStream serverOutput -> B
+    java.net.Socket serverSocket -> C
+    char[] hexchar -> D
+    boolean $assertionsDisabled -> a
+    java.lang.String getLocalHost() -> a
+    java.lang.String getSASLRealm() -> b
+    com.sun.mail.smtp.DigestMD5 getMD5() -> j
+    boolean protocolConnect(java.lang.String,int,java.lang.String,java.lang.String) -> protocolConnect
+    void sendMessage(javax.mail.Message,javax.mail.Address[]) -> sendMessage
+    void close() -> close
+    void closeConnection() -> k
+    boolean isConnected() -> isConnected
+    void expandGroups() -> l
+    boolean convertTo8Bit(javax.mail.internet.MimePart) -> a
+    boolean is8Bit(java.io.InputStream) -> a
+    void finalize() -> finalize
+    void helo(java.lang.String) -> a
+    boolean ehlo(java.lang.String) -> b
+    void mailFrom() -> c
+    void rcptTo() -> d
+    java.io.OutputStream data() -> e
+    void finishData() -> f
+    void startTLS() -> g
+    void openServer(java.lang.String,int) -> b
+    void openServer() -> m
+    void initStreams() -> n
+    void issueCommand(java.lang.String,int) -> a
+    void issueSendCommand(java.lang.String,int) -> c
+    int simpleCommand(java.lang.String) -> c
+    int simpleCommand(byte[]) -> a
+    void sendCommand(java.lang.String) -> d
+    void sendCommand(byte[]) -> b
+    int readServerResponse() -> h
+    void checkConnected() -> i
+    boolean isNotLastLine(java.lang.String) -> h
+    java.lang.String normalizeAddress(java.lang.String) -> i
+    boolean supportsExtension(java.lang.String) -> e
+    boolean supportsAuthentication(java.lang.String) -> f
+    java.lang.String xtext(java.lang.String) -> g
+com.sun.mail.util.ASCIIUtility -> com.sun.mail.a.g:
     int parseInt(byte[],int,int,int) -> a
     java.lang.String toString(byte[],int,int) -> a
     byte[] getBytes(java.lang.String) -> a
     byte[] getBytes(java.io.InputStream) -> a
-com.sun.mail.util.BASE64DecoderStream -> com.a.a.a.b:
+com.sun.mail.util.BASE64DecoderStream -> com.sun.mail.a.b:
     byte[] buffer -> a
     int bufsize -> b
     int index -> c
@@ -1152,7 +1297,7 @@ com.sun.mail.util.BASE64DecoderStream -> com.a.a.a.b:
     int decode(byte[],int,int) -> a
     int getByte() -> a
     java.lang.String recentChars() -> b
-com.sun.mail.util.BASE64EncoderStream -> com.a.a.a.d:
+com.sun.mail.util.BASE64EncoderStream -> com.sun.mail.a.d:
     byte[] buffer -> a
     int bufsize -> b
     byte[] outbuf -> c
@@ -1170,27 +1315,43 @@ com.sun.mail.util.BASE64EncoderStream -> com.a.a.a.d:
     void encode() -> a
     byte[] encode(byte[],int,int,byte[]) -> a
     int encodedSize(int) -> a
-com.sun.mail.util.BEncoderStream -> com.a.a.a.g:
+com.sun.mail.util.BEncoderStream -> com.sun.mail.a.m:
     int encodedLength(byte[]) -> a
-com.sun.mail.util.LineInputStream -> com.a.a.a.a:
+com.sun.mail.util.CRLFOutputStream -> com.sun.mail.a.r:
+    int lastb -> a
+    boolean atBOL -> b
+    byte[] newline -> c
+    void write(int) -> write
+    void write(byte[]) -> write
+    void write(byte[],int,int) -> write
+    void writeln() -> b
+com.sun.mail.util.FolderClosedIOException -> com.sun.mail.a.f:
+    javax.mail.Folder folder -> a
+    javax.mail.Folder getFolder() -> a
+com.sun.mail.util.LineInputStream -> com.sun.mail.a.a:
     char[] lineBuffer -> a
     java.lang.String readLine() -> a
-com.sun.mail.util.QDecoderStream -> com.a.a.a.j:
+com.sun.mail.util.LineOutputStream -> com.sun.mail.a.o:
+    byte[] newline -> a
+    void writeln(java.lang.String) -> a
+    void writeln() -> a
+com.sun.mail.util.MessageRemovedIOException -> com.sun.mail.a.j:
+com.sun.mail.util.QDecoderStream -> com.sun.mail.a.s:
     int read() -> read
-com.sun.mail.util.QEncoderStream -> com.a.a.a.h:
+com.sun.mail.util.QEncoderStream -> com.sun.mail.a.n:
     java.lang.String specials -> a
     java.lang.String WORD_SPECIALS -> b
     java.lang.String TEXT_SPECIALS -> c
     void write(int) -> write
     int encodedLength(byte[],boolean) -> a
-com.sun.mail.util.QPDecoderStream -> com.a.a.a.i:
+com.sun.mail.util.QPDecoderStream -> com.sun.mail.a.p:
     byte[] ba -> a
     int spaces -> b
     int read() -> read
     int read(byte[],int,int) -> read
     boolean markSupported() -> markSupported
     int available() -> available
-com.sun.mail.util.QPEncoderStream -> com.a.a.a.e:
+com.sun.mail.util.QPEncoderStream -> com.sun.mail.a.e:
     int count -> a
     int bytesPerLine -> b
     boolean gotSpace -> c
@@ -1203,7 +1364,35 @@ com.sun.mail.util.QPEncoderStream -> com.a.a.a.e:
     void close() -> close
     void outputCRLF() -> a
     void output(int,boolean) -> a
-com.sun.mail.util.UUDecoderStream -> com.a.a.a.c:
+com.sun.mail.util.SocketFetcher -> com.sun.mail.a.l:
+    java.net.Socket getSocket(java.lang.String,int,java.util.Properties,java.lang.String,boolean) -> a
+    java.net.Socket createSocket(java.net.InetAddress,int,java.lang.String,int,int,javax.net.SocketFactory,boolean) -> a
+    javax.net.SocketFactory getSocketFactory(java.lang.String) -> a
+    java.net.Socket startTLS(java.net.Socket,java.util.Properties,java.lang.String) -> a
+    void configureSSLSocket(java.net.Socket,java.util.Properties,java.lang.String) -> b
+    java.lang.String[] stringArray(java.lang.String) -> b
+    java.lang.ClassLoader getContextClassLoader() -> a
+com.sun.mail.util.SocketFetcher$1 -> com.sun.mail.a.i:
+    java.lang.Object run() -> run
+com.sun.mail.util.TraceInputStream -> com.sun.mail.a.h:
+    boolean trace -> a
+    boolean quote -> b
+    java.io.OutputStream traceOut -> c
+    void setTrace(boolean) -> a
+    void setQuote(boolean) -> b
+    int read() -> read
+    int read(byte[],int,int) -> read
+    void writeByte(int) -> a
+com.sun.mail.util.TraceOutputStream -> com.sun.mail.a.k:
+    boolean trace -> a
+    boolean quote -> b
+    java.io.OutputStream traceOut -> c
+    void setTrace(boolean) -> a
+    void setQuote(boolean) -> b
+    void write(int) -> write
+    void write(byte[],int,int) -> write
+    void writeByte(int) -> a
+com.sun.mail.util.UUDecoderStream -> com.sun.mail.a.c:
     java.lang.String name -> a
     int mode -> b
     byte[] buffer -> c
@@ -1218,393 +1407,808 @@ com.sun.mail.util.UUDecoderStream -> com.a.a.a.c:
     int available() -> available
     void readPrefix() -> a
     boolean decode() -> b
-javax.activation.CommandMap -> a.b.n:
-    javax.activation.CommandMap defaultCommandMap -> a
-    javax.activation.CommandMap getDefaultCommandMap() -> a
-    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
-    javax.activation.DataContentHandler createDataContentHandler(java.lang.String,javax.activation.DataSource) -> a
-javax.activation.DataContentHandler -> a.b.b:
-    java.lang.Object getContent(javax.activation.DataSource) -> a
-    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
-javax.activation.DataContentHandlerFactory -> a.b.d:
-    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
-javax.activation.DataHandler -> a.b.p:
-    javax.activation.DataSource dataSource -> a
-    javax.activation.DataSource objDataSource -> b
-    java.lang.Object object -> c
-    java.lang.String objectMimeType -> d
-    javax.activation.CommandMap currentCommandMap -> e
-    myjava.awt.datatransfer.DataFlavor[] emptyFlavors -> f
-    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> g
-    javax.activation.DataContentHandler dataContentHandler -> h
-    javax.activation.DataContentHandler factoryDCH -> i
-    javax.activation.DataContentHandlerFactory factory -> j
-    javax.activation.DataContentHandlerFactory oldFactory -> k
-    java.lang.String shortType -> l
-    javax.activation.CommandMap getCommandMap() -> f
-    javax.activation.DataSource getDataSource() -> a
-    java.lang.String getName() -> b
-    java.lang.String getContentType() -> c
-    java.io.InputStream getInputStream() -> d
-    void writeTo(java.io.OutputStream) -> a
-    java.lang.Object getContent() -> e
-    javax.activation.DataContentHandler getDataContentHandler() -> g
-    java.lang.String getBaseType() -> h
+com.sun.mail.util.UUEncoderStream -> com.sun.mail.a.q:
+    byte[] buffer -> c
+    int bufsize -> d
+    boolean wrotePrefix -> e
+    java.lang.String name -> a
+    int mode -> b
+    void write(byte[],int,int) -> write
+    void write(byte[]) -> write
+    void write(int) -> write
+    void flush() -> flush
+    void close() -> close
+    void writePrefix() -> a
+    void writeSuffix() -> b
+    void encode() -> c
+javax.activation.ActivationDataFlavor -> javax.activation.ActivationDataFlavor:
+    java.lang.String mimeType -> mimeType
+    javax.activation.MimeType mimeObject -> mimeObject
+    java.lang.String humanPresentableName -> humanPresentableName
+    java.lang.Class representationClass -> representationClass
+    java.lang.String getMimeType() -> getMimeType
+    java.lang.Class getRepresentationClass() -> getRepresentationClass
+    java.lang.String getHumanPresentableName() -> getHumanPresentableName
+    void setHumanPresentableName(java.lang.String) -> setHumanPresentableName
+    boolean equals(myjava.awt.datatransfer.DataFlavor) -> equals
+    boolean isMimeTypeEqual(java.lang.String) -> isMimeTypeEqual
+    java.lang.String normalizeMimeTypeParameter(java.lang.String,java.lang.String) -> normalizeMimeTypeParameter
+    java.lang.String normalizeMimeType(java.lang.String) -> normalizeMimeType
+javax.activation.CommandInfo -> javax.activation.CommandInfo:
+    java.lang.String verb -> verb
+    java.lang.String className -> className
+    java.lang.String getCommandName() -> getCommandName
+    java.lang.String getCommandClass() -> getCommandClass
+    java.lang.Object getCommandObject(javax.activation.DataHandler,java.lang.ClassLoader) -> getCommandObject
+javax.activation.CommandMap -> javax.activation.CommandMap:
+    javax.activation.CommandMap defaultCommandMap -> defaultCommandMap
+    javax.activation.CommandMap getDefaultCommandMap() -> getDefaultCommandMap
+    void setDefaultCommandMap(javax.activation.CommandMap) -> setDefaultCommandMap
+    javax.activation.CommandInfo[] getPreferredCommands(java.lang.String) -> getPreferredCommands
+    javax.activation.CommandInfo[] getPreferredCommands(java.lang.String,javax.activation.DataSource) -> getPreferredCommands
+    javax.activation.CommandInfo[] getAllCommands(java.lang.String) -> getAllCommands
+    javax.activation.CommandInfo[] getAllCommands(java.lang.String,javax.activation.DataSource) -> getAllCommands
+    javax.activation.CommandInfo getCommand(java.lang.String,java.lang.String) -> getCommand
+    javax.activation.CommandInfo getCommand(java.lang.String,java.lang.String,javax.activation.DataSource) -> getCommand
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> createDataContentHandler
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String,javax.activation.DataSource) -> createDataContentHandler
+    java.lang.String[] getMimeTypes() -> getMimeTypes
+javax.activation.CommandObject -> javax.activation.CommandObject:
+    void setCommandContext(java.lang.String,javax.activation.DataHandler) -> setCommandContext
+javax.activation.DataContentHandler -> javax.activation.DataContentHandler:
+    myjava.awt.datatransfer.DataFlavor[] getTransferDataFlavors() -> getTransferDataFlavors
+    java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor,javax.activation.DataSource) -> getTransferData
+    java.lang.Object getContent(javax.activation.DataSource) -> getContent
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> writeTo
+javax.activation.DataContentHandlerFactory -> javax.activation.DataContentHandlerFactory:
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> createDataContentHandler
+javax.activation.DataHandler -> javax.activation.DataHandler:
+    javax.activation.DataSource dataSource -> dataSource
+    javax.activation.DataSource objDataSource -> objDataSource
+    java.lang.Object object -> object
+    java.lang.String objectMimeType -> objectMimeType
+    javax.activation.CommandMap currentCommandMap -> currentCommandMap
+    myjava.awt.datatransfer.DataFlavor[] emptyFlavors -> emptyFlavors
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> transferFlavors
+    javax.activation.DataContentHandler dataContentHandler -> dataContentHandler
+    javax.activation.DataContentHandler factoryDCH -> factoryDCH
+    javax.activation.DataContentHandlerFactory factory -> factory
+    javax.activation.DataContentHandlerFactory oldFactory -> oldFactory
+    java.lang.String shortType -> shortType
+    javax.activation.CommandMap getCommandMap() -> getCommandMap
+    javax.activation.DataSource getDataSource() -> getDataSource
+    java.lang.String getName() -> getName
+    java.lang.String getContentType() -> getContentType
+    java.io.InputStream getInputStream() -> getInputStream
+    void writeTo(java.io.OutputStream) -> writeTo
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    myjava.awt.datatransfer.DataFlavor[] getTransferDataFlavors() -> getTransferDataFlavors
+    boolean isDataFlavorSupported(myjava.awt.datatransfer.DataFlavor) -> isDataFlavorSupported
+    java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor) -> getTransferData
+    void setCommandMap(javax.activation.CommandMap) -> setCommandMap
+    javax.activation.CommandInfo[] getPreferredCommands() -> getPreferredCommands
+    javax.activation.CommandInfo[] getAllCommands() -> getAllCommands
+    javax.activation.CommandInfo getCommand(java.lang.String) -> getCommand
+    java.lang.Object getContent() -> getContent
+    java.lang.Object getBean(javax.activation.CommandInfo) -> getBean
+    javax.activation.DataContentHandler getDataContentHandler() -> getDataContentHandler
+    java.lang.String getBaseType() -> getBaseType
+    void setDataContentHandlerFactory(javax.activation.DataContentHandlerFactory) -> setDataContentHandlerFactory
     java.lang.Object access$0(javax.activation.DataHandler) -> a
     java.lang.String access$1(javax.activation.DataHandler) -> b
-javax.activation.DataHandler$1 -> a.b.g:
+javax.activation.DataHandler$1 -> javax.activation.DataHandler$1:
     javax.activation.DataHandler this$0 -> a
-    java.io.PipedOutputStream val$pos -> b
-    javax.activation.DataContentHandler val$fdch -> c
+    java.io.PipedOutputStream val$pos -> val$pos
+    javax.activation.DataContentHandler val$fdch -> val$fdch
     void run() -> run
-javax.activation.DataHandlerDataSource -> a.b.h:
+javax.activation.DataHandlerDataSource -> javax.activation.DataHandlerDataSource:
     javax.activation.DataHandler dataHandler -> a
-    java.io.InputStream getInputStream() -> a
-    java.lang.String getContentType() -> b
-    java.lang.String getName() -> c
-javax.activation.DataSource -> a.b.f:
-    java.io.InputStream getInputStream() -> a
-    java.lang.String getContentType() -> b
-    java.lang.String getName() -> c
-javax.activation.DataSourceDataContentHandler -> a.b.u:
-    javax.activation.DataSource ds -> a
-    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> b
-    javax.activation.DataContentHandler dch -> c
-    java.lang.Object getContent(javax.activation.DataSource) -> a
-    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
-javax.activation.FileDataSource -> a.b.s:
-    java.io.File _file -> a
-    javax.activation.FileTypeMap typeMap -> b
-    java.io.InputStream getInputStream() -> a
-    java.lang.String getContentType() -> b
-    java.lang.String getName() -> c
-javax.activation.FileTypeMap -> a.b.q:
-    javax.activation.FileTypeMap defaultMap -> a
-    java.lang.String getContentType(java.io.File) -> a
-    javax.activation.FileTypeMap getDefaultFileTypeMap() -> a
-javax.activation.MailcapCommandMap -> a.b.v:
-    com.sun.activation.registries.MailcapFile defDB -> a
-    com.sun.activation.registries.MailcapFile[] DB -> b
-    com.sun.activation.registries.MailcapFile loadResource(java.lang.String) -> b
-    void loadAllResources(java.util.List,java.lang.String) -> a
-    com.sun.activation.registries.MailcapFile loadFile(java.lang.String) -> c
-    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> a
-    javax.activation.DataContentHandler getDataContentHandler(java.lang.String) -> d
-javax.activation.MimeType -> a.b.m:
-    java.lang.String primaryType -> a
-    java.lang.String subType -> b
-    javax.activation.MimeTypeParameterList parameters -> c
-    void parse(java.lang.String) -> a
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    java.lang.String getContentType() -> getContentType
+    java.lang.String getName() -> getName
+javax.activation.DataSource -> javax.activation.DataSource:
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    java.lang.String getContentType() -> getContentType
+    java.lang.String getName() -> getName
+javax.activation.DataSourceDataContentHandler -> javax.activation.DataSourceDataContentHandler:
+    javax.activation.DataSource ds -> ds
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> transferFlavors
+    javax.activation.DataContentHandler dch -> dch
+    myjava.awt.datatransfer.DataFlavor[] getTransferDataFlavors() -> getTransferDataFlavors
+    java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor,javax.activation.DataSource) -> getTransferData
+    java.lang.Object getContent(javax.activation.DataSource) -> getContent
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> writeTo
+javax.activation.FileDataSource -> javax.activation.FileDataSource:
+    java.io.File _file -> _file
+    javax.activation.FileTypeMap typeMap -> typeMap
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    java.lang.String getContentType() -> getContentType
+    java.lang.String getName() -> getName
+    java.io.File getFile() -> getFile
+    void setFileTypeMap(javax.activation.FileTypeMap) -> setFileTypeMap
+javax.activation.FileTypeMap -> javax.activation.FileTypeMap:
+    javax.activation.FileTypeMap defaultMap -> defaultMap
+    java.lang.String getContentType(java.io.File) -> getContentType
+    java.lang.String getContentType(java.lang.String) -> getContentType
+    void setDefaultFileTypeMap(javax.activation.FileTypeMap) -> setDefaultFileTypeMap
+    javax.activation.FileTypeMap getDefaultFileTypeMap() -> getDefaultFileTypeMap
+javax.activation.MailcapCommandMap -> javax.activation.MailcapCommandMap:
+    com.sun.activation.registries.MailcapFile defDB -> defDB
+    com.sun.activation.registries.MailcapFile[] DB -> DB
+    int PROG -> PROG
+    com.sun.activation.registries.MailcapFile loadResource(java.lang.String) -> loadResource
+    void loadAllResources(java.util.List,java.lang.String) -> loadAllResources
+    com.sun.activation.registries.MailcapFile loadFile(java.lang.String) -> loadFile
+    javax.activation.CommandInfo[] getPreferredCommands(java.lang.String) -> getPreferredCommands
+    void appendPrefCmdsToList(java.util.Map,java.util.List) -> appendPrefCmdsToList
+    boolean checkForVerb(java.util.List,java.lang.String) -> checkForVerb
+    javax.activation.CommandInfo[] getAllCommands(java.lang.String) -> getAllCommands
+    void appendCmdsToList(java.util.Map,java.util.List) -> appendCmdsToList
+    javax.activation.CommandInfo getCommand(java.lang.String,java.lang.String) -> getCommand
+    void addMailcap(java.lang.String) -> addMailcap
+    javax.activation.DataContentHandler createDataContentHandler(java.lang.String) -> createDataContentHandler
+    javax.activation.DataContentHandler getDataContentHandler(java.lang.String) -> getDataContentHandler
+    java.lang.String[] getMimeTypes() -> getMimeTypes
+    java.lang.String[] getNativeCommands(java.lang.String) -> getNativeCommands
+javax.activation.MimeType -> javax.activation.MimeType:
+    java.lang.String primaryType -> primaryType
+    java.lang.String subType -> subType
+    javax.activation.MimeTypeParameterList parameters -> parameters
+    java.lang.String TSPECIALS -> TSPECIALS
+    void parse(java.lang.String) -> parse
+    java.lang.String getPrimaryType() -> getPrimaryType
+    void setPrimaryType(java.lang.String) -> setPrimaryType
+    java.lang.String getSubType() -> getSubType
+    void setSubType(java.lang.String) -> setSubType
+    javax.activation.MimeTypeParameterList getParameters() -> getParameters
+    java.lang.String getParameter(java.lang.String) -> getParameter
+    void setParameter(java.lang.String,java.lang.String) -> setParameter
+    void removeParameter(java.lang.String) -> removeParameter
     java.lang.String toString() -> toString
-    java.lang.String getBaseType() -> a
+    java.lang.String getBaseType() -> getBaseType
+    boolean match(javax.activation.MimeType) -> match
+    boolean match(java.lang.String) -> match
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-    boolean isTokenChar(char) -> a
-    boolean isValidToken(java.lang.String) -> b
-javax.activation.MimeTypeParameterList -> a.b.t:
-    java.util.Hashtable parameters -> a
-    void parse(java.lang.String) -> a
+    boolean isTokenChar(char) -> isTokenChar
+    boolean isValidToken(java.lang.String) -> isValidToken
+javax.activation.MimeTypeParameterList -> javax.activation.MimeTypeParameterList:
+    java.util.Hashtable parameters -> parameters
+    java.lang.String TSPECIALS -> TSPECIALS
+    void parse(java.lang.String) -> parse
+    int size() -> size
+    boolean isEmpty() -> isEmpty
+    java.lang.String get(java.lang.String) -> get
+    void set(java.lang.String,java.lang.String) -> set
+    void remove(java.lang.String) -> remove
+    java.util.Enumeration getNames() -> getNames
     java.lang.String toString() -> toString
-    boolean isTokenChar(char) -> a
-    int skipWhiteSpace(java.lang.String,int) -> a
-    java.lang.String quote(java.lang.String) -> b
-    java.lang.String unquote(java.lang.String) -> c
-javax.activation.MimeTypeParseException -> a.b.o:
-javax.activation.MimetypesFileTypeMap -> a.b.w:
-    com.sun.activation.registries.MimeTypeFile defDB -> a
-    com.sun.activation.registries.MimeTypeFile[] DB -> b
-    java.lang.String defaultType -> c
-    com.sun.activation.registries.MimeTypeFile loadResource(java.lang.String) -> b
-    void loadAllResources(java.util.Vector,java.lang.String) -> a
-    com.sun.activation.registries.MimeTypeFile loadFile(java.lang.String) -> c
-    java.lang.String getContentType(java.io.File) -> a
-    java.lang.String getContentType(java.lang.String) -> a
-javax.activation.ObjectDataContentHandler -> a.b.a:
-    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> a
-    java.lang.Object obj -> b
-    java.lang.String mimeType -> c
-    javax.activation.DataContentHandler dch -> d
-    javax.activation.DataContentHandler getDCH() -> a
-    java.lang.Object getContent(javax.activation.DataSource) -> a
-    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> a
-javax.activation.SecuritySupport -> a.b.r:
-    java.lang.ClassLoader getContextClassLoader() -> a
-    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> a
-    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> a
-    java.net.URL[] getSystemResources(java.lang.String) -> a
-    java.io.InputStream openStream(java.net.URL) -> a
-javax.activation.SecuritySupport$1 -> a.b.i:
+    boolean isTokenChar(char) -> isTokenChar
+    int skipWhiteSpace(java.lang.String,int) -> skipWhiteSpace
+    java.lang.String quote(java.lang.String) -> quote
+    java.lang.String unquote(java.lang.String) -> unquote
+javax.activation.MimeTypeParseException -> javax.activation.MimeTypeParseException:
+javax.activation.MimetypesFileTypeMap -> javax.activation.MimetypesFileTypeMap:
+    com.sun.activation.registries.MimeTypeFile defDB -> defDB
+    com.sun.activation.registries.MimeTypeFile[] DB -> DB
+    int PROG -> PROG
+    java.lang.String defaultType -> defaultType
+    com.sun.activation.registries.MimeTypeFile loadResource(java.lang.String) -> loadResource
+    void loadAllResources(java.util.Vector,java.lang.String) -> loadAllResources
+    com.sun.activation.registries.MimeTypeFile loadFile(java.lang.String) -> loadFile
+    void addMimeTypes(java.lang.String) -> addMimeTypes
+    java.lang.String getContentType(java.io.File) -> getContentType
+    java.lang.String getContentType(java.lang.String) -> getContentType
+javax.activation.ObjectDataContentHandler -> javax.activation.ObjectDataContentHandler:
+    myjava.awt.datatransfer.DataFlavor[] transferFlavors -> transferFlavors
+    java.lang.Object obj -> obj
+    java.lang.String mimeType -> mimeType
+    javax.activation.DataContentHandler dch -> dch
+    javax.activation.DataContentHandler getDCH() -> getDCH
+    myjava.awt.datatransfer.DataFlavor[] getTransferDataFlavors() -> getTransferDataFlavors
+    java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor,javax.activation.DataSource) -> getTransferData
+    java.lang.Object getContent(javax.activation.DataSource) -> getContent
+    void writeTo(java.lang.Object,java.lang.String,java.io.OutputStream) -> writeTo
+javax.activation.SecuritySupport -> javax.activation.SecuritySupport:
+    java.lang.ClassLoader getContextClassLoader() -> getContextClassLoader
+    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> getResourceAsStream
+    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> getResources
+    java.net.URL[] getSystemResources(java.lang.String) -> getSystemResources
+    java.io.InputStream openStream(java.net.URL) -> openStream
+javax.activation.SecuritySupport$1 -> javax.activation.SecuritySupport$1:
     java.lang.Object run() -> run
-javax.activation.SecuritySupport$2 -> a.b.j:
-    java.lang.Class val$c -> a
-    java.lang.String val$name -> b
+javax.activation.SecuritySupport$2 -> javax.activation.SecuritySupport$2:
+    java.lang.Class val$c -> val$c
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.activation.SecuritySupport$3 -> a.b.k:
-    java.lang.ClassLoader val$cl -> a
-    java.lang.String val$name -> b
+javax.activation.SecuritySupport$3 -> javax.activation.SecuritySupport$3:
+    java.lang.ClassLoader val$cl -> val$cl
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.activation.SecuritySupport$4 -> a.b.l:
-    java.lang.String val$name -> a
+javax.activation.SecuritySupport$4 -> javax.activation.SecuritySupport$4:
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.activation.SecuritySupport$5 -> a.b.e:
-    java.net.URL val$url -> a
+javax.activation.SecuritySupport$5 -> javax.activation.SecuritySupport$5:
+    java.net.URL val$url -> val$url
     java.lang.Object run() -> run
-javax.activation.UnsupportedDataTypeException -> a.b.c:
-javax.mail.Address -> a.a.af:
-    java.lang.String getType() -> a
+javax.activation.URLDataSource -> javax.activation.URLDataSource:
+    java.net.URL url -> url
+    java.net.URLConnection url_conn -> url_conn
+    java.lang.String getContentType() -> getContentType
+    java.lang.String getName() -> getName
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    java.net.URL getURL() -> getURL
+javax.activation.UnsupportedDataTypeException -> javax.activation.UnsupportedDataTypeException:
+javax.mail.Address -> javax.mail.Address:
+    long serialVersionUID -> serialVersionUID
+    java.lang.String getType() -> getType
     java.lang.String toString() -> toString
-javax.mail.AuthenticationFailedException -> a.a.t:
-javax.mail.Authenticator -> a.a.ab:
-    java.net.InetAddress requestingSite -> a
-    int requestingPort -> b
-    java.lang.String requestingProtocol -> c
-    java.lang.String requestingPrompt -> d
-    java.lang.String requestingUserName -> e
-    void reset() -> b
+    boolean equals(java.lang.Object) -> equals
+javax.mail.AuthenticationFailedException -> javax.mail.AuthenticationFailedException:
+    long serialVersionUID -> serialVersionUID
+javax.mail.Authenticator -> javax.mail.Authenticator:
+    java.net.InetAddress requestingSite -> requestingSite
+    int requestingPort -> requestingPort
+    java.lang.String requestingProtocol -> requestingProtocol
+    java.lang.String requestingPrompt -> requestingPrompt
+    java.lang.String requestingUserName -> requestingUserName
+    void reset() -> reset
     javax.mail.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String) -> a
-    javax.mail.PasswordAuthentication getPasswordAuthentication() -> a
-javax.mail.BodyPart -> a.a.a:
-    javax.mail.Multipart parent -> a
+    java.net.InetAddress getRequestingSite() -> getRequestingSite
+    int getRequestingPort() -> getRequestingPort
+    java.lang.String getRequestingProtocol() -> getRequestingProtocol
+    java.lang.String getRequestingPrompt() -> getRequestingPrompt
+    java.lang.String getDefaultUserName() -> getDefaultUserName
+    javax.mail.PasswordAuthentication getPasswordAuthentication() -> getPasswordAuthentication
+javax.mail.BodyPart -> javax.mail.BodyPart:
+    javax.mail.Multipart parent -> parent
+    javax.mail.Multipart getParent() -> getParent
     void setParent(javax.mail.Multipart) -> a
-javax.mail.EventQueue -> a.a.e:
-    javax.mail.EventQueue$QueueElement head -> a
-    javax.mail.EventQueue$QueueElement tail -> b
-    java.lang.Thread qThread -> c
-    void enqueue(javax.mail.event.MailEvent,java.util.Vector) -> a
-    javax.mail.EventQueue$QueueElement dequeue() -> a
+javax.mail.EventQueue -> javax.mail.EventQueue:
+    javax.mail.EventQueue$QueueElement head -> head
+    javax.mail.EventQueue$QueueElement tail -> tail
+    java.lang.Thread qThread -> qThread
+    void enqueue(javax.mail.event.MailEvent,java.util.Vector) -> enqueue
+    javax.mail.EventQueue$QueueElement dequeue() -> dequeue
     void run() -> run
-javax.mail.EventQueue$QueueElement -> a.a.h:
+javax.mail.EventQueue$QueueElement -> javax.mail.EventQueue$QueueElement:
     javax.mail.EventQueue$QueueElement next -> a
     javax.mail.EventQueue$QueueElement prev -> b
     javax.mail.event.MailEvent event -> c
     java.util.Vector vector -> d
-javax.mail.Flags -> a.a.g:
-    int system_flags -> a
-    java.util.Hashtable user_flags -> b
+javax.mail.FetchProfile -> javax.mail.FetchProfile:
+    java.util.Vector specials -> specials
+    java.util.Vector headers -> headers
+    void add(javax.mail.FetchProfile$Item) -> add
+    void add(java.lang.String) -> add
+    boolean contains(javax.mail.FetchProfile$Item) -> contains
+    boolean contains(java.lang.String) -> contains
+    javax.mail.FetchProfile$Item[] getItems() -> getItems
+    java.lang.String[] getHeaderNames() -> getHeaderNames
+javax.mail.FetchProfile$Item -> javax.mail.FetchProfile$Item:
+    javax.mail.FetchProfile$Item ENVELOPE -> ENVELOPE
+    javax.mail.FetchProfile$Item CONTENT_INFO -> CONTENT_INFO
+    javax.mail.FetchProfile$Item FLAGS -> FLAGS
+    java.lang.String name -> name
+javax.mail.Flags -> javax.mail.Flags:
+    int system_flags -> system_flags
+    java.util.Hashtable user_flags -> user_flags
+    int ANSWERED_BIT -> ANSWERED_BIT
+    int DELETED_BIT -> DELETED_BIT
+    int DRAFT_BIT -> DRAFT_BIT
+    int FLAGGED_BIT -> FLAGGED_BIT
+    int RECENT_BIT -> RECENT_BIT
+    int SEEN_BIT -> SEEN_BIT
+    int USER_BIT -> USER_BIT
+    long serialVersionUID -> serialVersionUID
+    void add(javax.mail.Flags$Flag) -> add
+    void add(java.lang.String) -> add
+    void add(javax.mail.Flags) -> add
+    void remove(javax.mail.Flags$Flag) -> remove
+    void remove(java.lang.String) -> remove
+    void remove(javax.mail.Flags) -> remove
+    boolean contains(javax.mail.Flags$Flag) -> contains
+    boolean contains(java.lang.String) -> contains
+    boolean contains(javax.mail.Flags) -> contains
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
+    javax.mail.Flags$Flag[] getSystemFlags() -> getSystemFlags
+    java.lang.String[] getUserFlags() -> getUserFlags
     java.lang.Object clone() -> clone
-javax.mail.Flags$Flag -> a.a.b:
-    javax.mail.Flags$Flag ANSWERED -> a
-    javax.mail.Flags$Flag DELETED -> b
-    javax.mail.Flags$Flag DRAFT -> c
-    javax.mail.Flags$Flag FLAGGED -> d
-    javax.mail.Flags$Flag RECENT -> e
-    javax.mail.Flags$Flag SEEN -> f
-    javax.mail.Flags$Flag USER -> g
-    int bit -> h
+javax.mail.Flags$Flag -> javax.mail.Flags$Flag:
+    javax.mail.Flags$Flag ANSWERED -> ANSWERED
+    javax.mail.Flags$Flag DELETED -> DELETED
+    javax.mail.Flags$Flag DRAFT -> DRAFT
+    javax.mail.Flags$Flag FLAGGED -> FLAGGED
+    javax.mail.Flags$Flag RECENT -> RECENT
+    javax.mail.Flags$Flag SEEN -> SEEN
+    javax.mail.Flags$Flag USER -> USER
+    int bit -> bit
     int access$0(javax.mail.Flags$Flag) -> a
-javax.mail.Folder -> a.a.s:
-    javax.mail.EventQueue q -> a
-    java.lang.Object qLock -> b
-    java.lang.String getFullName() -> a
-    void terminateQueue() -> b
+javax.mail.Folder -> javax.mail.Folder:
+    javax.mail.Store store -> store
+    int mode -> mode
+    int HOLDS_MESSAGES -> HOLDS_MESSAGES
+    int HOLDS_FOLDERS -> HOLDS_FOLDERS
+    int READ_ONLY -> READ_ONLY
+    int READ_WRITE -> READ_WRITE
+    java.util.Vector connectionListeners -> connectionListeners
+    java.util.Vector folderListeners -> folderListeners
+    java.util.Vector messageCountListeners -> messageCountListeners
+    java.util.Vector messageChangedListeners -> messageChangedListeners
+    javax.mail.EventQueue q -> q
+    java.lang.Object qLock -> qLock
+    java.lang.String getName() -> getName
+    java.lang.String getFullName() -> getFullName
+    javax.mail.URLName getURLName() -> getURLName
+    javax.mail.Store getStore() -> getStore
+    javax.mail.Folder getParent() -> getParent
+    boolean exists() -> exists
+    javax.mail.Folder[] list(java.lang.String) -> list
+    javax.mail.Folder[] listSubscribed(java.lang.String) -> listSubscribed
+    javax.mail.Folder[] list() -> list
+    javax.mail.Folder[] listSubscribed() -> listSubscribed
+    char getSeparator() -> getSeparator
+    int getType() -> getType
+    boolean create(int) -> create
+    boolean isSubscribed() -> isSubscribed
+    void setSubscribed(boolean) -> setSubscribed
+    boolean hasNewMessages() -> hasNewMessages
+    javax.mail.Folder getFolder(java.lang.String) -> getFolder
+    boolean delete(boolean) -> delete
+    boolean renameTo(javax.mail.Folder) -> renameTo
+    void open(int) -> open
+    void close(boolean) -> close
+    boolean isOpen() -> isOpen
+    int getMode() -> getMode
+    javax.mail.Flags getPermanentFlags() -> getPermanentFlags
+    int getMessageCount() -> getMessageCount
+    int getNewMessageCount() -> getNewMessageCount
+    int getUnreadMessageCount() -> getUnreadMessageCount
+    int getDeletedMessageCount() -> getDeletedMessageCount
+    javax.mail.Message getMessage(int) -> getMessage
+    javax.mail.Message[] getMessages(int,int) -> getMessages
+    javax.mail.Message[] getMessages(int[]) -> getMessages
+    javax.mail.Message[] getMessages() -> getMessages
+    void appendMessages(javax.mail.Message[]) -> appendMessages
+    void fetch(javax.mail.Message[],javax.mail.FetchProfile) -> fetch
+    void setFlags(javax.mail.Message[],javax.mail.Flags,boolean) -> setFlags
+    void setFlags(int,int,javax.mail.Flags,boolean) -> setFlags
+    void setFlags(int[],javax.mail.Flags,boolean) -> setFlags
+    void copyMessages(javax.mail.Message[],javax.mail.Folder) -> copyMessages
+    javax.mail.Message[] expunge() -> expunge
+    javax.mail.Message[] search(javax.mail.search.SearchTerm) -> search
+    javax.mail.Message[] search(javax.mail.search.SearchTerm,javax.mail.Message[]) -> search
+    void addConnectionListener(javax.mail.event.ConnectionListener) -> addConnectionListener
+    void removeConnectionListener(javax.mail.event.ConnectionListener) -> removeConnectionListener
+    void notifyConnectionListeners(int) -> notifyConnectionListeners
+    void addFolderListener(javax.mail.event.FolderListener) -> addFolderListener
+    void removeFolderListener(javax.mail.event.FolderListener) -> removeFolderListener
+    void notifyFolderListeners(int) -> notifyFolderListeners
+    void notifyFolderRenamedListeners(javax.mail.Folder) -> notifyFolderRenamedListeners
+    void addMessageCountListener(javax.mail.event.MessageCountListener) -> addMessageCountListener
+    void removeMessageCountListener(javax.mail.event.MessageCountListener) -> removeMessageCountListener
+    void notifyMessageAddedListeners(javax.mail.Message[]) -> notifyMessageAddedListeners
+    void notifyMessageRemovedListeners(boolean,javax.mail.Message[]) -> notifyMessageRemovedListeners
+    void addMessageChangedListener(javax.mail.event.MessageChangedListener) -> addMessageChangedListener
+    void removeMessageChangedListener(javax.mail.event.MessageChangedListener) -> removeMessageChangedListener
+    void notifyMessageChangedListeners(int,javax.mail.Message) -> notifyMessageChangedListeners
+    void queueEvent(javax.mail.event.MailEvent,java.util.Vector) -> queueEvent
+    void terminateQueue() -> terminateQueue
     void finalize() -> finalize
     java.lang.String toString() -> toString
-javax.mail.Folder$TerminatorEvent -> a.a.ac:
-    void dispatch(java.lang.Object) -> a
-javax.mail.Header -> a.a.f:
-    java.lang.String name -> a
-    java.lang.String value -> b
-    java.lang.String getName() -> a
-    java.lang.String getValue() -> b
-javax.mail.Message -> a.a.c:
-    int msgnum -> a
-    boolean expunged -> b
-    javax.mail.Folder folder -> c
-    javax.mail.Session session -> d
-    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> a
-    javax.mail.Address[] getAllRecipients() -> b
-    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> a
-    void setRecipient(javax.mail.Message$RecipientType,javax.mail.Address) -> a
-    void saveChanges() -> c
-javax.mail.Message$RecipientType -> a.a.w:
-    javax.mail.Message$RecipientType TO -> b
-    javax.mail.Message$RecipientType CC -> c
-    javax.mail.Message$RecipientType BCC -> d
-    java.lang.String type -> e
+javax.mail.Folder$TerminatorEvent -> javax.mail.Folder$TerminatorEvent:
+    long serialVersionUID -> serialVersionUID
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.FolderClosedException -> javax.mail.FolderClosedException:
+    javax.mail.Folder folder -> folder
+    long serialVersionUID -> serialVersionUID
+    javax.mail.Folder getFolder() -> getFolder
+javax.mail.FolderNotFoundException -> javax.mail.FolderNotFoundException:
+    javax.mail.Folder folder -> folder
+    long serialVersionUID -> serialVersionUID
+    javax.mail.Folder getFolder() -> getFolder
+javax.mail.Header -> javax.mail.Header:
+    java.lang.String name -> name
+    java.lang.String value -> value
+    java.lang.String getName() -> getName
+    java.lang.String getValue() -> getValue
+javax.mail.IllegalWriteException -> javax.mail.IllegalWriteException:
+    long serialVersionUID -> serialVersionUID
+javax.mail.Message -> javax.mail.Message:
+    int msgnum -> msgnum
+    boolean expunged -> expunged
+    javax.mail.Folder folder -> folder
+    javax.mail.Session session -> session
+    javax.mail.Address[] getFrom() -> getFrom
+    void setFrom() -> setFrom
+    void setFrom(javax.mail.Address) -> setFrom
+    void addFrom(javax.mail.Address[]) -> addFrom
+    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> getRecipients
+    javax.mail.Address[] getAllRecipients() -> getAllRecipients
+    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> setRecipients
+    void setRecipient(javax.mail.Message$RecipientType,javax.mail.Address) -> setRecipient
+    void addRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> addRecipients
+    void addRecipient(javax.mail.Message$RecipientType,javax.mail.Address) -> addRecipient
+    javax.mail.Address[] getReplyTo() -> getReplyTo
+    void setReplyTo(javax.mail.Address[]) -> setReplyTo
+    java.lang.String getSubject() -> getSubject
+    void setSubject(java.lang.String) -> setSubject
+    java.util.Date getSentDate() -> getSentDate
+    void setSentDate(java.util.Date) -> setSentDate
+    java.util.Date getReceivedDate() -> getReceivedDate
+    javax.mail.Flags getFlags() -> getFlags
+    boolean isSet(javax.mail.Flags$Flag) -> isSet
+    void setFlags(javax.mail.Flags,boolean) -> setFlags
+    void setFlag(javax.mail.Flags$Flag,boolean) -> setFlag
+    int getMessageNumber() -> getMessageNumber
+    void setMessageNumber(int) -> setMessageNumber
+    javax.mail.Folder getFolder() -> getFolder
+    boolean isExpunged() -> isExpunged
+    void setExpunged(boolean) -> setExpunged
+    javax.mail.Message reply(boolean) -> reply
+    void saveChanges() -> saveChanges
+    boolean match(javax.mail.search.SearchTerm) -> match
+javax.mail.Message$RecipientType -> javax.mail.Message$RecipientType:
+    javax.mail.Message$RecipientType TO -> TO
+    javax.mail.Message$RecipientType CC -> CC
+    javax.mail.Message$RecipientType BCC -> BCC
+    java.lang.String type -> type
+    long serialVersionUID -> serialVersionUID
+    java.lang.Object readResolve() -> readResolve
     java.lang.String toString() -> toString
-javax.mail.MessagingException -> a.a.u:
-    java.lang.Exception next -> a
+javax.mail.MessageAware -> javax.mail.MessageAware:
+    javax.mail.MessageContext getMessageContext() -> getMessageContext
+javax.mail.MessageContext -> javax.mail.MessageContext:
+    javax.mail.Part part -> part
+    javax.mail.Part getPart() -> getPart
+    javax.mail.Message getMessage() -> getMessage
+    javax.mail.Message getMessage(javax.mail.Part) -> getMessage
+    javax.mail.Session getSession() -> getSession
+javax.mail.MessageRemovedException -> javax.mail.MessageRemovedException:
+    long serialVersionUID -> serialVersionUID
+javax.mail.MessagingException -> javax.mail.MessagingException:
+    java.lang.Exception next -> next
+    long serialVersionUID -> serialVersionUID
+    java.lang.Exception getNextException() -> getNextException
     java.lang.Throwable getCause() -> getCause
-    boolean setNextException(java.lang.Exception) -> a
+    boolean setNextException(java.lang.Exception) -> setNextException
     java.lang.String toString() -> toString
-    java.lang.String superToString() -> a
-javax.mail.Multipart -> a.a.z:
-    java.util.Vector parts -> c
-    java.lang.String contentType -> d
-    javax.mail.Part parent -> e
-    java.lang.String getContentType() -> c
-    void addBodyPart(javax.mail.BodyPart) -> a
-    void setParent(javax.mail.Part) -> a
-javax.mail.NoSuchProviderException -> a.a.ag:
-javax.mail.Part -> a.a.r:
-    java.lang.String getContentType() -> a_
-    javax.activation.DataHandler getDataHandler() -> e
-    void setContent(java.lang.Object,java.lang.String) -> a
-    java.lang.String[] getHeader(java.lang.String) -> b
-    void setHeader(java.lang.String,java.lang.String) -> b
-    void removeHeader(java.lang.String) -> c
-javax.mail.PasswordAuthentication -> a.a.ae:
-    java.lang.String userName -> a
-    java.lang.String password -> b
-    java.lang.String getUserName() -> a
-    java.lang.String getPassword() -> b
-javax.mail.Provider -> a.a.x:
-    javax.mail.Provider$Type type -> a
-    java.lang.String protocol -> b
-    java.lang.String className -> c
-    java.lang.String vendor -> d
-    java.lang.String version -> e
-    javax.mail.Provider$Type getType() -> a
-    java.lang.String getProtocol() -> b
-    java.lang.String getClassName() -> c
+    java.lang.String superToString() -> superToString
+javax.mail.MethodNotSupportedException -> javax.mail.MethodNotSupportedException:
+    long serialVersionUID -> serialVersionUID
+javax.mail.Multipart -> javax.mail.Multipart:
+    java.util.Vector parts -> parts
+    java.lang.String contentType -> contentType
+    javax.mail.Part parent -> parent
+    void setMultipartDataSource(javax.mail.MultipartDataSource) -> setMultipartDataSource
+    java.lang.String getContentType() -> getContentType
+    int getCount() -> getCount
+    javax.mail.BodyPart getBodyPart(int) -> getBodyPart
+    boolean removeBodyPart(javax.mail.BodyPart) -> removeBodyPart
+    void removeBodyPart(int) -> removeBodyPart
+    void addBodyPart(javax.mail.BodyPart) -> addBodyPart
+    void addBodyPart(javax.mail.BodyPart,int) -> addBodyPart
+    void writeTo(java.io.OutputStream) -> writeTo
+    javax.mail.Part getParent() -> getParent
+    void setParent(javax.mail.Part) -> setParent
+javax.mail.MultipartDataSource -> javax.mail.MultipartDataSource:
+    int getCount() -> getCount
+    javax.mail.BodyPart getBodyPart(int) -> getBodyPart
+javax.mail.NoSuchProviderException -> javax.mail.NoSuchProviderException:
+    long serialVersionUID -> serialVersionUID
+javax.mail.Part -> javax.mail.Part:
+    java.lang.String ATTACHMENT -> ATTACHMENT
+    java.lang.String INLINE -> INLINE
+    int getSize() -> getSize
+    int getLineCount() -> getLineCount
+    java.lang.String getContentType() -> getContentType
+    boolean isMimeType(java.lang.String) -> isMimeType
+    java.lang.String getDisposition() -> getDisposition
+    void setDisposition(java.lang.String) -> setDisposition
+    java.lang.String getDescription() -> getDescription
+    void setDescription(java.lang.String) -> setDescription
+    java.lang.String getFileName() -> getFileName
+    void setFileName(java.lang.String) -> setFileName
+    java.io.InputStream getInputStream() -> getInputStream
+    javax.activation.DataHandler getDataHandler() -> getDataHandler
+    java.lang.Object getContent() -> getContent
+    void setDataHandler(javax.activation.DataHandler) -> setDataHandler
+    void setContent(java.lang.Object,java.lang.String) -> setContent
+    void setText(java.lang.String) -> setText
+    void setContent(javax.mail.Multipart) -> setContent
+    void writeTo(java.io.OutputStream) -> writeTo
+    java.lang.String[] getHeader(java.lang.String) -> getHeader
+    void setHeader(java.lang.String,java.lang.String) -> setHeader
+    void addHeader(java.lang.String,java.lang.String) -> addHeader
+    void removeHeader(java.lang.String) -> removeHeader
+    java.util.Enumeration getAllHeaders() -> getAllHeaders
+    java.util.Enumeration getMatchingHeaders(java.lang.String[]) -> getMatchingHeaders
+    java.util.Enumeration getNonMatchingHeaders(java.lang.String[]) -> getNonMatchingHeaders
+javax.mail.PasswordAuthentication -> javax.mail.PasswordAuthentication:
+    java.lang.String userName -> userName
+    java.lang.String password -> password
+    java.lang.String getUserName() -> getUserName
+    java.lang.String getPassword() -> getPassword
+javax.mail.Provider -> javax.mail.Provider:
+    javax.mail.Provider$Type type -> type
+    java.lang.String protocol -> protocol
+    java.lang.String className -> className
+    java.lang.String vendor -> vendor
+    java.lang.String version -> version
+    javax.mail.Provider$Type getType() -> getType
+    java.lang.String getProtocol() -> getProtocol
+    java.lang.String getClassName() -> getClassName
+    java.lang.String getVendor() -> getVendor
+    java.lang.String getVersion() -> getVersion
     java.lang.String toString() -> toString
-javax.mail.Provider$Type -> a.a.j:
-    javax.mail.Provider$Type STORE -> a
-    javax.mail.Provider$Type TRANSPORT -> b
-    java.lang.String type -> c
+javax.mail.Provider$Type -> javax.mail.Provider$Type:
+    javax.mail.Provider$Type STORE -> STORE
+    javax.mail.Provider$Type TRANSPORT -> TRANSPORT
+    java.lang.String type -> type
     java.lang.String toString() -> toString
-javax.mail.SendFailedException -> a.a.aa:
-    javax.mail.Address[] invalid -> a
-    javax.mail.Address[] validSent -> b
-    javax.mail.Address[] validUnsent -> c
-    javax.mail.Address[] getValidSentAddresses() -> a
-    javax.mail.Address[] getValidUnsentAddresses() -> b
-    javax.mail.Address[] getInvalidAddresses() -> c
-javax.mail.Service -> a.a.ad:
-    javax.mail.Session session -> a
-    javax.mail.URLName url -> b
-    boolean debug -> c
-    boolean connected -> d
-    java.util.Vector connectionListeners -> e
-    javax.mail.EventQueue q -> f
-    java.lang.Object qLock -> g
-    void connect() -> a
-    void connect(java.lang.String,java.lang.String,java.lang.String) -> a
-    void connect(java.lang.String,int,java.lang.String,java.lang.String) -> a
-    boolean protocolConnect(java.lang.String,int,java.lang.String,java.lang.String) -> b
-    boolean isConnected() -> b
-    void setConnected(boolean) -> a
-    void close() -> c
-    javax.mail.URLName getURLName() -> d
-    void setURLName(javax.mail.URLName) -> a
-    void notifyConnectionListeners(int) -> a
+javax.mail.Quota -> javax.mail.Quota:
+    java.lang.String quotaRoot -> quotaRoot
+    javax.mail.Quota$Resource[] resources -> resources
+    void setResourceLimit(java.lang.String,long) -> setResourceLimit
+javax.mail.Quota$Resource -> javax.mail.Quota$Resource:
+    java.lang.String name -> name
+    long usage -> usage
+    long limit -> limit
+javax.mail.QuotaAwareStore -> javax.mail.QuotaAwareStore:
+    javax.mail.Quota[] getQuota(java.lang.String) -> getQuota
+    void setQuota(javax.mail.Quota) -> setQuota
+javax.mail.ReadOnlyFolderException -> javax.mail.ReadOnlyFolderException:
+    javax.mail.Folder folder -> folder
+    long serialVersionUID -> serialVersionUID
+    javax.mail.Folder getFolder() -> getFolder
+javax.mail.SendFailedException -> javax.mail.SendFailedException:
+    javax.mail.Address[] invalid -> invalid
+    javax.mail.Address[] validSent -> validSent
+    javax.mail.Address[] validUnsent -> validUnsent
+    long serialVersionUID -> serialVersionUID
+    javax.mail.Address[] getValidSentAddresses() -> getValidSentAddresses
+    javax.mail.Address[] getValidUnsentAddresses() -> getValidUnsentAddresses
+    javax.mail.Address[] getInvalidAddresses() -> getInvalidAddresses
+javax.mail.Service -> javax.mail.Service:
+    javax.mail.Session session -> session
+    javax.mail.URLName url -> url
+    boolean debug -> debug
+    boolean connected -> connected
+    java.util.Vector connectionListeners -> connectionListeners
+    javax.mail.EventQueue q -> q
+    java.lang.Object qLock -> qLock
+    void connect() -> connect
+    void connect(java.lang.String,java.lang.String,java.lang.String) -> connect
+    void connect(java.lang.String,java.lang.String) -> connect
+    void connect(java.lang.String,int,java.lang.String,java.lang.String) -> connect
+    boolean protocolConnect(java.lang.String,int,java.lang.String,java.lang.String) -> protocolConnect
+    boolean isConnected() -> isConnected
+    void setConnected(boolean) -> setConnected
+    void close() -> close
+    javax.mail.URLName getURLName() -> getURLName
+    void setURLName(javax.mail.URLName) -> setURLName
+    void addConnectionListener(javax.mail.event.ConnectionListener) -> addConnectionListener
+    void removeConnectionListener(javax.mail.event.ConnectionListener) -> removeConnectionListener
+    void notifyConnectionListeners(int) -> notifyConnectionListeners
     java.lang.String toString() -> toString
-    void queueEvent(javax.mail.event.MailEvent,java.util.Vector) -> a
-    void terminateQueue() -> e
+    void queueEvent(javax.mail.event.MailEvent,java.util.Vector) -> queueEvent
+    void terminateQueue() -> terminateQueue
     void finalize() -> finalize
-javax.mail.Service$TerminatorEvent -> a.a.d:
-    void dispatch(java.lang.Object) -> a
-javax.mail.Session -> a.a.ah:
-    java.util.Properties props -> a
-    javax.mail.Authenticator authenticator -> b
-    java.util.Hashtable authTable -> c
-    boolean debug -> d
-    java.io.PrintStream out -> e
-    java.util.Vector providers -> f
-    java.util.Hashtable providersByProtocol -> g
-    java.util.Hashtable providersByClassName -> h
-    java.util.Properties addressMap -> i
-    javax.mail.Session defaultSession -> j
-    javax.mail.Session getDefaultInstance(java.util.Properties,javax.mail.Authenticator) -> a
-    java.io.PrintStream getDebugOut() -> a
-    javax.mail.Provider getProvider(java.lang.String) -> a
-    javax.mail.Transport getTransport(java.lang.String) -> b
-    javax.mail.Transport getTransport(javax.mail.URLName) -> a
-    javax.mail.Transport getTransport(javax.mail.Address) -> a
-    javax.mail.Transport getTransport(javax.mail.Provider,javax.mail.URLName) -> a
-    java.lang.Object getService(javax.mail.Provider,javax.mail.URLName) -> b
-    void setPasswordAuthentication(javax.mail.URLName,javax.mail.PasswordAuthentication) -> a
-    javax.mail.PasswordAuthentication getPasswordAuthentication(javax.mail.URLName) -> b
-    javax.mail.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String) -> a
-    java.lang.String getProperty(java.lang.String) -> c
-    void loadProviders(java.lang.Class) -> a
-    void loadProvidersFromStream(java.io.InputStream) -> a
-    void addProvider(javax.mail.Provider) -> a
-    void loadAddressMap(java.lang.Class) -> b
-    void loadFile(java.lang.String,javax.mail.StreamLoader) -> a
-    void loadResource(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> a
-    void loadAllResources(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> b
-    void pr(java.lang.String) -> d
-    java.lang.ClassLoader getContextClassLoader() -> b
-    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> a
-    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> a
-    java.net.URL[] getSystemResources(java.lang.String) -> e
-    java.io.InputStream openStream(java.net.URL) -> a
+javax.mail.Service$TerminatorEvent -> javax.mail.Service$TerminatorEvent:
+    long serialVersionUID -> serialVersionUID
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.Session -> javax.mail.Session:
+    java.util.Properties props -> props
+    javax.mail.Authenticator authenticator -> authenticator
+    java.util.Hashtable authTable -> authTable
+    boolean debug -> debug
+    java.io.PrintStream out -> out
+    java.util.Vector providers -> providers
+    java.util.Hashtable providersByProtocol -> providersByProtocol
+    java.util.Hashtable providersByClassName -> providersByClassName
+    java.util.Properties addressMap -> addressMap
+    javax.mail.Session defaultSession -> defaultSession
+    javax.mail.Session getInstance(java.util.Properties,javax.mail.Authenticator) -> getInstance
+    javax.mail.Session getInstance(java.util.Properties) -> getInstance
+    javax.mail.Session getDefaultInstance(java.util.Properties,javax.mail.Authenticator) -> getDefaultInstance
+    javax.mail.Session getDefaultInstance(java.util.Properties) -> getDefaultInstance
+    void setDebug(boolean) -> setDebug
+    boolean getDebug() -> getDebug
+    void setDebugOut(java.io.PrintStream) -> setDebugOut
+    java.io.PrintStream getDebugOut() -> getDebugOut
+    javax.mail.Provider[] getProviders() -> getProviders
+    javax.mail.Provider getProvider(java.lang.String) -> getProvider
+    void setProvider(javax.mail.Provider) -> setProvider
+    javax.mail.Store getStore() -> getStore
+    javax.mail.Store getStore(java.lang.String) -> getStore
+    javax.mail.Store getStore(javax.mail.URLName) -> getStore
+    javax.mail.Store getStore(javax.mail.Provider) -> getStore
+    javax.mail.Store getStore(javax.mail.Provider,javax.mail.URLName) -> getStore
+    javax.mail.Folder getFolder(javax.mail.URLName) -> getFolder
+    javax.mail.Transport getTransport() -> getTransport
+    javax.mail.Transport getTransport(java.lang.String) -> getTransport
+    javax.mail.Transport getTransport(javax.mail.URLName) -> getTransport
+    javax.mail.Transport getTransport(javax.mail.Provider) -> getTransport
+    javax.mail.Transport getTransport(javax.mail.Address) -> getTransport
+    javax.mail.Transport getTransport(javax.mail.Provider,javax.mail.URLName) -> getTransport
+    java.lang.Object getService(javax.mail.Provider,javax.mail.URLName) -> getService
+    void setPasswordAuthentication(javax.mail.URLName,javax.mail.PasswordAuthentication) -> setPasswordAuthentication
+    javax.mail.PasswordAuthentication getPasswordAuthentication(javax.mail.URLName) -> getPasswordAuthentication
+    javax.mail.PasswordAuthentication requestPasswordAuthentication(java.net.InetAddress,int,java.lang.String,java.lang.String,java.lang.String) -> requestPasswordAuthentication
+    java.util.Properties getProperties() -> getProperties
+    java.lang.String getProperty(java.lang.String) -> getProperty
+    void loadProviders(java.lang.Class) -> loadProviders
+    void loadProvidersFromStream(java.io.InputStream) -> loadProvidersFromStream
+    void addProvider(javax.mail.Provider) -> addProvider
+    void loadAddressMap(java.lang.Class) -> loadAddressMap
+    void setProtocolForAddress(java.lang.String,java.lang.String) -> setProtocolForAddress
+    void loadFile(java.lang.String,javax.mail.StreamLoader) -> loadFile
+    void loadResource(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> loadResource
+    void loadAllResources(java.lang.String,java.lang.Class,javax.mail.StreamLoader) -> loadAllResources
+    void pr(java.lang.String) -> pr
+    java.lang.ClassLoader getContextClassLoader() -> getContextClassLoader
+    java.io.InputStream getResourceAsStream(java.lang.Class,java.lang.String) -> getResourceAsStream
+    java.net.URL[] getResources(java.lang.ClassLoader,java.lang.String) -> getResources
+    java.net.URL[] getSystemResources(java.lang.String) -> getSystemResources
+    java.io.InputStream openStream(java.net.URL) -> openStream
     void access$0(javax.mail.Session,java.io.InputStream) -> a
     java.util.Properties access$1(javax.mail.Session) -> a
-javax.mail.Session$1 -> a.a.q:
+javax.mail.Session$1 -> javax.mail.Session$1:
     javax.mail.Session this$0 -> a
-    void load(java.io.InputStream) -> a
-javax.mail.Session$2 -> a.a.p:
+    void load(java.io.InputStream) -> load
+javax.mail.Session$2 -> javax.mail.Session$2:
     javax.mail.Session this$0 -> a
-    void load(java.io.InputStream) -> a
-javax.mail.Session$3 -> a.a.o:
+    void load(java.io.InputStream) -> load
+javax.mail.Session$3 -> javax.mail.Session$3:
     java.lang.Object run() -> run
-javax.mail.Session$4 -> a.a.n:
-    java.lang.Class val$c -> a
-    java.lang.String val$name -> b
+javax.mail.Session$4 -> javax.mail.Session$4:
+    java.lang.Class val$c -> val$c
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.mail.Session$5 -> a.a.m:
-    java.lang.ClassLoader val$cl -> a
-    java.lang.String val$name -> b
+javax.mail.Session$5 -> javax.mail.Session$5:
+    java.lang.ClassLoader val$cl -> val$cl
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.mail.Session$6 -> a.a.l:
-    java.lang.String val$name -> a
+javax.mail.Session$6 -> javax.mail.Session$6:
+    java.lang.String val$name -> val$name
     java.lang.Object run() -> run
-javax.mail.Session$7 -> a.a.k:
-    java.net.URL val$url -> a
+javax.mail.Session$7 -> javax.mail.Session$7:
+    java.net.URL val$url -> val$url
     java.lang.Object run() -> run
-javax.mail.StreamLoader -> a.a.y:
-    void load(java.io.InputStream) -> a
-javax.mail.Transport -> a.a.i:
-    void send(javax.mail.Message) -> a
-    void send0(javax.mail.Message,javax.mail.Address[]) -> b
-    void sendMessage(javax.mail.Message,javax.mail.Address[]) -> a
-javax.mail.URLName -> a.a.v:
-    java.lang.String fullURL -> a
-    java.lang.String protocol -> c
-    java.lang.String username -> d
-    java.lang.String password -> e
-    java.lang.String host -> f
-    java.net.InetAddress hostAddress -> g
-    boolean hostAddressKnown -> h
-    int port -> i
-    java.lang.String file -> j
-    java.lang.String ref -> k
-    int hashCode -> l
-    boolean doEncode -> m
-    java.util.BitSet dontNeedEncoding -> b
+javax.mail.Store -> javax.mail.Store:
+    java.util.Vector storeListeners -> storeListeners
+    java.util.Vector folderListeners -> folderListeners
+    javax.mail.Folder getDefaultFolder() -> getDefaultFolder
+    javax.mail.Folder getFolder(java.lang.String) -> getFolder
+    javax.mail.Folder getFolder(javax.mail.URLName) -> getFolder
+    javax.mail.Folder[] getPersonalNamespaces() -> getPersonalNamespaces
+    javax.mail.Folder[] getUserNamespaces(java.lang.String) -> getUserNamespaces
+    javax.mail.Folder[] getSharedNamespaces() -> getSharedNamespaces
+    void addStoreListener(javax.mail.event.StoreListener) -> addStoreListener
+    void removeStoreListener(javax.mail.event.StoreListener) -> removeStoreListener
+    void notifyStoreListeners(int,java.lang.String) -> notifyStoreListeners
+    void addFolderListener(javax.mail.event.FolderListener) -> addFolderListener
+    void removeFolderListener(javax.mail.event.FolderListener) -> removeFolderListener
+    void notifyFolderListeners(int,javax.mail.Folder) -> notifyFolderListeners
+    void notifyFolderRenamedListeners(javax.mail.Folder,javax.mail.Folder) -> notifyFolderRenamedListeners
+javax.mail.StoreClosedException -> javax.mail.StoreClosedException:
+    javax.mail.Store store -> store
+    long serialVersionUID -> serialVersionUID
+    javax.mail.Store getStore() -> getStore
+javax.mail.StreamLoader -> javax.mail.StreamLoader:
+    void load(java.io.InputStream) -> load
+javax.mail.Transport -> javax.mail.Transport:
+    java.util.Vector transportListeners -> transportListeners
+    void send(javax.mail.Message) -> send
+    void send(javax.mail.Message,javax.mail.Address[]) -> send
+    void send0(javax.mail.Message,javax.mail.Address[]) -> send0
+    void sendMessage(javax.mail.Message,javax.mail.Address[]) -> sendMessage
+    void addTransportListener(javax.mail.event.TransportListener) -> addTransportListener
+    void removeTransportListener(javax.mail.event.TransportListener) -> removeTransportListener
+    void notifyTransportListeners(int,javax.mail.Address[],javax.mail.Address[],javax.mail.Address[],javax.mail.Message) -> notifyTransportListeners
+javax.mail.UIDFolder -> javax.mail.UIDFolder:
+    long LASTUID -> LASTUID
+    long getUIDValidity() -> getUIDValidity
+    javax.mail.Message getMessageByUID(long) -> getMessageByUID
+    javax.mail.Message[] getMessagesByUID(long,long) -> getMessagesByUID
+    javax.mail.Message[] getMessagesByUID(long[]) -> getMessagesByUID
+    long getUID(javax.mail.Message) -> getUID
+javax.mail.UIDFolder$FetchProfileItem -> javax.mail.UIDFolder$FetchProfileItem:
+    javax.mail.UIDFolder$FetchProfileItem UID -> UID
+javax.mail.URLName -> javax.mail.URLName:
+    java.lang.String fullURL -> fullURL
+    java.lang.String protocol -> protocol
+    java.lang.String username -> username
+    java.lang.String password -> password
+    java.lang.String host -> host
+    java.net.InetAddress hostAddress -> hostAddress
+    boolean hostAddressKnown -> hostAddressKnown
+    int port -> port
+    java.lang.String file -> file
+    java.lang.String ref -> ref
+    int hashCode -> hashCode
+    boolean doEncode -> doEncode
+    java.util.BitSet dontNeedEncoding -> a
     java.lang.String toString() -> toString
-    int getPort() -> a
-    java.lang.String getProtocol() -> b
-    java.lang.String getFile() -> c
-    java.lang.String getHost() -> d
-    java.lang.String getUsername() -> e
-    java.lang.String getPassword() -> f
+    void parseString(java.lang.String) -> parseString
+    int getPort() -> getPort
+    java.lang.String getProtocol() -> getProtocol
+    java.lang.String getFile() -> getFile
+    java.lang.String getRef() -> getRef
+    java.lang.String getHost() -> getHost
+    java.lang.String getUsername() -> getUsername
+    java.lang.String getPassword() -> getPassword
+    java.net.URL getURL() -> getURL
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-    java.net.InetAddress getHostAddress() -> g
+    java.net.InetAddress getHostAddress() -> getHostAddress
     java.lang.String encode(java.lang.String) -> a
-    java.lang.String _encode(java.lang.String) -> c
+    java.lang.String _encode(java.lang.String) -> _encode
     java.lang.String decode(java.lang.String) -> b
-    int indexOfAny(java.lang.String,java.lang.String) -> a
-    int indexOfAny(java.lang.String,java.lang.String,int) -> a
-javax.mail.event.ConnectionEvent -> a.a.b.c:
+    int indexOfAny(java.lang.String,java.lang.String) -> indexOfAny
+    int indexOfAny(java.lang.String,java.lang.String,int) -> indexOfAny
+javax.mail.Version -> javax.mail.Version:
+    java.lang.String version -> version
+javax.mail.event.ConnectionEvent -> javax.mail.a.l:
     int type -> a
-    void dispatch(java.lang.Object) -> a
-javax.mail.event.ConnectionListener -> a.a.b.b:
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.ConnectionListener -> javax.mail.a.h:
     void opened(javax.mail.event.ConnectionEvent) -> a
     void disconnected(javax.mail.event.ConnectionEvent) -> b
     void closed(javax.mail.event.ConnectionEvent) -> c
-javax.mail.event.MailEvent -> a.a.b.a:
-    void dispatch(java.lang.Object) -> a
-javax.mail.internet.AddressException -> a.a.a.y:
+javax.mail.event.FolderEvent -> javax.mail.a.j:
+    int type -> a
+    javax.mail.Folder folder -> b
+    javax.mail.Folder newFolder -> c
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.FolderListener -> javax.mail.a.i:
+    void folderCreated(javax.mail.event.FolderEvent) -> a
+    void folderDeleted(javax.mail.event.FolderEvent) -> b
+    void folderRenamed(javax.mail.event.FolderEvent) -> c
+javax.mail.event.MailEvent -> javax.mail.a.f:
+    long serialVersionUID -> serialVersionUID
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.MessageChangedEvent -> javax.mail.a.g:
+    int type -> a
+    javax.mail.Message msg -> b
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.MessageChangedListener -> javax.mail.a.c:
+    void messageChanged(javax.mail.event.MessageChangedEvent) -> a
+javax.mail.event.MessageCountEvent -> javax.mail.a.m:
+    int type -> a
+    boolean removed -> b
+    javax.mail.Message[] msgs -> c
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.MessageCountListener -> javax.mail.a.b:
+    void messagesAdded(javax.mail.event.MessageCountEvent) -> a
+    void messagesRemoved(javax.mail.event.MessageCountEvent) -> b
+javax.mail.event.StoreEvent -> javax.mail.a.k:
+    int type -> a
+    java.lang.String message -> b
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.StoreListener -> javax.mail.a.a:
+    void notification(javax.mail.event.StoreEvent) -> a
+javax.mail.event.TransportEvent -> javax.mail.a.d:
+    int type -> a
+    javax.mail.Address[] validSent -> b
+    javax.mail.Address[] validUnsent -> c
+    javax.mail.Address[] invalid -> d
+    javax.mail.Message msg -> e
+    void dispatch(java.lang.Object) -> dispatch
+javax.mail.event.TransportListener -> javax.mail.a.e:
+    void messageDelivered(javax.mail.event.TransportEvent) -> a
+    void messageNotDelivered(javax.mail.event.TransportEvent) -> b
+    void messagePartiallyDelivered(javax.mail.event.TransportEvent) -> c
+javax.mail.internet.AddressException -> javax.mail.b.z:
     java.lang.String ref -> a
     int pos -> b
     java.lang.String toString() -> toString
-javax.mail.internet.AsciiOutputStream -> a.a.a.n:
+javax.mail.internet.AsciiOutputStream -> javax.mail.b.o:
     boolean breakOnNonAscii -> a
     int ascii -> b
     int non_ascii -> c
@@ -1619,13 +2223,15 @@ javax.mail.internet.AsciiOutputStream -> a.a.a.n:
     void write(byte[],int,int) -> write
     void check(int) -> a
     int getAscii() -> a
-javax.mail.internet.ContentDisposition -> a.a.a.l:
+javax.mail.internet.ContentDisposition -> javax.mail.b.m:
     java.lang.String disposition -> a
     javax.mail.internet.ParameterList list -> b
+    java.lang.String getDisposition() -> a
     java.lang.String getParameter(java.lang.String) -> a
+    void setDisposition(java.lang.String) -> b
     void setParameter(java.lang.String,java.lang.String) -> a
     java.lang.String toString() -> toString
-javax.mail.internet.ContentType -> a.a.a.w:
+javax.mail.internet.ContentType -> javax.mail.b.x:
     java.lang.String primaryType -> a
     java.lang.String subType -> b
     javax.mail.internet.ParameterList list -> c
@@ -1636,7 +2242,7 @@ javax.mail.internet.ContentType -> a.a.a.w:
     java.lang.String toString() -> toString
     boolean match(javax.mail.internet.ContentType) -> a
     boolean match(java.lang.String) -> b
-javax.mail.internet.HeaderTokenizer -> a.a.a.q:
+javax.mail.internet.HeaderTokenizer -> javax.mail.b.r:
     java.lang.String string -> a
     boolean skipComments -> b
     java.lang.String delimiters -> c
@@ -1650,20 +2256,20 @@ javax.mail.internet.HeaderTokenizer -> a.a.a.q:
     javax.mail.internet.HeaderTokenizer$Token getNext() -> c
     int skipWhiteSpace() -> d
     java.lang.String filterToken(java.lang.String,int,int) -> a
-javax.mail.internet.HeaderTokenizer$Token -> a.a.a.z:
+javax.mail.internet.HeaderTokenizer$Token -> javax.mail.b.aa:
     int type -> a
     java.lang.String value -> b
     int getType() -> a
     java.lang.String getValue() -> b
-javax.mail.internet.InternetAddress -> a.a.a.j:
+javax.mail.internet.InternetAddress -> javax.mail.b.k:
     java.lang.String address -> a
     java.lang.String personal -> b
     java.lang.String encodedPersonal -> c
     java.lang.String rfc822phrase -> d
     java.lang.Object clone() -> clone
-    java.lang.String getType() -> a
+    java.lang.String getType() -> getType
     void setAddress(java.lang.String) -> a
-    java.lang.String getAddress() -> b
+    java.lang.String getAddress() -> a
     java.lang.String toString() -> toString
     java.lang.String quotePhrase(java.lang.String) -> c
     java.lang.String unquote(java.lang.String) -> d
@@ -1679,11 +2285,12 @@ javax.mail.internet.InternetAddress -> a.a.a.j:
     javax.mail.internet.InternetAddress[] parseHeader(java.lang.String,boolean) -> b
     javax.mail.internet.InternetAddress[] parse(java.lang.String,boolean,boolean) -> a
     void checkAddress(java.lang.String,boolean,boolean) -> b
-    boolean isSimple() -> d
-    boolean isGroup() -> c
+    boolean isSimple() -> c
+    boolean isGroup() -> b
+    javax.mail.internet.InternetAddress[] getGroup(boolean) -> a
     int indexOfAny(java.lang.String,java.lang.String) -> a
     int indexOfAny(java.lang.String,java.lang.String,int) -> a
-javax.mail.internet.InternetHeaders -> a.a.a.aa:
+javax.mail.internet.InternetHeaders -> javax.mail.b.ab:
     java.util.List headers -> a
     void load(java.io.InputStream) -> a
     java.lang.String[] getHeader(java.lang.String) -> a
@@ -1691,11 +2298,24 @@ javax.mail.internet.InternetHeaders -> a.a.a.aa:
     void setHeader(java.lang.String,java.lang.String) -> b
     void addHeader(java.lang.String,java.lang.String) -> c
     void removeHeader(java.lang.String) -> b
+    java.util.Enumeration getAllHeaders() -> a
+    java.util.Enumeration getMatchingHeaders(java.lang.String[]) -> a
+    java.util.Enumeration getNonMatchingHeaders(java.lang.String[]) -> b
     void addHeaderLine(java.lang.String) -> c
-javax.mail.internet.InternetHeaders$InternetHeader -> a.a.a.g:
-    java.lang.String line -> c
-    java.lang.String getValue() -> b
-javax.mail.internet.MailDateFormat -> a.a.a.x:
+    java.util.Enumeration getNonMatchingHeaderLines(java.lang.String[]) -> c
+javax.mail.internet.InternetHeaders$InternetHeader -> javax.mail.b.h:
+    java.lang.String line -> a
+    java.lang.String getValue() -> getValue
+javax.mail.internet.InternetHeaders$matchEnum -> javax.mail.b.f:
+    java.util.Iterator e -> a
+    java.lang.String[] names -> b
+    boolean match -> c
+    boolean want_line -> d
+    javax.mail.internet.InternetHeaders$InternetHeader next_header -> e
+    boolean hasMoreElements() -> hasMoreElements
+    java.lang.Object nextElement() -> nextElement
+    javax.mail.internet.InternetHeaders$InternetHeader nextMatch() -> a
+javax.mail.internet.MailDateFormat -> javax.mail.b.y:
     boolean debug -> a
     java.util.TimeZone tz -> b
     java.util.Calendar cal -> c
@@ -1705,7 +2325,7 @@ javax.mail.internet.MailDateFormat -> a.a.a.x:
     java.util.Date ourUTC(int,int,int,int,int,int,int,boolean) -> a
     void setCalendar(java.util.Calendar) -> setCalendar
     void setNumberFormat(java.text.NumberFormat) -> setNumberFormat
-javax.mail.internet.MailDateParser -> a.a.a.u:
+javax.mail.internet.MailDateParser -> javax.mail.b.v:
     int index -> a
     char[] orig -> b
     void skipUntilNumber() -> a
@@ -1718,106 +2338,178 @@ javax.mail.internet.MailDateParser -> a.a.a.u:
     int parseNumericTimeZone() -> f
     int parseAlphaTimeZone() -> g
     int getIndex() -> h
-javax.mail.internet.MimeBodyPart -> a.a.a.d:
-    boolean setDefaultTextCharset -> g
-    boolean setContentTypeFileName -> h
-    boolean encodeFileName -> i
-    boolean decodeFileName -> j
-    boolean cacheMultipart -> b
-    javax.activation.DataHandler dh -> c
-    byte[] content -> d
-    java.io.InputStream contentStream -> e
-    javax.mail.internet.InternetHeaders headers -> f
-    java.lang.Object cachedContent -> k
-    java.lang.String getContentType() -> a_
+javax.mail.internet.MimeBodyPart -> javax.mail.b.d:
+    boolean setDefaultTextCharset -> f
+    boolean setContentTypeFileName -> g
+    boolean encodeFileName -> h
+    boolean decodeFileName -> i
+    boolean cacheMultipart -> a
+    javax.activation.DataHandler dh -> b
+    byte[] content -> c
+    java.io.InputStream contentStream -> d
+    javax.mail.internet.InternetHeaders headers -> e
+    java.lang.Object cachedContent -> j
+    int getSize() -> getSize
+    int getLineCount() -> getLineCount
+    java.lang.String getContentType() -> getContentType
+    boolean isMimeType(java.lang.String) -> isMimeType
+    java.lang.String getDisposition() -> getDisposition
+    void setDisposition(java.lang.String) -> setDisposition
     java.lang.String getEncoding() -> a
-    java.lang.String getFileName() -> c
-    void setFileName(java.lang.String) -> a
-    java.io.InputStream getContentStream() -> d
-    javax.activation.DataHandler getDataHandler() -> e
-    void setDataHandler(javax.activation.DataHandler) -> a
-    void setContent(java.lang.Object,java.lang.String) -> a
-    void setContent(javax.mail.Multipart) -> b
-    java.lang.String[] getHeader(java.lang.String) -> b
+    java.lang.String getDescription() -> getDescription
+    void setDescription(java.lang.String) -> setDescription
+    void setDescription(java.lang.String,java.lang.String) -> b
+    java.lang.String getFileName() -> getFileName
+    void setFileName(java.lang.String) -> setFileName
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.InputStream getContentStream() -> b
+    javax.activation.DataHandler getDataHandler() -> getDataHandler
+    java.lang.Object getContent() -> getContent
+    void setDataHandler(javax.activation.DataHandler) -> setDataHandler
+    void setContent(java.lang.Object,java.lang.String) -> setContent
+    void setText(java.lang.String) -> setText
+    void setText(java.lang.String,java.lang.String) -> c
+    void setContent(javax.mail.Multipart) -> setContent
+    void writeTo(java.io.OutputStream) -> writeTo
+    java.lang.String[] getHeader(java.lang.String) -> getHeader
     java.lang.String getHeader(java.lang.String,java.lang.String) -> a
-    void setHeader(java.lang.String,java.lang.String) -> b
-    void removeHeader(java.lang.String) -> c
-    void updateHeaders() -> f
+    void setHeader(java.lang.String,java.lang.String) -> setHeader
+    void addHeader(java.lang.String,java.lang.String) -> addHeader
+    void removeHeader(java.lang.String) -> removeHeader
+    java.util.Enumeration getAllHeaders() -> getAllHeaders
+    java.util.Enumeration getMatchingHeaders(java.lang.String[]) -> getMatchingHeaders
+    java.util.Enumeration getNonMatchingHeaders(java.lang.String[]) -> getNonMatchingHeaders
+    java.util.Enumeration getNonMatchingHeaderLines(java.lang.String[]) -> a
+    void updateHeaders() -> c
+    boolean isMimeType(javax.mail.internet.MimePart,java.lang.String) -> a
     void setText(javax.mail.internet.MimePart,java.lang.String,java.lang.String,java.lang.String) -> a
-    java.lang.String getFileName(javax.mail.internet.MimePart) -> a
-    void setFileName(javax.mail.internet.MimePart,java.lang.String) -> a
-    java.lang.String getEncoding(javax.mail.internet.MimePart) -> b
-    void setEncoding(javax.mail.internet.MimePart,java.lang.String) -> b
-    void updateHeaders(javax.mail.internet.MimePart) -> c
-    void invalidateContentHeaders(javax.mail.internet.MimePart) -> d
-javax.mail.internet.MimeMessage -> a.a.a.m:
-    javax.activation.DataHandler dh -> e
-    byte[] content -> f
-    java.io.InputStream contentStream -> g
-    javax.mail.internet.InternetHeaders headers -> h
-    javax.mail.Flags flags -> i
-    boolean modified -> j
-    boolean saved -> k
-    java.lang.Object cachedContent -> l
-    javax.mail.internet.MailDateFormat mailDateFormat -> m
-    boolean strict -> n
-    javax.mail.Flags answeredFlag -> o
-    void initStrict() -> h
+    java.lang.String getDisposition(javax.mail.internet.MimePart) -> a
+    void setDisposition(javax.mail.internet.MimePart,java.lang.String) -> b
+    java.lang.String getDescription(javax.mail.internet.MimePart) -> b
+    void setDescription(javax.mail.internet.MimePart,java.lang.String,java.lang.String) -> a
+    java.lang.String getFileName(javax.mail.internet.MimePart) -> c
+    void setFileName(javax.mail.internet.MimePart,java.lang.String) -> c
+    java.lang.String getEncoding(javax.mail.internet.MimePart) -> d
+    void setEncoding(javax.mail.internet.MimePart,java.lang.String) -> d
+    void updateHeaders(javax.mail.internet.MimePart) -> e
+    void invalidateContentHeaders(javax.mail.internet.MimePart) -> f
+    void writeTo(javax.mail.internet.MimePart,java.io.OutputStream,java.lang.String[]) -> a
+javax.mail.internet.MimeMessage -> javax.mail.b.n:
+    javax.activation.DataHandler dh -> a
+    byte[] content -> b
+    java.io.InputStream contentStream -> c
+    javax.mail.internet.InternetHeaders headers -> d
+    javax.mail.Flags flags -> e
+    boolean modified -> f
+    boolean saved -> g
+    java.lang.Object cachedContent -> h
+    javax.mail.internet.MailDateFormat mailDateFormat -> i
+    boolean strict -> j
+    javax.mail.Flags answeredFlag -> k
+    void initStrict() -> e
+    javax.mail.Address[] getFrom() -> getFrom
+    void setFrom(javax.mail.Address) -> setFrom
+    void setFrom() -> setFrom
+    void addFrom(javax.mail.Address[]) -> addFrom
     void setSender(javax.mail.Address) -> a
-    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> a
-    javax.mail.Address[] getAllRecipients() -> b
-    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> a
-    javax.mail.Address[] getAddressHeader(java.lang.String) -> e
+    javax.mail.Address[] getRecipients(javax.mail.Message$RecipientType) -> getRecipients
+    javax.mail.Address[] getAllRecipients() -> getAllRecipients
+    void setRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> setRecipients
+    void addRecipients(javax.mail.Message$RecipientType,javax.mail.Address[]) -> addRecipients
+    javax.mail.Address[] getReplyTo() -> getReplyTo
+    void setReplyTo(javax.mail.Address[]) -> setReplyTo
+    javax.mail.Address[] getAddressHeader(java.lang.String) -> a
     void setAddressHeader(java.lang.String,javax.mail.Address[]) -> a
-    void setSubject(java.lang.String) -> a
-    void setSubject(java.lang.String,java.lang.String) -> c
-    java.lang.String getContentType() -> a_
+    void addAddressHeader(java.lang.String,javax.mail.Address[]) -> b
+    java.lang.String getSubject() -> getSubject
+    void setSubject(java.lang.String) -> setSubject
+    void setSubject(java.lang.String,java.lang.String) -> b
+    java.util.Date getSentDate() -> getSentDate
+    void setSentDate(java.util.Date) -> setSentDate
+    java.util.Date getReceivedDate() -> getReceivedDate
+    int getSize() -> getSize
+    int getLineCount() -> getLineCount
+    java.lang.String getContentType() -> getContentType
+    boolean isMimeType(java.lang.String) -> isMimeType
+    java.lang.String getDisposition() -> getDisposition
+    void setDisposition(java.lang.String) -> setDisposition
     java.lang.String getEncoding() -> a
-    java.lang.String getHeaderName(javax.mail.Message$RecipientType) -> b
-    java.io.InputStream getContentStream() -> d
-    javax.activation.DataHandler getDataHandler() -> e
-    void setDataHandler(javax.activation.DataHandler) -> a
-    void setContent(java.lang.Object,java.lang.String) -> a
-    void setText(java.lang.String) -> d
+    java.lang.String getDescription() -> getDescription
+    void setDescription(java.lang.String) -> setDescription
+    void setDescription(java.lang.String,java.lang.String) -> c
+    java.lang.String getFileName() -> getFileName
+    void setFileName(java.lang.String) -> setFileName
+    java.lang.String getHeaderName(javax.mail.Message$RecipientType) -> a
+    java.io.InputStream getInputStream() -> getInputStream
+    java.io.InputStream getContentStream() -> b
+    javax.activation.DataHandler getDataHandler() -> getDataHandler
+    java.lang.Object getContent() -> getContent
+    void setDataHandler(javax.activation.DataHandler) -> setDataHandler
+    void setContent(java.lang.Object,java.lang.String) -> setContent
+    void setText(java.lang.String) -> setText
     void setText(java.lang.String,java.lang.String) -> d
-    void setContent(javax.mail.Multipart) -> a
-    java.lang.String[] getHeader(java.lang.String) -> b
+    void setContent(javax.mail.Multipart) -> setContent
+    javax.mail.Message reply(boolean) -> reply
+    javax.mail.Address[] eliminateDuplicates(java.util.Vector,javax.mail.Address[]) -> a
+    void writeTo(java.io.OutputStream) -> writeTo
+    void writeTo(java.io.OutputStream,java.lang.String[]) -> a
+    java.lang.String[] getHeader(java.lang.String) -> getHeader
     java.lang.String getHeader(java.lang.String,java.lang.String) -> a
-    void setHeader(java.lang.String,java.lang.String) -> b
-    void removeHeader(java.lang.String) -> c
-    void saveChanges() -> c
-    void updateMessageID() -> f
-    void updateHeaders() -> g
-javax.mail.internet.MimeMessage$RecipientType -> a.a.a.f:
+    void setHeader(java.lang.String,java.lang.String) -> setHeader
+    void addHeader(java.lang.String,java.lang.String) -> addHeader
+    void removeHeader(java.lang.String) -> removeHeader
+    java.util.Enumeration getAllHeaders() -> getAllHeaders
+    java.util.Enumeration getMatchingHeaders(java.lang.String[]) -> getMatchingHeaders
+    java.util.Enumeration getNonMatchingHeaders(java.lang.String[]) -> getNonMatchingHeaders
+    java.util.Enumeration getNonMatchingHeaderLines(java.lang.String[]) -> a
+    javax.mail.Flags getFlags() -> getFlags
+    boolean isSet(javax.mail.Flags$Flag) -> isSet
+    void setFlags(javax.mail.Flags,boolean) -> setFlags
+    void saveChanges() -> saveChanges
+    void updateMessageID() -> c
+    void updateHeaders() -> d
+    javax.mail.internet.MimeMessage createMimeMessage(javax.mail.Session) -> a
+javax.mail.internet.MimeMessage$RecipientType -> javax.mail.b.g:
     javax.mail.internet.MimeMessage$RecipientType NEWSGROUPS -> a
-javax.mail.internet.MimeMultipart -> a.a.a.b:
-    boolean ignoreMissingEndBoundary -> f
-    boolean ignoreMissingBoundaryParameter -> g
-    boolean bmparse -> h
+    java.lang.Object readResolve() -> readResolve
+javax.mail.internet.MimeMultipart -> javax.mail.b.b:
+    boolean ignoreMissingEndBoundary -> c
+    boolean ignoreMissingBoundaryParameter -> d
+    boolean bmparse -> e
     javax.activation.DataSource ds -> a
     boolean parsed -> b
-    boolean complete -> i
-    java.lang.String preamble -> j
-    void addBodyPart(javax.mail.BodyPart) -> a
+    boolean complete -> f
+    java.lang.String preamble -> g
+    int getCount() -> getCount
+    javax.mail.BodyPart getBodyPart(int) -> getBodyPart
+    boolean removeBodyPart(javax.mail.BodyPart) -> removeBodyPart
+    void removeBodyPart(int) -> removeBodyPart
+    void addBodyPart(javax.mail.BodyPart) -> addBodyPart
+    void addBodyPart(javax.mail.BodyPart,int) -> addBodyPart
     void updateHeaders() -> a
+    void writeTo(java.io.OutputStream) -> writeTo
     void parse() -> b
-    void parsebm() -> d
+    void parsebm() -> c
     int readFully(java.io.InputStream,byte[],int,int) -> a
     void skipFully(java.io.InputStream,long) -> a
     javax.mail.internet.InternetHeaders createInternetHeaders(java.io.InputStream) -> a
     javax.mail.internet.MimeBodyPart createMimeBodyPart(javax.mail.internet.InternetHeaders,byte[]) -> a
     javax.mail.internet.MimeBodyPart createMimeBodyPart(java.io.InputStream) -> b
-javax.mail.internet.MimePart -> a.a.a.a:
+javax.mail.internet.MimePart -> javax.mail.b.a:
     java.lang.String getHeader(java.lang.String,java.lang.String) -> a
+    java.util.Enumeration getNonMatchingHeaderLines(java.lang.String[]) -> a
     java.lang.String getEncoding() -> a
-javax.mail.internet.MimePartDataSource -> a.a.a.h:
+javax.mail.internet.MimePartDataSource -> javax.mail.b.i:
     javax.mail.internet.MimePart part -> a
-    boolean ignoreMultipartEncoding -> b
-    java.io.InputStream getInputStream() -> a
+    javax.mail.MessageContext context -> b
+    boolean ignoreMultipartEncoding -> c
+    java.io.InputStream getInputStream() -> getInputStream
     java.lang.String restrictEncoding(java.lang.String,javax.mail.internet.MimePart) -> a
-    java.lang.String getContentType() -> b
-    java.lang.String getName() -> c
-javax.mail.internet.MimeUtility -> a.a.a.k:
+    java.io.OutputStream getOutputStream() -> getOutputStream
+    java.lang.String getContentType() -> getContentType
+    java.lang.String getName() -> getName
+    javax.mail.MessageContext getMessageContext() -> getMessageContext
+javax.mail.internet.MimeUtility -> javax.mail.b.l:
     boolean decodeStrict -> a
     boolean encodeEolStrict -> b
     boolean foldEncodedWords -> c
@@ -1829,6 +2521,7 @@ javax.mail.internet.MimeUtility -> a.a.a.k:
     java.lang.String getEncoding(javax.activation.DataSource) -> a
     java.lang.String getEncoding(javax.activation.DataHandler) -> a
     java.io.InputStream decode(java.io.InputStream,java.lang.String) -> a
+    java.io.OutputStream encode(java.io.OutputStream,java.lang.String) -> a
     java.lang.String encodeText(java.lang.String) -> a
     java.lang.String encodeText(java.lang.String,java.lang.String,java.lang.String) -> a
     java.lang.String decodeText(java.lang.String) -> b
@@ -1837,29 +2530,32 @@ javax.mail.internet.MimeUtility -> a.a.a.k:
     java.lang.String encodeWord(java.lang.String,java.lang.String,java.lang.String,boolean) -> a
     void doEncode(java.lang.String,boolean,java.lang.String,int,java.lang.String,boolean,boolean,java.lang.StringBuffer) -> a
     java.lang.String decodeWord(java.lang.String) -> d
-    java.lang.String decodeInnerWords(java.lang.String) -> h
+    java.lang.String decodeInnerWords(java.lang.String) -> i
     java.lang.String quote(java.lang.String,java.lang.String) -> a
     java.lang.String fold(int,java.lang.String) -> a
-    java.lang.String javaCharset(java.lang.String) -> e
-    java.lang.String mimeCharset(java.lang.String) -> f
+    java.lang.String unfold(java.lang.String) -> e
+    int indexOfAny(java.lang.String,java.lang.String) -> b
+    int indexOfAny(java.lang.String,java.lang.String,int) -> a
+    java.lang.String javaCharset(java.lang.String) -> f
+    java.lang.String mimeCharset(java.lang.String) -> g
     java.lang.String getDefaultJavaCharset() -> a
     java.lang.String getDefaultMIMECharset() -> b
     void loadMappings(com.sun.mail.util.LineInputStream,java.util.Hashtable) -> a
-    int checkAscii(java.lang.String) -> g
+    int checkAscii(java.lang.String) -> h
     int checkAscii(java.io.InputStream,int,boolean) -> a
     boolean nonascii(int) -> a
-javax.mail.internet.MimeUtility$1NullInputStream -> a.a.a.i:
+javax.mail.internet.MimeUtility$1NullInputStream -> javax.mail.b.j:
     int read() -> read
-javax.mail.internet.NewsAddress -> a.a.a.v:
+javax.mail.internet.NewsAddress -> javax.mail.b.w:
     java.lang.String newsgroup -> a
     java.lang.String host -> b
-    java.lang.String getType() -> a
+    java.lang.String getType() -> getType
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString(javax.mail.Address[]) -> a
     javax.mail.internet.NewsAddress[] parse(java.lang.String) -> a
-javax.mail.internet.ParameterList -> a.a.a.o:
+javax.mail.internet.ParameterList -> javax.mail.b.p:
     java.util.Map list -> a
     java.util.Set multisegmentNames -> b
     java.util.Map slist -> c
@@ -1879,55 +2575,99 @@ javax.mail.internet.ParameterList -> a.a.a.o:
     javax.mail.internet.ParameterList$Value decodeValue(java.lang.String) -> d
     java.lang.String decodeBytes(java.lang.String,java.lang.String) -> c
     java.lang.String access$0(java.lang.String) -> b
-javax.mail.internet.ParameterList$MultiValue -> a.a.a.p:
+javax.mail.internet.ParameterList$MultiValue -> javax.mail.b.q:
     java.lang.String value -> a
-javax.mail.internet.ParameterList$ToStringBuffer -> a.a.a.e:
+javax.mail.internet.ParameterList$ToStringBuffer -> javax.mail.b.e:
     int used -> a
     java.lang.StringBuffer sb -> b
     void addNV(java.lang.String,java.lang.String) -> a
     java.lang.String toString() -> toString
-javax.mail.internet.ParameterList$Value -> a.a.a.c:
+javax.mail.internet.ParameterList$Value -> javax.mail.b.c:
     java.lang.String value -> a
     java.lang.String charset -> b
     java.lang.String encodedValue -> c
-javax.mail.internet.ParseException -> a.a.a.t:
-javax.mail.internet.SharedInputStream -> a.a.a.s:
+javax.mail.internet.ParseException -> javax.mail.b.u:
+javax.mail.internet.SharedInputStream -> javax.mail.b.t:
     long getPosition() -> a
     java.io.InputStream newStream(long,long) -> a
-javax.mail.internet.UniqueValue -> a.a.a.r:
+javax.mail.internet.UniqueValue -> javax.mail.b.s:
     int id -> a
     java.lang.String getUniqueBoundaryValue() -> a
     java.lang.String getUniqueMessageIDValue(javax.mail.Session) -> a
     int getUniqueId() -> b
-javax.mail.util.SharedByteArrayInputStream -> a.a.c.a:
+javax.mail.search.SearchTerm -> javax.mail.c.a:
+    boolean match(javax.mail.Message) -> a
+javax.mail.util.SharedByteArrayInputStream -> javax.mail.d.a:
     int start -> a
     long getPosition() -> a
     java.io.InputStream newStream(long,long) -> a
-myjava.awt.datatransfer.DataFlavor -> b.a.a.a:
-    myjava.awt.datatransfer.DataFlavor plainTextFlavor -> a
-    myjava.awt.datatransfer.DataFlavor stringFlavor -> b
-    myjava.awt.datatransfer.DataFlavor javaFileListFlavor -> c
-    java.lang.String[] sortedTextFlavors -> d
-    myjava.awt.datatransfer.DataFlavor plainUnicodeFlavor -> e
-    java.lang.String humanPresentableName -> f
-    java.lang.Class representationClass -> g
-    myjava.awt.datatransfer.MimeTypeProcessor$MimeType mimeInfo -> h
-    boolean isCharsetSupported(java.lang.String) -> a
-    void init(java.lang.String,java.lang.String,java.lang.ClassLoader) -> a
-    java.lang.String getCharset() -> b
-    boolean isCharsetRequired() -> c
-    boolean isCharsetRedundant() -> d
-    java.lang.String getMimeType() -> a
+myjava.awt.datatransfer.DataFlavor -> a.a.a.a:
+    long serialVersionUID -> serialVersionUID
+    myjava.awt.datatransfer.DataFlavor plainTextFlavor -> plainTextFlavor
+    myjava.awt.datatransfer.DataFlavor stringFlavor -> stringFlavor
+    myjava.awt.datatransfer.DataFlavor javaFileListFlavor -> javaFileListFlavor
+    java.lang.String javaJVMLocalObjectMimeType -> javaJVMLocalObjectMimeType
+    java.lang.String javaRemoteObjectMimeType -> javaRemoteObjectMimeType
+    java.lang.String javaSerializedObjectMimeType -> javaSerializedObjectMimeType
+    java.lang.String[] sortedTextFlavors -> sortedTextFlavors
+    myjava.awt.datatransfer.DataFlavor plainUnicodeFlavor -> plainUnicodeFlavor
+    java.lang.String humanPresentableName -> humanPresentableName
+    java.lang.Class representationClass -> representationClass
+    myjava.awt.datatransfer.MimeTypeProcessor$MimeType mimeInfo -> mimeInfo
+    myjava.awt.datatransfer.DataFlavor getTextPlainUnicodeFlavor() -> getTextPlainUnicodeFlavor
+    java.lang.Class tryToLoadClass(java.lang.String,java.lang.ClassLoader) -> tryToLoadClass
+    boolean isCharsetSupported(java.lang.String) -> isCharsetSupported
+    void init(java.lang.String,java.lang.String,java.lang.ClassLoader) -> init
+    java.lang.String getCharset() -> getCharset
+    boolean isCharsetRequired() -> isCharsetRequired
+    boolean isCharsetRedundant() -> isCharsetRedundant
+    java.lang.String getPrimaryType() -> getPrimaryType
+    java.lang.String getSubType() -> getSubType
+    java.lang.String getMimeType() -> getMimeType
+    java.lang.String getParameter(java.lang.String) -> getParameter
+    java.lang.String getHumanPresentableName() -> getHumanPresentableName
+    void setHumanPresentableName(java.lang.String) -> setHumanPresentableName
+    java.lang.Class getRepresentationClass() -> getRepresentationClass
+    java.lang.Class getDefaultRepresentationClass() -> getDefaultRepresentationClass
+    java.lang.String getDefaultRepresentationClassAsString() -> getDefaultRepresentationClassAsString
+    boolean isRepresentationClassSerializable() -> isRepresentationClassSerializable
+    boolean isRepresentationClassRemote() -> isRepresentationClassRemote
+    boolean isRepresentationClassReader() -> isRepresentationClassReader
+    boolean isRepresentationClassInputStream() -> isRepresentationClassInputStream
+    boolean isRepresentationClassCharBuffer() -> isRepresentationClassCharBuffer
+    boolean isRepresentationClassByteBuffer() -> isRepresentationClassByteBuffer
+    java.lang.String normalizeMimeTypeParameter(java.lang.String,java.lang.String) -> normalizeMimeTypeParameter
+    java.lang.String normalizeMimeType(java.lang.String) -> normalizeMimeType
+    boolean isMimeTypeEqual(myjava.awt.datatransfer.DataFlavor) -> isMimeTypeEqual
+    boolean isMimeTypeEqual(java.lang.String) -> isMimeTypeEqual
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
     java.lang.Object clone() -> clone
     java.lang.String toString() -> toString
+    boolean isMimeTypeSerializedObject() -> isMimeTypeSerializedObject
     boolean equals(java.lang.Object) -> equals
-    boolean equals(myjava.awt.datatransfer.DataFlavor) -> a
+    boolean equals(myjava.awt.datatransfer.DataFlavor) -> equals
+    boolean equals(java.lang.String) -> equals
+    boolean match(myjava.awt.datatransfer.DataFlavor) -> match
     int hashCode() -> hashCode
-    java.lang.String getKeyInfo() -> e
-    boolean isUnicodeFlavor() -> f
-myjava.awt.datatransfer.MimeTypeProcessor -> b.a.a.c:
+    java.lang.String getKeyInfo() -> getKeyInfo
+    boolean isFlavorSerializedObjectType() -> isFlavorSerializedObjectType
+    boolean isFlavorRemoteObjectType() -> isFlavorRemoteObjectType
+    boolean isFlavorJavaFileListType() -> isFlavorJavaFileListType
+    boolean isFlavorTextType() -> isFlavorTextType
+    java.io.Reader getReaderForText(myjava.awt.datatransfer.Transferable) -> getReaderForText
+    myjava.awt.datatransfer.DataFlavor selectBestTextFlavor(myjava.awt.datatransfer.DataFlavor[]) -> selectBestTextFlavor
+    myjava.awt.datatransfer.DataFlavor selectBestFlavorWCharset(java.util.List) -> selectBestFlavorWCharset
+    myjava.awt.datatransfer.DataFlavor selectBestByCharset(java.util.List) -> selectBestByCharset
+    java.util.List selectBestByAlphabet(java.util.List) -> selectBestByAlphabet
+    java.util.List getFlavors(java.util.List,java.lang.String[]) -> getFlavors
+    myjava.awt.datatransfer.DataFlavor selectBestFlavorWOCharset(java.util.List) -> selectBestFlavorWOCharset
+    java.util.List getFlavors(java.util.List,java.lang.Class) -> getFlavors
+    java.util.List sortTextFlavorsByType(java.util.List) -> sortTextFlavorsByType
+    java.util.List fetchTextFlavors(java.util.List,java.lang.String) -> fetchTextFlavors
+    boolean isUnicodeFlavor() -> isUnicodeFlavor
+    boolean isByteCodeFlavor() -> isByteCodeFlavor
+myjava.awt.datatransfer.MimeTypeProcessor -> a.a.a.d:
     myjava.awt.datatransfer.MimeTypeProcessor instance -> a
     myjava.awt.datatransfer.MimeTypeProcessor$MimeType parse(java.lang.String) -> a
     java.lang.String assemble(myjava.awt.datatransfer.MimeTypeProcessor$MimeType) -> a
@@ -1939,7 +2679,7 @@ myjava.awt.datatransfer.MimeTypeProcessor -> b.a.a.c:
     int getNextMeaningfulIndex(java.lang.String,int) -> a
     boolean isTSpecialChar(char) -> a
     boolean isMeaningfulChar(char) -> b
-myjava.awt.datatransfer.MimeTypeProcessor$MimeType -> b.a.a.d:
+myjava.awt.datatransfer.MimeTypeProcessor$MimeType -> a.a.a.f:
     java.lang.String primaryType -> a
     java.lang.String subType -> b
     java.util.Hashtable parameters -> c
@@ -1956,9 +2696,12 @@ myjava.awt.datatransfer.MimeTypeProcessor$MimeType -> b.a.a.d:
     void access$2(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.lang.String) -> b
     void access$3(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.util.Hashtable) -> a
     void access$4(myjava.awt.datatransfer.MimeTypeProcessor$MimeType,java.util.Hashtable) -> b
-myjava.awt.datatransfer.MimeTypeProcessor$StringPosition -> b.a.a.b:
+myjava.awt.datatransfer.MimeTypeProcessor$StringPosition -> a.a.a.c:
     int i -> a
-org.apache.harmony.awt.ContextStorage -> c.a.a.a.b:
+myjava.awt.datatransfer.Transferable -> a.a.a.e:
+    java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor) -> getTransferData
+myjava.awt.datatransfer.UnsupportedFlavorException -> a.a.a.b:
+org.apache.harmony.awt.ContextStorage -> b.a.a.a.b:
     boolean shutdownPending -> a
     org.apache.harmony.awt.ContextStorage globalContext -> b
     org.apache.harmony.awt.datatransfer.DTK dtk -> c
@@ -1968,9 +2711,9 @@ org.apache.harmony.awt.ContextStorage -> c.a.a.a.b:
     java.lang.Object getContextLock() -> b
     org.apache.harmony.awt.ContextStorage getCurrentContext() -> d
     boolean shutdownPending() -> c
-org.apache.harmony.awt.ContextStorage$ContextLock -> c.a.a.a.a:
+org.apache.harmony.awt.ContextStorage$ContextLock -> b.a.a.a.a:
     org.apache.harmony.awt.ContextStorage this$0 -> a
-org.apache.harmony.awt.datatransfer.DTK -> c.a.a.a.b.c:
+org.apache.harmony.awt.datatransfer.DTK -> b.a.a.a.b.c:
     org.apache.harmony.awt.datatransfer.NativeClipboard nativeClipboard -> b
     org.apache.harmony.awt.datatransfer.NativeClipboard nativeSelection -> c
     org.apache.harmony.awt.datatransfer.DataTransferThread dataTransferThread -> a
@@ -1979,24 +2722,24 @@ org.apache.harmony.awt.datatransfer.DTK -> c.a.a.a.b.c:
     void runEventLoop() -> c
     org.apache.harmony.awt.datatransfer.DTK createDTK() -> e
     java.lang.String getDefaultCharset() -> d
-org.apache.harmony.awt.datatransfer.DataTransferThread -> c.a.a.a.b.a:
+org.apache.harmony.awt.datatransfer.DataTransferThread -> b.a.a.a.b.a:
     org.apache.harmony.awt.datatransfer.DTK dtk -> a
     void run() -> run
     void start() -> start
-org.apache.harmony.awt.datatransfer.NativeClipboard -> c.a.a.a.b.b:
-org.apache.harmony.awt.internal.nls.Messages -> c.a.a.a.a.a.a:
+org.apache.harmony.awt.datatransfer.NativeClipboard -> b.a.a.a.b.b:
+org.apache.harmony.awt.internal.nls.Messages -> b.a.a.a.a.a.a:
     java.util.ResourceBundle bundle -> a
     java.lang.String getString(java.lang.String) -> a
     java.lang.String getString(java.lang.String,java.lang.Object) -> a
     java.lang.String getString(java.lang.String,java.lang.Object[]) -> a
     java.lang.String format(java.lang.String,java.lang.Object[]) -> b
     java.util.ResourceBundle setLocale(java.util.Locale,java.lang.String) -> a
-org.apache.harmony.awt.internal.nls.Messages$1 -> c.a.a.a.a.a.b:
+org.apache.harmony.awt.internal.nls.Messages$1 -> b.a.a.a.a.a.b:
     java.lang.String val$resource -> a
     java.util.Locale val$locale -> b
     java.lang.ClassLoader val$loader -> c
     java.lang.Object run() -> run
-org.apache.harmony.misc.SystemUtils -> c.a.a.b.a:
+org.apache.harmony.misc.SystemUtils -> b.a.a.b.a:
     int os -> a
     int arc -> b
     int getOS() -> a

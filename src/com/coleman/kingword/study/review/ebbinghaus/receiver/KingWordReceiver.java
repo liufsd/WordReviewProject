@@ -12,6 +12,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.widget.Toast;
+
 import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
@@ -45,6 +47,7 @@ public class KingWordReceiver extends BroadcastReceiver {
     private void doEbbinghausAction(final Context context, Intent intent) {
         if (!needReview(context)) {
             Log.d(TAG, "##############there is no words need to be reviewed!");
+            Toast.makeText(context, context.getString(R.string.no_need_review), Toast.LENGTH_SHORT).show();
             return;
         }
 

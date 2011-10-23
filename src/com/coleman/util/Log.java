@@ -19,8 +19,6 @@ package com.coleman.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.coleman.util.Log.LogType;
-
 import android.content.Context;
 
 /**

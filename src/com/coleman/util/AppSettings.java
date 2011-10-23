@@ -8,6 +8,8 @@
 
 package com.coleman.util;
 
+import com.coleman.kingword.dict.DictManager;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -167,12 +169,12 @@ public class AppSettings {
         String temps[] = str.split(";");
         for (String string : temps) {
             String subs[] = string.split(",");
-            int type = Integer.parseInt(subs[3]);
+            int type = Integer.parseInt(subs[4]);
             if (type == 1 || type == 3) {
                 return subs[0];
             }
         }
-        return null;
+        return DictManager.DEFAULT_CUR_LIB;
     }
 
     public static String getMoreLibraryString(Context context) {
@@ -180,11 +182,11 @@ public class AppSettings {
         String temps[] = str.split(";");
         for (String string : temps) {
             String subs[] = string.split(",");
-            int type = Integer.parseInt(subs[3]);
+            int type = Integer.parseInt(subs[4]);
             if (type == 2 || type == 3) {
                 return subs[0];
             }
         }
-        return null;
+        return DictManager.DEFAULT_MORE_LIB;
     }
 }

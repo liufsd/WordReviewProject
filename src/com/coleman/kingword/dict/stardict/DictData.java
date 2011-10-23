@@ -34,8 +34,9 @@ public class DictData {
         dici.symbol = "";
         return dici;
     }
-    
-    public static DictData readData(Context context, DictInfo info, DictIndex index, String fileName) {
+
+    public static DictData readData(Context context, boolean isInternal, DictInfo info,
+            DictIndex index, String fileName) {
         DictData dici = new DictData();
 
         final int FILE_LEN = 1000000;
@@ -60,8 +61,8 @@ public class DictData {
         if (merged) {
             int size1 = FILE_LEN - fileOffset;
             int size2 = (int) index.size - size1;
-            byte[] bytes1 = readData(context, info, fName, fileOffset, size1);
-            byte[] bytes2 = readData(context, info, fNameAppend, 0, size2);
+            byte[] bytes1 = readData(context,isInternal, info, fName, fileOffset, size1);
+            byte[] bytes2 = readData(context,isInternal, info, fNameAppend, 0, size2);
             if (bytes1 == null || bytes2 == null) {
                 Log.d(TAG, "parse data error");
                 return dici;
@@ -70,7 +71,7 @@ public class DictData {
             System.arraycopy(bytes2, 0, bytes, bytes1.length, bytes2.length);
             // Log.d(TAG, "the word " + index.word + " is merged!");
         } else {
-            bytes = readData(context, info, fName, fileOffset, (int) index.size);
+            bytes = readData(context,isInternal, info, fName, fileOffset, (int) index.size);
             if (bytes == null) {
                 Log.d(TAG, "parse data error");
                 return dici;
@@ -78,7 +79,7 @@ public class DictData {
         }
 
         if (!"tm".equals(info.sameTypeSequence)) {
-            if("m".equals(info.sameTypeSequence)){
+            if ("m".equals(info.sameTypeSequence)) {
                 dici.isDetail = true;
             }
             // one word's data can't be larger than Integer's value
@@ -110,18 +111,18 @@ public class DictData {
         return dici;
     }
 
-    private static byte[] readData(Context context, DictInfo info, String fileName, int offset,
-            int size) {
+    private static byte[] readData(Context context, boolean isInternal, DictInfo info,
+            String fileName, int offset, int size) {
         byte[] bytes = null;
         InputStream is;
         DataInputStream reader;
         try {
             bytes = new byte[size];
-            if (!Config.THIN_VERSION) {
+            if (isInternal) {
                 is = context.getAssets().open(fileName, AssetManager.ACCESS_RANDOM);
             } else {
-                is = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                        + fileName);
+                is = new FileInputStream(Environment.getExternalStorageDirectory()
+                        .getAbsolutePath() + File.separator + fileName);
             }
             reader = new DataInputStream(is);
             // System.out.println("size:" + reader.available() + "   data size:"

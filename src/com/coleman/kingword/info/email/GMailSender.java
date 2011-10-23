@@ -20,13 +20,12 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import com.coleman.kingword.info.InfoGather;
-
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.coleman.util.Log;
 
 public class GMailSender extends javax.mail.Authenticator {
-    private static final String TAG = GMailSender.class.getName();
+    private static final String TAG = "GMailSender";
 
     private String mailhost = "smtp.gmail.com";
 
@@ -43,7 +42,9 @@ public class GMailSender extends javax.mail.Authenticator {
         this.mPassword = password;
 
         Properties props = new Properties();
+        
         // props.setProperty("mail.transport.protocol", "smtp");
+        
         props.put("mail.smtp.host", mailhost);
         // port 465 is for ssl, 587 is for starttls, need to enable
         props.put("mail.smtp.port", "587");

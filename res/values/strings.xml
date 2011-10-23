@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="hello">Hello World, KingWordActivity!</string>
-	<string name="app_name">KingWord</string>
+	<string name="app_name">单词王</string>
 	<string name="nothing">1</string>
 
 	<string name="init_word_list">词库正在进行初使化...</string>
@@ -32,7 +32,7 @@
 	<string name="delay">延迟10分钟</string>
 	<string name="review_reminder" formatted="false">距离你上次学习已经有%s，单击进入复习模式！
 	</string>
-	<string name="review_notify">You have some new words to review!</string>
+	<string name="review_notify">你有一些单词需要复习了！</string>
 
 	<string name="hour">小时</string>
 	<string name="day">天</string>
@@ -44,7 +44,7 @@
 	<string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？
 	</string>
 
-	<string name="welcome">Welcome to KingWord~</string>
+	<string name="welcome">欢迎使用单词王！</string>
 	<string name="about_dev">关于开发</string>
 
 	<string name="anim_set">动画设置</string>
@@ -222,4 +222,6 @@
 	<string name="input_dialog_title">输入框</string>
 	<string name="warning_dialog_title">警告</string>
 	<string name="delete_warning" formatted="false">你确定要删除单词表%s吗？</string>
+	
+	<string name="no_need_review">没有需要复习的单词！</string>
 </resources>

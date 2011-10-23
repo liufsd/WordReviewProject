@@ -64,6 +64,11 @@ public class WelcomeActivity extends Activity {
         // init DictIndex list
         // DictManager.getInstance().initDictIndexList(this);
         DynamicTableManager.getInstance().initTables(this);
+        
+        //set cur lib and more lib
+        DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
+        DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
+        
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
     }
@@ -105,10 +110,9 @@ public class WelcomeActivity extends Activity {
                     AppSettings.saveInt(this, k[i][j], c[i][j]);
                 }
             }
-            
-            // set default lib
-            AppSettings.saveString(this, AppSettings.DICTS_KEY,
-                    "a49_stardict_1_3,false,1000,1;a50_oxford_gb_formated,false,1002,2");
+
+            // set default lib load from internal or external
+            AppSettings.saveString(this, AppSettings.DICTS_KEY, "a49_stardict_1_3,false,true,1000,1;a50_oxford_gb_formated,false,true,1002,2");
             System.out.println("...");
             // ///////////////////////////////////////////////
             // check if there is backup to restore
@@ -119,11 +123,6 @@ public class WelcomeActivity extends Activity {
                     AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
             Log.setLogType(this, LogType.instanse(AppSettings.getInt(this,
                     AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
-            DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
-            DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
-            // ////////////// following is for debug/////////////////
-            // Log.setLogType(this, LogType.verbose);
-            // AppSettings.saveInt(this, AppSettings.SAVED_PW_KEY, 123);
         }
     }
 
