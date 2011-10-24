@@ -45,21 +45,25 @@ public class KingWordReceiver extends BroadcastReceiver {
     }
 
     private void doEbbinghausAction(final Context context, Intent intent) {
+        // @key-sentence
+        // get the top activity of the current system.
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        String cName = cn.getClassName();
+        Log.d(TAG, "##############" + cn);
+
         if (!needReview(context)) {
             Log.d(TAG, "##############there is no words need to be reviewed!");
-            Toast.makeText(context, context.getString(R.string.no_need_review), Toast.LENGTH_SHORT).show();
+            if (cName != null && cName.contains("com.coleman.kingword")) {
+                Toast.makeText(context, context.getString(R.string.no_need_review),
+                        Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 
         byte type = intent.getByteExtra("type", Byte.MAX_VALUE);
-        final Intent i = new Intent(context, CoreActivity.class);
-        i.putExtra("type", type);
-
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-        Log.d(TAG, "##############" + cn);
-        if (CoreActivity.class.getName().equals(cn.getClassName())
-                || EbbinghausActivityAsDialog.class.getName().equals(cn.getClassName())) {
+        if (CoreActivity.class.getName().equals(cName)
+                || EbbinghausActivityAsDialog.class.getName().equals(cName)) {
             Intent it = new Intent(context, EbbinghausActivityAsDialog.class);
             it.putExtra("title", context.getString(R.string.review));
             it.putExtra("message", context.getString(R.string.review_notify));
@@ -69,6 +73,8 @@ public class KingWordReceiver extends BroadcastReceiver {
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(it);
         } else {
+            final Intent i = new Intent(context, CoreActivity.class);
+            i.putExtra("type", type);
             PendingIntent sender = PendingIntent.getActivity(context, -1, i,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationManager manager = (NotificationManager) context
