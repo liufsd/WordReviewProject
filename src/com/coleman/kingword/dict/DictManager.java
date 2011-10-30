@@ -123,7 +123,7 @@ public class DictManager {
         }
         DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
-            Log.w(TAG, "not found!");
+            Log.w(TAG, word+" not found!");
             return DictData.constructData(word + ": not found!");
         }
         DictData wordData = DictData.readData(context, library.isInternal(),

@@ -155,7 +155,7 @@ com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder:
     86:90:private static boolean checkOneHourTimeUp()
 com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver:
     public static final java.lang.String ACTION_SEND_INFO_SILENT
-    87:113:java.lang.String getMessage(android.content.Context,byte)
+    93:119:java.lang.String getMessage(android.content.Context,byte)
 com.coleman.kingword.study.unit.SubWordListActivity$ExpensiveTask:
     private static final byte INIT_QUERY
 com.coleman.kingword.study.unit.SubWordListActivity$PageControl:

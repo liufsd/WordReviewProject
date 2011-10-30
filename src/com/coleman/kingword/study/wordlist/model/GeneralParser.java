@@ -58,7 +58,7 @@ public class GeneralParser {
         is.close();
 
         String str = new String(baf.toByteArray());
-        String temps[] = str.split("\n");
+        String temps[] = str.split("\\s");
         int cc = 0;
         ArrayList<String> list = new ArrayList<String>();
         for (String string : temps) {

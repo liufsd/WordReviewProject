@@ -8,15 +8,22 @@
 
 package com.coleman.kingword.study.wordlist;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -104,6 +111,17 @@ public class TextEditor extends Activity implements OnClickListener {
      * @param text
      */
     private void doSave() {
+        //save file to sdcard
+        try {
+            FileWriter writer= new FileWriter(new File(path));
+            writer.write(editText.getText().toString());
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //load the wordlist
         Intent intent = new Intent(this, WordListActivity.class);
         intent.putExtra(WordListActivity.EXTERNAL_FILE, true);
         intent.putExtra(WordListActivity.EXTERNAL_FILE_PATH, path);
@@ -158,55 +176,26 @@ public class TextEditor extends Activity implements OnClickListener {
 
     private class FileLoader {
 
-        private String content;
+        private String content = "";
 
         private FileLoader(String path) {
-            InputStream is = null;
             try {
-                is = new FileInputStream(path);
-            } catch (FileNotFoundException e) {
+                FileReader reader = new FileReader(new File(path));
+                BufferedReader breader = new BufferedReader(reader);
+                String line;
+                while ((line = breader.readLine()) != null) {
+                    content += line+"\n";
+                }
+                breader.close();
+                reader.close();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            doLoad(is);
         }
 
         public String getContent() {
             return content;
         }
 
-        private void doLoad(InputStream is) {
-            ByteArrayOutputStream baos;
-            if (is == null) {
-                Log.w(TAG, "InputStream should not be null!");
-                return;
-            }
-            baos = new ByteArrayOutputStream();
-            try {
-                byte[] buf = new byte[512];
-                int count = -1;
-                while ((count = is.read(buf)) != -1) {
-                    baos.write(buf, 0, count);
-                }
-                buf = baos.toByteArray();
-                Log.d(TAG, buf[0] + "   buf[0]: " + Integer.toHexString(buf[0]));
-                Log.d(TAG, buf[1] + "   buf[1]: " + Integer.toHexString(buf[1]));
-                content = new String(buf, Config.ENCODE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (Exception e2) {
-                }
-                try {
-                    if (baos != null) {
-                        baos.close();
-                    }
-                } catch (Exception e2) {
-                }
-            }
-        }
     }
 }

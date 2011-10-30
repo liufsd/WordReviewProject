@@ -926,10 +926,9 @@ com.coleman.kingword.study.wordlist.TextEditor -> com.coleman.kingword.study.wor
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onClick(android.view.View) -> onClick
     void onDestroy() -> onDestroy
-    void doSave() -> b
+    void doSave() -> a
     java.lang.String access$0(com.coleman.kingword.study.wordlist.TextEditor) -> a
     android.widget.EditText access$1(com.coleman.kingword.study.wordlist.TextEditor) -> b
-    java.lang.String access$2() -> a
 com.coleman.kingword.study.wordlist.TextEditor$ExpensiveTask -> com.coleman.kingword.study.wordlist.b:
     byte type -> b
     java.lang.String content -> c
@@ -943,7 +942,6 @@ com.coleman.kingword.study.wordlist.TextEditor$FileLoader -> com.coleman.kingwor
     java.lang.String content -> b
     com.coleman.kingword.study.wordlist.TextEditor this$0 -> a
     java.lang.String getContent() -> a
-    void doLoad(java.io.InputStream) -> a
 com.coleman.kingword.study.wordlist.WordListActivity -> com.coleman.kingword.study.wordlist.WordListActivity:
     java.lang.String TAG -> a
     com.coleman.kingword.study.wordlist.WordListActivity$WordListAdapter adapter -> b
