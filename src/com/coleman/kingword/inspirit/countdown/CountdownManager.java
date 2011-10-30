@@ -1,6 +1,8 @@
 
 package com.coleman.kingword.inspirit.countdown;
 
+import java.io.Serializable;
+
 import android.content.Context;
 import android.os.Handler;
 import com.coleman.util.Log;
@@ -14,79 +16,46 @@ import com.coleman.kingword.study.CoreActivity;
  * 
  * @author coleman
  */
-public class CountdownManager {
-    private final long TOTAL_TIME;
+public class CountdownManager implements Serializable {
+    private static final long serialVersionUID = 7969022016568854596L;
 
     private static final String TAG = CountdownManager.class.getName();
 
-    private long startTime, pauseTime;
+    private final int TOTAL_TIME;
 
-    private boolean running = false;
+    private int costTime = 0;
 
-    private Handler handler;
+    private transient Handler handler;
 
-    public CountdownManager(Handler handler, int wordsNum) {
+    public void setHandler(Handler handler) {
         this.handler = handler;
-        this.TOTAL_TIME = 12 * wordsNum * 1000;
         start();
     }
 
-    private void start() {
-        running = true;
+    public CountdownManager(Handler handler, int wordsNum) {
+        this.handler = handler;
+        this.TOTAL_TIME = 12 * wordsNum;
+        start();
+    }
+
+    public void start() {
         handler.sendEmptyMessage(CoreActivity.UPDATE_REMAINDER_TIME);
-        startTime = System.currentTimeMillis();
     }
 
     public void pause() {
-        running = false;
-        pauseTime = System.currentTimeMillis();
-    }
-
-    public void resume() {
-        running = true;
-        update();
-        long curTime = System.currentTimeMillis();
-        startTime = startTime + (curTime - pauseTime);
-    }
-
-    public long getSpentTime() {
-        return System.currentTimeMillis() - startTime;
-    }
-
-    public String getRemainderTimeFormatted(Context context) {
-        long remainder = TOTAL_TIME - getSpentTime();
-        int m, s, ms;
-        boolean over = false;
-        if (remainder < 0) {
-            over = true;
-            remainder = -remainder;
-        }
-        m = (int) (remainder / (60 * 1000));
-        s = (int) (remainder / 1000 % 60);
-        ms = (int) (remainder % 1000);
-        String reStr = !over ? context.getString(R.string.remainder_time) + "\n" + getMString(m)
-                + ":" + getSString(s) + ":" + getMSString(ms) : context
-                .getString(R.string.over_time)
-                + "\n"
-                + getMString(m)
-                + ":"
-                + getSString(s)
-                + ":"
-                + getMSString(ms);
-        // Log.d(TAG, "********remainder time>>>" + reStr);
-        return reStr;
+        handler.sendEmptyMessage(CoreActivity.PAUSE_REMAINDER_TIME);
     }
 
     public String getRemainderTimeShortFormatted(Context context) {
-        long remainder = TOTAL_TIME - getSpentTime();
+        int remainder = TOTAL_TIME - costTime;
         int m, s;
         boolean over = false;
         if (remainder < 0) {
             over = true;
             remainder = -remainder;
         }
-        m = (int) (remainder / (60 * 1000));
-        s = (int) (remainder / 1000 % 60);
+        m = (int) (remainder / 60);
+        s = (int) (remainder % 60);
         String reStr = !over ? context.getString(R.string.remainder_time) + "\n" + getMString(m)
                 + ":" + getSString(s) : context.getString(R.string.over_time) + "\n"
                 + getMString(m) + ":" + getSString(s);
@@ -102,19 +71,8 @@ public class CountdownManager {
         return s < 10 ? "0" + s : "" + s;
     }
 
-    private String getMSString(int ms) {
-        if (ms < 10) {
-            return "00" + ms;
-        } else if (ms < 100) {
-            return "0" + ms;
-        } else {
-            return "" + ms;
-        }
-    }
-
     public void update() {
-        if (running) {
-            handler.sendEmptyMessageDelayed(CoreActivity.UPDATE_REMAINDER_TIME, 1000);
-        }
+        costTime++;
+        handler.sendEmptyMessageDelayed(CoreActivity.UPDATE_REMAINDER_TIME, 1000);
     }
 }

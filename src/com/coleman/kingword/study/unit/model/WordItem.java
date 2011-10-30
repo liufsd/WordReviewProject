@@ -1,6 +1,7 @@
 
 package com.coleman.kingword.study.unit.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
@@ -22,7 +23,9 @@ import com.coleman.kingword.study.unit.model.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordinfo.WordInfoVO;
 
-public class WordItem {
+public class WordItem implements Serializable{
+    private static final long serialVersionUID = 884726896304858319L;
+
     private static final String TAG = WordItem.class.getName();
 
     public long id;

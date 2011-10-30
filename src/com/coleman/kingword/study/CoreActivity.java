@@ -1,6 +1,10 @@
 
 package com.coleman.kingword.study;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -39,22 +43,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
-import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver;
-import com.coleman.kingword.study.unit.model.SliceWordList;
-import com.coleman.kingword.study.unit.model.WordItem;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.InitState;
+import com.coleman.kingword.study.unit.model.SliceWordList;
 import com.coleman.kingword.study.unit.model.SliceWordList.SubInfo;
+import com.coleman.kingword.study.unit.model.WordItem;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -120,6 +121,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private CountdownManager countdownManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +153,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 wordlist = new SliceWordList(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
+            case SliceWordList.RECOVERY_LIST:
+                DynamicTableManager.getInstance().initTables(this);
+                startService(new Intent(this, DictLoadService.class));
+                new ExpensiveTask(ExpensiveTask.INIT_RECOVERY_LIST).execute();
+                break;
             default:
                 finish();
                 break;
@@ -168,7 +175,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     protected void onResume() {
         if (countdownManager != null) {
-            countdownManager.resume();
+            countdownManager.start();
         }
         super.onResume();
     }
@@ -311,10 +318,52 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onDestroy() {
+        writeCacheObject();
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
         // ///////////////////////////////////////////
         super.onDestroy();
+    }
+
+    private void readCacheObject() {
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(new FileInputStream("/sdcard/kingword/obj.save"));
+            wordlist = (SliceWordList) ois.readObject();
+            countdownManager = (CountdownManager) ois.readObject();
+            countdownManager.setHandler(handler);
+            Log.d(TAG, "------------------------load cache");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ois.close();
+            } catch (Exception e2) {
+            }
+        }
+    }
+
+    private void writeCacheObject() {
+        new Thread() {
+            public void run() {
+                ObjectOutputStream oos = null;
+                try {
+                    oos = new ObjectOutputStream(new FileOutputStream("/sdcard/kingword/obj.save"));
+                    oos.writeObject(wordlist);
+                    oos.writeObject(countdownManager);
+                    AppSettings.saveBoolean(CoreActivity.this, AppSettings.SAVE_CACHE_KEY, true);
+                    Log.d(TAG, "------------------------save cache");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        oos.close();
+                    } catch (Exception e2) {
+                    }
+                }
+
+            };
+        }.start();
     }
 
     @Override
@@ -670,6 +719,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     public static final int UPDATE_REMAINDER_TIME = 5;
 
+    public static final int PAUSE_REMAINDER_TIME = 6;
+
     /**
      * Used to report a subwordlist msg or an inspirit msg.
      */
@@ -694,6 +745,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     countdownManager.update();
                     // Log.d(TAG, "remainder time: " +
                     // countdownManager.getRemainderTimeFormatted(CoreActivity.this));
+                    break;
+                case PAUSE_REMAINDER_TIME:
+                    countBtn.setText(countdownManager
+                            .getRemainderTimeShortFormatted(CoreActivity.this));
                     break;
                 default:
                     break;
@@ -846,6 +901,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
 
+        public static final byte INIT_RECOVERY_LIST = -9;
+
         public static final byte INIT_REVIEW_LIST = -8;
 
         public static final byte INIT_SCAN_LIST = -7;
@@ -898,6 +955,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     findViewById(R.id.linearLayout2).setVisibility(View.GONE);
                     countBtn.setVisibility(View.INVISIBLE);
                     break;
+                case INIT_RECOVERY_LIST:
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
@@ -954,6 +1012,17 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     bundle = new Bundle();
                     wordlist.loadReviewWordList(CoreActivity.this);
                     sliceListType = SliceWordList.REVIEW_LIST;
+                    if (!wordlist.allComplete()) {
+                        nextWordItem = wordlist.getCurrentWord();
+                        lookupInDict(nextWordItem);
+                        bundle.putBoolean("complete", false);
+                    } else {
+                        bundle.putBoolean("complete", true);
+                    }
+                    break;
+                case INIT_RECOVERY_LIST:
+                    readCacheObject();
+                    bundle = new Bundle();
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);
@@ -1058,12 +1127,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     applySlideIn();
                     break;
                 case INIT_REVIEW_LIST:
+                case INIT_RECOVERY_LIST:
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
-                        countdownManager = new CountdownManager(handler, wordlist.getCount());
+                        // if recovery list, the countdown manager will be
+                        // deserialized
+                        if (taskType != INIT_RECOVERY_LIST) {
+                            countdownManager = new CountdownManager(handler, wordlist.getCount());
+                        }
+
                         list.clear();
                         list.addAll(_buflist);
                         if (nextWordItem.isNewWord()) {
@@ -1086,7 +1161,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         } else {
                             ignoreOrNot.setText(R.string.ignore);
                         }
-                        if (taskType == INIT_SUB_WORD_LIST) {
+                        if (taskType == INIT_SUB_WORD_LIST || taskType == INIT_RECOVERY_LIST) {
                             loopView.setText(String.format(getString(R.string.loop_info),
                                     wordlist.getLoopIndex() + 1, wordlist.getLoopCount() + 1,
                                     wordlist.getCount() - wordlist.getIgnoreCount()));

@@ -1,6 +1,7 @@
 
 package com.coleman.kingword.study.unit.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
@@ -23,7 +24,9 @@ import com.coleman.kingword.study.unit.model.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordinfo.WordInfoVO;
 
-public class SliceWordList {
+public class SliceWordList implements Serializable{
+    private static final long serialVersionUID = -5435967694193721910L;
+
     private SubInfo subinfo;
 
     private ArrayList<WordItem> list;
@@ -75,7 +78,10 @@ public class SliceWordList {
 
     public static final byte NEW_WORD_BOOK_LIST = 4;
 
+    public static final byte RECOVERY_LIST = 5;
+    
     public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
+
 
     public SliceWordList(SubInfo info) {
         listType = SUB_WORD_LIST;
@@ -330,7 +336,9 @@ public class SliceWordList {
     /**
      * For map the index to the id storing in the database.
      */
-    public static class SubInfo implements Parcelable {
+    public static class SubInfo implements Parcelable,Serializable {
+        private static final long serialVersionUID = 911690030424514203L;
+
         public SubInfo(long id, int index, int level, long wordlist_id) {
             this.id = id;
             this.index = index;

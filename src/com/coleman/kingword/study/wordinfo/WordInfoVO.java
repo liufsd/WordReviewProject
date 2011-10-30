@@ -1,6 +1,8 @@
 
 package com.coleman.kingword.study.wordinfo;
 
+import java.io.Serializable;
+
 import com.coleman.kingword.R;
 
 import android.content.Context;
@@ -12,7 +14,9 @@ import com.coleman.util.Log;
 /**
  * Should only be used by WordItem and WordInfoHelper.
  */
-public class WordInfoVO implements Parcelable {
+public class WordInfoVO implements Parcelable,Serializable {
+    private static final long serialVersionUID = 3683192721924884338L;
+
     public static final byte MIN_WEIGHT = 0;
 
     public static final byte MAX_WEIGHT = 5;

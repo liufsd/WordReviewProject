@@ -5,13 +5,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,10 +26,10 @@ import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.info.InfoGather;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.study.unit.model.SliceWordList;
 import com.coleman.kingword.study.wordlist.WordListActivity;
 import com.coleman.kingword.study.wordlist.model.WordListManager;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Config;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -64,13 +63,33 @@ public class WelcomeActivity extends Activity {
         // init DictIndex list
         // DictManager.getInstance().initDictIndexList(this);
         DynamicTableManager.getInstance().initTables(this);
-        
-        //set cur lib and more lib
+
+        // set cur lib and more lib
         DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
         DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
-        
+
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
+
+        // check last study
+        checkLastStudy();
+    }
+
+    private void checkLastStudy() {
+        boolean isSave = AppSettings.getBoolean(this, AppSettings.SAVE_CACHE_KEY, false);
+        if (isSave) {
+            new AlertDialog.Builder(this).setTitle(R.string.recovery_tip)
+                    .setMessage(R.string.recovery_message)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Intent i = new Intent(WelcomeActivity.this, CoreActivity.class);
+                            i.putExtra("type", SliceWordList.RECOVERY_LIST);
+                            startActivity(i);
+                        }
+                    }).setNegativeButton(R.string.cancel, null).show();
+            AppSettings.saveBoolean(this, AppSettings.SAVE_CACHE_KEY, false);
+        }
     }
 
     @Override
@@ -112,7 +131,8 @@ public class WelcomeActivity extends Activity {
             }
 
             // set default lib load from internal or external
-            AppSettings.saveString(this, AppSettings.DICTS_KEY, "a49_stardict_1_3,false,true,1000,1;a50_oxford_gb_formated,false,true,1002,2");
+            AppSettings.saveString(this, AppSettings.DICTS_KEY,
+                    "a49_stardict_1_3,false,true,1000,1;a50_oxford_gb_formated,false,true,1002,2");
             System.out.println("...");
             // ///////////////////////////////////////////////
             // check if there is backup to restore

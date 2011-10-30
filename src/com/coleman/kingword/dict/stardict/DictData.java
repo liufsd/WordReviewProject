@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 import com.coleman.util.Config;
@@ -16,7 +17,9 @@ import android.os.Environment;
 import android.text.TextUtils;
 import com.coleman.util.Log;
 
-public class DictData {
+public class DictData implements Serializable{
+    private static final long serialVersionUID = -1508100039531151478L;
+
     private static final String TAG = DictData.class.getName();
 
     public String symbol;

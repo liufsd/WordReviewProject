@@ -1,6 +1,7 @@
 
 package com.coleman.kingword.study.unit.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,7 +16,9 @@ import android.os.Message;
  * Finite state machine is composite of an InitState, an group of states, some
  * input messages, some output messages, and the state transition function.
  */
-public class FiniteStateMachine {
+public class FiniteStateMachine implements Serializable{
+
+    private static final long serialVersionUID = -8116244691305999296L;
 
     private FiniteState mCurrentState;
 
@@ -108,7 +111,9 @@ public class FiniteStateMachine {
         mCurrentState = state;
     }
 
-    public abstract class FiniteState {
+    public abstract class FiniteState implements Serializable {
+        private static final long serialVersionUID = 6453121803787047807L;
+
         private Random ran = new Random();
 
         protected FiniteState nextState;
@@ -237,7 +242,9 @@ public class FiniteStateMachine {
         }
     }
 
-    private class FiniteStateEngine implements IFSMCommand {
+    private class FiniteStateEngine implements IFSMCommand,Serializable {
+        private static final long serialVersionUID = 762743574880645974L;
+
         private FiniteStateEngine() {
         }
 

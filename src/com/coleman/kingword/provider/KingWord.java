@@ -9,6 +9,7 @@ package com.coleman.kingword.provider;
  * Review      : 
  */
 import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -155,7 +156,9 @@ public class KingWord {
         }
     }
 
-    public static final class WordListItem implements BaseColumns {
+    public static final class WordListItem implements BaseColumns, Serializable {
+
+        private static final long serialVersionUID = -49108198357051291L;
 
         // table name
         public static final String TABLE_NAME = "word_list_item";

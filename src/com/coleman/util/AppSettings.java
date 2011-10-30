@@ -70,6 +70,8 @@ public class AppSettings {
 
     public static final String VIEW_DETAILED_INFO_KEY = "view_detailed_info";
 
+    public static final String SAVE_CACHE_KEY = "save_cache";
+
     public static void saveBoolean(Context context, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(key, value);

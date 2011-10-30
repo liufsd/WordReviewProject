@@ -3,6 +3,7 @@ package com.coleman.kingword.study.unit.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import com.coleman.util.Log;
 import android.view.LayoutInflater;
@@ -148,7 +149,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
                 Intent intent = new Intent(getContext(), CoreActivity.class);
                 intent.putExtra("type", SliceWordList.SUB_WORD_LIST);
                 SubInfo info = (SubInfo) (v.getTag());
-                intent.putExtra("subinfo", info);
+                intent.putExtra("subinfo", (Parcelable)info);
                 getContext().startActivity(intent);
                 break;
             default:

@@ -1,227 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="hello">Hello World, KingWordActivity!</string>
-	<string name="app_name">单词王</string>
-	<string name="nothing">1</string>
 
-	<string name="init_word_list">词库正在进行初使化...</string>
-	<string name="view_more">查看详细</string>
-	<string name="view_raw">查看简要</string>
-	<string name="view_select">查看选项</string>
-	<string name="upgrade">升级</string>
-	<string name="degrade">降级</string>
-	<string name="add_new">加入生词本</string>
-	<string name="remove_from_new">移除生词本</string>
-	<string name="ignore">忽略</string>
-	<string name="remove_from_ignore">逆忽略</string>
-	<string name="begin">开始</string>
-
-	<string name="review">复习</string>
-	<string name="review_complete">本次复习完成！</string>
-
-	<string name="review_1_hour">1小时</string>
-	<string name="review_12_hour">12小时</string>
-	<string name="review_1_day">1天</string>
-	<string name="review_5_day">5天</string>
-	<string name="review_20_day">20天</string>
-	<string name="review_40_day">40天</string>
-	<string name="review_60_day">60天</string>
-
-	<string name="new_word">生词</string>
-
-	<string name="delay">延迟10分钟</string>
-	<string name="review_reminder" formatted="false">距离你上次学习已经有%s，单击进入复习模式！
+    <string name="hello">Hello World, KingWordActivity!</string>
+    <string name="app_name">单词王</string>
+    <string name="nothing">1</string>
+    <string name="init_word_list">词库正在进行初使化...</string>
+    <string name="view_more">查看详细</string>
+    <string name="view_raw">查看简要</string>
+    <string name="view_select">查看选项</string>
+    <string name="upgrade">升级</string>
+    <string name="degrade">降级</string>
+    <string name="add_new">加入生词本</string>
+    <string name="remove_from_new">移除生词本</string>
+    <string name="ignore">忽略</string>
+    <string name="remove_from_ignore">逆忽略</string>
+    <string name="begin">开始</string>
+    <string name="review">复习</string>
+    <string name="review_complete">本次复习完成！</string>
+    <string name="review_1_hour">1小时</string>
+    <string name="review_12_hour">12小时</string>
+    <string name="review_1_day">1天</string>
+    <string name="review_5_day">5天</string>
+    <string name="review_20_day">20天</string>
+    <string name="review_40_day">40天</string>
+    <string name="review_60_day">60天</string>
+    <string name="new_word">生词</string>
+    <string name="delay">延迟10分钟</string>
+    <string formatted="false" name="review_reminder">距离你上次学习已经有%s，单击进入复习模式！
 	</string>
-	<string name="review_notify">你有一些单词需要复习了！</string>
-
-	<string name="hour">小时</string>
-	<string name="day">天</string>
-
-	<string name="backup">备份</string>
-	<string name="backup_msg">备份后的数据保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
+    <string name="review_notify">你有一些单词需要复习了！</string>
+    <string name="hour">小时</string>
+    <string name="day">天</string>
+    <string name="backup">备份</string>
+    <string name="backup_msg">备份后的数据保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
 	</string>
-	<string name="restore">恢复</string>
-	<string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？
+    <string name="restore">恢复</string>
+    <string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？
 	</string>
-
-	<string name="welcome">欢迎使用单词王！</string>
-	<string name="about_dev">关于开发</string>
-
-	<string name="anim_set">动画设置</string>
-	<string name="enable3d">开启3D特效</string>
-	<string name="not_enable3d">关闭3D特效</string>
-	<string name="night_mode">夜晚模式</string>
-	<string name="day_mode">白天模式</string>
-
-	<string name="view_new_book">进入生词本</string>
-	<string name="view_ignore_list">浏览过滤列表</string>
-
-	<string name="study_new_word_book_end">你完成了生词本的学习！</string>
-	<string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
-
-	<string name="continue_hit_count">%d Hit!</string>
-
-	<string name="new_unit">新单元</string>
-	<string name="unpass_unit">未通过</string>
-	<string name="low_level">通过</string>
-	<string name="mid_level">良好</string>
-	<string name="high_level">优秀</string>
-	<string name="history_level">没有超过历史最好成绩，将不计入新的成绩榜</string>
-
-	<string name="miss">选择错误！</string>
-
-	<string name="show_sub_list_reach_end">此单元学习已经完成！</string>
-	<string name="show_complete_study" formatted="false">您已完成此单元学习,正确率%s,此单元成绩%s！
+    <string name="welcome">欢迎使用单词王！</string>
+    <string name="about_dev">关于开发</string>
+    <string name="anim_set">动画设置</string>
+    <string name="enable3d">开启3D特效</string>
+    <string name="not_enable3d">关闭3D特效</string>
+    <string name="night_mode">夜晚模式</string>
+    <string name="day_mode">白天模式</string>
+    <string name="view_new_book">进入生词本</string>
+    <string name="view_ignore_list">浏览过滤列表</string>
+    <string name="study_new_word_book_end">你完成了生词本的学习！</string>
+    <string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
+    <string name="continue_hit_count">%d Hit!</string>
+    <string name="new_unit">新单元</string>
+    <string name="unpass_unit">未通过</string>
+    <string name="low_level">通过</string>
+    <string name="mid_level">良好</string>
+    <string name="high_level">优秀</string>
+    <string name="history_level">没有超过历史最好成绩，将不计入新的成绩榜</string>
+    <string name="miss">选择错误！</string>
+    <string name="show_sub_list_reach_end">此单元学习已经完成！</string>
+    <string formatted="false" name="show_complete_study">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
+    <string name="set_split_num_hint">设置单元单词数量</string>
+    <string name="set_review_time">设置复习时间点</string>
+    <string name="upgrade_success">单词升级成功</string>
+    <string name="degrade_success">单词降级成功</string>
+    <string name="ignore_success">单词忽略成功</string>
+    <string name="add_success">添加生词本成功</string>
+    <string name="remove_success">从生词本删除成功</string>
+    <string name="upgrade_failed">单词升级失败</string>
+    <string name="degrade_failed">单词降级失败</string>
+    <string name="ignore_failed">单词忽略失败</string>
+    <string name="add_failed">添加生词本失败</string>
+    <string name="remove_failed">从生词本删除失败</string>
+    <string name="send">发送</string>
+    <string name="send_to">发送给%s</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除 </string>
+    <string name="search">搜索</string>
+    <string name="delete_all">删除所有</string>
+    <string name="new_one">新建</string>
+    <string name="ok">确定 </string>
+    <string name="cancel">取消</string>
+    <string name="back">返回</string>
+    <string name="save">保存</string>
+    <string name="exit">退出</string>
+    <string name="split">分割</string>
+    <string name="clear">清除</string>
+    <string name="select_all">全部选择</string>
+    <string name="none_select">取消选择</string>
+    <string name="load">单词表加载</string>
+    <string name="set_option">设置选项</string>
+    <string name="path">路径:%s</string>
+    <string name="settings">设置</string>
+    <string name="not_set">未设置</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
+    <string name="option">选项</string>
+    <string name="contact_me">联系作者</string>
 
-	<string name="set_split_num_hint">设置单元单词数量</string>
-	<string name="set_review_time">设置复习时间点</string>
-
-	<string name="upgrade_success">单词升级成功</string>
-	<string name="degrade_success">单词降级成功</string>
-	<string name="ignore_success">单词忽略成功</string>
-	<string name="add_success">添加生词本成功</string>
-	<string name="remove_success">从生词本删除成功</string>
-
-	<string name="upgrade_failed">单词升级失败</string>
-	<string name="degrade_failed">单词降级失败</string>
-	<string name="ignore_failed">单词忽略失败</string>
-	<string name="add_failed">添加生词本失败</string>
-	<string name="remove_failed">从生词本删除失败</string>
-
-	<string name="send">发送</string>
-	<string name="send_to">发送给%s</string>
-	<string name="edit">编辑</string>
-	<string name="delete">删除 </string>
-	<string name="search">搜索</string>
-	<string name="delete_all">删除所有</string>
-	<string name="new_one">新建</string>
-	<string name="ok">确定 </string>
-	<string name="cancel">取消</string>
-	<string name="back">返回</string>
-	<string name="save">保存</string>
-	<string name="exit">退出</string>
-	<string name="split">分割</string>
-	<string name="clear">清除</string>
-	<string name="select_all">全部选择</string>
-	<string name="none_select">取消选择</string>
-	<string name="load">单词表加载</string>
-	<string name="set_option">设置选项</string>
-	<string name="path">路径:%s</string>
-	<string name="settings">设置</string>
-	<string name="not_set">未设置</string>
-
-	<string name="help">帮助</string>
-	<string name="about">关于</string>
-	<string name="option">选项</string>
-	<string name="contact_me">联系作者</string>
-
-	<!-- smsender setting option -->
-	<string name="default_favor">默认发送人</string>
-	<string name="add_favor">增加发送人</string>
-	<string name="delete_favor">删除发送人</string>
-	<string name="delete_all_favor">删除所有人</string>
-
-	<string name="save_hint">此操作会覆盖原文件，你确实要保存它吗？</string>
-
-	<string name="mail_subject">给作者的一封信</string>
-	<string name="mail_content">亲爱的Coleman:\n 你好!\n\n我很喜欢这个软件，谢谢你的无私贡献！</string>
-	<string name="help_title">帮助信息</string>
-	<string name="about_title">关于信息</string>
-	<string name="help_hint">暂无帮助信息！\n（警告：请勿使用此软件进行任何不法活动！）</string>
-	<string name="about_hint">献给梅子！\n\n——Coleman</string>
-
-	<string name="toast_media_unmounted">设备没有发现可用的外部存储卡！</string>
-
-	<string name="editor_hint">文字编辑框</string>
-	<string name="search_hint">输入你想查找的关键字！</string>
-	<!-- add a null pointer, to skip the build error -->
-	<string name="pointer">*p</string>
-
-	<string name="remainder_time">剩余时间</string>
-	<string name="over_time">超时</string>
-	<string name="countdown_conceal">隐藏倒计时</string>
-	<string name="countdown_show">显示倒计时</string>
-
-	<string name="color_set">顔色设置</string>
-	<string name="sbackground_color">背景</string>
-	<string name="sbackground_select">选择</string>
-	<string name="sfont_color">文字</string>
-	<string name="sreset">重置</string>
-
-	<string name="sday">白天</string>
-	<string name="snight">夜晚</string>
-	<string name="scustom">自定义</string>
-	<string name="sfont">字体</string>
-	<string name="sred">红</string>
-	<string name="sgreen">绿</string>
-	<string name="sblue">蓝</string>
-	<string name="strans">透明度</string>
-
-	<string name="cur_leve" formatted="false">当前等级: %s(%d词)</string>
-	<string name="next_level" formatted="false">下一等级: %s(%d词)</string>
-	<string name="top_level">你已经到达最高等级！</string>
-	<string name="learning_level_name_set">设置等级称号</string>
-	<string name="level_info">等级榜说明</string>
-	<string name="level_info_item" formatted="false">等级%d：%s（%d词）\n</string>
-
-	<string name="security_set">高级安全设置</string>
-	<string name="security_hint">
+    <!-- smsender setting option -->
+    <string name="default_favor">默认发送人</string>
+    <string name="add_favor">增加发送人</string>
+    <string name="delete_favor">删除发送人</string>
+    <string name="delete_all_favor">删除所有人</string>
+    <string name="save_hint">此操作会覆盖原文件，你确实要保存它吗？</string>
+    <string name="mail_subject">给作者的一封信</string>
+    <string name="mail_content">亲爱的Coleman:\n 你好!\n\n我很喜欢这个软件，谢谢你的无私贡献！</string>
+    <string name="help_title">帮助信息</string>
+    <string name="about_title">关于信息</string>
+    <string name="help_hint">暂无帮助信息！\n（警告：请勿使用此软件进行任何不法活动！）</string>
+    <string name="about_hint">献给梅子！\n\n——Coleman</string>
+    <string name="toast_media_unmounted">设备没有发现可用的外部存储卡！</string>
+    <string name="editor_hint">文字编辑框</string>
+    <string name="search_hint">输入你想查找的关键字！</string>
+    <!-- add a null pointer, to skip the build error -->
+    <string name="pointer">*p</string>
+    <string name="remainder_time">剩余时间</string>
+    <string name="over_time">超时</string>
+    <string name="countdown_conceal">隐藏倒计时</string>
+    <string name="countdown_show">显示倒计时</string>
+    <string name="color_set">顔色设置</string>
+    <string name="sbackground_color">背景</string>
+    <string name="sbackground_select">选择</string>
+    <string name="sfont_color">文字</string>
+    <string name="sreset">重置</string>
+    <string name="sday">白天</string>
+    <string name="snight">夜晚</string>
+    <string name="scustom">自定义</string>
+    <string name="sfont">字体</string>
+    <string name="sred">红</string>
+    <string name="sgreen">绿</string>
+    <string name="sblue">蓝</string>
+    <string name="strans">透明度</string>
+    <string formatted="false" name="cur_leve">当前等级: %s(%d词)</string>
+    <string formatted="false" name="next_level">下一等级: %s(%d词)</string>
+    <string name="top_level">你已经到达最高等级！</string>
+    <string name="learning_level_name_set">设置等级称号</string>
+    <string name="level_info">等级榜说明</string>
+    <string formatted="false" name="level_info_item">等级%d：%s（%d词）\n</string>
+    <string name="security_set">高级安全设置</string>
+    <string name="security_hint">
 		高级安全设置提供了一些作者不想公开的相对隐秘的设置，使用此设置需要认证，如果你不知道认证密码请按“获取密码”向软件作者索取。
 	</string>
-	<string name="show_pw">显示密码</string>
-	<string name="get_pw">获取密码</string>
-	<string name="input_pw">输入密码</string>
-	<string name="get_pw_hint">
+    <string name="show_pw">显示密码</string>
+    <string name="get_pw">获取密码</string>
+    <string name="input_pw">输入密码</string>
+    <string name="get_pw_hint">
 		请输入你的邮箱地址，并评价此软件，以获取高级设置认证密码，一般的你的申请会在七个工作日内得到处理，请耐心等候。
 	</string>
-	<string name="get_pw_request_sent">
+    <string name="get_pw_request_sent">
 		你已成功发送索取密码请求，请耐心等候作者回复！
 	</string>
-	<string name="get_pw_request_send_wait">
+    <string name="get_pw_request_send_wait">
 		你距离上次发送密码请求不满三天，请满三天之后再试！
 	</string>
-	<string name="pw_failed">你输入的密码有误，认证失败！</string>
-	<string name="pw_successed">密码正确，认证成功！</string>
-	<string name="high_level_settings">高级安全设置</string>
-	<string name="msg_dialog_title">消息提示</string>
-
-	<string name="loop_info" formatted="false">第%d轮（%d/%d词）</string>
-
-	<string name="enter_next_loop" formatted="false">进入第%d轮！</string>
-	<string name="view_method_dialog_title">查看方式设定</string>
-
-	<string name="sub_settings">查看单元</string>
-	<string name="review_settings">查看复习</string>
-	<string name="newbook_settings">查看生词</string>
-	<string name="ignore_settings">查看过滤</string>
-	<string name="add_method">添加</string>
-	<string name="view_method_empty_warn">操作失败，查看方式列表不能为空！</string>
-	<string name="view_method_success_hint">操作成功！</string>
-
-	<string name="view_sub_complete_title">单元学习</string>
-	<string name="view_review_complete_title">复习</string>
-	<string name="view_newbook_complete_title">生词本学习</string>
-	<string name="view_ignore_complete_title">过滤列表学习</string>
-
-	<string name="request_pw">申请密码</string>
-
-	<string name="version">版本号：</string>
-	<string name="mail">联系作者：</string>
-	<string name="copyright">Copyright@2009-2013 Coleman</string>
-
-	<string name="language_settings">数据库设定</string>
-
-	<string name="auth_introduce">免责声明：本软件仅供学习研究使用，所涉及的资源系网上搜集所得，如有涉嫌侵权请联系软件作者，在未收到相关通知前使用本软件所造成的相关法律责任一概与软件作者无关。
+    <string name="pw_failed">你输入的密码有误，认证失败！</string>
+    <string name="pw_successed">密码正确，认证成功！</string>
+    <string name="high_level_settings">高级安全设置</string>
+    <string name="msg_dialog_title">消息提示</string>
+    <string formatted="false" name="loop_info">第%d轮（%d/%d词）</string>
+    <string formatted="false" name="enter_next_loop">进入第%d轮！</string>
+    <string name="view_method_dialog_title">查看方式设定</string>
+    <string name="sub_settings">查看单元</string>
+    <string name="review_settings">查看复习</string>
+    <string name="newbook_settings">查看生词</string>
+    <string name="ignore_settings">查看过滤</string>
+    <string name="add_method">添加</string>
+    <string name="view_method_empty_warn">操作失败，查看方式列表不能为空！</string>
+    <string name="view_method_success_hint">操作成功！</string>
+    <string name="view_sub_complete_title">单元学习</string>
+    <string name="view_review_complete_title">复习</string>
+    <string name="view_newbook_complete_title">生词本学习</string>
+    <string name="view_ignore_complete_title">过滤列表学习</string>
+    <string name="request_pw">申请密码</string>
+    <string name="version">版本号：</string>
+    <string name="mail">联系作者：</string>
+    <string name="copyright">Copyright@2009-2013 Coleman</string>
+    <string name="language_settings">数据库设定</string>
+    <string name="auth_introduce">免责声明：本软件仅供学习研究使用，所涉及的资源系网上搜集所得，如有涉嫌侵权请联系软件作者，在未收到相关通知前使用本软件所造成的相关法律责任一概与软件作者无关。
 	</string>
-
-	<string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！
+    <string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！
 	</string>
+    <string name="rename">重命名</string>
+    <string name="input_dialog_title">输入框</string>
+    <string name="warning_dialog_title">警告</string>
+    <string formatted="false" name="delete_warning">你确定要删除单词表%s吗？</string>
+    <string name="no_need_review">没有需要复习的单词！</string>
+    <string name="recovery_tip">恢复提醒</string>
+    <string name="recovery_message">你有未完成的学习进度，是否载入这个进度？</string>
 
-	<string name="rename">重命名</string>
-	<string name="input_dialog_title">输入框</string>
-	<string name="warning_dialog_title">警告</string>
-	<string name="delete_warning" formatted="false">你确定要删除单词表%s吗？</string>
-	
-	<string name="no_need_review">没有需要复习的单词！</string>
 </resources>
