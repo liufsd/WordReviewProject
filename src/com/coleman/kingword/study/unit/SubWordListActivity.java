@@ -208,13 +208,13 @@ public class SubWordListActivity extends Activity {
             d_x = (int) event.getX();
         } else if (MotionEvent.ACTION_UP == event.getAction()) {
             u_x = (int) event.getX();
-            if (u_x - d_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
+            if (u_x - d_x > getWindowManager().getDefaultDisplay().getWidth() / 5) {
                 if (pageControl.hasPreviousPage()) {
                     SubInfo sub_ids[] = pageControl.moveToPrePage();
                     mSwitcher.showPreviousScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                 }
-            } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 3) {
+            } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 5) {
                 if (pageControl.hasNextPage()) {
                     SubInfo sub_ids[] = pageControl.moveToNextPage();
                     mSwitcher.showNextScreen(sub_ids);
@@ -224,5 +224,4 @@ public class SubWordListActivity extends Activity {
         }
         return super.onTouchEvent(event);
     }
-
 }
