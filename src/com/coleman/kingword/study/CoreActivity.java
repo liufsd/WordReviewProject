@@ -23,6 +23,8 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,7 +61,8 @@ import com.coleman.kingword.study.unit.model.WordItem;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
-public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener {
+public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
+        OnInitListener {
     private static final String TAG = CoreActivity.class.getName();
 
     private static final int SET_COLOR = 0;
@@ -94,6 +97,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private byte sliceListType;
 
     private Anim anim;
+
+    private Button btnSpeak;
+
+    private TextToSpeech tts;
 
     public static enum Anim {
         ANIM_3D(0), ANIM_SLIDE(1), ANIM_FADE(2);
@@ -162,6 +169,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 finish();
                 break;
         }
+
+        tts = new TextToSpeech(this, this);
     }
 
     @Override
@@ -318,7 +327,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onDestroy() {
+        //backup this time study progress
         writeCacheObject();
+        
+        //shutdown the text-to-speech
+        tts.shutdown();
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
         // ///////////////////////////////////////////
@@ -343,27 +356,34 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
     }
 
-    private void writeCacheObject() {
-        new Thread() {
-            public void run() {
-                ObjectOutputStream oos = null;
-                try {
-                    oos = new ObjectOutputStream(new FileOutputStream("/sdcard/kingword/obj.save"));
-                    oos.writeObject(wordlist);
-                    oos.writeObject(countdownManager);
-                    AppSettings.saveBoolean(CoreActivity.this, AppSettings.SAVE_CACHE_KEY, true);
-                    Log.d(TAG, "------------------------save cache");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        oos.close();
-                    } catch (Exception e2) {
-                    }
-                }
+    private boolean needWriteCache = true;
 
-            };
-        }.start();
+    private void writeCacheObject() {
+        if (needWriteCache
+                && (sliceListType == SliceWordList.SUB_WORD_LIST || sliceListType == SliceWordList.RECOVERY_LIST)) {
+            new Thread() {
+                public void run() {
+                    ObjectOutputStream oos = null;
+                    try {
+                        oos = new ObjectOutputStream(new FileOutputStream(
+                                "/sdcard/kingword/obj.save"));
+                        oos.writeObject(wordlist);
+                        oos.writeObject(countdownManager);
+                        AppSettings
+                                .saveBoolean(CoreActivity.this, AppSettings.SAVE_CACHE_KEY, true);
+                        Log.d(TAG, "------------------------save cache");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            oos.close();
+                        } catch (Exception e2) {
+                        }
+                    }
+
+                };
+            }.start();
+        }
     }
 
     @Override
@@ -451,10 +471,31 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.countdown:
                 slideRightOut(countBtn);
                 break;
+            case R.id.btn_speak:
+                playVoice(nextWordItem.word);
+                break;
             default:
                 break;
         }
 
+    }
+
+    private void playVoice(String word) {
+        try {
+            tts.speak(word, TextToSpeech.QUEUE_ADD, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void finish() {
+        needWriteCache = false;
+        super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.finish();
     }
 
     private void slideRightIn(final Button view) {
@@ -507,6 +548,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         addOrRemove = (Button) findViewById(R.id.add_or_remove);
         ignoreOrNot = (Button) findViewById(R.id.ignore_or_not);
         countBtn = (Button) findViewById(R.id.countdown);
+        btnSpeak = (Button) findViewById(R.id.btn_speak);
 
         progressBarDay = (ProgressBar) findViewById(R.id.progressBarDay1);
         progressBarNight = (ProgressBar) findViewById(R.id.progressBarNight1);
@@ -519,6 +561,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         viewWord.setOnClickListener(this);
         ignoreOrNot.setOnClickListener(this);
         countBtn.setOnClickListener(this);
+        btnSpeak.setOnClickListener(this);
 
         adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
@@ -719,8 +762,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     public static final int UPDATE_REMAINDER_TIME = 5;
 
-    public static final int PAUSE_REMAINDER_TIME = 6;
-
     /**
      * Used to report a subwordlist msg or an inspirit msg.
      */
@@ -745,10 +786,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     countdownManager.update();
                     // Log.d(TAG, "remainder time: " +
                     // countdownManager.getRemainderTimeFormatted(CoreActivity.this));
-                    break;
-                case PAUSE_REMAINDER_TIME:
-                    countBtn.setText(countdownManager
-                            .getRemainderTimeShortFormatted(CoreActivity.this));
                     break;
                 default:
                     break;
@@ -1357,6 +1394,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
             matrix.preTranslate(-centerX, -centerY);
             matrix.postTranslate(centerX, centerY);
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            btnSpeak.setVisibility(View.VISIBLE);
+        } else {
+            btnSpeak.setVisibility(View.GONE);
         }
     }
 }

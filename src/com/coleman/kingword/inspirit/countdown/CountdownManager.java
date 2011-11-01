@@ -43,7 +43,7 @@ public class CountdownManager implements Serializable {
     }
 
     public void pause() {
-        handler.sendEmptyMessage(CoreActivity.PAUSE_REMAINDER_TIME);
+        handler.removeMessages(CoreActivity.UPDATE_REMAINDER_TIME);
     }
 
     public String getRemainderTimeShortFormatted(Context context) {
