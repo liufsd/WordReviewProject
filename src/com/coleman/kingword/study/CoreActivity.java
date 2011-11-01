@@ -644,10 +644,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     }
                 });
                 textView.startAnimation(a);
+                btnSpeak.startAnimation(a);
                 listView.startAnimation(a);
             }
         });
         textView.startAnimation(anim);
+        btnSpeak.startAnimation(anim);
         listView.startAnimation(anim);
     }
 

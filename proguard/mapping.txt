@@ -327,6 +327,7 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     void access$31(com.coleman.kingword.study.CoreActivity) -> z
     void access$32(com.coleman.kingword.study.CoreActivity) -> A
     void access$33(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.CoreActivity$Anim) -> a
+    android.widget.Button access$34(com.coleman.kingword.study.CoreActivity) -> B
 com.coleman.kingword.study.CoreActivity$1 -> com.coleman.kingword.study.ac:
     com.coleman.kingword.study.CoreActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
