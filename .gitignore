@@ -4,3 +4,4 @@ progard.cfg
 .settings
 default.properties
 gen/
+proguard/

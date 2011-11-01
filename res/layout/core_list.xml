@@ -72,14 +72,13 @@
             android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="55dp"
-            android:layout_below="@id/progressBarLayout"
-            android:paddingTop="2dp" >
+            android:layout_below="@id/progressBarLayout" >
 
             <Button
                 android:id="@+id/btn_speak"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/speak" >
             </Button>
 
