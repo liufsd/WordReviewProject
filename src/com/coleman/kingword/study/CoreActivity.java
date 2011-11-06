@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
@@ -156,6 +157,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 break;
             case SliceWordList.REVIEW_LIST:
                 DynamicTableManager.getInstance().initTables(this);
+                DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
+                DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
                 startService(new Intent(this, DictLoadService.class));
                 wordlist = new SliceWordList(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
@@ -809,6 +812,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void showCompleteStudyDialog() {
         String title = "", msg = "";
         switch (sliceListType) {
+            case SliceWordList.RECOVERY_LIST:
             case SliceWordList.SUB_WORD_LIST: {
                 String str1 = wordlist.getCorrectPercentage() + "%";
                 String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
