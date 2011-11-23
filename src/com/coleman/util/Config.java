@@ -40,7 +40,6 @@ public final class Config {
 
     public static boolean isExternalMediaMounted() {
         String state = Environment.getExternalStorageState();
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + state);
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
         }

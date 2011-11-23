@@ -254,15 +254,16 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     byte sliceListType -> r
     com.coleman.kingword.study.CoreActivity$Anim anim -> s
     android.widget.Button btnSpeak -> t
-    android.speech.tts.TextToSpeech tts -> u
-    com.coleman.kingword.inspirit.countdown.CountdownManager countdownManager -> v
-    int selectMode -> w
-    int textColor -> x
-    int bgColor -> y
-    int selectColor -> z
-    boolean needWriteCache -> A
-    java.util.ArrayList _buflist -> B
-    android.os.Handler handler -> C
+    boolean autoSpeak -> u
+    android.speech.tts.TextToSpeech tts -> v
+    com.coleman.kingword.inspirit.countdown.CountdownManager countdownManager -> w
+    int selectMode -> x
+    int textColor -> y
+    int bgColor -> z
+    int selectColor -> A
+    boolean needWriteCache -> B
+    java.util.ArrayList _buflist -> C
+    android.os.Handler handler -> D
     void onCreate(android.os.Bundle) -> onCreate
     void onPause() -> onPause
     void onResume() -> onResume
@@ -279,6 +280,8 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     void updateLoopCount() -> g
     void onClick(android.view.View) -> onClick
+    boolean onLongClick(android.view.View) -> onLongClick
+    void onInit(int) -> onInit
     void playVoice(java.lang.String) -> a
     void finish() -> finish
     void onBackPressed() -> onBackPressed
@@ -292,7 +295,6 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     void lookupInDict(com.coleman.kingword.study.unit.model.WordItem) -> a
     void showSubListReachEndDialog() -> l
     void showCompleteStudyDialog() -> m
-    void onInit(int) -> onInit
     void access$0(com.coleman.kingword.study.CoreActivity) -> a
     void access$1(com.coleman.kingword.study.CoreActivity) -> b
     android.widget.Button access$2(com.coleman.kingword.study.CoreActivity) -> c
@@ -312,22 +314,24 @@ com.coleman.kingword.study.CoreActivity -> com.coleman.kingword.study.CoreActivi
     void access$16(com.coleman.kingword.study.CoreActivity,byte) -> a
     void access$17(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.unit.model.WordItem) -> b
     void access$18(com.coleman.kingword.study.CoreActivity) -> p
-    android.widget.Button access$19(com.coleman.kingword.study.CoreActivity) -> q
-    void access$20(com.coleman.kingword.study.CoreActivity) -> r
-    android.os.Handler access$21(com.coleman.kingword.study.CoreActivity) -> s
-    void access$22(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.inspirit.countdown.CountdownManager) -> a
-    android.widget.ProgressBar access$23(com.coleman.kingword.study.CoreActivity) -> t
-    android.widget.ProgressBar access$24(com.coleman.kingword.study.CoreActivity) -> u
-    android.widget.Button access$25(com.coleman.kingword.study.CoreActivity) -> v
-    android.widget.Button access$26(com.coleman.kingword.study.CoreActivity) -> w
-    android.widget.TextView access$27(com.coleman.kingword.study.CoreActivity) -> x
-    java.lang.String access$28() -> a
-    com.coleman.kingword.study.CoreActivity$Anim access$29(com.coleman.kingword.study.CoreActivity) -> y
-    void access$30(com.coleman.kingword.study.CoreActivity,float,float) -> a
-    void access$31(com.coleman.kingword.study.CoreActivity) -> z
-    void access$32(com.coleman.kingword.study.CoreActivity) -> A
-    void access$33(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.CoreActivity$Anim) -> a
-    android.widget.Button access$34(com.coleman.kingword.study.CoreActivity) -> B
+    boolean access$19(com.coleman.kingword.study.CoreActivity) -> q
+    void access$20(com.coleman.kingword.study.CoreActivity,java.lang.String) -> a
+    android.widget.Button access$21(com.coleman.kingword.study.CoreActivity) -> r
+    void access$22(com.coleman.kingword.study.CoreActivity) -> s
+    android.os.Handler access$23(com.coleman.kingword.study.CoreActivity) -> t
+    void access$24(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.inspirit.countdown.CountdownManager) -> a
+    android.widget.ProgressBar access$25(com.coleman.kingword.study.CoreActivity) -> u
+    android.widget.ProgressBar access$26(com.coleman.kingword.study.CoreActivity) -> v
+    android.widget.Button access$27(com.coleman.kingword.study.CoreActivity) -> w
+    android.widget.Button access$28(com.coleman.kingword.study.CoreActivity) -> x
+    android.widget.TextView access$29(com.coleman.kingword.study.CoreActivity) -> y
+    java.lang.String access$30() -> a
+    com.coleman.kingword.study.CoreActivity$Anim access$31(com.coleman.kingword.study.CoreActivity) -> z
+    void access$32(com.coleman.kingword.study.CoreActivity,float,float) -> a
+    void access$33(com.coleman.kingword.study.CoreActivity) -> A
+    void access$34(com.coleman.kingword.study.CoreActivity) -> B
+    void access$35(com.coleman.kingword.study.CoreActivity,com.coleman.kingword.study.CoreActivity$Anim) -> a
+    android.widget.Button access$36(com.coleman.kingword.study.CoreActivity) -> C
 com.coleman.kingword.study.CoreActivity$1 -> com.coleman.kingword.study.ac:
     com.coleman.kingword.study.CoreActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
@@ -700,7 +704,7 @@ com.coleman.kingword.study.unit.SubWordListActivity$PageControl -> com.coleman.k
     boolean hasPreviousPage() -> d
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToNextPage() -> e
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] moveToPrePage() -> f
-com.coleman.kingword.study.unit.model.FiniteStateMachine -> com.coleman.kingword.study.unit.model.f:
+com.coleman.kingword.study.unit.model.FiniteStateMachine -> com.coleman.kingword.study.unit.model.g:
     com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState mCurrentState -> a
     com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteStateEngine mStateEngine -> b
     java.util.ArrayList mStateList -> c
@@ -790,7 +794,7 @@ com.coleman.kingword.study.unit.model.SliceWordList$SubInfo -> com.coleman.kingw
     java.lang.String toString() -> toString
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.coleman.kingword.study.unit.model.SliceWordList$SubInfo$1 -> com.coleman.kingword.study.unit.model.g:
+com.coleman.kingword.study.unit.model.SliceWordList$SubInfo$1 -> com.coleman.kingword.study.unit.model.f:
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo createFromParcel(android.os.Parcel) -> a
     com.coleman.kingword.study.unit.model.SliceWordList$SubInfo[] newArray(int) -> a
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel

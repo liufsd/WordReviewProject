@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -63,7 +64,7 @@ import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
-        OnInitListener {
+        OnInitListener, OnLongClickListener {
     private static final String TAG = CoreActivity.class.getName();
 
     private static final int SET_COLOR = 0;
@@ -100,6 +101,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private Anim anim;
 
     private Button btnSpeak;
+
+    private boolean autoSpeak;
 
     private TextToSpeech tts;
 
@@ -330,10 +333,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onDestroy() {
-        //backup this time study progress
+        // backup this time study progress
         writeCacheObject();
-        
-        //shutdown the text-to-speech
+
+        // shutdown the text-to-speech
         tts.shutdown();
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
@@ -483,6 +486,34 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_speak:
+                if (!autoSpeak) {
+                    btnSpeak.setBackgroundResource(R.drawable.speak_auto);
+                    playVoice(nextWordItem.word);
+                }
+                else{
+                    btnSpeak.setBackgroundResource(R.drawable.speak);
+                }
+                autoSpeak = !autoSpeak;
+                return true;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            btnSpeak.setVisibility(View.VISIBLE);
+        } else {
+            btnSpeak.setVisibility(View.GONE);
+        }
+    }
+
     private void playVoice(String word) {
         try {
             tts.speak(word, TextToSpeech.QUEUE_ADD, null);
@@ -565,6 +596,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         ignoreOrNot.setOnClickListener(this);
         countBtn.setOnClickListener(this);
         btnSpeak.setOnClickListener(this);
+
+        btnSpeak.setOnLongClickListener(this);
 
         adapter = new ParaphraseAdapter();
         listView.setAdapter(adapter);
@@ -1102,6 +1135,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getNext();
                         lookupInDict(nextWordItem);
+                        if(autoSpeak){
+                            playVoice(nextWordItem.word);
+                        }
                         bundle.putBoolean("next", true);
                     } else {
                         bundle.putBoolean("next", false);
@@ -1400,15 +1436,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
             matrix.preTranslate(-centerX, -centerY);
             matrix.postTranslate(centerX, centerY);
-        }
-    }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            btnSpeak.setVisibility(View.VISIBLE);
-        } else {
-            btnSpeak.setVisibility(View.GONE);
         }
     }
 }
