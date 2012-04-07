@@ -11,13 +11,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import com.coleman.util.Log;
 
-import com.coleman.kingword.provider.KingWord.SubWordsList;
-import com.coleman.kingword.provider.KingWord.WordListItem;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
 import com.coleman.kingword.study.unit.model.SliceWordList.SubInfo;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();
@@ -186,8 +185,9 @@ public class WordListManager {
     }
 
     private void doInsertSubWordList(Context context, SubInfo sub) {
-        Uri uri = context.getContentResolver().insert(SubWordsList.CONTENT_URI,
-                sub.toContentValues());
+        Uri uri = context.getContentResolver().insert(
+                com.coleman.kingword.provider.WordListManager.getInstance()
+                        .getCurrentSubWordsList().getContentUri(), sub.toContentValues());
         sub.id = Long.parseLong(uri.getPathSegments().get(1));
     }
 
@@ -200,7 +200,9 @@ public class WordListManager {
             cv[i].put(WordListItem.SUB_WORD_LIST_ID, sub.id);
             i++;
         }
-        context.getContentResolver().bulkInsert(WordListItem.CONTENT_URI, cv);
+        context.getContentResolver().bulkInsert(
+                com.coleman.kingword.provider.WordListManager.getInstance()
+                        .getCurrentWordListItem().getContentUri(), cv);
     }
 
     private void sort(ArrayList<String> list) {

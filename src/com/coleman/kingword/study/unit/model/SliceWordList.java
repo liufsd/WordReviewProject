@@ -14,13 +14,14 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.provider.KingWord.WordsList.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
+import com.coleman.kingword.provider.WordListManager;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.CompleteState;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordinfo.WordInfoVO;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
-public class SliceWordList implements Serializable{
+public class SliceWordList implements Serializable {
     private static final long serialVersionUID = -5435967694193721910L;
 
     private SubInfo subinfo;
@@ -75,9 +76,8 @@ public class SliceWordList implements Serializable{
     public static final byte NEW_WORD_BOOK_LIST = 4;
 
     public static final byte RECOVERY_LIST = 5;
-    
-    public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
+    public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
     public SliceWordList(SubInfo info) {
         listType = SUB_WORD_LIST;
@@ -173,7 +173,8 @@ public class SliceWordList implements Serializable{
 
     private void loadSubList(Context context) {
         long time = System.currentTimeMillis();
-        Cursor c = context.getContentResolver().query(WordListItem.CONTENT_URI, projection,
+        Cursor c = context.getContentResolver().query(
+                WordListManager.getInstance().getCurrentWordListItem().getContentUri(), projection,
                 WordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
         if (c.moveToFirst()) {
             WordItem item;
@@ -324,7 +325,8 @@ public class SliceWordList implements Serializable{
 
     private void update(Context context) {
         ContentValues values = subinfo.toContentValues();
-        int num = context.getContentResolver().update(SubWordsList.CONTENT_URI, values,
+        int num = context.getContentResolver().update(
+                WordListManager.getInstance().getCurrentSubWordsList().getContentUri(), values,
                 SubWordsList._ID + "=" + subinfo.id, null);
         Log.d(TAG, "sub word list update num: " + num);
     }
@@ -332,7 +334,7 @@ public class SliceWordList implements Serializable{
     /**
      * For map the index to the id storing in the database.
      */
-    public static class SubInfo implements Parcelable,Serializable {
+    public static class SubInfo implements Parcelable, Serializable {
         private static final long serialVersionUID = 911690030424514203L;
 
         public SubInfo(long id, int index, int level, long wordlist_id) {

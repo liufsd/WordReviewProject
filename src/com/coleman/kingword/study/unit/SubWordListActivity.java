@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.kingword.provider.KingWord.WordsList.SubWordsList;
+import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
+import com.coleman.kingword.provider.WordListManager;
 import com.coleman.kingword.study.unit.model.SliceWordList.SubInfo;
 import com.coleman.kingword.study.unit.view.SlideTableSwitcher;
 
@@ -87,8 +89,9 @@ public class SubWordListActivity extends Activity {
                             SubWordsList._ID, SubWordsList.LEVEL
                     };
                     long wordlist_id = params[0].getLong(WordsList._ID);
-                    Cursor c = getContentResolver().query(SubWordsList.CONTENT_URI, projection,
-                            SubWordsList.WORD_LIST_ID + "=" + wordlist_id, null, null);
+                    Cursor c = getContentResolver().query(
+                            WordListManager.getInstance().getCurrentSubWordsList().getContentUri(),
+                            projection, SubWordsList.WORD_LIST_ID + "=" + wordlist_id, null, null);
                     ArrayList<SubInfo> list = new ArrayList<SubInfo>();
                     int i = 1;
                     if (c.moveToFirst()) {
