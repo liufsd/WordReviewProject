@@ -9,20 +9,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
-
-import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.provider.KingWord.SubWordsList;
-import com.coleman.kingword.provider.KingWord.WordListItem;
+import com.coleman.kingword.provider.KingWord.WordsList.SubWordsList;
+import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.CompleteState;
-import com.coleman.kingword.study.unit.model.FiniteStateMachine.InitState;
-import com.coleman.kingword.study.unit.model.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordinfo.WordInfoVO;
+import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 public class SliceWordList implements Serializable{
     private static final long serialVersionUID = -5435967694193721910L;

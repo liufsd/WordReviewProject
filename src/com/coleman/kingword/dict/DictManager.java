@@ -1,23 +1,17 @@
 
 package com.coleman.kingword.dict;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.dict.stardict.DictLibraryFactory;
 import com.coleman.kingword.provider.DictIndexManager;
-import com.coleman.kingword.provider.UpgradeManager;
-import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
-import com.coleman.util.AppSettings;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.Log;
 
 /**
@@ -89,7 +83,7 @@ public class DictManager {
         long time = System.currentTimeMillis();
         try {
             DictLibraryFactory factory = new DictLibraryFactory();
-            for (DictIndexTable table : DictIndexManager.getInstance().getHashMap().values()) {
+            for (TDictIndex table : DictIndexManager.getInstance().getHashMap().values()) {
                 factory.loadLibrary(context, table.TABLE_NAME, DynamicTableManager.getInstance()
                         .isInternal(table.TABLE_NAME), libmap);
             }

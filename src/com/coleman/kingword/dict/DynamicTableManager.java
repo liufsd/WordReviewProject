@@ -9,10 +9,9 @@ import java.util.HashMap;
 import android.content.Context;
 import android.os.Environment;
 
-import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.provider.DictIndexManager;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.kingword.provider.UpgradeManager;
-import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -77,17 +76,15 @@ public class DynamicTableManager {
         boolean upgrade = false;
         for (DictIndexDescribeTable t : map.values()) {
             if (!t.internal && !storagelist.contains(t.name)) {
-                DictIndexManager.getInstance().getDropList().add(new DictIndexTable(t.name, t.id));
+                DictIndexManager.getInstance().getDropList().add(new TDictIndex(t.name));
                 removelist.add(t.name);
                 upgrade = true;
             } else {
                 if (!t.loaded) {
-                    DictIndexManager.getInstance().getCreateList()
-                            .add(new DictIndexTable(t.name, t.id));
+                    DictIndexManager.getInstance().getCreateList().add(new TDictIndex(t.name));
                     upgrade = true;
                 }
-                DictIndexManager.getInstance().getHashMap()
-                        .put(t.name, new DictIndexTable(t.name, t.id));
+                DictIndexManager.getInstance().getHashMap().put(t.name, new TDictIndex(t.name));
             }
         }
         for (String string : removelist) {
@@ -107,8 +104,7 @@ public class DynamicTableManager {
         // handle external dicts
         for (String s : storagelist) {
             if (!map.containsKey(s)) {
-                max += 2;
-                DictIndexTable table = new DictIndexTable(s, max);
+                TDictIndex table = new TDictIndex(s);
                 DictIndexManager.getInstance().getCreateList().add(table);
                 DictIndexManager.getInstance().getHashMap().put(s, table);
                 map.put(s, new DictIndexDescribeTable(s, false, false, max, 0));

@@ -7,8 +7,7 @@ import android.text.TextUtils;
 
 import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.provider.DictIndexManager;
-import com.coleman.kingword.provider.KingWord.IDictIndex;
-import com.coleman.util.AppSettings;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.Log;
 
 public class DictLibrary {
@@ -63,13 +62,13 @@ public class DictLibrary {
     public DictIndex getDictIndex(Context context, String word) {
         DictIndex di = null;
         String[] projection = new String[] {
-                IDictIndex.WORD, IDictIndex.OFFSET, IDictIndex.SIZE
+                TDictIndex.WORD, TDictIndex.OFFSET, TDictIndex.SIZE
         };
         if (dbInitialed) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    DictIndexManager.getInstance().getTable(mLibKey).CONTENT_URI, projection,
-                    IDictIndex.WORD + " = '" + word + "'", null, null);
+                    DictIndexManager.getInstance().getTable(mLibKey).getContentUri(), projection,
+                    TDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
@@ -81,9 +80,10 @@ public class DictLibrary {
             // if not found the word from the index databases, try to query the
             // lower case of the word from the index database
             if (di == null) {
-                c = context.getContentResolver().query(
-                        DictIndexManager.getInstance().getTable(mLibKey).CONTENT_URI, projection,
-                        IDictIndex.WORD + " = '" + word.toLowerCase() + "'", null, null);
+                c = context.getContentResolver()
+                        .query(DictIndexManager.getInstance().getTable(mLibKey).getContentUri(),
+                                projection, TDictIndex.WORD + " = '" + word.toLowerCase() + "'",
+                                null, null);
                 if (c.moveToFirst()) {
                     di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
                 }

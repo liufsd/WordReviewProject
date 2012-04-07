@@ -11,21 +11,14 @@ package com.coleman.kingword.provider;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.provider.ContactsContract.Contacts.Data;
 
 public class KingWord {
-    public static interface IDictIndex {
-        // fields
-        public static String WORD = "word";
+    public static final HashMap<String, HashMap<String, String>> maps = new HashMap<String, HashMap<String, String>>();
 
-        public static String OFFSET = "offset";
-
-        public static String SIZE = "size";
-    }
-
-    public static final class Dict implements BaseColumns {
+    public static final class TDict implements BaseColumns {
         // table name
         public static final String TABLE_NAME = "name";
 
@@ -48,9 +41,10 @@ public class KingWord {
             projectionMap.put(_ID, _ID);
             projectionMap.put(DICT_INDEX_NAME, DICT_INDEX_NAME);
             projectionMap.put(DATE, DATE);
+            maps.put(TABLE_NAME, projectionMap);
         }
 
-        public static class DictIndex implements BaseColumns {
+        public static class TDictIndex implements BaseColumns {
             public static final String TABLE_NAME_PREFIX = "dict_index_";
 
             // table name
@@ -86,9 +80,10 @@ public class KingWord {
                         + TABLE_NAME);
             }
 
-            public DictIndex(String tableName) {
+            public TDictIndex(String tableName) {
                 // table name
                 TABLE_NAME = TABLE_NAME_PREFIX + tableName;
+                maps.put(TABLE_NAME, projectionMap);
             }
 
             public String toString() {
@@ -146,6 +141,7 @@ public class KingWord {
             projectionMap.put(NEW_WORD, NEW_WORD);
             projectionMap.put(REVIEW_TYPE, REVIEW_TYPE);
             projectionMap.put(REVIEW_TIME, REVIEW_TIME);
+            maps.put(TABLE_NAME, projectionMap);
         }
     }
 
@@ -184,6 +180,7 @@ public class KingWord {
             projectionMap.put(COUNT, COUNT);
             projectionMap.put(DESCRIBE, DESCRIBE);
             projectionMap.put(SUBTYPE, SUBTYPE);
+            maps.put(TABLE_NAME, projectionMap);
         }
     }
 
@@ -223,6 +220,7 @@ public class KingWord {
             projectionMap.put(PATH_NAME, PATH_NAME);
             projectionMap.put(SET_METHOD, SET_METHOD);
             projectionMap.put(WORDLIST_NAME, WORDLIST_NAME);
+            maps.put(TABLE_NAME, projectionMap);
         }
 
         public static final class SubWordsList implements BaseColumns {
@@ -249,6 +247,7 @@ public class KingWord {
 
             public SubWordsList(String tableName) {
                 TABLE_NAME = TABLE_NAME_PREFIX + tableName;
+                maps.put(TABLE_NAME, projectionMap);
             }
 
             public Uri getContentUri() {
@@ -290,6 +289,7 @@ public class KingWord {
 
             public WordListItem(String tableName) {
                 TABLE_NAME = TABLE_NAME_PREFIX + tableName;
+                maps.put(TABLE_NAME, projectionMap);
             }
 
             public Uri getContentUri() {

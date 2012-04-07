@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.provider.KingWord.WordsList.SubWordsList;
 import com.coleman.kingword.study.unit.model.SliceWordList.SubInfo;
 import com.coleman.kingword.study.unit.view.SlideTableSwitcher;
 

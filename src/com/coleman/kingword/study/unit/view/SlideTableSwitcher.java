@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import com.coleman.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,9 +15,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.provider.KingWord.SubWordsList;
 import com.coleman.kingword.study.CoreActivity;
-import com.coleman.kingword.study.unit.SubWordListActivity;
 import com.coleman.kingword.study.unit.model.SliceWordList;
 import com.coleman.kingword.study.unit.model.SliceWordList.SubInfo;
 

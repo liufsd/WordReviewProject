@@ -32,8 +32,7 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 
 import com.coleman.kingword.provider.DictIndexManager;
-import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
-import com.coleman.kingword.provider.KingWord.IDictIndex;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.ConvertUtils;
 import com.coleman.util.Log;
 
@@ -93,7 +92,7 @@ public class DictIndex {
      * {@link #dictIndexList}
      * 
      * @throws java.io.FileNotFoundException
-     * @see DictIndexTable.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
+     * @see TDictIndex.edu.ynu.sei.dict.kernel.core.fixed.reader.stardict.DictIndex
      */
     private static void readIndexFileNative(Context context, DictLibrary lib,
             HashMap<String, DictIndex> wordmap) {
@@ -197,17 +196,17 @@ public class DictIndex {
         ContentValues[] values = new ContentValues[col.size()];
         for (DictIndex dictIndex : col) {
             values[i] = new ContentValues();
-            values[i].put(IDictIndex.WORD, dictIndex.word);
-            values[i].put(IDictIndex.OFFSET, dictIndex.offset);
-            values[i].put(IDictIndex.SIZE, dictIndex.size);
+            values[i].put(TDictIndex.WORD, dictIndex.word);
+            values[i].put(TDictIndex.OFFSET, dictIndex.offset);
+            values[i].put(TDictIndex.SIZE, dictIndex.size);
             i++;
         }
         String fileName = indexFileName.substring(indexFileName.lastIndexOf("/") + 1,
                 indexFileName.lastIndexOf("."));
-        Collection<DictIndexTable> col2 = DictIndexManager.getInstance().getHashMap().values();
-        for (DictIndexTable dictIndexTable : col2) {
-            if (fileName.equals(dictIndexTable.TABLE_NAME)) {
-                context.getContentResolver().bulkInsert(dictIndexTable.CONTENT_URI, values);
+        Collection<TDictIndex> col2 = DictIndexManager.getInstance().getHashMap().values();
+        for (TDictIndex index : col2) {
+            if (fileName.equals(index.TABLE_NAME)) {
+                context.getContentResolver().bulkInsert(index.getContentUri(), values);
                 break;
             }
         }

@@ -6,22 +6,17 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.provider.Browser.BookmarkColumns;
-
-import com.coleman.util.Log;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.provider.KingWord.WordListItem;
-import com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.study.unit.model.FiniteStateMachine.CompleteState;
+import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.IFSMCommand;
 import com.coleman.kingword.study.unit.model.FiniteStateMachine.InitState;
-import com.coleman.kingword.study.unit.model.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.study.wordinfo.WordInfoHelper;
 import com.coleman.kingword.study.wordinfo.WordInfoVO;
+import com.coleman.util.Log;
 
 public class WordItem implements Serializable{
     private static final long serialVersionUID = 884726896304858319L;
