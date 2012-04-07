@@ -13,7 +13,7 @@ public class GMailSenderHelper {
      */
     public static void sendMail(String title, String msg, String attachFilePath) {
         try {
-            GMailSender sender = new GMailSender("kingword1984@gmail.com", "test33403140");
+            GMailSender sender = new GMailSender("kingword1984@gmail.com", "cg33403140");
             sender.setAttachment(attachFilePath);
             sender.sendMail(title, msg, "kingword1984@gmail.com", "kingword1984@gmail.com");
         } catch (Exception e) {
