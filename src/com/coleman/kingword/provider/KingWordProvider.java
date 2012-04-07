@@ -14,22 +14,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import com.coleman.util.Log;
 
-import com.coleman.kingword.provider.DictIndexManager.DictIndexTable;
 import com.coleman.kingword.provider.KingWord.Achievement;
-import com.coleman.kingword.provider.KingWord.SubWordsList;
+import com.coleman.kingword.provider.KingWord.Dict;
+import com.coleman.kingword.provider.KingWord.Dict.DictIndex;
 import com.coleman.kingword.provider.KingWord.WordInfo;
 import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.provider.KingWord.WordListItem;
-import com.coleman.kingword.study.wordlist.model.WordList;
+import com.coleman.kingword.provider.KingWord.WordsList.SubWordsList;
+import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
+import com.coleman.util.Log;
 
 public class KingWordProvider extends ContentProvider {
     private KingWordDBHepler dbHelper;
 
     public static final String AUTHORITY = "kingword";
 
-    // table cat match id
+    // table match id
+    private static final int URI_DICT = 1;
+
+    private static final int URI_DICT_ID = 2;
+
+    private static final int URI_DICT_INDEX = 3;
+
+    private static final int URI_DICT_INDEX_ID = 4;
 
     private static final int URI_WORDINFO = 5;
 
@@ -55,6 +62,12 @@ public class KingWordProvider extends ContentProvider {
 
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
+        matcher.addURI(AUTHORITY, Dict.TABLE_NAME, URI_DICT);
+        matcher.addURI(AUTHORITY, Dict.TABLE_NAME + File.separator + "#", URI_DICT_ID);
+
+        matcher.addURI(AUTHORITY, DictIndex.TABLE_NAME_PREFIX, URI_DICT_INDEX);
+        matcher.addURI(AUTHORITY, DictIndex.TABLE_NAME_PREFIX + File.separator + "#",
+                URI_DICT_INDEX_ID);
 
         matcher.addURI(AUTHORITY, WordInfo.TABLE_NAME, URI_WORDINFO);
         matcher.addURI(AUTHORITY, WordInfo.TABLE_NAME + File.separator + "#", URI_WORDINFO_ID);
@@ -65,28 +78,14 @@ public class KingWordProvider extends ContentProvider {
         matcher.addURI(AUTHORITY, WordsList.TABLE_NAME, URI_WORDLIST);
         matcher.addURI(AUTHORITY, WordsList.TABLE_NAME + File.separator + "#", URI_WORDLIST_ID);
 
-        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME, URI_SUB_WORDLIST);
-        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME + File.separator + "#",
+        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME_PREFIX, URI_SUB_WORDLIST);
+        matcher.addURI(AUTHORITY, SubWordsList.TABLE_NAME_PREFIX + File.separator + "#",
                 URI_SUB_WORDLIST_ID);
 
-        matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME, URI_WORDLISTITEM);
-        matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME + File.separator + "#",
+        matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME_PREFIX, URI_WORDLISTITEM);
+        matcher.addURI(AUTHORITY, WordListItem.TABLE_NAME_PREFIX + File.separator + "#",
                 URI_WORDLISTITEM_ID);
 
-        updateUriMatcher(DictIndexManager.getInstance().getHashMap().values());
-
-    }
-
-    /**
-     * Used for load dictionary dynamically
-     * 
-     * @param col
-     */
-    public static void updateUriMatcher(Collection<DictIndexTable> col) {
-        for (DictIndexTable dictIndexTable : col) {
-            matcher.addURI(AUTHORITY, dictIndexTable.TABLE_NAME, dictIndexTable.URI);
-            matcher.addURI(AUTHORITY, dictIndexTable.TABLE_NAME, dictIndexTable.URI_ID);
-        }
     }
 
     @Override
@@ -314,7 +313,7 @@ public class KingWordProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        //dynamically create dict index table or delete dict index table
+        // dynamically create dict index table or delete dict index table
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (uri.getLastPathSegment().equals("upgrade")) {
             Collection<DictIndexTable> dropList = DictIndexManager.getInstance().getDropList();
@@ -327,7 +326,7 @@ public class KingWordProvider extends ContentProvider {
             }
             return 0;
         }
-        
+
         // store the data
         switch (matcher.match(uri)) {
             case URI_WORDINFO:
