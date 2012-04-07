@@ -174,6 +174,9 @@ public class FileExplorer extends Activity {
             } else {
                 if (fn != null && fn.toLowerCase().indexOf(".txt") != -1) {
                     doEdit(getItem(position).getPath());
+                } else {
+                    Toast.makeText(FileExplorer.this, getString(R.string.file_not_txt),
+                            Toast.LENGTH_SHORT).show();
                 }
                 root = root.getParentFile();
             }
