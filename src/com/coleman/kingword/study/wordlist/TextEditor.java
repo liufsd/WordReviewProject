@@ -18,6 +18,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -111,21 +115,37 @@ public class TextEditor extends Activity implements OnClickListener {
      * @param text
      */
     private void doSave() {
-        //save file to sdcard
+        // save file to sdcard
         try {
-            FileWriter writer= new FileWriter(new File(path));
+            FileWriter writer = new FileWriter(new File(path));
             writer.write(editText.getText().toString());
             writer.flush();
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        //load the wordlist
+
+        // load the wordlist
         Intent intent = new Intent(this, WordListActivity.class);
         intent.putExtra(WordListActivity.EXTERNAL_FILE, true);
         intent.putExtra(WordListActivity.EXTERNAL_FILE_PATH, path);
         startActivity(intent);
+    }
+
+    public static List<String> getWorldList(StringBuilder sb) {
+        final Pattern WORD = Pattern.compile("[a-zA-Z-]+\\b");
+        final Pattern WORD_TYPE = Pattern.compile("^(prep|n|v(t|i|)|ad(j|v|)|[a-zA-Z])$");
+        ArrayList<String> list = new ArrayList<String>();
+        Matcher m = WORD.matcher(sb);
+        while (m.find()) {
+            if (!WORD_TYPE.matcher(m.group()).find()) {
+                System.out.println("---------------" + m.group());
+                list.add(m.group());
+            } else {
+                // System.out.println(m.group());
+            }
+        }
+        return list;
     }
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Void> {
@@ -184,7 +204,7 @@ public class TextEditor extends Activity implements OnClickListener {
                 BufferedReader breader = new BufferedReader(reader);
                 String line;
                 while ((line = breader.readLine()) != null) {
-                    content += line+"\n";
+                    content += line + "\n";
                 }
                 breader.close();
                 reader.close();
