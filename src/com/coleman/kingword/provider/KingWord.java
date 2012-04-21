@@ -92,10 +92,10 @@ public class KingWord {
         }
     }
 
-    public static final class WordInfo implements BaseColumns {
+    public static final class History implements BaseColumns {
 
         // table name
-        public static final String TABLE_NAME = "word_info";
+        public static final String TABLE_NAME = "history";
 
         // content uri
         public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
@@ -119,12 +119,12 @@ public class KingWord {
         public static final String REVIEW_TIME = "review_time";
 
         // create table sql
-        public static final String CREATE_TABLE_SQL = "create table " + WordInfo.TABLE_NAME + " ( "
-                + WordInfo._ID + " integer primary key autoincrement , " + WordInfo.WORD
-                + " text ," + WordInfo.IGNORE + " integer," + WordInfo.STUDY_COUNT + " integer,"
-                + WordInfo.ERROR_COUNT + " integer," + WordInfo.WEIGHT + " integer,"
-                + WordInfo.NEW_WORD + " integer," + WordInfo.REVIEW_TYPE + " integer,"
-                + WordInfo.REVIEW_TIME + " integer )";
+        public static final String CREATE_TABLE_SQL = "create table " + History.TABLE_NAME + " ( "
+                + History._ID + " integer primary key autoincrement , " + History.WORD + " text ,"
+                + History.IGNORE + " integer," + History.STUDY_COUNT + " integer,"
+                + History.ERROR_COUNT + " integer," + History.WEIGHT + " integer,"
+                + History.NEW_WORD + " integer," + History.REVIEW_TYPE + " integer,"
+                + History.REVIEW_TIME + " integer )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
@@ -184,6 +184,37 @@ public class KingWord {
         }
     }
 
+    public static final class SubList implements BaseColumns {
+        // table name
+        public static final String TABLE_NAME = "sub_list";
+
+        // content uri
+        public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
+                + File.separator + TABLE_NAME);
+
+        // fields
+        public static final String WORD_LIST_ID = "word_list_id";
+
+        public static final String LEVEL = "level";
+
+        // create table sql
+        public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
+                + " ( " + SubList._ID + " integer primary key autoincrement , "
+                + SubList.WORD_LIST_ID + " integer ," + SubList.LEVEL + " integer )";
+
+        // default sort order
+        public static final String DEFAULT_SORT_ORDER = _ID + " asc";
+
+        // projection map , used for query builder
+        public static HashMap<String, String> projectionMap = new HashMap<String, String>();
+        static {
+            projectionMap.put(_ID, _ID);
+            projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(LEVEL, LEVEL);
+        }
+
+    }
+
     public static final class WordsList implements BaseColumns {
 
         // table name
@@ -221,46 +252,6 @@ public class KingWord {
             projectionMap.put(SET_METHOD, SET_METHOD);
             projectionMap.put(WORDLIST_NAME, WORDLIST_NAME);
             maps.put(TABLE_NAME, projectionMap);
-        }
-
-        public static final class SubWordsList implements BaseColumns {
-            public static final String TABLE_NAME_PREFIX = "sub_word_list_";
-
-            // table name
-            public final String TABLE_NAME;
-
-            // fields
-            public static final String WORD_LIST_ID = "word_list_id";
-
-            public static final String LEVEL = "level";
-
-            // default sort order
-            public static final String DEFAULT_SORT_ORDER = _ID + " asc";
-
-            // projection map , used for query builder
-            public static HashMap<String, String> projectionMap = new HashMap<String, String>();
-            static {
-                projectionMap.put(_ID, _ID);
-                projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
-                projectionMap.put(LEVEL, LEVEL);
-            }
-
-            public SubWordsList(String tableName) {
-                TABLE_NAME = TABLE_NAME_PREFIX + tableName;
-                maps.put(TABLE_NAME, projectionMap);
-            }
-
-            public Uri getContentUri() {
-                return Uri.parse("content://" + KingWordProvider.AUTHORITY + File.separator
-                        + TABLE_NAME);
-            }
-
-            public String getCreateTableSql() {
-                return "create table if not exists " + TABLE_NAME + " ( " + SubWordsList._ID
-                        + " integer primary key autoincrement , " + SubWordsList.WORD_LIST_ID
-                        + " integer ," + SubWordsList.LEVEL + " integer )";
-            }
-
         }
 
         public static final class WordListItem implements BaseColumns, Serializable {

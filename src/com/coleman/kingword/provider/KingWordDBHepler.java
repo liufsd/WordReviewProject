@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.coleman.kingword.provider.KingWord.Achievement;
 import com.coleman.kingword.provider.KingWord.TDict;
-import com.coleman.kingword.provider.KingWord.WordInfo;
+import com.coleman.kingword.provider.KingWord.History;
 import com.coleman.kingword.provider.KingWord.WordsList;
 import com.coleman.util.Log;
 
@@ -26,7 +26,7 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // create table
         db.execSQL(TDict.CREATE_TABLE_SQL);
-        db.execSQL(WordInfo.CREATE_TABLE_SQL);
+        db.execSQL(History.CREATE_TABLE_SQL);
         db.execSQL(Achievement.CREATE_TABLE_SQL);
         db.execSQL(WordsList.CREATE_TABLE_SQL);
         Log.d(TAG, "=========================db onCreate");
@@ -36,7 +36,7 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // drop table
         db.execSQL("drop table if exists " + TDict.TABLE_NAME);
-        db.execSQL("drop table if exists " + WordInfo.TABLE_NAME);
+        db.execSQL("drop table if exists " + History.TABLE_NAME);
         db.execSQL("drop table if exists " + Achievement.TABLE_NAME);
         db.execSQL("drop table if exists " + WordsList.TABLE_NAME);
         // create table

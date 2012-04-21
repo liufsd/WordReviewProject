@@ -7,44 +7,44 @@
 		<provider android:name=".provider.KingWordProvider"
 			android:authorities="kingword" />
 		<!-- activity -->
-		<activity android:name=".study.WelcomeActivity"
+		<activity android:name=".WelcomeActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".study.wordlist.WordListActivity"
+		<activity android:name=".wordlist.WordListActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".study.unit.SubWordListActivity"
+		<activity android:name=".wordlist.sublist.SubWordListActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".study.wordlist.FileExplorer"
+		<activity android:name=".wordlist.FileExplorer"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".study.wordlist.TextEditor"
+		<activity android:name=".wordlist.TextEditor"
 			android:label="@string/app_name" android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="edit_text"></action>
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".study.CoreActivity" android:label="@string/app_name"
+		<activity android:name=".CoreActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar">
 		</activity>
-		<activity android:name=".study.review.ebbinghaus.EbbinghausActivityAsDialog"
+		<activity android:name=".ebbinghaus.EbbinghausActivityAsDialog"
 			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog"
 			android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".study.SettingsActivity"
+		<activity android:name=".SettingsActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".study.ColorSetActivityAsDialog"
+		<activity android:name=".ColorSetActivityAsDialog"
 			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog">
 		</activity>
 		<!-- receiver -->
-		<receiver android:name=".study.review.ebbinghaus.receiver.KingWordReceiver"
+		<receiver android:name=".ebbinghaus.receiver.KingWordReceiver"
 			android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="review_time_0"></action>

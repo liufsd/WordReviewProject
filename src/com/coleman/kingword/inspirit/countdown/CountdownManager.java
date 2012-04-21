@@ -7,8 +7,8 @@ import android.content.Context;
 import android.os.Handler;
 import com.coleman.util.Log;
 
+import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
-import com.coleman.kingword.study.CoreActivity;
 
 /**
  * As there are many ways to view word list, so the countdown manager should not
