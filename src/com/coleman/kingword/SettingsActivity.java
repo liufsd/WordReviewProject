@@ -45,18 +45,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.DynamicTableManager;
-import com.coleman.kingword.dict.DynamicTableManager.DictIndexDescribeTable;
+import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.wordlist.WordListManager;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
 import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.MultipleState;
+import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
 import com.coleman.tools.InfoGather;
-import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.Log;
@@ -321,13 +318,13 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private void showSummaryInfoDB() {
-        final Collection<DictIndexDescribeTable> c = DynamicTableManager.getInstance().getTables();
+        final Collection<DictLibrary> c = DictManager.getInstance().getLibrarys();
         final String[] names = new String[c.size()];
         int i = 0;
         int index = -1;
-        for (DictIndexDescribeTable dynamicTable : c) {
-            names[i] = dynamicTable.name;
-            if (dynamicTable.type == 1 || dynamicTable.type == 3) {
+        for (DictLibrary dynamicTable : c) {
+            names[i] = dynamicTable.getLibDirName();
+            if (dynamicTable.isCurLib()) {
                 index = i;
             }
             i++;
@@ -335,26 +332,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for (DictIndexDescribeTable dynamicTable : c) {
-                    if (dynamicTable.type == 1) {
-                        dynamicTable.type = 0;
-                    } else if (dynamicTable.type == 3) {
-                        dynamicTable.type = 2;
-                    }
-                }
-                for (DictIndexDescribeTable dynamicTable : c) {
-                    if (dynamicTable.name.equals(names[which])) {
-                        if (dynamicTable.type == 0) {
-                            dynamicTable.type = 1;
-                        } else if (dynamicTable.type == 2) {
-                            dynamicTable.type = 3;
-                        }
-                        break;
-                    }
-                }
                 DictManager.getInstance().setCurLibrary(names[which]);
-                AppSettings.saveString(SettingsActivity.this, AppSettings.DICTS_KEY,
-                        DynamicTableManager.getInstance().toString());
                 dialog.dismiss();
             }
 
@@ -365,13 +343,13 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
     }
 
     private void showDetailedInfoDB() {
-        final Collection<DictIndexDescribeTable> c = DynamicTableManager.getInstance().getTables();
+        final Collection<DictLibrary> c = DictManager.getInstance().getLibrarys();
         final String[] names = new String[c.size()];
         int i = 0;
         int index = -1;
-        for (DictIndexDescribeTable dynamicTable : c) {
-            names[i] = dynamicTable.name;
-            if (dynamicTable.type == 2 || dynamicTable.type == 3) {
+        for (DictLibrary dynamicTable : c) {
+            names[i] = dynamicTable.getLibDirName();
+            if (dynamicTable.isMoreLib()) {
                 index = i;
             }
             i++;
@@ -379,26 +357,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for (DictIndexDescribeTable dynamicTable : c) {
-                    if (dynamicTable.type == 2) {
-                        dynamicTable.type = 0;
-                    } else if (dynamicTable.type == 3) {
-                        dynamicTable.type = 1;
-                    }
-                }
-                for (DictIndexDescribeTable dynamicTable : c) {
-                    if (dynamicTable.name.equals(names[which])) {
-                        if (dynamicTable.type == 0) {
-                            dynamicTable.type = 2;
-                        } else if (dynamicTable.type == 1) {
-                            dynamicTable.type = 3;
-                        }
-                        break;
-                    }
-                }
-                DictManager.getInstance().setMoreLibrary(names[which]);
-                AppSettings.saveString(SettingsActivity.this, AppSettings.DICTS_KEY,
-                        DynamicTableManager.getInstance().toString());
+                DictManager.getInstance().setCurLibrary(names[which]);
                 dialog.dismiss();
             }
 

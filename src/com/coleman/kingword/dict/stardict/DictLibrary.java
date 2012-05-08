@@ -1,11 +1,13 @@
 
 package com.coleman.kingword.dict.stardict;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
 
-import com.coleman.kingword.dict.DynamicTableManager;
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.Log;
@@ -17,7 +19,7 @@ public class DictLibrary {
 
     private DictInfo libraryInfo;
 
-    private String mLibKey;
+    private String mLibDirName;
 
     private String mLibPath;
 
@@ -29,22 +31,34 @@ public class DictLibrary {
     private boolean internal;
 
     /**
+     * This work is time expensive, you should do it on the background thread.
+     * 
+     * @param context
+     * @param libKey
+     * @param dictmap
+     * @throws IOException
+     */
+    public static DictLibrary loadLibrary(Context context, String libKey, boolean isInternal)
+            throws IOException {
+        DictLibrary lib = new DictLibrary();
+        lib.mLibDirName = libKey;
+        lib.mLibPath = DICTS_DIR + libKey;
+        lib.dbInitialed = DictManager.getInstance().isInitialed(libKey);
+        lib.internal = isInternal;
+        lib.libraryInfo = DictInfo.loadInfo(context, lib);
+        if (!lib.dbInitialed) {
+            DictIndex.loadDictIndexMap(context, lib);
+        }
+        return lib;
+    }
+
+    /**
      * If a DictLibrary is constructed, it will do inserting data to database
      * background, after the work done, the libraryWordMap will be cleared,
      * after all these thing done, a mark will be set to indicate database
      * initialed.
      */
-    DictLibrary(final Context context, final String libKey, boolean isInternal) {
-        this.mLibKey = libKey;
-        this.mLibPath = DICTS_DIR + libKey;
-        this.dbInitialed = DynamicTableManager.getInstance().isInitialed(libKey);
-        this.internal = isInternal;
-        Log.d(TAG, ">>>>>>>>>>>>>>>>dbInitialed: " + dbInitialed);
-        if (!dbInitialed) {
-            new LoadAndInsert().doWork(context);
-        } else {
-            new LoadInfo().doWork(context);
-        }
+    private DictLibrary() {
     }
 
     public DictInfo getLibraryInfo() {
@@ -59,6 +73,17 @@ public class DictLibrary {
         return internal;
     }
 
+    public boolean isCurLib() {
+        return mLibDirName != null
+                && mLibDirName.equals(DictManager.getInstance().getCurLibDirName());
+    }
+
+    public boolean isMoreLib() {
+        return mLibDirName != null
+                && mLibDirName.equals(DictManager.getInstance().getMoreLibDirName());
+
+    }
+
     public DictIndex getDictIndex(Context context, String word) {
         DictIndex di = null;
         String[] projection = new String[] {
@@ -67,8 +92,8 @@ public class DictLibrary {
         if (dbInitialed) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    DictIndexManager.getInstance().getTable(mLibKey).getContentUri(), projection,
-                    TDictIndex.WORD + " = '" + word + "'", null, null);
+                    DictIndexManager.getInstance().getTable(mLibDirName).getContentUri(),
+                    projection, TDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
@@ -80,8 +105,9 @@ public class DictLibrary {
             // if not found the word from the index databases, try to query the
             // lower case of the word from the index database
             if (di == null) {
-                c = context.getContentResolver()
-                        .query(DictIndexManager.getInstance().getTable(mLibKey).getContentUri(),
+                c = context
+                        .getContentResolver()
+                        .query(DictIndexManager.getInstance().getTable(mLibDirName).getContentUri(),
                                 projection, TDictIndex.WORD + " = '" + word.toLowerCase() + "'",
                                 null, null);
                 if (c.moveToFirst()) {
@@ -96,6 +122,10 @@ public class DictLibrary {
             Log.d(TAG, "Query the word from the database cost time: " + time);
         }
         return di;
+    }
+
+    public String getLibDirName() {
+        return mLibDirName;
     }
 
     public String getLibraryName() {
@@ -116,38 +146,8 @@ public class DictLibrary {
 
     public void setComplete(Context context) {
         dbInitialed = true;
-        DynamicTableManager.getInstance().setComplete(context, mLibKey);
-    }
-
-    private class LoadInfo {
-
-        private LoadInfo() {
-        }
-
-        protected void doWork(Context context) {
-            if (!TextUtils.isEmpty(mLibKey)) {
-                libraryInfo = DictInfo.readDicInfo(context, DictLibrary.this);
-            } else {
-                Log.e(TAG, "The library to be loaded is not exist!");
-            }
-            Log.d(TAG, "lib info:" + libraryInfo);
-        }
-
-    }
-
-    private class LoadAndInsert {
-
-        private LoadAndInsert() {
-        }
-
-        protected void doWork(Context context) {
-            if (!TextUtils.isEmpty(mLibKey)) {
-                libraryInfo = DictInfo.readDicInfo(context, DictLibrary.this);
-                DictIndex.loadDictIndexMap(context, DictLibrary.this);
-            } else {
-                Log.e(TAG, "The library to be loaded is not exist!");
-            }
-        }
+        libraryInfo.loaded = dbInitialed;
+        libraryInfo.insertOrUpdate(context);
     }
 
 }

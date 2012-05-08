@@ -19,10 +19,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.History;
 import com.coleman.kingword.wordlist.WordListActivity;
@@ -97,10 +95,6 @@ public class WelcomeActivity extends Activity {
                 }
             }
 
-            // set default lib load from internal or external
-            AppSettings.saveString(this, AppSettings.DICTS_KEY,
-                    "a49_stardict_1_3,false,true,1000,1;a50_oxford_gb_formated,false,true,1002,2");
-            
             // ///////////////////////////////////////////////
             // check if there is backup to restore
             // WordInfoHelper.restoreWordInfoDB(this, false);
@@ -112,15 +106,8 @@ public class WelcomeActivity extends Activity {
                     AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
         }
         
-        // init the tables
-        DynamicTableManager.getInstance().initTables(this);
-        
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
-        
-        // set cur lib and more lib
-        DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
-        DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
         
         // set last study restore
         boolean isSave = AppSettings.getBoolean(this, AppSettings.SAVE_CACHE_KEY, false);

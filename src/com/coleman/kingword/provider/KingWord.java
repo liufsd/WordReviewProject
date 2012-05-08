@@ -20,17 +20,44 @@ public class KingWord {
 
     public static final class TDict implements BaseColumns {
         // table name
-        public static final String TABLE_NAME = "name";
+        public static final String TABLE_NAME = "dict";
+
+        // content uri
+        public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY
+                + File.separator + TABLE_NAME);
 
         // fields
-        public static final String DICT_INDEX_NAME = "index_name";
+        // book name
+        public static final String DICT_NAME = "book_name";
+
+        public static final String WORD_COUNT = "word_count";
+
+        public static final String IDX_FILE_SIZE = "idx_file_size";
+
+        // sameTypeSequence
+        public static final String SAME_TYPE_SEQUENCE = "same_type_sequence";
+
+        /**
+         * 0 未设置，1 current lib, 2 more lib, 3 cur lib & more lib
+         */
+        public static final String TYPE = "type";
+
+        public static final String LOADED = "loaded";
+
+        // mark if the dict library is store in the application package, or
+        // external.
+        public static final String INTERNAL = "internal";
+
+        public static final String DICT_DIR_NAME = "index_name";
 
         public static final String DATE = "date";
 
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table " + TABLE_NAME + "(" + _ID
-                + " integer primary key autoincrement , " + DICT_INDEX_NAME + " text , " + DATE
-                + " integer)";
+                + " integer primary key autoincrement , " + DICT_NAME + " text, " + WORD_COUNT
+                + " text , " + IDX_FILE_SIZE + " text, " + SAME_TYPE_SEQUENCE + " text, " + TYPE
+                + " integer, " + LOADED + " integer , " + INTERNAL + " integer , " + DICT_DIR_NAME
+                + " text unique , " + DATE + " integer)";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = DATE + " asc";
@@ -39,7 +66,15 @@ public class KingWord {
         public static HashMap<String, String> projectionMap = new HashMap<String, String>();
         static {
             projectionMap.put(_ID, _ID);
-            projectionMap.put(DICT_INDEX_NAME, DICT_INDEX_NAME);
+            projectionMap.put(DICT_NAME, DICT_NAME);
+            projectionMap.put(WORD_COUNT, WORD_COUNT);
+            projectionMap.put(IDX_FILE_SIZE, IDX_FILE_SIZE);
+            projectionMap.put(SAME_TYPE_SEQUENCE, SAME_TYPE_SEQUENCE);
+
+            projectionMap.put(TYPE, TYPE);
+            projectionMap.put(LOADED, LOADED);
+            projectionMap.put(INTERNAL, INTERNAL);
+            projectionMap.put(DICT_DIR_NAME, DICT_DIR_NAME);
             projectionMap.put(DATE, DATE);
             maps.put(TABLE_NAME, projectionMap);
         }
@@ -59,6 +94,9 @@ public class KingWord {
 
             // default sort order
             public static final String DEFAULT_SORT_ORDER = WORD + " asc";
+
+            // not stored in the db
+            private String libDirName;
 
             // projection map , used for query builder
             public static HashMap<String, String> projectionMap = new HashMap<String, String>();
@@ -80,10 +118,20 @@ public class KingWord {
                         + TABLE_NAME);
             }
 
+            public static Uri getContentUri(String tableName) {
+                return Uri.parse("content://" + KingWordProvider.AUTHORITY + File.separator
+                        + TABLE_NAME_PREFIX + tableName);
+            }
+
             public TDictIndex(String tableName) {
+                this.libDirName = tableName;
                 // table name
                 TABLE_NAME = TABLE_NAME_PREFIX + tableName;
                 maps.put(TABLE_NAME, projectionMap);
+            }
+
+            public String getLibDirName() {
+                return libDirName;
             }
 
             public String toString() {

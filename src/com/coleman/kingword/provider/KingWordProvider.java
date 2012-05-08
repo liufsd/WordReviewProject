@@ -25,7 +25,7 @@ public class KingWordProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        dbHelper = new KingWordDBHepler(getContext());
+        dbHelper = KingWordDBHepler.getInstance(getContext());
         return true;
     }
 
@@ -153,9 +153,9 @@ public class KingWordProvider extends ContentProvider {
         }
 
         if (tableName != null && id != null) {
-            return db.update(tableName, values, selection, selectionArgs);
-        } else if (tableName != null) {
             return db.update(tableName, values, History._ID + "=" + id, null);
+        } else if (tableName != null) {
+            return db.update(tableName, values, selection, selectionArgs);
         } else {
             throw new IllegalArgumentException("Unknow uri: " + uri);
         }

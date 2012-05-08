@@ -1,17 +1,21 @@
 
 package com.coleman.kingword.dict;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
+import com.coleman.kingword.dict.stardict.DictInfo;
 import com.coleman.kingword.dict.stardict.DictLibrary;
-import com.coleman.kingword.dict.stardict.DictLibraryFactory;
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 /**
@@ -64,34 +68,27 @@ public class DictManager {
      */
     public void initLibrary(Context context) {
 
-        // initial the current library
-        // int type = AppSettings.getInt(context, AppSettings.LANGUAGE_TYPE, 0);
-        // Log.d(TAG, "===========Dict type: " + type);
-        // switch (type) {
-        // case 0:
-        // setCurLibrary(DictLibrary.STARDICT);
-        // break;
-        // case 1:
-        // setCurLibrary(DictLibrary.BABYLON_ENG);
-        // break;
-        // default:
-        // // ignore
-        // break;
-        // }
+        // 1. initial library by loader
+        LibraryLoader.getInstance().initTables(context);
 
-        // load library
+        // 2. load library
         long time = System.currentTimeMillis();
-        try {
-            DictLibraryFactory factory = new DictLibraryFactory();
-            for (TDictIndex table : DictIndexManager.getInstance().getHashMap().values()) {
-                factory.loadLibrary(context, table.TABLE_NAME, DynamicTableManager.getInstance()
-                        .isInternal(table.TABLE_NAME), libmap);
+
+        // 3. set cur library and more library
+        for (DictLibrary lib : libmap.values()) {
+            if (lib.isCurLib()) {
+                setCurLibrary(lib.getLibDirName());
+            } else if (lib.isMoreLib()) {
+                setMoreLibrary(lib.getLibDirName());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         time = System.currentTimeMillis() - time;
         System.out.println("Load library cost time: " + time);
+    }
+
+    public void addLib(DictLibrary lib) {
+        libmap.put(lib.getLibDirName(), lib);
     }
 
     public void setCurLibrary(String lib) {
@@ -102,6 +99,22 @@ public class DictManager {
     public void setMoreLibrary(String lib) {
         moreLib = lib;
         Log.d(TAG, ">>>>>>>>>>>>>>>moreLib: " + moreLib);
+    }
+
+    public DictLibrary getLibrary(String lib) {
+        return libmap.get(lib);
+    }
+
+    public Collection<DictLibrary> getLibrarys() {
+        return libmap.values();
+    }
+
+    public String getCurLibDirName() {
+        return curLib;
+    }
+
+    public String getMoreLibDirName() {
+        return moreLib;
     }
 
     /**********************************************************************
@@ -117,7 +130,7 @@ public class DictManager {
         }
         DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
-            Log.w(TAG, word+" not found!");
+            Log.w(TAG, word + " not found!");
             return DictData.constructData(word + ": not found!");
         }
         DictData wordData = DictData.readData(context, library.isInternal(),
@@ -142,6 +155,18 @@ public class DictManager {
                 library.getLibraryInfo(), index, library.getLibraryName());
         Log.d(TAG, "" + wordData);
         return wordData;
+    }
+
+    public boolean isInitialed(String libKey) {
+        return LibraryLoader.getInstance().isInitialed(libKey);
+    }
+
+    public boolean isInternal(String tableName) {
+        return LibraryLoader.getInstance().isInternal(tableName);
+    }
+
+    public void setComplete(Context context, String mLibKey) {
+        LibraryLoader.getInstance().setComplete(context, mLibKey);
     }
 
     public enum ViewType {
@@ -171,5 +196,120 @@ public class DictManager {
                     return DEFAULT;
             }
         }
+    }
+
+    private static class LibraryLoader {
+        private static LibraryLoader mg = new LibraryLoader();
+
+        private static final String EXT_DIC_PATH = Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + File.separator + "kingword/dicts";
+
+        private static final String TAG = LibraryLoader.class.getName();
+
+        private HashMap<String, DictInfo> infoMap = new HashMap<String, DictInfo>();
+
+        private LibraryLoader() {
+        }
+
+        public static LibraryLoader getInstance() {
+            return mg;
+        }
+
+        /**
+         * invoke by WelcomeActivity
+         * 
+         * @param context
+         */
+        public void initTables(Context context) {
+
+            // initial the collections of the dict index manager
+            DictIndexManager.getInstance().init();
+            infoMap.clear();
+
+            // get the storage dict list
+            ArrayList<String> storagelist = new ArrayList<String>();
+            String path = EXT_DIC_PATH;
+            File dir = new File(path);
+            String fs[] = dir.list();
+            if (fs != null) {
+                for (String string : fs) {
+                    if (string.endsWith(".ifo")) {
+                        storagelist.add(string.substring(0, string.lastIndexOf(".")));
+                    }
+                }
+            }
+
+            // get loaded dicts from db
+            infoMap = DictInfo.loadFromDB(context);
+            if (infoMap.size() == 0) {
+                infoMap = DictInfo.loadDefault(context);
+            }
+
+            // compare storagelist and loaded list
+            ArrayList<String> removelist = new ArrayList<String>();
+            boolean upgrade = false;
+            for (DictInfo t : infoMap.values()) {
+                if (!t.internal && !storagelist.contains(t.dictDirName)) {
+                    DictIndexManager.getInstance().getDropList().add(new TDictIndex(t.dictDirName));
+                    removelist.add(t.dictDirName);
+                    upgrade = true;
+                } else {
+                    if (!t.loaded) {
+                        DictIndexManager.getInstance().getCreateList()
+                                .add(new TDictIndex(t.dictDirName));
+                        upgrade = true;
+                    }
+                    DictIndexManager.getInstance().getHashMap()
+                            .put(t.dictDirName, new TDictIndex(t.dictDirName));
+                }
+            }
+            for (String string : removelist) {
+                // @coding-skill
+                // you can not remove the element of the collection directly in
+                // its
+                // for-each loop.
+                infoMap.remove(string);
+            }
+
+            // handle external dicts
+            for (String s : storagelist) {
+                if (!infoMap.containsKey(s)) {
+                    TDictIndex table = new TDictIndex(s);
+                    DictIndexManager.getInstance().getCreateList().add(table);
+                    DictIndexManager.getInstance().getHashMap().put(s, table);
+                    DictInfo info = DictInfo.loadFromFile(context, false, s);
+                    infoMap.put(s, info);
+                    upgrade = true;
+                }
+            }
+
+            if (upgrade) {
+                // update database
+                DictIndexManager.getInstance().update(context);
+            }
+
+            // log for debug
+            DictIndexManager.getInstance().print();
+        }
+
+        public boolean isInternal(String tableName) {
+            return infoMap.get(tableName).internal;
+        }
+
+        public boolean isInitialed(String libKey) {
+            DictInfo t = infoMap.get(libKey);
+            if (t != null) {
+                return t.loaded;
+            }
+            return false;
+        }
+
+        public void setComplete(Context context, String mLibKey) {
+            DictLibrary lib = DictManager.getInstance().getLibrary(mLibKey);
+            if (lib != null) {
+                lib.setComplete(context);
+            }
+        }
+
     }
 }

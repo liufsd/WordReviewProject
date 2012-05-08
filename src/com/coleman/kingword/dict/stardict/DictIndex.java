@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.ConvertUtils;
@@ -182,7 +183,7 @@ public class DictIndex {
             }
         }
         // save the settings preference.
-        lib.setComplete(context);
+        DictManager.getInstance().setComplete(context, lib.getLibDirName());
 
         time = System.currentTimeMillis() - time;
         System.out
@@ -203,12 +204,9 @@ public class DictIndex {
         }
         String fileName = indexFileName.substring(indexFileName.lastIndexOf("/") + 1,
                 indexFileName.lastIndexOf("."));
-        Collection<TDictIndex> col2 = DictIndexManager.getInstance().getHashMap().values();
-        for (TDictIndex index : col2) {
-            if (fileName.equals(index.TABLE_NAME)) {
-                context.getContentResolver().bulkInsert(index.getContentUri(), values);
-                break;
-            }
+        TDictIndex index = DictIndexManager.getInstance().getHashMap().get(fileName);
+        if (index != null) {
+            context.getContentResolver().bulkInsert(index.getContentUri(), values);
         }
     }
 }

@@ -49,17 +49,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.DynamicTableManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
-import com.coleman.kingword.wordlist.sublist.model.WordItem;
 import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
 import com.coleman.kingword.wordlist.sublist.model.SliceWordList.SubInfo;
+import com.coleman.kingword.wordlist.sublist.model.WordItem;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -159,15 +157,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
             case SliceWordList.REVIEW_LIST:
-                DynamicTableManager.getInstance().initTables(this);
-                DictManager.getInstance().setCurLibrary(AppSettings.getCurLibraryString(this));
-                DictManager.getInstance().setMoreLibrary(AppSettings.getMoreLibraryString(this));
+                DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 wordlist = new SliceWordList(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
             case SliceWordList.RECOVERY_LIST:
-                DynamicTableManager.getInstance().initTables(this);
+                DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 new ExpensiveTask(ExpensiveTask.INIT_RECOVERY_LIST).execute();
                 break;

@@ -24,12 +24,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
-import com.coleman.util.Config;
-
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.os.Environment;
+
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.provider.KingWord;
+import com.coleman.kingword.provider.KingWord.TDict;
 
 /**
  * Dictionary information
@@ -47,7 +52,7 @@ public class DictInfo {
     /**
      * dictionary name
      */
-    public String bookName;
+    public String dictName;
 
     /**
      * dicitonary vocabulary count
@@ -64,7 +69,19 @@ public class DictInfo {
      */
     public String sameTypeSequence;
 
-    public int count;
+    /**
+     * 0 未设置，1 current lib, 2 more lib, 3 cur lib & more lib
+     */
+    public int type = -1;
+
+    // fields new added, not read from the file
+    public boolean loaded;
+
+    public boolean internal;
+
+    public String dictDirName;
+
+    public long date;
 
     /**
      * Constructor with arguments
@@ -74,8 +91,8 @@ public class DictInfo {
      * @param idxFileSize vocabulary index file
      * @param sametypesequence
      */
-    public DictInfo(String bookName, String wordCount, String idxFileSize, String sametypesequence) {
-        this.bookName = bookName;
+    private DictInfo(String bookName, String wordCount, String idxFileSize, String sametypesequence) {
+        this.dictName = bookName;
         this.wordCount = wordCount;
         this.idxFileSize = idxFileSize;
         this.sameTypeSequence = sametypesequence;
@@ -83,18 +100,141 @@ public class DictInfo {
 
     @Override
     public String toString() {
-        return "Book Name: " + bookName + "\tWord Count: " + wordCount + "\tIndex File Size: "
+        return "Dict Name: " + dictName + "\tWord Count: " + wordCount + "\tIndex File Size: "
                 + idxFileSize + "\tSame Type Sequence:" + this.sameTypeSequence;
     }
 
-    public static DictInfo readDicInfo(Context context,DictLibrary lib) {
-        InputStream is = null;
+    public static DictInfo loadInfo(Context context, DictLibrary lib) {
+        if (lib.isInitialed()) {
+            return loadFromDB(context, lib);
+        } else {
+            return loadFromFile(context, lib.isInternal(), lib.getLibDirName());
+        }
+    }
+
+    public void insertOrUpdate(Context context) {
+        ContentValues values = new ContentValues();
+        if (dictName != null) {
+            values.put(TDict.DICT_NAME, dictName);
+        }
+        if (wordCount != null) {
+            values.put(TDict.WORD_COUNT, wordCount);
+        }
+        if (idxFileSize != null) {
+            values.put(TDict.IDX_FILE_SIZE, idxFileSize);
+        }
+        if (sameTypeSequence != null) {
+            values.put(TDict.SAME_TYPE_SEQUENCE, sameTypeSequence);
+        }
+        values.put(TDict.TYPE, getType());
+        values.put(TDict.LOADED, loaded ? 1 : 0);
+        values.put(TDict.INTERNAL, internal ? 1 : 0);
+        if (dictDirName != null) {
+            values.put(TDict.DICT_DIR_NAME, dictDirName);
+        }
+        values.put(TDict.DATE, date);
+        Cursor c = context.getContentResolver().query(TDict.CONTENT_URI, null,
+                TDict.DICT_DIR_NAME + " = '" + dictDirName + "'", null, null);
+        boolean has = c.moveToFirst();
+        c.close();
+        if (has) {
+            context.getContentResolver().update(TDict.CONTENT_URI, values,
+                    TDict.DICT_DIR_NAME + " = '" + dictDirName + "'", null);
+        } else {
+            context.getContentResolver().insert(TDict.CONTENT_URI, values);
+        }
+    }
+
+    public static HashMap<String, DictInfo> loadFromDB(Context context) {
+        HashMap<String, DictInfo> map = new HashMap<String, DictInfo>();
+        DictInfo info = null;
+        Cursor c = null;
         try {
-            if (lib.isInternal()) {
-                is = context.getAssets().open(lib.getIfoFileName(), AssetManager.ACCESS_RANDOM);
+            c = context.getContentResolver().query(KingWord.TDict.CONTENT_URI, null, null, null,
+                    null);
+            for (c.moveToFirst(); c.isAfterLast(); c.moveToNext()) {
+                String dictName = c.getString(c.getColumnIndex(TDict.DICT_NAME));
+                String wordCount = c.getString(c.getColumnIndex(TDict.WORD_COUNT));
+                String idxFileSize = c.getString(c.getColumnIndex(TDict.IDX_FILE_SIZE));
+                String sameTypeSequence = c.getString(c.getColumnIndex(TDict.SAME_TYPE_SEQUENCE));
+
+                int type = c.getInt(c.getColumnIndex(TDict.TYPE));
+                boolean loaded = c.getInt(c.getColumnIndex(TDict.LOADED)) == 1;
+                boolean internal = c.getInt(c.getColumnIndex(TDict.INTERNAL)) == 1;
+                String dictDirName = c.getString(c.getColumnIndex(TDict.DICT_DIR_NAME));
+                long date = c.getLong(c.getColumnIndex(TDict.DATE));
+
+                info = new DictInfo(dictName, wordCount, idxFileSize, sameTypeSequence);
+                info.type = type;
+                info.loaded = loaded;
+                info.internal = internal;
+                info.dictDirName = dictDirName;
+                info.date = date;
+                map.put(dictDirName, info);
+            }
+        } catch (Exception e) {
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return map;
+    }
+
+    public static HashMap<String, DictInfo> loadDefault(Context context) {
+        HashMap<String, DictInfo> map = new HashMap<String, DictInfo>();
+        String dictDirName = "a49_stardict_1_3";
+        DictInfo info = loadFromFile(context, true, dictDirName);
+        map.put(dictDirName, info);
+
+        dictDirName = "a50_oxford_gb_formated";
+        info = loadFromFile(context, true, dictDirName);
+        map.put(dictDirName, info);
+        return map;
+    }
+
+    private static DictInfo loadFromDB(Context context, DictLibrary lib) {
+        DictInfo info = null;
+        String libDirName = lib.getLibDirName();
+        Cursor c = null;
+        try {
+            c = context.getContentResolver().query(KingWord.TDict.CONTENT_URI, null,
+                    KingWord.TDict.DICT_DIR_NAME + " = '" + libDirName + "'", null, null);
+            if (c.moveToFirst()) {
+                String dictName = c.getString(c.getColumnIndex(TDict.DICT_NAME));
+                String wordCount = c.getString(c.getColumnIndex(TDict.WORD_COUNT));
+                String idxFileSize = c.getString(c.getColumnIndex(TDict.IDX_FILE_SIZE));
+                String sameTypeSequence = c.getString(c.getColumnIndex(TDict.SAME_TYPE_SEQUENCE));
+
+                boolean loaded = c.getInt(c.getColumnIndex(TDict.LOADED)) == 1;
+                boolean internal = c.getInt(c.getColumnIndex(TDict.INTERNAL)) == 1;
+                String dictDirName = c.getString(c.getColumnIndex(TDict.DICT_DIR_NAME));
+                long date = c.getLong(c.getColumnIndex(TDict.DATE));
+
+                info = new DictInfo(dictName, wordCount, idxFileSize, sameTypeSequence);
+                info.loaded = loaded;
+                info.internal = internal;
+                info.dictDirName = dictDirName;
+                info.date = date;
+            }
+        } catch (Exception e) {
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return info;
+    }
+
+    public static DictInfo loadFromFile(Context context, boolean internal, String libDirName) {
+        InputStream is = null;
+        String ifo = "kingword/dicts/" + libDirName + ".ifo";
+        try {
+            if (internal) {
+                is = context.getAssets().open(ifo, AssetManager.ACCESS_RANDOM);
             } else {
                 is = new FileInputStream(Environment.getExternalStorageDirectory()
-                        .getAbsolutePath() + File.separator + lib.getIfoFileName());
+                        .getAbsolutePath() + File.separator + ifo);
             }
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(reader);
@@ -116,7 +256,14 @@ public class DictInfo {
                     sameTypeSequence = info[1];
                 }
             }
-            return new DictInfo(bookName, wordCount, idxFileSize, sameTypeSequence);
+            DictInfo info = new DictInfo(bookName, wordCount, idxFileSize, sameTypeSequence);
+            info.type = 0;
+            info.loaded = false;
+            info.dictDirName = libDirName;
+            info.internal = internal;
+            info.date = System.currentTimeMillis();
+            info.insertOrUpdate(context);
+            return info;
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
@@ -126,5 +273,23 @@ public class DictInfo {
             } catch (IOException ex) {
             }
         }
+    }
+
+    private int getType() {
+        if (type == -1) {
+            if (dictDirName == null) {
+                type = 0;
+            } else if (dictDirName.equals(DictManager.getInstance().getCurLibDirName())
+                    && dictDirName.equals(DictManager.getInstance().getMoreLibDirName())) {
+                type = 3;
+            } else if (dictDirName.equals(DictManager.getInstance().getCurLibDirName())) {
+                type = 1;
+            } else if (dictDirName.equals(DictManager.getInstance().getMoreLibDirName())) {
+                type = 2;
+            } else {
+                type = 0;
+            }
+        }
+        return type;
     }
 }

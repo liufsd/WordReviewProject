@@ -18,7 +18,16 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
 
-    public KingWordDBHepler(Context context) {
+    private static KingWordDBHepler instance;
+
+    public static KingWordDBHepler getInstance(Context context) {
+        if (instance == null) {
+            instance = new KingWordDBHepler(context);
+        }
+        return instance;
+    }
+
+    private KingWordDBHepler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
