@@ -2,13 +2,11 @@
 package com.coleman.kingword.dict.stardict;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import android.content.Context;
 import android.database.Cursor;
 
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.Log;
 
@@ -38,14 +36,14 @@ public class DictLibrary {
      * @param dictmap
      * @throws IOException
      */
-    public static DictLibrary loadLibrary(Context context, String libKey, boolean isInternal)
+    public static DictLibrary loadLibrary(Context context, DictInfo info)
             throws IOException {
         DictLibrary lib = new DictLibrary();
-        lib.mLibDirName = libKey;
-        lib.mLibPath = DICTS_DIR + libKey;
-        lib.dbInitialed = DictManager.getInstance().isInitialed(libKey);
-        lib.internal = isInternal;
-        lib.libraryInfo = DictInfo.loadInfo(context, lib);
+        lib.mLibDirName = info.dictDirName;
+        lib.mLibPath = DICTS_DIR + info.dictDirName;
+        lib.dbInitialed = info.loaded;
+        lib.internal = info.internal;
+        lib.libraryInfo = info;
         if (!lib.dbInitialed) {
             DictIndex.loadDictIndexMap(context, lib);
         }
@@ -92,8 +90,8 @@ public class DictLibrary {
         if (dbInitialed) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    DictIndexManager.getInstance().getTable(mLibDirName).getContentUri(),
-                    projection, TDictIndex.WORD + " = '" + word + "'", null, null);
+                    DictManager.getInstance().getTable(mLibDirName).getContentUri(), projection,
+                    TDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
             }
@@ -105,9 +103,8 @@ public class DictLibrary {
             // if not found the word from the index databases, try to query the
             // lower case of the word from the index database
             if (di == null) {
-                c = context
-                        .getContentResolver()
-                        .query(DictIndexManager.getInstance().getTable(mLibDirName).getContentUri(),
+                c = context.getContentResolver()
+                        .query(DictManager.getInstance().getTable(mLibDirName).getContentUri(),
                                 projection, TDictIndex.WORD + " = '" + word.toLowerCase() + "'",
                                 null, null);
                 if (c.moveToFirst()) {

@@ -32,7 +32,6 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.provider.DictIndexManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.ConvertUtils;
 import com.coleman.util.Log;
@@ -204,7 +203,7 @@ public class DictIndex {
         }
         String fileName = indexFileName.substring(indexFileName.lastIndexOf("/") + 1,
                 indexFileName.lastIndexOf("."));
-        TDictIndex index = DictIndexManager.getInstance().getHashMap().get(fileName);
+        TDictIndex index = DictManager.getInstance().getTable(fileName);
         if (index != null) {
             context.getContentResolver().bulkInsert(index.getContentUri(), values);
         }

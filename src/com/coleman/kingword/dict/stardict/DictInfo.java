@@ -104,14 +104,6 @@ public class DictInfo {
                 + idxFileSize + "\tSame Type Sequence:" + this.sameTypeSequence;
     }
 
-    public static DictInfo loadInfo(Context context, DictLibrary lib) {
-        if (lib.isInitialed()) {
-            return loadFromDB(context, lib);
-        } else {
-            return loadFromFile(context, lib.isInternal(), lib.getLibDirName());
-        }
-    }
-
     public void insertOrUpdate(Context context) {
         ContentValues values = new ContentValues();
         if (dictName != null) {
@@ -142,6 +134,14 @@ public class DictInfo {
                     TDict.DICT_DIR_NAME + " = '" + dictDirName + "'", null);
         } else {
             context.getContentResolver().insert(TDict.CONTENT_URI, values);
+        }
+    }
+
+    public static DictInfo loadInfo(Context context, DictLibrary lib) {
+        if (lib.isInitialed()) {
+            return loadFromDB(context, lib);
+        } else {
+            return loadFromFile(context, lib.isInternal(), lib.getLibDirName());
         }
     }
 
@@ -262,7 +262,6 @@ public class DictInfo {
             info.dictDirName = libDirName;
             info.internal = internal;
             info.date = System.currentTimeMillis();
-            info.insertOrUpdate(context);
             return info;
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -2,20 +2,24 @@
 package com.coleman.kingword.dict;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.dict.stardict.DictInfo;
 import com.coleman.kingword.dict.stardict.DictLibrary;
-import com.coleman.kingword.provider.DictIndexManager;
+import com.coleman.kingword.provider.KingWord.TDict;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
-import com.coleman.util.AppSettings;
+import com.coleman.kingword.provider.KingWordDBHepler;
 import com.coleman.util.Log;
 
 /**
@@ -103,6 +107,10 @@ public class DictManager {
 
     public DictLibrary getLibrary(String lib) {
         return libmap.get(lib);
+    }
+
+    public TDictIndex getTable(String mLibDirName) {
+        return LibraryLoader.getInstance().idxMap.get(mLibDirName);
     }
 
     public Collection<DictLibrary> getLibrarys() {
@@ -198,6 +206,17 @@ public class DictManager {
         }
     }
 
+    /**
+     * LibraryLoader works by comparing the database storage with external file
+     * path, to determine load or drop a library.
+     * <P>
+     * No need to compare the whole library, only the DictInfo.
+     * 
+     * @author coleman
+     * @version [version, May 9, 2012]
+     * @see [relevant class/method]
+     * @since [product/module version]
+     */
     private static class LibraryLoader {
         private static LibraryLoader mg = new LibraryLoader();
 
@@ -207,6 +226,12 @@ public class DictManager {
         private static final String TAG = LibraryLoader.class.getName();
 
         private HashMap<String, DictInfo> infoMap = new HashMap<String, DictInfo>();
+
+        private HashMap<String, TDictIndex> idxMap = new HashMap<String, TDictIndex>();
+
+        private HashSet<TDictIndex> droplist = new HashSet<TDictIndex>();
+
+        private HashSet<TDictIndex> createlist = new HashSet<TDictIndex>();
 
         private LibraryLoader() {
         }
@@ -222,11 +247,13 @@ public class DictManager {
          */
         public void initTables(Context context) {
 
-            // initial the collections of the dict index manager
-            DictIndexManager.getInstance().init();
+            // clear the collection
             infoMap.clear();
+            idxMap.clear();
+            droplist.clear();
+            createlist.clear();
 
-            // get the storage dict list
+            // get the external storage dict list
             ArrayList<String> storagelist = new ArrayList<String>();
             String path = EXT_DIC_PATH;
             File dir = new File(path);
@@ -239,57 +266,50 @@ public class DictManager {
                 }
             }
 
-            // get loaded dicts from db
+            // loaded dicts from db, if db hasn't been initialized, load
+            // from internal file path.
             infoMap = DictInfo.loadFromDB(context);
             if (infoMap.size() == 0) {
                 infoMap = DictInfo.loadDefault(context);
             }
 
-            // compare storagelist and loaded list
-            ArrayList<String> removelist = new ArrayList<String>();
+            // drop or create the dict by comparing the external
+            // storage list with loaded list
             boolean upgrade = false;
-            for (DictInfo t : infoMap.values()) {
+            ArrayList<DictInfo> allInfosCopy = new ArrayList<DictInfo>();
+            allInfosCopy.addAll(infoMap.values());
+            for (DictInfo t : allInfosCopy) {
                 if (!t.internal && !storagelist.contains(t.dictDirName)) {
-                    DictIndexManager.getInstance().getDropList().add(new TDictIndex(t.dictDirName));
-                    removelist.add(t.dictDirName);
+                    droplist.add(new TDictIndex(t.dictDirName));
+                    infoMap.remove(t.dictDirName);
                     upgrade = true;
                 } else {
                     if (!t.loaded) {
-                        DictIndexManager.getInstance().getCreateList()
-                                .add(new TDictIndex(t.dictDirName));
+                        createlist.add(new TDictIndex(t.dictDirName));
                         upgrade = true;
                     }
-                    DictIndexManager.getInstance().getHashMap()
-                            .put(t.dictDirName, new TDictIndex(t.dictDirName));
+                    idxMap.put(t.dictDirName, new TDictIndex(t.dictDirName));
                 }
             }
-            for (String string : removelist) {
-                // @coding-skill
-                // you can not remove the element of the collection directly in
-                // its
-                // for-each loop.
-                infoMap.remove(string);
-            }
+            allInfosCopy.clear();
 
             // handle external dicts
             for (String s : storagelist) {
                 if (!infoMap.containsKey(s)) {
                     TDictIndex table = new TDictIndex(s);
-                    DictIndexManager.getInstance().getCreateList().add(table);
-                    DictIndexManager.getInstance().getHashMap().put(s, table);
+                    createlist.add(table);
+                    idxMap.put(s, table);
                     DictInfo info = DictInfo.loadFromFile(context, false, s);
                     infoMap.put(s, info);
                     upgrade = true;
                 }
             }
 
+            // update database
             if (upgrade) {
-                // update database
-                DictIndexManager.getInstance().update(context);
+                update(context);
             }
 
-            // log for debug
-            DictIndexManager.getInstance().print();
         }
 
         public boolean isInternal(String tableName) {
@@ -311,5 +331,27 @@ public class DictManager {
             }
         }
 
+        public void update(Context context) {
+            try {
+                SQLiteDatabase db = KingWordDBHepler.getInstance(context).getWritableDatabase();
+                for (TDictIndex id : droplist) {
+                    db.delete(TDict.TABLE_NAME, TDict.DICT_DIR_NAME + "='" + id.getLibDirName()
+                            + "'", null);
+                    db.execSQL("drop table if exists " + id.TABLE_NAME);
+                }
+                for (TDictIndex id : createlist) {
+                    DictInfo info = infoMap.get(id.getLibDirName());
+                    info.insertOrUpdate(context);
+
+                    db.execSQL(id.getCreateTableSQL());
+                }
+                for (DictInfo info : infoMap.values()) {
+                    DictLibrary lib = DictLibrary.loadLibrary(context, info);
+                    DictManager.getInstance().addLib(lib);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
