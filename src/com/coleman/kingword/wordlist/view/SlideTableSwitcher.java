@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.sublist.view;
+package com.coleman.kingword.wordlist.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import android.widget.ViewSwitcher;
 
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList.SubInfo;
+import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.model.SubWordList;
 
 public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener {
 
@@ -86,7 +86,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         return R.string.new_unit;
     }
 
-    public void setData(SubInfo sub_ids[]) {
+    public void setData(SubWordList sub_ids[]) {
         int i = 0;
         for (Button btn : btns) {
             if (i < sub_ids.length) {
@@ -103,7 +103,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         }
     }
 
-    public void showNextScreen(SubInfo sub_ids[]) {
+    public void showNextScreen(SubWordList sub_ids[]) {
         setInAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right_in));
         setOutAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left_out));
         TableLayout l = (TableLayout) getNextView();
@@ -113,7 +113,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         showNext();
     }
 
-    public void showPreviousScreen(SubInfo sub_ids[]) {
+    public void showPreviousScreen(SubWordList sub_ids[]) {
         setInAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_left_in));
         setOutAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.slide_right_out));
         TableLayout l = (TableLayout) getNextView();
@@ -123,7 +123,7 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
         showPrevious();
     }
 
-    public void showCurrentScreen(SubInfo sub_ids[]) {
+    public void showCurrentScreen(SubWordList sub_ids[]) {
         setVisibility(VISIBLE);
         setData(sub_ids);
     }
@@ -144,8 +144,8 @@ public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener 
             case R.id.button11:
             case R.id.button12:
                 Intent intent = new Intent(getContext(), CoreActivity.class);
-                intent.putExtra("type", SliceWordList.SUB_WORD_LIST);
-                SubInfo info = (SubInfo) (v.getTag());
+                intent.putExtra("type", WordListAccessor.SUB_WORD_LIST);
+                SubWordList info = (SubWordList) (v.getTag());
                 intent.putExtra("subinfo", (Parcelable)info);
                 getContext().startActivity(intent);
                 break;

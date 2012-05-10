@@ -10,12 +10,15 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import com.coleman.kingword.provider.KingWord.SubList;
-import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList.SubInfo;
+import com.coleman.kingword.provider.KingWord.TSubWordList;
+import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
+import com.coleman.kingword.provider.KingWordDBHepler;
+import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.kingword.wordlist.model.WordList;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -79,10 +82,10 @@ public class WordListManager {
 
     public boolean isExist(Context context, String wordlist) {
         String projection[] = new String[] {
-                WordsList._ID, WordsList.PATH_NAME
+                TWordList._ID, TWordList.PATH_NAME
         };
-        Cursor c = context.getContentResolver().query(WordsList.CONTENT_URI, projection,
-                WordsList.PATH_NAME + "='" + wordlist + "'", null, null);
+        Cursor c = context.getContentResolver().query(TWordList.CONTENT_URI, projection,
+                TWordList.PATH_NAME + "='" + wordlist + "'", null, null);
         if (c == null || c.getCount() <= 0) {
             if (c != null) {
                 c.close();
@@ -113,7 +116,7 @@ public class WordListManager {
     }
 
     private void insertWordList(Context context, WordList wordlist, IProgressNotifier notifier) {
-        Uri uri = context.getContentResolver().insert(WordsList.CONTENT_URI,
+        Uri uri = context.getContentResolver().insert(TWordList.CONTENT_URI,
                 wordlist.toContentValues());
         notifier.notify(45);
         wordlist.id = Long.parseLong(uri.getPathSegments().get(1));
@@ -171,9 +174,12 @@ public class WordListManager {
         int total_steps = sublist.size();
         int step = 0;
 
+        update(context, wordlist.id);
+
         for (List<String> list2 : sublist) {
-            SubInfo sub = new SubInfo(wordlist.id);
+            SubWordList sub = new SubWordList(wordlist.id);
             doInsertSubWordList(context, sub);
+
             doInsertWords(context, sub, list2);
             step++;
             if (total_steps == 0) {
@@ -185,21 +191,28 @@ public class WordListManager {
 
     }
 
-    private void doInsertSubWordList(Context context, SubInfo sub) {
-        Uri uri = context.getContentResolver().insert(SubList.CONTENT_URI, sub.toContentValues());
+    private void doInsertSubWordList(Context context, SubWordList sub) {
+        Uri uri = context.getContentResolver().insert(TSubWordList.CONTENT_URI,
+                sub.toContentValues());
         sub.id = Long.parseLong(uri.getPathSegments().get(1));
     }
 
-    private void doInsertWords(Context context, SubInfo sub, List<String> list) {
+    private void doInsertWords(Context context, SubWordList sub, List<String> list) {
         ContentValues cv[] = new ContentValues[list.size()];
         int i = 0;
         for (String string : list) {
             cv[i] = new ContentValues();
-            cv[i].put(WordListItem.WORD, string);
-            cv[i].put(WordListItem.SUB_WORD_LIST_ID, sub.id);
+            cv[i].put(TWordListItem.WORD, string);
+            cv[i].put(TWordListItem.SUB_WORD_LIST_ID, sub.id);
             i++;
         }
-        context.getContentResolver().bulkInsert(SubList.CONTENT_URI, cv);
+        context.getContentResolver().bulkInsert(TWordListItem.getContentUri(sub.word_list_id), cv);
+    }
+
+    private void update(Context context, long id) {
+        TWordListItem table = new TWordListItem(id);
+        SQLiteDatabase db = KingWordDBHepler.getInstance(context).getWritableDatabase();
+        db.execSQL(table.getCreateTableSql());
     }
 
     private void sort(ArrayList<String> list) {

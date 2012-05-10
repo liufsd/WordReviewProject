@@ -21,8 +21,8 @@ import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.history.WordInfoVO;
-import com.coleman.kingword.provider.KingWord.History;
+import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.provider.KingWord.THistory;
 
 public class KingWordReceiver extends BroadcastReceiver {
     public static final String ACTION_SEND_INFO_SILENT = "com.coleman.kingword.ACTION_SEND_INFO_SILENT";
@@ -92,25 +92,25 @@ public class KingWordReceiver extends BroadcastReceiver {
     String getMessage(Context context, byte reviewType) {
         String msg = context.getString(R.string.review_reminder);
         switch (reviewType) {
-            case WordInfoVO.REVIEW_1_HOUR:
+            case WordInfo.REVIEW_1_HOUR:
                 msg = String.format(msg, 1 + context.getString(R.string.hour));
                 break;
-            case WordInfoVO.REVIEW_12_HOUR:
+            case WordInfo.REVIEW_12_HOUR:
                 msg = String.format(msg, 12 + context.getString(R.string.hour));
                 break;
-            case WordInfoVO.REVIEW_1_DAY:
+            case WordInfo.REVIEW_1_DAY:
                 msg = String.format(msg, 1 + context.getString(R.string.day));
                 break;
-            case WordInfoVO.REVIEW_5_DAY:
+            case WordInfo.REVIEW_5_DAY:
                 msg = String.format(msg, 5 + context.getString(R.string.day));
                 break;
-            case WordInfoVO.REVIEW_20_DAY:
+            case WordInfo.REVIEW_20_DAY:
                 msg = String.format(msg, 20 + context.getString(R.string.day));
                 break;
-            case WordInfoVO.REVIEW_40_DAY:
+            case WordInfo.REVIEW_40_DAY:
                 msg = String.format(msg, 40 + context.getString(R.string.day));
                 break;
-            case WordInfoVO.REVIEW_60_DAY:
+            case WordInfo.REVIEW_60_DAY:
                 msg = String.format(msg, 60 + context.getString(R.string.day));
                 break;
             default:
@@ -123,22 +123,22 @@ public class KingWordReceiver extends BroadcastReceiver {
         boolean needed = false;
         long ct = System.currentTimeMillis();
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        String selection = (hour >= 18 ? History.NEW_WORD + " = 2 or " : "") + "("
-                + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
-                + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_40_DAY + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
-                + History.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
-        Cursor c = context.getContentResolver().query(History.CONTENT_URI, null, selection, null,
+        String selection = (hour >= 18 ? THistory.NEW_WORD + " = 2 or " : "") + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_HOUR + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_12_HOUR + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_5_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_40_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, null, selection, null,
                 null);
         Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct));
         if (c.moveToFirst()) {

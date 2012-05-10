@@ -14,14 +14,14 @@ import com.coleman.util.Log;
 /**
  * Should only be used by WordItem and WordInfoHelper.
  */
-public class WordInfoVO implements Parcelable,Serializable {
+public class WordInfo implements Parcelable,Serializable {
     private static final long serialVersionUID = 3683192721924884338L;
 
     public static final byte MIN_WEIGHT = 0;
 
     public static final byte MAX_WEIGHT = 5;
 
-    private static final String TAG = WordInfoVO.class.getName();
+    private static final String TAG = WordInfo.class.getName();
 
     public long id = -1;
 
@@ -63,7 +63,7 @@ public class WordInfoVO implements Parcelable,Serializable {
 
     private static final byte REVIEW_COMPLETE = 100;
 
-    public WordInfoVO(String word) {
+    public WordInfo(String word) {
         if (!TextUtils.isEmpty(word)) {
             this.word = word;
         }
@@ -116,7 +116,7 @@ public class WordInfoVO implements Parcelable,Serializable {
 
     @Override
     public boolean equals(Object o) {
-        WordInfoVO info = (WordInfoVO) o;
+        WordInfo info = (WordInfo) o;
         if (id != info.id) {
             return false;
         }
@@ -158,16 +158,16 @@ public class WordInfoVO implements Parcelable,Serializable {
 
     }
 
-    public static final Creator<WordInfoVO> CREATOR = new Creator<WordInfoVO>() {
+    public static final Creator<WordInfo> CREATOR = new Creator<WordInfo>() {
 
         @Override
-        public WordInfoVO createFromParcel(Parcel source) {
+        public WordInfo createFromParcel(Parcel source) {
             // TODO Auto-generated method stub
             return null;
         }
 
         @Override
-        public WordInfoVO[] newArray(int size) {
+        public WordInfo[] newArray(int size) {
             // TODO Auto-generated method stub
             return null;
         }

@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.sublist.model;
+package com.coleman.kingword.wordlist;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,9 +32,9 @@ public class FiniteStateMachine implements Serializable{
 
     private FiniteState completeState = new CompleteState();
 
-    private SliceWordList sliceList;
+    private WordListAccessor sliceList;
 
-    public FiniteStateMachine(SliceWordList sliceList) {
+    public FiniteStateMachine(WordListAccessor sliceList) {
         this.sliceList = sliceList;
 
         setInitialState(initState);
@@ -44,7 +44,7 @@ public class FiniteStateMachine implements Serializable{
         addState(completeState, null);
     }
 
-    public FiniteStateMachine(SliceWordList sliceList, int types[]) {
+    public FiniteStateMachine(WordListAccessor sliceList, int types[]) {
         this.sliceList = sliceList;
         for (int i = 0; i < types.length; i++) {
             switch (types[i]) {
@@ -103,7 +103,7 @@ public class FiniteStateMachine implements Serializable{
         mStateEngine.handleMessage(msg);
     }
 
-    public ArrayList<DictData> getDictData(Context context, WordItem item, ArrayList<WordItem> list) {
+    public ArrayList<DictData> getDictData(Context context, WordAccessor item, ArrayList<WordAccessor> list) {
         return mCurrentState.getDictData(context, item, list);
     }
 
@@ -147,8 +147,8 @@ public class FiniteStateMachine implements Serializable{
             pass = false;
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordItem item,
-                ArrayList<WordItem> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
+                ArrayList<WordAccessor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             return datalist;
         }
@@ -161,7 +161,7 @@ public class FiniteStateMachine implements Serializable{
             }
         }
 
-        protected void addRandomDictData(Context context, ArrayList<WordItem> list,
+        protected void addRandomDictData(Context context, ArrayList<WordAccessor> list,
                 ArrayList<DictData> datalist) {
             int index = ran.nextInt(list.size());
             int i = 0;
@@ -193,8 +193,8 @@ public class FiniteStateMachine implements Serializable{
             super.exit();
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordItem item,
-                ArrayList<WordItem> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
+                ArrayList<WordAccessor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             DictData data = item.getDictData(context);
             datalist.add(data);
@@ -214,8 +214,8 @@ public class FiniteStateMachine implements Serializable{
             super.exit();
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordItem item,
-                ArrayList<WordItem> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
+                ArrayList<WordAccessor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             datalist.add(item.getDictData(context));
             int size = list.size();

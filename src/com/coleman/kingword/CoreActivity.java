@@ -54,10 +54,10 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.InitState;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList.SubInfo;
-import com.coleman.kingword.wordlist.sublist.model.WordItem;
+import com.coleman.kingword.wordlist.WordAccessor;
+import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
@@ -77,11 +77,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ParaphraseAdapter adapter;
 
-    private SliceWordList wordlist;
+    private WordListAccessor wordlist;
 
     private LinearLayout container;
 
-    private WordItem nextWordItem;
+    private WordAccessor nextWordItem;
 
     /**
      * upgrade and degrade are not support by user anymore.
@@ -140,29 +140,29 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         initView();
 
         Intent intent = getIntent();
-        sliceListType = intent.getByteExtra("type", SliceWordList.NULL_TYPE);
+        sliceListType = intent.getByteExtra("type", WordListAccessor.NULL_TYPE);
         switch (sliceListType) {
-            case SliceWordList.SUB_WORD_LIST:
-                SubInfo info = getIntent().getParcelableExtra("subinfo");
+            case WordListAccessor.SUB_WORD_LIST:
+                SubWordList info = getIntent().getParcelableExtra("subinfo");
                 Log.d(TAG, "info:" + info);
-                wordlist = new SliceWordList(info);
+                wordlist = new WordListAccessor(info);
                 new ExpensiveTask(ExpensiveTask.INIT_SUB_WORD_LIST).execute();
                 break;
-            case SliceWordList.NEW_WORD_BOOK_LIST:
-                wordlist = new SliceWordList(sliceListType);
+            case WordListAccessor.NEW_WORD_BOOK_LIST:
+                wordlist = new WordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_NEW_WORD_BOOK_LIST).execute();
                 break;
-            case SliceWordList.SCAN_LIST:
-                wordlist = new SliceWordList(sliceListType);
+            case WordListAccessor.SCAN_LIST:
+                wordlist = new WordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
-            case SliceWordList.REVIEW_LIST:
+            case WordListAccessor.REVIEW_LIST:
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
-                wordlist = new SliceWordList(sliceListType);
+                wordlist = new WordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
-            case SliceWordList.RECOVERY_LIST:
+            case WordListAccessor.RECOVERY_LIST:
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 new ExpensiveTask(ExpensiveTask.INIT_RECOVERY_LIST).execute();
@@ -209,7 +209,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         } else {
             menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_show);
         }
-        if (sliceListType == SliceWordList.REVIEW_LIST) {
+        if (sliceListType == WordListAccessor.REVIEW_LIST) {
             menu.removeItem(R.id.menu_review);
         }
         return true;
@@ -268,7 +268,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private void broadcastReview() {
         Intent intent = new Intent(this, KingWordReceiver.class);
-        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         sendBroadcast(intent);
     }
 
@@ -344,7 +344,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         ObjectInputStream ois = null;
         try {
             ois = new ObjectInputStream(new FileInputStream("/sdcard/kingword/obj.save"));
-            wordlist = (SliceWordList) ois.readObject();
+            wordlist = (WordListAccessor) ois.readObject();
             countdownManager = (CountdownManager) ois.readObject();
             countdownManager.setHandler(handler);
             Log.d(TAG, "------------------------load cache");
@@ -362,7 +362,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private void writeCacheObject() {
         if (needWriteCache
-                && (sliceListType == SliceWordList.SUB_WORD_LIST || sliceListType == SliceWordList.RECOVERY_LIST)) {
+                && (sliceListType == WordListAccessor.SUB_WORD_LIST || sliceListType == WordListAccessor.RECOVERY_LIST)) {
             new Thread() {
                 public void run() {
                     ObjectOutputStream oos = null;
@@ -418,7 +418,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void updateLoopCount() {
-        if (wordlist.getListType() != SliceWordList.SUB_WORD_LIST) {
+        if (wordlist.getListType() != WordListAccessor.SUB_WORD_LIST) {
             return;
         }
         // loop display control
@@ -474,7 +474,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 slideRightOut(countBtn);
                 break;
             case R.id.btn_speak:
-                playVoice(nextWordItem.word);
+                playVoice(nextWordItem.item.word);
                 break;
             default:
                 break;
@@ -488,7 +488,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.btn_speak:
                 if (!autoSpeak) {
                     btnSpeak.setBackgroundResource(R.drawable.speak_auto);
-                    playVoice(nextWordItem.word);
+                    playVoice(nextWordItem.item.word);
                 }
                 else{
                     btnSpeak.setBackgroundResource(R.drawable.speak);
@@ -779,7 +779,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ArrayList<DictData> _buflist = new ArrayList<DictData>();
 
-    private void lookupInDict(WordItem worditem) {
+    private void lookupInDict(WordAccessor worditem) {
         _buflist.clear();
         _buflist.addAll(wordlist.getDictData(this, worditem));
     }
@@ -841,23 +841,23 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void showCompleteStudyDialog() {
         String title = "", msg = "";
         switch (sliceListType) {
-            case SliceWordList.RECOVERY_LIST:
-            case SliceWordList.SUB_WORD_LIST: {
+            case WordListAccessor.RECOVERY_LIST:
+            case WordListAccessor.SUB_WORD_LIST: {
                 String str1 = wordlist.getCorrectPercentage() + "%";
                 String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
                 title = getString(R.string.view_sub_complete_title);
                 msg = String.format(getString(R.string.show_complete_study), str1, str2);
                 break;
             }
-            case SliceWordList.REVIEW_LIST:
+            case WordListAccessor.REVIEW_LIST:
                 title = getString(R.string.view_review_complete_title);
                 msg = getString(R.string.review_complete);
                 break;
-            case SliceWordList.NEW_WORD_BOOK_LIST:
+            case WordListAccessor.NEW_WORD_BOOK_LIST:
                 title = getString(R.string.view_newbook_complete_title);
                 msg = getString(R.string.study_new_word_book_end);
                 break;
-            case SliceWordList.SCAN_LIST:
+            case WordListAccessor.SCAN_LIST:
                 title = getString(R.string.view_ignore_complete_title);
                 msg = getString(R.string.study_ignore_list_end);
                 break;
@@ -1083,7 +1083,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_REVIEW_LIST:
                     bundle = new Bundle();
                     wordlist.loadReviewWordList(CoreActivity.this);
-                    sliceListType = SliceWordList.REVIEW_LIST;
+                    sliceListType = WordListAccessor.REVIEW_LIST;
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getCurrentWord();
                         lookupInDict(nextWordItem);
@@ -1132,7 +1132,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         nextWordItem = wordlist.getNext();
                         lookupInDict(nextWordItem);
                         if(autoSpeak){
-                            playVoice(nextWordItem.word);
+                            playVoice(nextWordItem.item.word);
                         }
                         bundle.putBoolean("next", true);
                     } else {
@@ -1311,7 +1311,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             CoreActivity.this,
                             b ? getString(R.string.ignore_success)
                                     : getString(R.string.ignore_failed), Toast.LENGTH_SHORT).show();
-                    if (wordlist.getListType() == SliceWordList.SUB_WORD_LIST) {
+                    if (wordlist.getListType() == WordListAccessor.SUB_WORD_LIST) {
                         loopView.setText(String.format(getString(R.string.loop_info),
                                 wordlist.getLoopIndex() + 1, wordlist.getLoopCount() + 1,
                                 wordlist.getCount() - wordlist.getIgnoreCount()));

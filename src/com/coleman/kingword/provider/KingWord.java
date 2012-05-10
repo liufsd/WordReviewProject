@@ -140,7 +140,7 @@ public class KingWord {
         }
     }
 
-    public static final class History implements BaseColumns {
+    public static final class THistory implements BaseColumns {
 
         // table name
         public static final String TABLE_NAME = "history";
@@ -167,12 +167,12 @@ public class KingWord {
         public static final String REVIEW_TIME = "review_time";
 
         // create table sql
-        public static final String CREATE_TABLE_SQL = "create table " + History.TABLE_NAME + " ( "
-                + History._ID + " integer primary key autoincrement , " + History.WORD + " text ,"
-                + History.IGNORE + " integer," + History.STUDY_COUNT + " integer,"
-                + History.ERROR_COUNT + " integer," + History.WEIGHT + " integer,"
-                + History.NEW_WORD + " integer," + History.REVIEW_TYPE + " integer,"
-                + History.REVIEW_TIME + " integer )";
+        public static final String CREATE_TABLE_SQL = "create table " + THistory.TABLE_NAME + " ( "
+                + THistory._ID + " integer primary key autoincrement , " + THistory.WORD
+                + " text ," + THistory.IGNORE + " integer," + THistory.STUDY_COUNT + " integer,"
+                + THistory.ERROR_COUNT + " integer," + THistory.WEIGHT + " integer,"
+                + THistory.NEW_WORD + " integer," + THistory.REVIEW_TYPE + " integer,"
+                + THistory.REVIEW_TIME + " integer )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = WORD + " asc";
@@ -193,7 +193,7 @@ public class KingWord {
         }
     }
 
-    public static final class Achievement implements BaseColumns {
+    public static final class TAchievement implements BaseColumns {
 
         // table name
         public static final String TABLE_NAME = "achievement";
@@ -212,10 +212,10 @@ public class KingWord {
         public static final String SUBTYPE = "subtype";
 
         // create table sql
-        public static final String CREATE_TABLE_SQL = "create table " + Achievement.TABLE_NAME
-                + " ( " + Achievement._ID + " integer primary key autoincrement , "
-                + Achievement.TIME + " integer ," + Achievement.COUNT + " integer,"
-                + Achievement.DESCRIBE + " text," + Achievement.SUBTYPE + " integer )";
+        public static final String CREATE_TABLE_SQL = "create table " + TAchievement.TABLE_NAME
+                + " ( " + TAchievement._ID + " integer primary key autoincrement , "
+                + TAchievement.TIME + " integer ," + TAchievement.COUNT + " integer,"
+                + TAchievement.DESCRIBE + " text," + TAchievement.SUBTYPE + " integer )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -232,7 +232,7 @@ public class KingWord {
         }
     }
 
-    public static final class SubList implements BaseColumns {
+    public static final class TSubWordList implements BaseColumns {
         // table name
         public static final String TABLE_NAME = "sub_list";
 
@@ -247,8 +247,8 @@ public class KingWord {
 
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
-                + " ( " + SubList._ID + " integer primary key autoincrement , "
-                + SubList.WORD_LIST_ID + " integer ," + SubList.LEVEL + " integer )";
+                + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
+                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.LEVEL + " integer )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -263,7 +263,7 @@ public class KingWord {
 
     }
 
-    public static final class WordsList implements BaseColumns {
+    public static final class TWordList implements BaseColumns {
 
         // table name
         public static final String TABLE_NAME = "word_list";
@@ -285,10 +285,10 @@ public class KingWord {
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
 
         // create table sql
-        public static final String CREATE_TABLE_SQL = "create table " + WordsList.TABLE_NAME
-                + " ( " + WordsList._ID + " integer primary key autoincrement , "
-                + WordsList.DESCRIBE + " text ," + WordsList.PATH_NAME + " text,"
-                + WordsList.SET_METHOD + " integer , " + WORDLIST_NAME + " text )";
+        public static final String CREATE_TABLE_SQL = "create table " + TWordList.TABLE_NAME
+                + " ( " + TWordList._ID + " integer primary key autoincrement , "
+                + TWordList.DESCRIBE + " text ," + TWordList.PATH_NAME + " text,"
+                + TWordList.SET_METHOD + " integer , " + WORDLIST_NAME + " text )";
 
         // projection map , used for query builder
         public static HashMap<String, String> projectionMap = new HashMap<String, String>();
@@ -302,7 +302,7 @@ public class KingWord {
             maps.put(TABLE_NAME, projectionMap);
         }
 
-        public static final class WordListItem implements BaseColumns, Serializable {
+        public static final class TWordListItem implements BaseColumns, Serializable {
             private static final long serialVersionUID = -49108198357051291L;
 
             public static final String TABLE_NAME_PREFIX = "word_list_item_";
@@ -326,8 +326,8 @@ public class KingWord {
                 projectionMap.put(WORD, WORD);
             }
 
-            public WordListItem(String tableName) {
-                TABLE_NAME = TABLE_NAME_PREFIX + tableName;
+            public TWordListItem(long word_list_id) {
+                TABLE_NAME = TABLE_NAME_PREFIX + word_list_id;
                 maps.put(TABLE_NAME, projectionMap);
             }
 
@@ -337,9 +337,14 @@ public class KingWord {
             }
 
             public String getCreateTableSql() {
-                return "create table if not exists " + TABLE_NAME + " ( " + WordListItem._ID
-                        + " integer primary key autoincrement , " + WordListItem.SUB_WORD_LIST_ID
-                        + " integer ," + WordListItem.WORD + " text )";
+                return "create table if not exists " + TABLE_NAME + " ( " + TWordListItem._ID
+                        + " integer primary key autoincrement , " + TWordListItem.SUB_WORD_LIST_ID
+                        + " integer ," + TWordListItem.WORD + " text )";
+            }
+
+            public static Uri getContentUri(long word_list_id) {
+                return Uri.parse("content://" + KingWordProvider.AUTHORITY + File.separator
+                        + TABLE_NAME_PREFIX + word_list_id);
             }
         }
     }

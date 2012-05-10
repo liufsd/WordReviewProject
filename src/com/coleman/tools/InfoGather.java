@@ -13,7 +13,7 @@ import android.telephony.TelephonyManager;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
-import com.coleman.kingword.provider.KingWord.History;
+import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -176,9 +176,9 @@ public class InfoGather {
                 R.array.military_rank) : (levelType == 1 ? context.getResources().getStringArray(
                 R.array.leaning_level) : context.getResources().getStringArray(
                 R.array.xiuzhen_level)));
-        Cursor c = context.getContentResolver().query(History.CONTENT_URI, new String[] {
-            History._ID
-        }, null, null, History._ID + " desc LIMIT 1");
+        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
+            THistory._ID
+        }, null, null, THistory._ID + " desc LIMIT 1");
         if (c.moveToFirst()) {
             long id = c.getLong(0);
             count = (int) id;

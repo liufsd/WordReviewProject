@@ -49,10 +49,10 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfoHelper;
+import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.kingword.wordlist.WordListManager;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.InitState;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.MultipleState;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
@@ -417,7 +417,7 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
                 R.layout.textview_item_white, list);
         final Index selectIndex = new Index();
         String viewMtd = AppSettings.getString(this, AppSettings.VIEW_METHOD_KEY,
-                SliceWordList.DEFAULT_VIEW_METHOD);
+                WordListAccessor.DEFAULT_VIEW_METHOD);
         String scrap[] = viewMtd.split("#");
         for (int i = 0; i < scrap.length; i++) {
             String ss[] = scrap[i].split(",");

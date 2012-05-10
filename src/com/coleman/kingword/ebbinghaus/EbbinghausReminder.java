@@ -15,8 +15,8 @@ import android.util.TimeUtils;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
-import com.coleman.kingword.history.WordInfoVO;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
+import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.util.AppSettings;
 
 public class EbbinghausReminder {
@@ -35,34 +35,34 @@ public class EbbinghausReminder {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         switch (reviewType) {
-            case WordInfoVO.REVIEW_1_HOUR:
+            case WordInfo.REVIEW_1_HOUR:
                 calendar.add(Calendar.MINUTE, 40);
                 // calendar.add(Calendar.SECOND, 10);
                 if (!checkOneHourTimeUp()) {
                     return;
                 }
                 break;
-            case WordInfoVO.REVIEW_12_HOUR:
+            case WordInfo.REVIEW_12_HOUR:
                 calendar.add(Calendar.HOUR, 12);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
-            case WordInfoVO.REVIEW_1_DAY:
+            case WordInfo.REVIEW_1_DAY:
                 calendar.add(Calendar.HOUR, 24);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
-            case WordInfoVO.REVIEW_5_DAY:
+            case WordInfo.REVIEW_5_DAY:
                 calendar.add(Calendar.HOUR, 24 * 5);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
-            case WordInfoVO.REVIEW_20_DAY:
+            case WordInfo.REVIEW_20_DAY:
                 calendar.add(Calendar.HOUR, 24 * 20);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
-            case WordInfoVO.REVIEW_40_DAY:
+            case WordInfo.REVIEW_40_DAY:
                 calendar.add(Calendar.HOUR, 24 * 40);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
-            case WordInfoVO.REVIEW_60_DAY:
+            case WordInfo.REVIEW_60_DAY:
                 calendar.add(Calendar.HOUR, 24 * 60);
                 // calendar.add(Calendar.SECOND, 10);
                 break;
@@ -70,13 +70,13 @@ public class EbbinghausReminder {
                 break;
         }
         Intent intent = new Intent(context, KingWordReceiver.class);
-        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
-        Log.d(TAG, "=======set alarm: " + WordInfoVO.getReviewTypeText(context, reviewType));
+        Log.d(TAG, "=======set alarm: " + WordInfo.getReviewTypeText(context, reviewType));
     }
 
     /**
@@ -96,7 +96,7 @@ public class EbbinghausReminder {
         calendar.add(Calendar.MINUTE, delayMinute);
         // calendar.add(Calendar.SECOND, delayMinute);
         Intent intent = new Intent(context, KingWordReceiver.class);
-        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         intent.putExtra("review_type", reviewType);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
@@ -107,7 +107,7 @@ public class EbbinghausReminder {
     public static void removeRepeatNotifaction(Context context, int which) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent("review_time_" + which);
-        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         am.cancel(sender);
@@ -124,7 +124,7 @@ public class EbbinghausReminder {
             return;
         }
         Intent intent = new Intent("review_time_" + which);
-        intent.putExtra("type", SliceWordList.REVIEW_LIST);
+        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 

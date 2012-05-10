@@ -17,7 +17,7 @@
 		<activity android:name=".wordlist.WordListActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
-		<activity android:name=".wordlist.sublist.SubWordListActivity"
+		<activity android:name=".wordlist.SubWordListActivity"
 			android:label="@string/app_name" android:launchMode="singleTask">
 		</activity>
 		<activity android:name=".wordlist.FileExplorer"

@@ -5,10 +5,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.coleman.kingword.provider.KingWord.Achievement;
+import com.coleman.kingword.provider.KingWord.TAchievement;
 import com.coleman.kingword.provider.KingWord.TDict;
-import com.coleman.kingword.provider.KingWord.History;
-import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.kingword.provider.KingWord.TSubWordList;
+import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.util.Log;
 
 public class KingWordDBHepler extends SQLiteOpenHelper {
@@ -35,9 +36,10 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // create table
         db.execSQL(TDict.CREATE_TABLE_SQL);
-        db.execSQL(History.CREATE_TABLE_SQL);
-        db.execSQL(Achievement.CREATE_TABLE_SQL);
-        db.execSQL(WordsList.CREATE_TABLE_SQL);
+        db.execSQL(THistory.CREATE_TABLE_SQL);
+        db.execSQL(TAchievement.CREATE_TABLE_SQL);
+        db.execSQL(TWordList.CREATE_TABLE_SQL);
+        db.execSQL(TSubWordList.CREATE_TABLE_SQL);
         Log.d(TAG, "=========================db onCreate");
     }
 
@@ -45,9 +47,10 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // drop table
         db.execSQL("drop table if exists " + TDict.TABLE_NAME);
-        db.execSQL("drop table if exists " + History.TABLE_NAME);
-        db.execSQL("drop table if exists " + Achievement.TABLE_NAME);
-        db.execSQL("drop table if exists " + WordsList.TABLE_NAME);
+        db.execSQL("drop table if exists " + THistory.TABLE_NAME);
+        db.execSQL("drop table if exists " + TAchievement.TABLE_NAME);
+        db.execSQL("drop table if exists " + TWordList.TABLE_NAME);
+        db.execSQL("drop table if exists " + TSubWordList.TABLE_NAME);
         // create table
         onCreate(db);
         Log.d(TAG, "=========================db onUpgrade");

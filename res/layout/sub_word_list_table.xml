@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:background="@color/cornsilk">
-	<com.coleman.kingword.study.unit.view.SlideTableSwitcher
+	<com.coleman.kingword.wordlist.view.SlideTableSwitcher
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:id="@+id/viewSwitcher1" android:layout_alignParentTop="true" />
 	<ProgressBar android:layout_width="fill_parent"

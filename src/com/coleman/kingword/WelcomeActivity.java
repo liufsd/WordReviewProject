@@ -22,10 +22,10 @@ import android.widget.TextView;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.provider.KingWord.History;
+import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.WordListManager;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -118,7 +118,7 @@ public class WelcomeActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final Intent i = new Intent(WelcomeActivity.this, CoreActivity.class);
-                            i.putExtra("type", SliceWordList.RECOVERY_LIST);
+                            i.putExtra("type", WordListAccessor.RECOVERY_LIST);
                             startActivity(i);
                         }
                     }).setNegativeButton(R.string.cancel, null).show();
@@ -225,9 +225,9 @@ public class WelcomeActivity extends Activity {
             }
         }
         String pro[] = new String[] {
-                History._ID, History.WORD
+                THistory._ID, THistory.WORD
         };
-        Cursor c = getContentResolver().query(History.CONTENT_URI, pro, null, null, null);
+        Cursor c = getContentResolver().query(THistory.CONTENT_URI, pro, null, null, null);
         ArrayList<Info> list = new ArrayList<Info>();
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
@@ -243,7 +243,7 @@ public class WelcomeActivity extends Activity {
             for (Info info2 : list) {
                 if (!info.del && info2.id != info.id && info2.word.equals(info.word) && !info2.del) {
                     Log.d(TAG, info + " >>> " + info2);
-                    getContentResolver().delete(History.CONTENT_URI, History._ID + "=" + info2.id,
+                    getContentResolver().delete(THistory.CONTENT_URI, THistory._ID + "=" + info2.id,
                             null);
                     info2.del = true;
                 }
@@ -262,9 +262,9 @@ public class WelcomeActivity extends Activity {
                 .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
                 .getStringArray(R.array.leaning_level) : getResources().getStringArray(
                 R.array.xiuzhen_level)));
-        Cursor c = getContentResolver().query(History.CONTENT_URI, new String[] {
-            History._ID
-        }, null, null, History._ID + " desc LIMIT 1");
+        Cursor c = getContentResolver().query(THistory.CONTENT_URI, new String[] {
+            THistory._ID
+        }, null, null, THistory._ID + " desc LIMIT 1");
         if (c.moveToFirst()) {
             long id = c.getLong(0);
             count = (int) id;

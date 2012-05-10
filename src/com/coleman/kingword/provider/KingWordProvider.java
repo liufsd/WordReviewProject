@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.coleman.kingword.provider.KingWord.History;
+import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.util.Log;
 
 public class KingWordProvider extends ContentProvider {
@@ -112,7 +112,7 @@ public class KingWordProvider extends ContentProvider {
         if (tableName != null && id != null) {
             qb.setTables(tableName);
             qb.setProjectionMap(getProjectionMap(tableName));
-            qb.appendWhere(History._ID + "=" + id);
+            qb.appendWhere(THistory._ID + "=" + id);
 
         } else if (tableName != null) {
             qb.setTables(tableName);
@@ -153,7 +153,7 @@ public class KingWordProvider extends ContentProvider {
         }
 
         if (tableName != null && id != null) {
-            return db.update(tableName, values, History._ID + "=" + id, null);
+            return db.update(tableName, values, THistory._ID + "=" + id, null);
         } else if (tableName != null) {
             return db.update(tableName, values, selection, selectionArgs);
         } else {

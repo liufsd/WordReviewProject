@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.sublist.model;
+package com.coleman.kingword.wordlist;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,32 +7,31 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfoHelper;
-import com.coleman.kingword.history.WordInfoVO;
-import com.coleman.kingword.provider.KingWord.SubList;
-import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.CompleteState;
+import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.provider.KingWord.TSubWordList;
+import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
+import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
+import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.kingword.wordlist.model.WordListItem;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
-public class SliceWordList implements Serializable {
+public class WordListAccessor implements Serializable {
     private static final long serialVersionUID = -5435967694193721910L;
 
-    private SubInfo subinfo;
+    private SubWordList subinfo;
 
-    private ArrayList<WordItem> list;
+    private ArrayList<WordAccessor> list;
 
     private static final String projection[] = new String[] {
-            WordListItem.WORD, WordListItem._ID
+            TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID
     };
 
-    private static final String TAG = SliceWordList.class.getName();
+    private static final String TAG = WordListAccessor.class.getName();
 
     /**
      * the pointer of the word index in the sublist.
@@ -43,14 +42,14 @@ public class SliceWordList implements Serializable {
      * count the number of passed word, ignored will be passed, or meanwhile
      * passView, passAlternative, and passMultiple of WordItem will also passed.
      */
-    int passStateCount[];
+    public int passStateCount[];
 
     /**
      * count the total number of the error occuring times.
      */
-    int errorCount;
+    public int errorCount;
 
-    int totalCount;
+    public int totalCount;
 
     /**
      * used to control loop display
@@ -59,9 +58,9 @@ public class SliceWordList implements Serializable {
 
     public int loopIndex;
 
-    int ignoreCount;
+    public int ignoreCount;
 
-    byte listType;
+    public byte listType;
 
     public static final byte NULL_TYPE = -1;
 
@@ -79,15 +78,15 @@ public class SliceWordList implements Serializable {
 
     public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
-    public SliceWordList(SubInfo info) {
+    public WordListAccessor(SubWordList info) {
         listType = SUB_WORD_LIST;
         subinfo = info;
-        list = new ArrayList<WordItem>();
+        list = new ArrayList<WordAccessor>();
     }
 
-    public SliceWordList(byte type) {
+    public WordListAccessor(byte type) {
         listType = type;
-        list = new ArrayList<WordItem>();
+        list = new ArrayList<WordAccessor>();
     }
 
     private void loadViewMethod(Context context) {
@@ -146,11 +145,11 @@ public class SliceWordList implements Serializable {
 
     public void loadReviewWordList(Context context) {
         loadViewMethod(context);
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
-        WordItem item;
-        for (WordInfoVO info : infoList) {
-            item = new WordItem(this);
-            item.word = info.word;
+        ArrayList<WordInfo> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
+        WordAccessor item;
+        for (WordInfo info : infoList) {
+            item = new WordAccessor(this);
+            item.item.word = info.word;
             item.info = info;
             list.add(item);
             Log.d(TAG, "item:" + item + " status:" + item.getCurrentStatus());
@@ -159,30 +158,35 @@ public class SliceWordList implements Serializable {
     }
 
     private void loadInfoList(Context context) {
-        ArrayList<WordInfoVO> infoList = WordInfoHelper.getWordInfoList(context, listType);
-        WordItem item;
-        for (WordInfoVO info : infoList) {
-            item = new WordItem(this);
-            item.word = info.word;
-            item.info = info;
-            list.add(item);
-            Log.d(TAG, "item:" + item);
+        ArrayList<WordInfo> infoList = WordInfoHelper.getWordInfoList(context, listType);
+        WordAccessor wa;
+        for (WordInfo info : infoList) {
+            wa = new WordAccessor(this);
+            wa.item.word = info.word;
+            wa.info = info;
+            list.add(wa);
+            Log.d(TAG, "item:" + wa);
         }
         infoList.clear();
     }
 
     private void loadSubList(Context context) {
         long time = System.currentTimeMillis();
-        Cursor c = context.getContentResolver().query(SubList.CONTENT_URI, projection,
-                WordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
+        Cursor c = context.getContentResolver().query(TSubWordList.CONTENT_URI, projection,
+                TWordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
         if (c.moveToFirst()) {
-            WordItem item;
+            WordAccessor wordAccessor;
             while (!c.isAfterLast()) {
-                item = new WordItem(this);
+                wordAccessor = new WordAccessor(this);
+
+                WordListItem item = new WordListItem();
                 item.word = c.getString(0);
                 item.id = c.getLong(1);
-                list.add(item);
-                item.loadInfo(context);
+                item.sub_wordlist_id = c.getLong(2);
+                wordAccessor.item = item;
+
+                list.add(wordAccessor);
+                wordAccessor.loadInfo(context);
                 c.moveToNext();
             }
         }
@@ -224,18 +228,18 @@ public class SliceWordList implements Serializable {
         return true;
     }
 
-    public ArrayList<DictData> getDictData(Context context, WordItem item) {
+    public ArrayList<DictData> getDictData(Context context, WordAccessor item) {
         return item.getDictData(context, list);
     }
 
     /**
      * call the method must make sure that isComplete is called first.
      */
-    public WordItem getCurrentWord() {
+    public WordAccessor getCurrentWord() {
         if (allComplete()) {
             return list.get(p);
         }
-        WordItem item = list.get(p);
+        WordAccessor item = list.get(p);
         if (!item.isComplete()) {
             return item;
         } else {
@@ -246,12 +250,12 @@ public class SliceWordList implements Serializable {
     /**
      * call this method must make sure that hasNext is called first!!!
      */
-    public WordItem getNext() {
+    public WordAccessor getNext() {
         if (allComplete()) {
             return list.get(p);
         }
         p = p + 1 > list.size() - 1 ? 0 : p + 1;
-        WordItem item = list.get(p);
+        WordAccessor item = list.get(p);
         if (!item.isComplete()) {
             return item;
         } else {
@@ -259,7 +263,7 @@ public class SliceWordList implements Serializable {
             // word after index of p
             int tmp = p + 1 > list.size() - 1 ? 0 : p + 1;
             for (int i = tmp; i < list.size(); i++) {
-                WordItem it = list.get(i);
+                WordAccessor it = list.get(i);
                 if (!it.isComplete()) {
                     p = i;
                     return it;
@@ -268,7 +272,7 @@ public class SliceWordList implements Serializable {
             // if not found next word after index p, then try to find the next
             // word from the index 0
             for (int i = 0; i < tmp; i++) {
-                WordItem it = list.get(i);
+                WordAccessor it = list.get(i);
                 if (!it.isComplete()) {
                     p = i;
                     return it;
@@ -324,86 +328,9 @@ public class SliceWordList implements Serializable {
 
     private void update(Context context) {
         ContentValues values = subinfo.toContentValues();
-        int num = context.getContentResolver().update(SubList.CONTENT_URI, values,
-                SubList._ID + "=" + subinfo.id, null);
+        int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
+                TSubWordList._ID + "=" + subinfo.id, null);
         Log.d(TAG, "sub word list update num: " + num);
-    }
-
-    /**
-     * For map the index to the id storing in the database.
-     */
-    public static class SubInfo implements Parcelable, Serializable {
-        private static final long serialVersionUID = 911690030424514203L;
-
-        public SubInfo(long id, int index, int level, long wordlist_id) {
-            this.id = id;
-            this.index = index;
-            this.level = level;
-            this.word_list_id = wordlist_id;
-        }
-
-        public SubInfo(long word_list_id) {
-            this.word_list_id = word_list_id;
-        }
-
-        public int index;
-
-        // field
-        public long id;
-
-        public long word_list_id;
-
-        public int level;
-
-        public ContentValues toContentValues() {
-            ContentValues value = new ContentValues();
-            value.put(SubList.WORD_LIST_ID, word_list_id);
-            value.put(SubList.LEVEL, level);
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return "id:" + id + "  index:" + index + " level:" + level + " word_list_id:"
-                    + word_list_id;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        /**
-         * Implement the Parcelable interface.
-         * 
-         * @hide
-         */
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeLong(id);
-            dest.writeLong(word_list_id);
-            dest.writeInt(level);
-            dest.writeInt(index);
-        }
-
-        /**
-         * Implement the Parcelable interface.
-         * 
-         * @hide
-         */
-        public static final Creator<SubInfo> CREATOR = new Creator<SubInfo>() {
-            public SubInfo createFromParcel(Parcel in) {
-                long id = in.readLong();
-                long word_list_id = in.readLong();
-                int level = in.readInt();
-                int index = in.readInt();
-                return new SubInfo(id, index, level, word_list_id);
-            }
-
-            public SubInfo[] newArray(int size) {
-                return new SubInfo[size];
-            }
-        };
-
     }
 
     public int getCount() {

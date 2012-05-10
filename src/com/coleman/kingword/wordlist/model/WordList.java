@@ -1,9 +1,9 @@
 
-package com.coleman.kingword.wordlist;
+package com.coleman.kingword.wordlist.model;
 
 import android.content.ContentValues;
 
-import com.coleman.kingword.provider.KingWord.WordsList;
+import com.coleman.kingword.provider.KingWord.TWordList;
 
 public class WordList {
     public static interface InternalWordList {
@@ -25,7 +25,7 @@ public class WordList {
     public WordList() {
     }
 
-    WordList(String describe, String path_name, SetMethod method) {
+    public WordList(String describe, String path_name, SetMethod method) {
         this.describe = describe == null ? "" : describe;
         this.path_name = path_name == null ? "" : path_name;
         this.set_method = method == null ? this.set_method : method;
@@ -58,9 +58,9 @@ public class WordList {
 
     public ContentValues toContentValues() {
         ContentValues value = new ContentValues();
-        value.put(WordsList.DESCRIBE, describe);
-        value.put(WordsList.PATH_NAME, path_name);
-        value.put(WordsList.SET_METHOD, set_method.getValue());
+        value.put(TWordList.DESCRIBE, describe);
+        value.put(TWordList.PATH_NAME, path_name);
+        value.put(TWordList.SET_METHOD, set_method.getValue());
         return value;
     }
 

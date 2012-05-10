@@ -22,8 +22,8 @@ import android.os.Message;
 import com.coleman.util.Log;
 import android.widget.Toast;
 
-import com.coleman.kingword.provider.KingWord.History;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
+import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.util.Config;
 
 /**
@@ -34,9 +34,9 @@ import com.coleman.util.Config;
  */
 public class WordInfoHelper {
     private static final String[] projection = new String[] {
-            History._ID, History.WORD, History.IGNORE, History.STUDY_COUNT,
-            History.ERROR_COUNT, History.WEIGHT, History.NEW_WORD, History.REVIEW_TYPE,
-            History.REVIEW_TIME
+            THistory._ID, THistory.WORD, THistory.IGNORE, THistory.STUDY_COUNT,
+            THistory.ERROR_COUNT, THistory.WEIGHT, THistory.NEW_WORD, THistory.REVIEW_TYPE,
+            THistory.REVIEW_TIME
     };
 
     private static final String TAG = WordInfoHelper.class.getName();
@@ -45,7 +45,7 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static boolean upgrade(Context context, String word) {
-        WordInfoVO wordinfo = getWordInfo(context, word);
+        WordInfo wordinfo = getWordInfo(context, word);
         if (wordinfo.increaseWeight() && store(context, wordinfo)) {
             return true;
         }
@@ -56,7 +56,7 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static boolean degrade(Context context, String word) {
-        WordInfoVO wordinfo = getWordInfo(context, word);
+        WordInfo wordinfo = getWordInfo(context, word);
         if (wordinfo.decreaseWeight() && store(context, wordinfo)) {
             return true;
         }
@@ -67,7 +67,7 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static boolean study(Context context, String word) {
-        WordInfoVO wordinfo = getWordInfo(context, word);
+        WordInfo wordinfo = getWordInfo(context, word);
         wordinfo.studycount++;
         return store(context, wordinfo);
     }
@@ -76,7 +76,7 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static boolean reportMiss(Context context, String word) {
-        WordInfoVO wordinfo = getWordInfo(context, word);
+        WordInfo wordinfo = getWordInfo(context, word);
         wordinfo.errorcount++;
         return store(context, wordinfo);
     }
@@ -85,7 +85,7 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static boolean ignore(Context context, String word) {
-        WordInfoVO wordinfo = getWordInfo(context, word);
+        WordInfo wordinfo = getWordInfo(context, word);
         wordinfo.ignore = true;
         return store(context, wordinfo);
     }
@@ -93,10 +93,10 @@ public class WordInfoHelper {
     /**
      * You must make sure the word is not empty.
      */
-    public static WordInfoVO getWordInfo(Context context, String word) {
-        Cursor c = context.getContentResolver().query(History.CONTENT_URI, projection,
-                History.WORD + "='" + word + "'", null, null);
-        WordInfoVO wi = new WordInfoVO(word);
+    public static WordInfo getWordInfo(Context context, String word) {
+        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
+                THistory.WORD + "='" + word + "'", null, null);
+        WordInfo wi = new WordInfo(word);
         if (c.moveToFirst()) {
             wi.id = c.getLong(0);
             wi.word = c.getString(1);
@@ -122,43 +122,43 @@ public class WordInfoHelper {
      * @param type map the value of SubWordListActivity's type.
      * @return
      */
-    public static ArrayList<WordInfoVO> getWordInfoList(Context context, byte type) {
-        ArrayList<WordInfoVO> list = new ArrayList<WordInfoVO>();
+    public static ArrayList<WordInfo> getWordInfoList(Context context, byte type) {
+        ArrayList<WordInfo> list = new ArrayList<WordInfo>();
         Cursor c = null;
         switch (type) {
-            case SliceWordList.NEW_WORD_BOOK_LIST:
-                c = context.getContentResolver().query(History.CONTENT_URI, projection,
+            case WordListAccessor.NEW_WORD_BOOK_LIST:
+                c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means new word
-                        History.NEW_WORD + "= 2", null, null);
+                        THistory.NEW_WORD + "= 2", null, null);
 
                 break;
-            case SliceWordList.SCAN_LIST:
-                c = context.getContentResolver().query(History.CONTENT_URI, projection,
+            case WordListAccessor.SCAN_LIST:
+                c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means ignore word
-                        History.IGNORE + "= 2", null, null);
+                        THistory.IGNORE + "= 2", null, null);
 
                 break;
-            case SliceWordList.REVIEW_LIST:
+            case WordListAccessor.REVIEW_LIST:
                 long ct = System.currentTimeMillis();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 Log.d(TAG, "=====current hour:" + hour);
-                String selection = (hour >= 18 ? History.NEW_WORD + " = 2 or " : "") + "("
-                        + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_HOUR + " and "
-                        + History.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
-                        + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_12_HOUR + " and "
-                        + History.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or "
-                        + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_1_DAY + " and "
-                        + History.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or "
-                        + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_5_DAY + " and "
-                        + History.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")"
-                        + " or " + "(" + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_20_DAY
-                        + " and " + History.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l)
-                        + ")" + " or " + "(" + History.REVIEW_TYPE + "="
-                        + WordInfoVO.REVIEW_40_DAY + " and " + History.REVIEW_TIME + "<="
+                String selection = (hour >= 18 ? THistory.NEW_WORD + " = 2 or " : "") + "("
+                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_HOUR + " and "
+                        + THistory.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
+                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_12_HOUR + " and "
+                        + THistory.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or "
+                        + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_DAY + " and "
+                        + THistory.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or "
+                        + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_5_DAY + " and "
+                        + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")"
+                        + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY
+                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l)
+                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "="
+                        + WordInfo.REVIEW_40_DAY + " and " + THistory.REVIEW_TIME + "<="
                         + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                        + History.REVIEW_TYPE + "=" + WordInfoVO.REVIEW_60_DAY + " and "
-                        + History.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
-                c = context.getContentResolver().query(History.CONTENT_URI, projection, selection,
+                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
+                        + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+                c = context.getContentResolver().query(THistory.CONTENT_URI, projection, selection,
                         null, null);
                 break;
             default:
@@ -166,7 +166,7 @@ public class WordInfoHelper {
         }
         if (c != null && c.moveToFirst()) {
             while (!c.isAfterLast()) {
-                WordInfoVO wi = new WordInfoVO("");
+                WordInfo wi = new WordInfo("");
                 wi.id = c.getLong(0);
                 wi.word = c.getString(1);
                 wi.ignore = c.getInt(2) == 2 ? true : false;
@@ -190,15 +190,15 @@ public class WordInfoHelper {
      * You must make sure the word is not empty.
      */
     public static int delete(Context context, String word) {
-        int count = context.getContentResolver().delete(History.CONTENT_URI,
-                History.WORD + "='" + word + "'", null);
+        int count = context.getContentResolver().delete(THistory.CONTENT_URI,
+                THistory.WORD + "='" + word + "'", null);
         return count;
     }
 
     /**
      * Store the WordInfo to the database, true if succeed, otherwise false.
      */
-    public static boolean store(Context context, WordInfoVO info) {
+    public static boolean store(Context context, WordInfo info) {
         if (info.id == -1) {
             Uri uri = insert(context, info);
             if (uri != null) {
@@ -261,7 +261,7 @@ public class WordInfoHelper {
                     while (first || cur_count == 500) {
                         first = false;
                         selection = "_id >" + s_id;
-                        c = context.getContentResolver().query(History.CONTENT_URI, projection,
+                        c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                                 selection, null, "_id asc limit " + limit);
                         cur_count = c.getCount();
                         total_count += cur_count;
@@ -368,33 +368,33 @@ public class WordInfoHelper {
                                     + ignore + " scount " + scount + " ecount " + ecount
                                     + " weight " + weight + " newword " + newword);
 
-                            cv[i].put(History.WORD, word);
-                            cv[i].put(History.IGNORE, ignore);
-                            cv[i].put(History.STUDY_COUNT, scount);
-                            cv[i].put(History.ERROR_COUNT, ecount);
-                            cv[i].put(History.WEIGHT, weight);
-                            cv[i].put(History.NEW_WORD, newword);
-                            cv[i].put(History.REVIEW_TYPE, review_type);
-                            cv[i].put(History.REVIEW_TIME, review_time);
+                            cv[i].put(THistory.WORD, word);
+                            cv[i].put(THistory.IGNORE, ignore);
+                            cv[i].put(THistory.STUDY_COUNT, scount);
+                            cv[i].put(THistory.ERROR_COUNT, ecount);
+                            cv[i].put(THistory.WEIGHT, weight);
+                            cv[i].put(THistory.NEW_WORD, newword);
+                            cv[i].put(THistory.REVIEW_TYPE, review_type);
+                            cv[i].put(THistory.REVIEW_TIME, review_time);
                         }
                         dis.close();
                         fis.close();
                         file.delete();
-                        context.getContentResolver().delete(History.CONTENT_URI, null, null);
+                        context.getContentResolver().delete(THistory.CONTENT_URI, null, null);
                         int slice = 500;
                         int times = cv.length / slice;
                         int left = cv.length % slice;
                         ContentValues subcv[] = new ContentValues[slice];
                         for (int i = 0; i < times; i++) {
                             System.arraycopy(cv, i * slice, subcv, 0, slice);
-                            context.getContentResolver().bulkInsert(History.CONTENT_URI, subcv);
+                            context.getContentResolver().bulkInsert(THistory.CONTENT_URI, subcv);
                             System.out.println("insert " + (i * slice) + "-" + (i * slice + slice)
                                     + " records to db!");
                         }
                         if (left > 0) {
                             subcv = new ContentValues[left];
                             System.arraycopy(cv, times * slice, subcv, 0, left);
-                            context.getContentResolver().bulkInsert(History.CONTENT_URI, subcv);
+                            context.getContentResolver().bulkInsert(THistory.CONTENT_URI, subcv);
                             System.out.println("insert " + (times * slice) + "-"
                                     + (times * slice + left) + " records to db!");
                         }
@@ -418,20 +418,20 @@ public class WordInfoHelper {
     /**
      * Return the uri if succeed, otherwise null.
      */
-    private static Uri insert(Context context, WordInfoVO info) {
+    private static Uri insert(Context context, WordInfo info) {
         ContentValues value = null;
         Uri uri = null;
         if (info != null) {
             value = new ContentValues();
-            value.put(History.WORD, info.word);
-            value.put(History.IGNORE, info.ignore ? 2 : 1);
-            value.put(History.STUDY_COUNT, info.studycount);
-            value.put(History.ERROR_COUNT, info.errorcount);
-            value.put(History.WEIGHT, info.weight);
-            value.put(History.NEW_WORD, info.newword ? 2 : 1);
-            value.put(History.REVIEW_TYPE, info.review_type);
-            value.put(History.REVIEW_TIME, info.review_time);
-            uri = context.getContentResolver().insert(History.CONTENT_URI, value);
+            value.put(THistory.WORD, info.word);
+            value.put(THistory.IGNORE, info.ignore ? 2 : 1);
+            value.put(THistory.STUDY_COUNT, info.studycount);
+            value.put(THistory.ERROR_COUNT, info.errorcount);
+            value.put(THistory.WEIGHT, info.weight);
+            value.put(THistory.NEW_WORD, info.newword ? 2 : 1);
+            value.put(THistory.REVIEW_TYPE, info.review_type);
+            value.put(THistory.REVIEW_TIME, info.review_time);
+            uri = context.getContentResolver().insert(THistory.CONTENT_URI, value);
         }
         return uri;
     }
@@ -439,21 +439,21 @@ public class WordInfoHelper {
     /**
      * Return count>0 if succeed, otherwise 0.
      */
-    private static int update(Context context, WordInfoVO info) {
+    private static int update(Context context, WordInfo info) {
         ContentValues value = null;
         int count = 0;
         if (info != null) {
             value = new ContentValues();
-            value.put(History.WORD, info.word);
-            value.put(History.IGNORE, info.ignore ? 2 : 1);
-            value.put(History.STUDY_COUNT, info.studycount);
-            value.put(History.ERROR_COUNT, info.errorcount);
-            value.put(History.WEIGHT, info.weight);
-            value.put(History.NEW_WORD, info.newword ? 2 : 1);
-            value.put(History.REVIEW_TYPE, info.review_type);
-            value.put(History.REVIEW_TIME, info.review_time);
-            count = context.getContentResolver().update(History.CONTENT_URI, value,
-                    History._ID + "=" + info.id, null);
+            value.put(THistory.WORD, info.word);
+            value.put(THistory.IGNORE, info.ignore ? 2 : 1);
+            value.put(THistory.STUDY_COUNT, info.studycount);
+            value.put(THistory.ERROR_COUNT, info.errorcount);
+            value.put(THistory.WEIGHT, info.weight);
+            value.put(THistory.NEW_WORD, info.newword ? 2 : 1);
+            value.put(THistory.REVIEW_TYPE, info.review_type);
+            value.put(THistory.REVIEW_TIME, info.review_time);
+            count = context.getContentResolver().update(THistory.CONTENT_URI, value,
+                    THistory._ID + "=" + info.id, null);
         }
         return count;
     }

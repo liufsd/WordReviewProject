@@ -35,11 +35,9 @@ import android.widget.TextView;
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.wordlist.WordList.InternalWordList;
+import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
-import com.coleman.kingword.wordlist.sublist.SubWordListActivity;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList;
+import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
 import com.coleman.util.Log;
 
 public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
@@ -51,7 +49,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     private Cursor c;
 
     private static final String projection[] = new String[] {
-            WordsList._ID, WordsList.DESCRIBE, WordsList.PATH_NAME, WordsList.SET_METHOD
+            TWordList._ID, TWordList.DESCRIBE, TWordList.PATH_NAME, TWordList.SET_METHOD
     };
 
     public static final String EXTERNAL_FILE = "external_file";
@@ -157,7 +155,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
         } else {
             Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
-            i.putExtra(WordsList._ID, (Long) view.getTag());
+            i.putExtra(TWordList._ID, (Long) view.getTag());
             startActivity(i);
         }
     }
@@ -176,7 +174,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 break;
             case R.id.menu_ignore_list:
                 Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", SliceWordList.SCAN_LIST);
+                intent.putExtra("type", WordListAccessor.SCAN_LIST);
                 startActivity(intent);
                 break;
         }
@@ -215,8 +213,8 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        getContentResolver().delete(WordsList.CONTENT_URI,
-                                WordsList._ID + " = " + id, null);
+                        getContentResolver().delete(TWordList.CONTENT_URI,
+                                TWordList._ID + " = " + id, null);
                         c.requery();
                         adapter.notifyDataSetChanged();
                     }
@@ -233,9 +231,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                         String str = et.getText().toString();
                         if (!TextUtils.isEmpty(str)) {
                             ContentValues value = new ContentValues();
-                            value.put(WordsList.PATH_NAME, str);
-                            getContentResolver().update(WordsList.CONTENT_URI, value,
-                                    WordsList._ID + " = " + id, null);
+                            value.put(TWordList.PATH_NAME, str);
+                            getContentResolver().update(TWordList.CONTENT_URI, value,
+                                    TWordList._ID + " = " + id, null);
                             c.requery();
                             adapter.notifyDataSetChanged();
                         }
@@ -248,7 +246,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         switch (v.getId()) {
             case R.id.button1:
                 Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", SliceWordList.NEW_WORD_BOOK_LIST);
+                intent.putExtra("type", WordListAccessor.NEW_WORD_BOOK_LIST);
                 startActivity(intent);
                 break;
             default:
@@ -276,13 +274,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         protected void onPreExecute() {
             switch (type) {
                 case INIT_QUERY:
-                    progressBar.setVisibility(View.VISIBLE);
                     loadLayout.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
                 case LOAD_EXTERNAL:
                     listView.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.VISIBLE);
                     loadLayout.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
@@ -295,7 +291,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         protected Void doInBackground(Void... params) {
             switch (type) {
                 case INIT_QUERY: {
-                    c = getContentResolver().query(WordsList.CONTENT_URI, projection, null, null,
+                    c = getContentResolver().query(TWordList.CONTENT_URI, projection, null, null,
                             null);
                     if (!c.moveToFirst()) {
                         IProgressNotifier notifier = new IProgressNotifier() {
@@ -309,11 +305,10 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                                 InternalWordList.POSTGRADUATE_WORDLIST, notifier);
                         c.requery();
                     }
-                    publishProgress(100);
                     break;
                 }
                 case LOAD_EXTERNAL: {
-                    c = getContentResolver().query(WordsList.CONTENT_URI, projection, null, null,
+                    c = getContentResolver().query(TWordList.CONTENT_URI, projection, null, null,
                             null);
                     IProgressNotifier notifier = new IProgressNotifier() {
                         @Override
@@ -339,9 +334,16 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             switch (type) {
                 case INIT_QUERY:
                     Log.d(TAG, "update:" + values[0]);
+                    if (progressBar.getVisibility() != View.VISIBLE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
                     progressBar.setProgress(values[0]);
                     break;
                 case LOAD_EXTERNAL:
+
+                    if (progressBar.getVisibility() != View.VISIBLE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
                     progressBar.setProgress(values[0]);
                     break;
                 default:

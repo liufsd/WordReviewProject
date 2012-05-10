@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.sublist;
+package com.coleman.kingword.wordlist;
 
 import java.util.ArrayList;
 
@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.provider.KingWord.SubList;
-import com.coleman.kingword.provider.KingWord.WordsList;
-import com.coleman.kingword.wordlist.sublist.model.SliceWordList.SubInfo;
-import com.coleman.kingword.wordlist.sublist.view.SlideTableSwitcher;
+import com.coleman.kingword.provider.KingWord.TSubWordList;
+import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.kingword.wordlist.view.SlideTableSwitcher;
 
 public class SubWordListActivity extends Activity {
 
@@ -46,9 +46,9 @@ public class SubWordListActivity extends Activity {
         super.onStart();
         Bundle b = new Bundle();
         if (wordlist_id == -1) {
-            wordlist_id = getIntent().getLongExtra(WordsList._ID, -1);
+            wordlist_id = getIntent().getLongExtra(TWordList._ID, -1);
         }
-        b.putLong(WordsList._ID, wordlist_id);
+        b.putLong(TWordList._ID, wordlist_id);
         new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute(b);
     }
 
@@ -84,16 +84,16 @@ public class SubWordListActivity extends Activity {
             switch (type) {
                 case INIT_QUERY:
                     String projection[] = new String[] {
-                            SubList._ID, SubList.LEVEL
+                            TSubWordList._ID, TSubWordList.LEVEL
                     };
-                    long wordlist_id = params[0].getLong(WordsList._ID);
-                    Cursor c = getContentResolver().query(SubList.CONTENT_URI, projection,
-                            SubList.WORD_LIST_ID + "=" + wordlist_id, null, null);
-                    ArrayList<SubInfo> list = new ArrayList<SubInfo>();
+                    long wordlist_id = params[0].getLong(TWordList._ID);
+                    Cursor c = getContentResolver().query(TSubWordList.CONTENT_URI, projection,
+                            TSubWordList.WORD_LIST_ID + "=" + wordlist_id, null, null);
+                    ArrayList<SubWordList> list = new ArrayList<SubWordList>();
                     int i = 1;
                     if (c.moveToFirst()) {
                         while (!c.isAfterLast()) {
-                            list.add(new SubInfo(c.getLong(0), i, c.getInt(1), wordlist_id));
+                            list.add(new SubWordList(c.getLong(0), i, c.getInt(1), wordlist_id));
                             c.moveToNext();
                             i++;
                         }
@@ -116,7 +116,7 @@ public class SubWordListActivity extends Activity {
                 case INIT_QUERY:
                     progressBar.setVisibility(View.VISIBLE);
                     preProgress.setVisibility(View.GONE);
-                    SubInfo[] sub_ids = pageControl.getPageInfo();
+                    SubWordList[] sub_ids = pageControl.getPageInfo();
                     mSwitcher.showCurrentScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                     break;
@@ -127,26 +127,26 @@ public class SubWordListActivity extends Activity {
     }
 
     public static class PageControl {
-        private ArrayList<SubInfo[]> mlist = new ArrayList<SubInfo[]>();
+        private ArrayList<SubWordList[]> mlist = new ArrayList<SubWordList[]>();
 
         private int curIndex;
 
         private final int MAX_PAGE_ITEM = 12;
 
-        public PageControl(ArrayList<SubInfo> list) {
+        public PageControl(ArrayList<SubWordList> list) {
             curIndex = 0;
             int size = list.size();
             int pnum = size / MAX_PAGE_ITEM;
             int lp = size % MAX_PAGE_ITEM;
             for (int i = 0; i < pnum; i++) {
-                SubInfo[] page = new SubInfo[12];
+                SubWordList[] page = new SubWordList[12];
                 for (int j = 0; j < MAX_PAGE_ITEM; j++) {
                     page[j] = list.remove(0);
                 }
                 mlist.add(page);
             }
             if (lp != 0) {
-                SubInfo[] page = new SubInfo[lp];
+                SubWordList[] page = new SubWordList[lp];
                 for (int j = 0; j < lp; j++) {
                     page[j] = list.remove(0);
                 }
@@ -174,7 +174,7 @@ public class SubWordListActivity extends Activity {
         /**
          * return an array of current page info.
          */
-        public SubInfo[] getPageInfo() {
+        public SubWordList[] getPageInfo() {
             return mlist.get(curIndex);
         }
 
@@ -186,12 +186,12 @@ public class SubWordListActivity extends Activity {
             return curIndex - 1 >= 0;
         }
 
-        public SubInfo[] moveToNextPage() {
+        public SubWordList[] moveToNextPage() {
             curIndex = curIndex + 1 > mlist.size() - 1 ? mlist.size() - 1 : curIndex + 1;
             return mlist.get(curIndex);
         }
 
-        public SubInfo[] moveToPrePage() {
+        public SubWordList[] moveToPrePage() {
             curIndex = curIndex - 1 < 0 ? 0 : curIndex - 1;
             return mlist.get(curIndex);
         }
@@ -210,13 +210,13 @@ public class SubWordListActivity extends Activity {
             u_x = (int) event.getX();
             if (u_x - d_x > getWindowManager().getDefaultDisplay().getWidth() / 5) {
                 if (pageControl.hasPreviousPage()) {
-                    SubInfo sub_ids[] = pageControl.moveToPrePage();
+                    SubWordList sub_ids[] = pageControl.moveToPrePage();
                     mSwitcher.showPreviousScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                 }
             } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 5) {
                 if (pageControl.hasNextPage()) {
-                    SubInfo sub_ids[] = pageControl.moveToNextPage();
+                    SubWordList sub_ids[] = pageControl.moveToNextPage();
                     mSwitcher.showNextScreen(sub_ids);
                     progressBar.setProgress(pageControl.getProgress());
                 }

@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.sublist.model;
+package com.coleman.kingword.wordlist;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,23 +11,23 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfoHelper;
-import com.coleman.kingword.history.WordInfoVO;
-import com.coleman.kingword.provider.KingWord.WordsList.WordListItem;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.FiniteState;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.IFSMCommand;
-import com.coleman.kingword.wordlist.sublist.model.FiniteStateMachine.InitState;
+import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
+import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.model.WordListItem;
 import com.coleman.util.Log;
 
-public class WordItem implements Serializable{
+public class WordAccessor implements Serializable {
+
     private static final long serialVersionUID = 884726896304858319L;
 
-    private static final String TAG = WordItem.class.getName();
+    private static final String TAG = WordAccessor.class.getName();
 
-    public long id;
+    public WordListItem item;
 
-    public String word;
-
-    WordInfoVO info;
+    public WordInfo info;
 
     private boolean reviewed;
 
@@ -37,22 +37,26 @@ public class WordItem implements Serializable{
 
     private FiniteStateMachine mStateMachine;
 
-    private SliceWordList sliceList;
+    private WordListAccessor sliceList;
 
-    public WordItem(SliceWordList sliceList) {
+    public WordAccessor(WordListAccessor sliceList) {
         this.sliceList = sliceList;
         switch (sliceList.listType) {
-            case SliceWordList.SUB_WORD_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[0]);
+            case WordListAccessor.SUB_WORD_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList,
+                        WordListAccessor.slicelistState[0]);
                 break;
-            case SliceWordList.REVIEW_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[1]);
+            case WordListAccessor.REVIEW_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList,
+                        WordListAccessor.slicelistState[1]);
                 break;
-            case SliceWordList.NEW_WORD_BOOK_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[2]);
+            case WordListAccessor.NEW_WORD_BOOK_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList,
+                        WordListAccessor.slicelistState[2]);
                 break;
-            case SliceWordList.SCAN_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList, SliceWordList.slicelistState[3]);
+            case WordListAccessor.SCAN_LIST:
+                mStateMachine = new FiniteStateMachine(sliceList,
+                        WordListAccessor.slicelistState[3]);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -60,19 +64,18 @@ public class WordItem implements Serializable{
     }
 
     public String getWord(Context context) {
-        String w = word;
+        String w = item.word;
         Log.d(TAG, "sliceList.listType:" + sliceList.listType);
-        if (sliceList.listType == SliceWordList.REVIEW_LIST) {
+        if (sliceList.listType == WordListAccessor.REVIEW_LIST) {
             if (info.newword) {
                 Log.d(TAG, "info.getReviewTime:" + info.inReviewTime());
                 w += "("
                         + context.getString(R.string.new_word)
                         + (info.inReviewTime() ? ","
-                                + WordInfoVO.getReviewTypeText(context, info.review_type) : "")
-                        + ")";
+                                + WordInfo.getReviewTypeText(context, info.review_type) : "") + ")";
             } else {
                 w += info.inReviewTime() ? "("
-                        + WordInfoVO.getReviewTypeText(context, info.review_type) + ")" : "";
+                        + WordInfo.getReviewTypeText(context, info.review_type) + ")" : "";
             }
             return w;
         } else {
@@ -86,7 +89,8 @@ public class WordItem implements Serializable{
 
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
-        cv.put(WordListItem.WORD, word);
+        cv.put(TWordListItem.WORD, item.word);
+        cv.put(TWordListItem.SUB_WORD_LIST_ID, item.sub_wordlist_id);
         return cv;
     }
 
@@ -112,21 +116,21 @@ public class WordItem implements Serializable{
 
     public DictData getDictData(Context context) {
         if (dictData == null) {
-            dictData = DictManager.getInstance().viewWord(context, word);
+            dictData = DictManager.getInstance().viewWord(context, item.word);
         }
         return dictData;
     }
 
     public DictData getDetail(Context context) {
         if (detailData == null) {
-            detailData = DictManager.getInstance().viewMore(context, word);
+            detailData = DictManager.getInstance().viewMore(context, item.word);
         }
         return detailData;
     }
 
     public void loadInfo(Context context) {
         if (info == null) {
-            info = WordInfoHelper.getWordInfo(context, word);
+            info = WordInfoHelper.getWordInfo(context, item.word);
         }
         if (info.ignore) {
             sliceList.ignoreCount++;
@@ -173,7 +177,7 @@ public class WordItem implements Serializable{
     }
 
     public void studyOrReview(Context context) {
-        if (sliceList.listType == SliceWordList.REVIEW_LIST) {
+        if (sliceList.listType == WordListAccessor.REVIEW_LIST) {
             reviewPlus(context);
         } else {
             studyPlus(context);
@@ -183,7 +187,7 @@ public class WordItem implements Serializable{
     private void studyPlus(Context context) {
         info.studycount++;
         if (info.review_time == 0) {
-            info.review_type = WordInfoVO.REVIEW_1_HOUR;
+            info.review_type = WordInfo.REVIEW_1_HOUR;
             info.review_time = System.currentTimeMillis();
             // ////////////////////////////////////////////////////////////
             // EbbinghausReminder.setNotifaction(context, info.review_type);
@@ -192,7 +196,7 @@ public class WordItem implements Serializable{
         if (info.studycount % 3 == 0) {
             info.weight--;
         }
-        info.weight = info.weight < WordInfoVO.MIN_WEIGHT ? WordInfoVO.MIN_WEIGHT : info.weight;
+        info.weight = info.weight < WordInfo.MIN_WEIGHT ? WordInfo.MIN_WEIGHT : info.weight;
         Log.d(TAG, "study plus:" + toString());
         WordInfoHelper.store(context, info);
     }
@@ -202,13 +206,13 @@ public class WordItem implements Serializable{
         if (!reviewed) {
             reviewed = true;
             if (info.inReviewTime()) {
-                info.review_type = WordInfoVO.getNextReviewType(info.review_type);
+                info.review_type = WordInfo.getNextReviewType(info.review_type);
             }
         }
         if (info.studycount % 3 == 0) {
             info.weight--;
         }
-        info.weight = info.weight < WordInfoVO.MIN_WEIGHT ? WordInfoVO.MIN_WEIGHT : info.weight;
+        info.weight = info.weight < WordInfo.MIN_WEIGHT ? WordInfo.MIN_WEIGHT : info.weight;
         Log.d(TAG, "review plus:" + toString());
         WordInfoHelper.store(context, info);
     }
@@ -219,18 +223,18 @@ public class WordItem implements Serializable{
         if (info.errorcount % 2 == 0) {
             info.weight++;
         }
-        info.weight = info.weight > WordInfoVO.MAX_WEIGHT ? WordInfoVO.MAX_WEIGHT : info.weight;
+        info.weight = info.weight > WordInfo.MAX_WEIGHT ? WordInfo.MAX_WEIGHT : info.weight;
         Log.d(TAG, "error plus:" + toString());
         WordInfoHelper.store(context, info);
     }
 
     @Override
     public String toString() {
-        return "id:" + id + " word:" + word + " info:" + info + " data:" + dictData + " detail:"
-                + detailData;
+        return "id:" + item.id + " word:" + item.word + " info:" + info + " data:" + dictData
+                + " detail:" + detailData;
     }
 
-    public ArrayList<DictData> getDictData(Context context, ArrayList<WordItem> list) {
+    public ArrayList<DictData> getDictData(Context context, ArrayList<WordAccessor> list) {
         return mStateMachine.getDictData(context, this, list);
     }
 
