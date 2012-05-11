@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.util.ByteArrayBuffer;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -184,14 +186,17 @@ public class TextEditor extends Activity implements OnClickListener {
 
         private FileLoader(String path) {
             try {
-                FileReader reader = new FileReader(new File(path));
-                BufferedReader breader = new BufferedReader(reader);
-                String line;
-                while ((line = breader.readLine()) != null) {
-                    content += line + "\n";
+                FileInputStream fis = new FileInputStream(path);
+                int count = -1;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte datas[] = new byte[1024];
+                while ((count = fis.read(datas)) > 0) {
+                    baos.write(datas, 0, count);
                 }
-                breader.close();
-                reader.close();
+                baos.flush();
+                baos.close();
+                content = baos.toString();
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }

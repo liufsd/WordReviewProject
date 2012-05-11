@@ -1,6 +1,7 @@
 
 package com.coleman.kingword.wordlist;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,15 +52,14 @@ public class GeneralParser {
         // process the stream line by line
         int v;
         byte bytes[] = new byte[1024];
-        ByteArrayBuffer baf = new ByteArrayBuffer(1024 * 200);
+        ByteArrayOutputStream baf = new ByteArrayOutputStream();
         while ((v = is.read(bytes)) != -1) {
-            baf.append(bytes, 0, v);
-            load_size = baf.length();
+            baf.write(bytes, 0, v);
+            load_size = baf.size();
             cur = load_size * (max - 10) / (total_size + 1);
             notifier.notify(cur);
         }
         is.close();
-
         String str = new String(baf.toByteArray());
         ArrayList<String> list = getWorldList(str);
         notifier.notify(cur + 10);

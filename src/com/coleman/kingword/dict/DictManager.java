@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -301,7 +300,7 @@ public class DictManager {
             if (upgrade) {
                 update(context);
             }
-            
+
             // load library
             try {
                 for (DictInfo info : infoMap.values()) {
@@ -330,7 +329,9 @@ public class DictManager {
             for (TDictIndex id : droplist) {
                 db.delete(TDict.TABLE_NAME, TDict.DICT_DIR_NAME + "='" + id.getLibDirName() + "'",
                         null);
-                db.execSQL("drop table if exists " + id.TABLE_NAME);
+                // the table is deleted in KingWordProvider.delete(), so no need
+                // delete here.
+                // db.execSQL("drop table if exists " + id.TABLE_NAME);
             }
             for (TDictIndex dictIndex : createlist) {
                 DictInfo info = infoMap.get(dictIndex.getLibDirName());

@@ -13,7 +13,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.coleman.kingword.provider.KingWord.TDict;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
+import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.util.Log;
 
 public class KingWordProvider extends ContentProvider {
@@ -86,8 +90,39 @@ public class KingWordProvider extends ContentProvider {
         }
 
         if (tableName != null && id != null) {
+            // 1. delete dynamic created table TDictIndex, TWordListItem
+            if (TDict.TABLE_NAME.equals(tableName)) {
+                Cursor cursor = db.query(tableName, null, "_id = " + id, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    db.execSQL("drop table if exists " + TDictIndex.TABLE_NAME_PREFIX
+                            + cursor.getString(cursor.getColumnIndex(TDict.DICT_DIR_NAME)));
+                }
+                cursor.close();
+            } else if (TWordList.TABLE_NAME.equals(tableName)) {
+                db.execSQL("drop table if exists " + TWordListItem.TABLE_NAME_PREFIX + id);
+            }
+            // 2. delete normal table
             count = db.delete(tableName, whereWithId(id, selection), null);
         } else if (tableName != null) {
+            // 1. delete dynamic created tables TDictIndex, TWordListItem
+            if (TDict.TABLE_NAME.equals(tableName)) {
+                Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null,
+                        null);
+                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                    db.execSQL("drop table if exists " + TDictIndex.TABLE_NAME_PREFIX
+                            + cursor.getString(cursor.getColumnIndex(TDict.DICT_DIR_NAME)));
+                }
+                cursor.close();
+            } else if (TWordList.TABLE_NAME.equals(tableName)) {
+                Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null,
+                        null);
+                for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                    db.execSQL("drop table if exists " + TWordListItem.TABLE_NAME_PREFIX
+                            + cursor.getString(cursor.getColumnIndex(TWordList._ID)));
+                }
+                cursor.close();
+            }
+            // 2. delete normal tables
             count = db.delete(tableName, selection, selectionArgs);
         } else {
             throw new IllegalArgumentException("Unknow uri: " + uri);
