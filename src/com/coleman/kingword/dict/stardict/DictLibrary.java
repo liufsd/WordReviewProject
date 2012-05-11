@@ -17,16 +17,7 @@ public class DictLibrary {
 
     private DictInfo libraryInfo;
 
-    private String mLibDirName;
-
     private String mLibPath;
-
-    private boolean dbInitialed;
-
-    /**
-     * describe the library internal or external.
-     */
-    private boolean internal;
 
     /**
      * This work is time expensive, you should do it on the background thread.
@@ -36,15 +27,11 @@ public class DictLibrary {
      * @param dictmap
      * @throws IOException
      */
-    public static DictLibrary loadLibrary(Context context, DictInfo info)
-            throws IOException {
+    public static DictLibrary loadLibrary(Context context, DictInfo info) throws IOException {
         DictLibrary lib = new DictLibrary();
-        lib.mLibDirName = info.dictDirName;
         lib.mLibPath = DICTS_DIR + info.dictDirName;
-        lib.dbInitialed = info.loaded;
-        lib.internal = info.internal;
         lib.libraryInfo = info;
-        if (!lib.dbInitialed) {
+        if (!info.loaded) {
             DictIndex.loadDictIndexMap(context, lib);
         }
         return lib;
@@ -64,21 +51,21 @@ public class DictLibrary {
     }
 
     public boolean isInitialed() {
-        return dbInitialed;
+        return libraryInfo.loaded;
     }
 
     public boolean isInternal() {
-        return internal;
+        return libraryInfo.internal;
     }
 
     public boolean isCurLib() {
-        return mLibDirName != null
-                && mLibDirName.equals(DictManager.getInstance().getCurLibDirName());
+        return libraryInfo.dictDirName != null
+                && libraryInfo.dictDirName.equals(DictManager.getInstance().getCurLibDirName());
     }
 
     public boolean isMoreLib() {
-        return mLibDirName != null
-                && mLibDirName.equals(DictManager.getInstance().getMoreLibDirName());
+        return libraryInfo.dictDirName != null
+                && libraryInfo.dictDirName.equals(DictManager.getInstance().getMoreLibDirName());
 
     }
 
@@ -87,10 +74,10 @@ public class DictLibrary {
         String[] projection = new String[] {
                 TDictIndex.WORD, TDictIndex.OFFSET, TDictIndex.SIZE
         };
-        if (dbInitialed) {
+        if (libraryInfo.loaded) {
             long time = System.currentTimeMillis();
             Cursor c = context.getContentResolver().query(
-                    DictManager.getInstance().getTable(mLibDirName).getContentUri(), projection,
+                    TDictIndex.getContentUri(libraryInfo.dictDirName), projection,
                     TDictIndex.WORD + " = '" + word + "'", null, null);
             if (c.moveToFirst()) {
                 di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
@@ -103,10 +90,9 @@ public class DictLibrary {
             // if not found the word from the index databases, try to query the
             // lower case of the word from the index database
             if (di == null) {
-                c = context.getContentResolver()
-                        .query(DictManager.getInstance().getTable(mLibDirName).getContentUri(),
-                                projection, TDictIndex.WORD + " = '" + word.toLowerCase() + "'",
-                                null, null);
+                c = context.getContentResolver().query(
+                        TDictIndex.getContentUri(libraryInfo.dictDirName), projection,
+                        TDictIndex.WORD + " = '" + word.toLowerCase() + "'", null, null);
                 if (c.moveToFirst()) {
                     di = new DictIndex(c.getString(0), c.getLong(1), c.getInt(2));
                 }
@@ -122,7 +108,7 @@ public class DictLibrary {
     }
 
     public String getLibDirName() {
-        return mLibDirName;
+        return libraryInfo.dictDirName;
     }
 
     public String getLibraryName() {
@@ -142,8 +128,7 @@ public class DictLibrary {
     }
 
     public void setComplete(Context context) {
-        dbInitialed = true;
-        libraryInfo.loaded = dbInitialed;
+        libraryInfo.loaded = true;
         libraryInfo.insertOrUpdate(context);
     }
 

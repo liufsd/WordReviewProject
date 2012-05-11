@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -58,19 +61,25 @@ public class GeneralParser {
         is.close();
 
         String str = new String(baf.toByteArray());
-        String temps[] = str.split("\\s");
-        int cc = 0;
-        ArrayList<String> list = new ArrayList<String>();
-        for (String string : temps) {
-            list.add(string);
-            if (cc == temps.length / 10) {
-                notifier.notify(++cur);
-                cc = 0;
-            }
-            cc++;
-        }
+        ArrayList<String> list = getWorldList(str);
+        notifier.notify(cur + 10);
 
         return list;
     }
 
+    private static ArrayList<String> getWorldList(CharSequence sb) {
+        final Pattern WORD = Pattern.compile("[a-zA-Z-]+\\b");
+        final Pattern WORD_TYPE = Pattern.compile("^(prep|n|v(t|i|)|ad(j|v|)|[a-zA-Z])$");
+        ArrayList<String> list = new ArrayList<String>();
+        Matcher m = WORD.matcher(sb);
+        while (m.find()) {
+            if (!WORD_TYPE.matcher(m.group()).find()) {
+                System.out.println("---------------" + m.group());
+                list.add(m.group());
+            } else {
+                // System.out.println(m.group());
+            }
+        }
+        return list;
+    }
 }

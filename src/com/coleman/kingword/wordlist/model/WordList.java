@@ -1,11 +1,15 @@
 
 package com.coleman.kingword.wordlist.model;
 
+import java.io.Serializable;
+
 import android.content.ContentValues;
 
 import com.coleman.kingword.provider.KingWord.TWordList;
 
-public class WordList {
+public class WordList implements Serializable{
+    private static final long serialVersionUID = -5031315199643078115L;
+
     public static interface InternalWordList {
         String POSTGRADUATE_WORDLIST = "kingword/wordlist/postgraduate/postgraduate.wl";
 

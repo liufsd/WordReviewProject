@@ -105,6 +105,7 @@ public class DictInfo {
     }
 
     public void insertOrUpdate(Context context) {
+
         ContentValues values = new ContentValues();
         if (dictName != null) {
             values.put(TDict.DICT_NAME, dictName);
@@ -125,6 +126,7 @@ public class DictInfo {
             values.put(TDict.DICT_DIR_NAME, dictDirName);
         }
         values.put(TDict.DATE, date);
+
         Cursor c = context.getContentResolver().query(TDict.CONTENT_URI, null,
                 TDict.DICT_DIR_NAME + " = '" + dictDirName + "'", null, null);
         boolean has = c.moveToFirst();
@@ -152,7 +154,7 @@ public class DictInfo {
         try {
             c = context.getContentResolver().query(KingWord.TDict.CONTENT_URI, null, null, null,
                     null);
-            for (c.moveToFirst(); c.isAfterLast(); c.moveToNext()) {
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 String dictName = c.getString(c.getColumnIndex(TDict.DICT_NAME));
                 String wordCount = c.getString(c.getColumnIndex(TDict.WORD_COUNT));
                 String idxFileSize = c.getString(c.getColumnIndex(TDict.IDX_FILE_SIZE));

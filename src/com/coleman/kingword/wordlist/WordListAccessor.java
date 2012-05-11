@@ -172,7 +172,8 @@ public class WordListAccessor implements Serializable {
 
     private void loadSubList(Context context) {
         long time = System.currentTimeMillis();
-        Cursor c = context.getContentResolver().query(TSubWordList.CONTENT_URI, projection,
+        Cursor c = context.getContentResolver().query(
+                TWordListItem.getContentUri(subinfo.word_list_id), projection,
                 TWordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null, null);
         if (c.moveToFirst()) {
             WordAccessor wordAccessor;

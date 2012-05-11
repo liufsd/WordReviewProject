@@ -132,22 +132,6 @@ public class TextEditor extends Activity implements OnClickListener {
         startActivity(intent);
     }
 
-    public static List<String> getWorldList(StringBuilder sb) {
-        final Pattern WORD = Pattern.compile("[a-zA-Z-]+\\b");
-        final Pattern WORD_TYPE = Pattern.compile("^(prep|n|v(t|i|)|ad(j|v|)|[a-zA-Z])$");
-        ArrayList<String> list = new ArrayList<String>();
-        Matcher m = WORD.matcher(sb);
-        while (m.find()) {
-            if (!WORD_TYPE.matcher(m.group()).find()) {
-                System.out.println("---------------" + m.group());
-                list.add(m.group());
-            } else {
-                // System.out.println(m.group());
-            }
-        }
-        return list;
-    }
-
     private class ExpensiveTask extends AsyncTask<Void, Void, Void> {
         private byte type;
 

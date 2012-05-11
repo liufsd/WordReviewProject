@@ -109,10 +109,6 @@ public class DictManager {
         return libmap.get(lib);
     }
 
-    public TDictIndex getTable(String mLibDirName) {
-        return LibraryLoader.getInstance().idxMap.get(mLibDirName);
-    }
-
     public Collection<DictLibrary> getLibrarys() {
         return libmap.values();
     }
@@ -171,10 +167,6 @@ public class DictManager {
 
     public boolean isInternal(String tableName) {
         return LibraryLoader.getInstance().isInternal(tableName);
-    }
-
-    public void setComplete(Context context, String mLibKey) {
-        LibraryLoader.getInstance().setComplete(context, mLibKey);
     }
 
     public enum ViewType {
@@ -309,7 +301,16 @@ public class DictManager {
             if (upgrade) {
                 update(context);
             }
-
+            
+            // load library
+            try {
+                for (DictInfo info : infoMap.values()) {
+                    DictLibrary lib = DictLibrary.loadLibrary(context, info);
+                    DictManager.getInstance().addLib(lib);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         public boolean isInternal(String tableName) {
@@ -324,33 +325,18 @@ public class DictManager {
             return false;
         }
 
-        public void setComplete(Context context, String mLibKey) {
-            DictLibrary lib = DictManager.getInstance().getLibrary(mLibKey);
-            if (lib != null) {
-                lib.setComplete(context);
-            }
-        }
-
         public void update(Context context) {
-            try {
-                SQLiteDatabase db = KingWordDBHepler.getInstance(context).getWritableDatabase();
-                for (TDictIndex id : droplist) {
-                    db.delete(TDict.TABLE_NAME, TDict.DICT_DIR_NAME + "='" + id.getLibDirName()
-                            + "'", null);
-                    db.execSQL("drop table if exists " + id.TABLE_NAME);
-                }
-                for (TDictIndex id : createlist) {
-                    DictInfo info = infoMap.get(id.getLibDirName());
-                    info.insertOrUpdate(context);
+            SQLiteDatabase db = KingWordDBHepler.getInstance(context).getWritableDatabase();
+            for (TDictIndex id : droplist) {
+                db.delete(TDict.TABLE_NAME, TDict.DICT_DIR_NAME + "='" + id.getLibDirName() + "'",
+                        null);
+                db.execSQL("drop table if exists " + id.TABLE_NAME);
+            }
+            for (TDictIndex dictIndex : createlist) {
+                DictInfo info = infoMap.get(dictIndex.getLibDirName());
+                info.insertOrUpdate(context);
 
-                    db.execSQL(id.getCreateTableSQL());
-                }
-                for (DictInfo info : infoMap.values()) {
-                    DictLibrary lib = DictLibrary.loadLibrary(context, info);
-                    DictManager.getInstance().addLib(lib);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                db.execSQL(dictIndex.getCreateTableSQL());
             }
         }
     }

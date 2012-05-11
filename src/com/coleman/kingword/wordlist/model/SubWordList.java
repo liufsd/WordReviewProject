@@ -28,7 +28,8 @@ public class SubWordList implements Parcelable, Serializable {
     public long word_list_id;
 
     public int level;
-
+    
+    // used for SlideTableSwitcher
     public int index;
 
     public ContentValues toContentValues() {
