@@ -8,28 +8,15 @@
 
 package com.coleman.kingword.wordlist;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.FileObserver;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
-import com.coleman.util.Config;
 import com.coleman.util.Log;
 
 public class TextEditor extends Activity implements OnClickListener {

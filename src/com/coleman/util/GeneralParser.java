@@ -1,16 +1,14 @@
 
-package com.coleman.kingword.wordlist;
+package com.coleman.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 import android.content.Context;
 
@@ -31,7 +29,7 @@ public class GeneralParser {
      * @param fileName
      * @throws IOException
      */
-    static ArrayList<String> parseFile(Context context, String fileName, boolean fromAsset,
+    public static ArrayList<String> parseFile(Context context, String fileName, boolean fromAsset,
             IProgressNotifier notifier) throws IOException {
         InputStream is = null;
 
@@ -74,10 +72,44 @@ public class GeneralParser {
         Matcher m = WORD.matcher(sb);
         while (m.find()) {
             if (!WORD_TYPE.matcher(m.group()).find()) {
-                System.out.println("---------------" + m.group());
                 list.add(m.group());
             } else {
-                // System.out.println(m.group());
+                Log.i(TAG, "skip word: " + m.group());
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Assets is pre-installed files.
+     * 
+     * @param fileName
+     * @throws IOException
+     */
+    public static HashMap<String, String> parseFile(InputStream is) throws IOException {
+
+        // process the stream line by line
+        int v;
+        byte bytes[] = new byte[1024];
+        ByteArrayOutputStream baf = new ByteArrayOutputStream();
+        while ((v = is.read(bytes)) != -1) {
+            baf.write(bytes, 0, v);
+        }
+        is.close();
+        baf.close();
+        String str = new String(baf.toByteArray());
+        HashMap<String, String> list = getProperties(str);
+
+        return list;
+    }
+
+    private static HashMap<String, String> getProperties(String sb) {
+        HashMap<String, String> list = new HashMap<String, String>();
+        String items[] = sb.split("\\s");
+        for (String string : items) {
+            if (string != null && !string.trim().equals("")) {
+                list.put(string.substring(0, string.indexOf("=")).trim(),
+                        string.substring(string.indexOf("=") + 1).trim());
             }
         }
         return list;

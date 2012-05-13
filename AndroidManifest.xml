@@ -1,67 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.coleman.kingword" android:versionName="2.0.1" android:versionCode="5">
-	<uses-sdk android:minSdkVersion="7"></uses-sdk>
-	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<!-- provider -->
-		<provider android:name=".provider.KingWordProvider"
-			android:authorities="kingword" />
-		<!-- activity -->
-		<activity android:name=".WelcomeActivity"
-			android:label="@string/app_name" android:launchMode="singleTask">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".wordlist.WordListActivity"
-			android:label="@string/app_name" android:launchMode="singleTask">
-		</activity>
-		<activity android:name=".wordlist.SubWordListActivity"
-			android:label="@string/app_name" android:launchMode="singleTask">
-		</activity>
-		<activity android:name=".wordlist.FileExplorer"
-			android:label="@string/app_name" android:launchMode="singleTask">
-		</activity>
-		<activity android:name=".wordlist.TextEditor"
-			android:label="@string/app_name" android:launchMode="singleTask">
-			<intent-filter>
-				<action android:name="edit_text"></action>
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".CoreActivity" android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar">
-		</activity>
-		<activity android:name=".ebbinghaus.EbbinghausActivityAsDialog"
-			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog"
-			android:launchMode="singleTask">
-		</activity>
-		<activity android:name=".SettingsActivity"
-			android:label="@string/app_name" android:launchMode="singleTask">
-		</activity>
-		<activity android:name=".ColorSetActivityAsDialog"
-			android:label="@string/app_name" android:theme="@android:style/Theme.Dialog">
-		</activity>
-		<!-- receiver -->
-		<receiver android:name=".ebbinghaus.receiver.KingWordReceiver"
-			android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="review_time_0"></action>
-				<action android:name="review_time_1"></action>
-				<action android:name="review_time_2"></action>
+    package="com.coleman.kingword"
+    android:versionCode="5"
+    android:versionName="2.0.1" >
 
-				<action android:name="com.coleman.kingword.ACTION_SEND_INFO_SILENT"></action>
+    <uses-sdk android:minSdkVersion="7" >
+    </uses-sdk>
 
-				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
-			</intent-filter>
-		</receiver>
-		<!-- service -->
-		<service android:name=".dict.DictLoadService"></service>
-	</application>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.GET_TASKS" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:name="com.coleman.util.MyApp" >
+
+        <!-- provider -->
+        <provider
+            android:authorities="kingword"
+            android:name=".provider.KingWordProvider" />
+        <!-- activity -->
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".WelcomeActivity" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".wordlist.WordListActivity" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".wordlist.SubWordListActivity" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".wordlist.FileExplorer" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".wordlist.TextEditor" >
+            <intent-filter >
+                <action android:name="edit_text" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".CoreActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".ebbinghaus.EbbinghausActivityAsDialog"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".SettingsActivity" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ColorSetActivityAsDialog"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <!-- receiver -->
+        <receiver
+            android:label="@string/app_name"
+            android:name=".ebbinghaus.receiver.KingWordReceiver" >
+            <intent-filter >
+                <action android:name="review_time_0" >
+                </action>
+                <action android:name="review_time_1" >
+                </action>
+                <action android:name="review_time_2" >
+                </action>
+                <action android:name="com.coleman.kingword.ACTION_SEND_INFO_SILENT" >
+                </action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+        <!-- service -->
+        <service android:name=".dict.DictLoadService" />
+         <service android:name=".UpgradeService" />
+    </application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>

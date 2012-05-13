@@ -11,7 +11,7 @@ public class DictLoadService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "===============Servcie onCreate!=================");
+        Log.d(TAG, "===============DictLoadService onCreate!=================");
         new Thread() {
             @Override
             public void run() {
@@ -23,7 +23,7 @@ public class DictLoadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "===============Servcie onStartCommand!=================");
+        Log.d(TAG, "===============DictLoadService onStartCommand!=================");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -35,7 +35,7 @@ public class DictLoadService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "===============Servcie onDestroy!=================");
+        Log.d(TAG, "===============DictLoadService onDestroy!=================");
         super.onDestroy();
     }
 

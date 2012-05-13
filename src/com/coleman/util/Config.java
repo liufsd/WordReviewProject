@@ -30,6 +30,7 @@ public final class Config {
      * App read file encoding.
      */
     public static final String ENCODE = "GBK";
+	public static final boolean isTestServer = true;
 
     public static boolean isSimulator(Context context) {
         TelephonyManager telmgr = (TelephonyManager) context

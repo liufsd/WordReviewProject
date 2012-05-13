@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/hwnj-slad/!svn/ver/224/code/trunk/HWSL/src/com/huawei/shanglv/da/http/exception
+END
+UnknownTypeException.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/hwnj-slad/!svn/ver/224/code/trunk/HWSL/src/com/huawei/shanglv/da/http/exception/UnknownTypeException.java
+END
+FieldNotInitException.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/hwnj-slad/!svn/ver/224/code/trunk/HWSL/src/com/huawei/shanglv/da/http/exception/FieldNotInitException.java
+END

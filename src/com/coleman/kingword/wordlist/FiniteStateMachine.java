@@ -4,19 +4,18 @@ package com.coleman.kingword.wordlist;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Random;
-
-import com.coleman.kingword.dict.stardict.DictData;
 
 import android.content.Context;
 import android.os.Message;
+
+import com.coleman.kingword.dict.stardict.DictData;
 
 /**
  * Finite state machine is composite of an InitState, an group of states, some
  * input messages, some output messages, and the state transition function.
  */
-public class FiniteStateMachine implements Serializable{
+public class FiniteStateMachine implements Serializable {
 
     private static final long serialVersionUID = -8116244691305999296L;
 
@@ -103,7 +102,8 @@ public class FiniteStateMachine implements Serializable{
         mStateEngine.handleMessage(msg);
     }
 
-    public ArrayList<DictData> getDictData(Context context, WordAccessor item, ArrayList<WordAccessor> list) {
+    public ArrayList<DictData> getDictData(Context context, WordAccessor item,
+            ArrayList<WordAccessor> list) {
         return mCurrentState.getDictData(context, item, list);
     }
 
@@ -183,6 +183,8 @@ public class FiniteStateMachine implements Serializable{
     }
 
     public class InitState extends FiniteState {
+        private static final long serialVersionUID = -1336813785311805550L;
+
         public static final int TYPE = 0;
 
         @Override
@@ -204,6 +206,8 @@ public class FiniteStateMachine implements Serializable{
     }
 
     public class MultipleState extends FiniteState {
+        private static final long serialVersionUID = 3630980301775392193L;
+
         public static final int TYPE = 1;
 
         @Override
@@ -234,6 +238,8 @@ public class FiniteStateMachine implements Serializable{
 
     public class CompleteState extends FiniteState {
 
+        private static final long serialVersionUID = 1872280077484642327L;
+
         public static final int TYPE = 100;
 
         @Override
@@ -242,7 +248,7 @@ public class FiniteStateMachine implements Serializable{
         }
     }
 
-    private class FiniteStateEngine implements IFSMCommand,Serializable {
+    private class FiniteStateEngine implements IFSMCommand, Serializable {
         private static final long serialVersionUID = 762743574880645974L;
 
         private FiniteStateEngine() {

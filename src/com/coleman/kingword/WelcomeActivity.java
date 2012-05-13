@@ -1,7 +1,11 @@
 
 package com.coleman.kingword;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,8 +23,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.coleman.http.json.bean.VersionCheckReq;
+import com.coleman.http.json.bean.VersionCheckResp;
+import com.coleman.http.json.bussiness.WorkManager;
+import com.coleman.http.json.connection.SLRequest;
+import com.coleman.http.json.connection.SLResponse;
 import com.coleman.kingword.dict.DictLoadService;
-import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.wordlist.WordListAccessor;
@@ -28,13 +36,15 @@ import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
+import com.coleman.util.DialogUtil;
+import com.coleman.util.GeneralParser;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
 /**
  * @author coleman
  */
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends Activity implements Observer {
     private static final String TAG = WelcomeActivity.class.getName();
 
     private Button startButton;
@@ -56,36 +66,55 @@ public class WelcomeActivity extends Activity {
                 startActivity(new Intent(WelcomeActivity.this, WordListActivity.class));
             }
         });
-        
+
         // initial the environment
         init();
+
+        // test versionUpgrade
+        upgradeCheck();
+    }
+
+    private void upgradeCheck() {
+        try {
+            VersionCheckReq req = new VersionCheckReq();
+            String path = "kingword/release/release_note.txt";
+            InputStream is = getAssets().open(path);
+            HashMap<String, String> map = GeneralParser.parseFile(is);
+            req.setVersionCode(Integer.parseInt(map.get("versionCode")));
+            req.setVersionType("");
+            SLRequest<VersionCheckReq> slReq = new SLRequest<VersionCheckReq>(req);
+            WorkManager.getInstance().versionUpgrade(this, slReq);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void init() {
         boolean firstStarted = AppSettings.getBoolean(this, AppSettings.FIRST_STARTED_KEY, true);
         if (firstStarted) {
-            
+
             // mark first start app
             AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
-            
+
             // init ebbinghaus notification
             EbbinghausReminder.setNotifactionAfterInstalled(this);
-            
+
             // /////////////////////////////////////////////////////
             // don't send sms to author every week, send when upgrade instead
             // SmsInfoGather.setSmsGatherRepeatNotifaction(this);
             // /////////////////////////////////////////////////////
-            
+
             // save first start app time
             AppSettings.saveLong(this, AppSettings.FIRST_STARTED_TIME_KEY,
                     System.currentTimeMillis());
-            
+
             // set default log type to warn
             Log.init(this);
-            
+
             // set default unit split number
             AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
-            
+
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
@@ -105,10 +134,10 @@ public class WelcomeActivity extends Activity {
             Log.setLogType(this, LogType.instanse(AppSettings.getInt(this,
                     AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
         }
-        
+
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
-        
+
         // set last study restore
         boolean isSave = AppSettings.getBoolean(this, AppSettings.SAVE_CACHE_KEY, false);
         if (isSave) {
@@ -243,8 +272,8 @@ public class WelcomeActivity extends Activity {
             for (Info info2 : list) {
                 if (!info.del && info2.id != info.id && info2.word.equals(info.word) && !info2.del) {
                     Log.d(TAG, info + " >>> " + info2);
-                    getContentResolver().delete(THistory.CONTENT_URI, THistory._ID + "=" + info2.id,
-                            null);
+                    getContentResolver().delete(THistory.CONTENT_URI,
+                            THistory._ID + "=" + info2.id, null);
                     info2.del = true;
                 }
             }
@@ -292,4 +321,40 @@ public class WelcomeActivity extends Activity {
         }
         nextTV.setText(nextLev);
     }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (!(observable instanceof SLResponse<?>)) {
+            return;
+        }
+        if (((SLResponse<?>) observable).getResponse() instanceof VersionCheckResp) {
+            final VersionCheckResp bean = (VersionCheckResp) ((SLResponse<?>) observable)
+                    .getResponse();
+            if (data == null) {
+                int rc = bean.getResultCode();
+                if (rc == 0) {
+                    if (bean.getNewVersionCode() != -1) {
+                        new AlertDialog.Builder(this)
+                                .setTitle(R.string.upgrade_tip)
+                                .setMessage(bean.getDescription())
+                                .setPositiveButton(R.string.ok,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                UpgradeService.downloadVersion(
+                                                        WelcomeActivity.this, bean);
+                                            }
+                                        }).setNegativeButton(R.string.cancel, null).show();
+                    }
+                } else {
+                    DialogUtil.showServerMessage(this, bean.getDescription());
+                }
+
+            } else {
+                DialogUtil.showErrorMessage(this, data);
+            }
+        }
+
+    }
+
 }
