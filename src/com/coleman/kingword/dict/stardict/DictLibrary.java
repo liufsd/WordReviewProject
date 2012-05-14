@@ -11,7 +11,7 @@ import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.util.Log;
 
 public class DictLibrary {
-    private static final String TAG = DictLibrary.class.getName();
+    private static final String TAG = "DictLibrary";
 
     private static final String DICTS_DIR = "kingword/dicts/";
 

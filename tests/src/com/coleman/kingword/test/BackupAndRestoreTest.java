@@ -23,7 +23,7 @@ import android.test.AndroidTestCase;
 import android.widget.Toast;
 
 public class BackupAndRestoreTest extends AndroidTestCase {
-    protected static final String TAG = BackupAndRestoreTest.class.getName();
+    protected static final String TAG = "BackupAndRestoreTest";
     private static final String[] projection = new String[] {
             WordInfo._ID,
             WordInfo.WORD, WordInfo.IGNORE, WordInfo.STUDY_COUNT,

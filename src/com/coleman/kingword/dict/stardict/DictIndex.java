@@ -50,7 +50,7 @@ import com.coleman.util.Log;
  */
 public class DictIndex {
 
-    private static final String TAG = DictIndex.class.getName();
+    private static final String TAG = "DictIndex";
 
     /**
      * word string

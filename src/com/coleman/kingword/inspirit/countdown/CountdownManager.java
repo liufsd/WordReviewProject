@@ -19,7 +19,7 @@ import com.coleman.kingword.R;
 public class CountdownManager implements Serializable {
     private static final long serialVersionUID = 7969022016568854596L;
 
-    private static final String TAG = CountdownManager.class.getName();
+    private static final String TAG = "CountdownManager";
 
     private final int TOTAL_TIME;
 

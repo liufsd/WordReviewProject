@@ -63,7 +63,7 @@ import com.coleman.util.Log;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnInitListener, OnLongClickListener {
-    private static final String TAG = CoreActivity.class.getName();
+    private static final String TAG = "CoreActivity";
 
     private static final int SET_COLOR = 0;
 

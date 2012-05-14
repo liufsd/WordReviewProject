@@ -38,7 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class FileExplorer extends Activity {
     public static final String ACTION_EXPLORER = "com.coleman.sms.activity.EXPLORER";
 
-    private static final String TAG = FileExplorer.class.getName();
+    private static final String TAG = "FileExplorer";
 
     private static final String ROOT_PATH = "/sdcard";
 

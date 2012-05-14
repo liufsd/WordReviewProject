@@ -17,7 +17,7 @@ import com.coleman.util.Log;
 public class KingWordDBHepler extends SQLiteOpenHelper {
     private static final String DB_NAME = "kingword.db";
 
-    private static final String TAG = KingWordDBHepler.class.getName();
+    private static final String TAG = "KingWordDBHepler";
 
     private static final int DB_VERSION = 1;
 

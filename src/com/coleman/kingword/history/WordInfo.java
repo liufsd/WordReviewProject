@@ -21,7 +21,7 @@ public class WordInfo implements Parcelable,Serializable {
 
     public static final byte MAX_WEIGHT = 5;
 
-    private static final String TAG = WordInfo.class.getName();
+    private static final String TAG = "WordInfo";
 
     public long id = -1;
 

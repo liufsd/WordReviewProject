@@ -36,7 +36,6 @@ import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
-import com.coleman.util.DialogUtil;
 import com.coleman.util.GeneralParser;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
@@ -45,7 +44,7 @@ import com.coleman.util.Log.LogType;
  * @author coleman
  */
 public class WelcomeActivity extends Activity implements Observer {
-    private static final String TAG = WelcomeActivity.class.getName();
+    private static final String TAG = "WelcomeActivity";
 
     private Button startButton;
 
@@ -69,7 +68,6 @@ public class WelcomeActivity extends Activity implements Observer {
 
         // initial the environment
         init();
-
         // test versionUpgrade
         upgradeCheck();
     }
@@ -81,7 +79,7 @@ public class WelcomeActivity extends Activity implements Observer {
             InputStream is = getAssets().open(path);
             HashMap<String, String> map = GeneralParser.parseFile(is);
             req.setVersionCode(Integer.parseInt(map.get("versionCode")));
-            req.setVersionType("");
+            req.setVersionType(map.get("versionType"));
             SLRequest<VersionCheckReq> slReq = new SLRequest<VersionCheckReq>(req);
             WorkManager.getInstance().versionUpgrade(this, slReq);
 
@@ -347,11 +345,11 @@ public class WelcomeActivity extends Activity implements Observer {
                                         }).setNegativeButton(R.string.cancel, null).show();
                     }
                 } else {
-                    DialogUtil.showServerMessage(this, bean.getDescription());
+                    Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
                 }
 
             } else {
-                DialogUtil.showErrorMessage(this, data);
+                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
             }
         }
 

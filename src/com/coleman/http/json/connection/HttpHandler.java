@@ -31,7 +31,7 @@ import com.coleman.util.MyApp;
 import com.coleman.util.ThreadUtils;
 
 public class HttpHandler {
-    private static final String TAG = HttpHandler.class.getName();
+    private static final String TAG = "HttpHandler";
 
     private static final LinkedList<SLRequest<?>> cancelableList = new LinkedList<SLRequest<?>>();
 

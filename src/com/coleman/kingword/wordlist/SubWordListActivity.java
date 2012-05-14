@@ -19,7 +19,7 @@ import com.coleman.kingword.wordlist.view.SlideTableSwitcher;
 
 public class SubWordListActivity extends Activity {
 
-    private static final String TAG = SubWordListActivity.class.getName();
+    private static final String TAG = "SubWordListActivity";
 
     private ProgressBar progressBar;
 

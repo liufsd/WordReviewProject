@@ -1,4 +1,2 @@
-versionCode=3
-versionName=SMSObserver.apk
-versionDescription=修改一些bug
-downloadUrl=""
+versionCode=2
+versionType=null

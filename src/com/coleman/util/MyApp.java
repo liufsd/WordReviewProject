@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 
 public class MyApp extends Application {
-    private static final String TAG = MyApp.class.getName();
+    private static final String TAG = "MyApp";
 
     public static Context context;
 

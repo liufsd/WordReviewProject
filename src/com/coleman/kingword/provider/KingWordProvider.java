@@ -25,7 +25,7 @@ public class KingWordProvider extends ContentProvider {
 
     public static final String AUTHORITY = "kingword";
 
-    private static final String TAG = KingWordProvider.class.getName();
+    private static final String TAG = "KingWordProvider";
 
     @Override
     public boolean onCreate() {

@@ -23,7 +23,7 @@ public class WordAccessor implements Serializable {
 
     private static final long serialVersionUID = 884726896304858319L;
 
-    private static final String TAG = WordAccessor.class.getName();
+    private static final String TAG = "WordAccessor";
 
     public WordListItem item;
 

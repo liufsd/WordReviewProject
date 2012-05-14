@@ -19,7 +19,7 @@ import com.coleman.util.ThreadUtils;
 
 public class UpgradeService extends Service {
 
-    private static final String TAG = UpgradeService.class.getName();
+    private static final String TAG = "UpgradeService";
 
     @Override
     public void onCreate() {

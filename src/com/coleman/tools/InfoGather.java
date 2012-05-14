@@ -25,7 +25,7 @@ import com.coleman.util.Log;
  * @author coleman
  */
 public class InfoGather {
-    private static final String TAG = InfoGather.class.getName();
+    private static final String TAG = "InfoGather";
 
     /**
      * send every week.

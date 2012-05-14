@@ -20,7 +20,7 @@ import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.util.AppSettings;
 
 public class EbbinghausReminder {
-    private static final String TAG = EbbinghausReminder.class.getName();
+    private static final String TAG = "EbbinghausReminder";
 
     private static long mTime;
 

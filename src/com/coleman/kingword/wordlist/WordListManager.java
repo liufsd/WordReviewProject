@@ -24,7 +24,7 @@ import com.coleman.util.GeneralParser;
 import com.coleman.util.Log;
 
 public class WordListManager {
-    private static final String TAG = WordListManager.class.getName();
+    private static final String TAG = "WordListManager";
 
     private static WordListManager manager;
 

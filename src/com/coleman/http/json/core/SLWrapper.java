@@ -18,7 +18,7 @@ import com.coleman.util.Log;
 
 public class SLWrapper
 {
-    private static final String TAG = SLWrapper.class.getName();
+    private static final String TAG = "SLWrapper";
     
     public static final SimpleDateFormat format = new SimpleDateFormat(
             "yyyyMMddHHmmss");

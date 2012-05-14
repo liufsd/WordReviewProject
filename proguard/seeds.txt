@@ -1188,31 +1188,69 @@ javax.activation.FileTypeMap: void setDefaultFileTypeMap(javax.activation.FileTy
 javax.activation.FileTypeMap: javax.activation.FileTypeMap getDefaultFileTypeMap()
 com.sun.mail.smtp.SMTPTransport
 com.sun.mail.smtp.SMTPSSLTransport
+com.coleman.http.json.bean.VersionCheckResp
+com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer resultCode
+com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer newVersionCode
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String Description
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String downloadFileName
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String thirdpartDownloadUrl
+com.coleman.http.json.bean.VersionCheckResp: VersionCheckResp()
+com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer getNewVersionCode()
+com.coleman.http.json.bean.VersionCheckResp: void setNewVersionCode(java.lang.Integer)
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String getDescription()
+com.coleman.http.json.bean.VersionCheckResp: void setDescription(java.lang.String)
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String getDownloadFileName()
+com.coleman.http.json.bean.VersionCheckResp: void setDownloadFile(java.lang.String)
+com.coleman.http.json.bean.VersionCheckResp: void setResultCode(java.lang.Integer)
+com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer getResultCode()
+com.coleman.http.json.bean.VersionCheckResp: void setThirdpartDownloadUrl(java.lang.String)
+com.coleman.http.json.bean.VersionCheckResp: java.lang.String getThirdpartDownloadUrl()
+com.coleman.http.json.bean.VersionCheckReq
+com.coleman.http.json.bean.VersionCheckReq: java.lang.Integer versionCode
+com.coleman.http.json.bean.VersionCheckReq: java.lang.String versionType
+com.coleman.http.json.bean.VersionCheckReq: VersionCheckReq()
+com.coleman.http.json.bean.VersionCheckReq: java.lang.Integer getVersionCode()
+com.coleman.http.json.bean.VersionCheckReq: void setVersionCode(java.lang.Integer)
+com.coleman.http.json.bean.VersionCheckReq: java.lang.String getVersionType()
+com.coleman.http.json.bean.VersionCheckReq: void setVersionType(java.lang.String)
+com.coleman.http.json.annotation.KeyName
+com.coleman.http.json.annotation.KeyName: java.lang.String abbr()
+com.coleman.http.json.annotation.KeyName: boolean need()
+com.coleman.http.json.annotation.KeyName: java.lang.Class genericType()
+com.coleman.http.json.annotation.KeyName: boolean question()
+com.coleman.http.json.annotation.RequestObject
+com.coleman.http.json.annotation.RequestObject: java.lang.String url()
+com.coleman.http.json.annotation.RequestObject: java.lang.String path()
+com.coleman.http.json.annotation.RequestObject: java.lang.String hwUrl()
+com.coleman.http.json.annotation.ValueObject
+com.coleman.http.json.annotation.ResponseObject
 com.coleman.util.Log
 com.coleman.util.Log: boolean isLoggable(java.lang.String,int)
-com.coleman.kingword.study.unit.view.SlideTableSwitcher
-com.coleman.kingword.study.unit.view.SlideTableSwitcher: SlideTableSwitcher(android.content.Context,android.util.AttributeSet)
+com.coleman.kingword.wordlist.view.SlideTableSwitcher
+com.coleman.kingword.wordlist.view.SlideTableSwitcher: SlideTableSwitcher(android.content.Context,android.util.AttributeSet)
+com.coleman.kingword.CoreActivity$Anim: com.coleman.kingword.CoreActivity$Anim[] values()
+com.coleman.kingword.CoreActivity$Anim: com.coleman.kingword.CoreActivity$Anim valueOf(java.lang.String)
+com.coleman.kingword.wordlist.model.WordList$SetMethod: com.coleman.kingword.wordlist.model.WordList$SetMethod[] values()
+com.coleman.kingword.wordlist.model.WordList$SetMethod: com.coleman.kingword.wordlist.model.WordList$SetMethod valueOf(java.lang.String)
 com.coleman.util.Log$LogType: com.coleman.util.Log$LogType[] values()
 com.coleman.util.Log$LogType: com.coleman.util.Log$LogType valueOf(java.lang.String)
 com.coleman.kingword.dict.DictManager$ViewType: com.coleman.kingword.dict.DictManager$ViewType[] values()
 com.coleman.kingword.dict.DictManager$ViewType: com.coleman.kingword.dict.DictManager$ViewType valueOf(java.lang.String)
-com.coleman.kingword.study.CoreActivity$Anim: com.coleman.kingword.study.CoreActivity$Anim[] values()
-com.coleman.kingword.study.CoreActivity$Anim: com.coleman.kingword.study.CoreActivity$Anim valueOf(java.lang.String)
-com.coleman.kingword.study.wordlist.model.WordList$SetMethod: com.coleman.kingword.study.wordlist.model.WordList$SetMethod[] values()
-com.coleman.kingword.study.wordlist.model.WordList$SetMethod: com.coleman.kingword.study.wordlist.model.WordList$SetMethod valueOf(java.lang.String)
-com.coleman.kingword.study.unit.SubWordListActivity
-com.coleman.kingword.study.SettingsActivity
-com.coleman.kingword.study.wordlist.TextEditor
-com.coleman.kingword.study.wordlist.FileExplorer
-com.coleman.kingword.study.review.ebbinghaus.EbbinghausActivityAsDialog
-com.coleman.kingword.study.CoreActivity
-com.coleman.kingword.study.wordlist.WordListActivity
-com.coleman.kingword.study.WelcomeActivity
-com.coleman.kingword.study.ColorSetActivityAsDialog
+com.coleman.kingword.CoreActivity
+com.coleman.kingword.wordlist.SubWordListActivity
+com.coleman.kingword.WelcomeActivity
+com.coleman.kingword.wordlist.FileExplorer
+com.coleman.kingword.wordlist.WordListActivity
+com.coleman.kingword.ColorSetActivityAsDialog
+com.coleman.kingword.wordlist.TextEditor
+com.coleman.kingword.SettingsActivity
+com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog
+com.coleman.util.MyApp
 com.coleman.kingword.dict.DictLoadService
-com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver
+com.coleman.kingword.UpgradeService
+com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver
 com.coleman.kingword.provider.KingWordProvider
-com.coleman.kingword.study.wordinfo.WordInfoVO
-com.coleman.kingword.study.wordinfo.WordInfoVO: android.os.Parcelable$Creator CREATOR
-com.coleman.kingword.study.unit.model.SliceWordList$SubInfo
-com.coleman.kingword.study.unit.model.SliceWordList$SubInfo: android.os.Parcelable$Creator CREATOR
+com.coleman.kingword.history.WordInfo
+com.coleman.kingword.history.WordInfo: android.os.Parcelable$Creator CREATOR
+com.coleman.kingword.wordlist.model.SubWordList
+com.coleman.kingword.wordlist.model.SubWordList: android.os.Parcelable$Creator CREATOR

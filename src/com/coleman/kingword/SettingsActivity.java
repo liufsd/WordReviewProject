@@ -60,7 +60,7 @@ import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
 public class SettingsActivity extends Activity implements OnItemClickListener {
-    protected static final String TAG = SettingsActivity.class.getName();
+    protected static final String TAG = "SettingsActivity";
 
     private ListView listView;
 
@@ -102,10 +102,10 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
         map.put(from[1], R.string.learning_level_name_set);
         data.add(map);
         // 3
-        map = new HashMap<String, Integer>();
-        map.put(from[0], R.drawable.set_security);
-        map.put(from[1], R.string.security_set);
-        data.add(map);
+        // map = new HashMap<String, Integer>();
+        // map.put(from[0], R.drawable.set_security);
+        // map.put(from[1], R.string.security_set);
+        // data.add(map);
     }
 
     @Override
@@ -218,9 +218,9 @@ public class SettingsActivity extends Activity implements OnItemClickListener {
 
     private String getSuperPW() {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(System.currentTimeMillis());
-        String superpw = "" + (c.get(Calendar.MONTH) + 1 + 10)
-                + (c.get(Calendar.DAY_OF_MONTH) + 11);
+        int m = c.get(Calendar.MONTH);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        String superpw = "" + (m + 1 + 10) + (d + 11);
         return superpw;
     }
 

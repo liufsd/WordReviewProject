@@ -29,7 +29,7 @@ import com.coleman.util.Log;
  * @author coleman
  */
 public class DictManager {
-    private static final String TAG = DictManager.class.getName();
+    private static final String TAG = "DictManager";
 
     private static DictManager manager;
 
@@ -214,7 +214,7 @@ public class DictManager {
         private static final String EXT_DIC_PATH = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + File.separator + "kingword/dicts";
 
-        private static final String TAG = LibraryLoader.class.getName();
+        private static final String TAG = "LibraryLoader";
 
         private HashMap<String, DictInfo> infoMap = new HashMap<String, DictInfo>();
 

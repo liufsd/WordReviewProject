@@ -42,7 +42,7 @@ import com.coleman.util.Log;
 
 public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnMenuItemClickListener {
-    private static final String TAG = WordListActivity.class.getName();
+    private static final String TAG = "WordListActivity";
 
     private WordListAdapter adapter;
 

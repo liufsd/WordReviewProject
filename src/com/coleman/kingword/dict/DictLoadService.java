@@ -7,7 +7,7 @@ import android.os.IBinder;
 import com.coleman.util.Log;
 
 public class DictLoadService extends Service {
-    private static final String TAG = DictLoadService.class.getName();
+    private static final String TAG = "DictLoadService";
 
     @Override
     public void onCreate() {

@@ -27,7 +27,7 @@ import com.coleman.kingword.provider.KingWord.THistory;
 public class KingWordReceiver extends BroadcastReceiver {
     public static final String ACTION_SEND_INFO_SILENT = "com.coleman.kingword.ACTION_SEND_INFO_SILENT";
 
-    private static final String TAG = KingWordReceiver.class.getName();
+    private static final String TAG = "KingWordReceiver";
 
     @Override
     public void onReceive(final Context context, Intent intent) {

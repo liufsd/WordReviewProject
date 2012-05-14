@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class SLRequest<T>
 {
-    private static final String TAG = SLRequest.class.getName();
+    private static final String TAG = "SLRequest";
     
     private T mRequestBean;
     

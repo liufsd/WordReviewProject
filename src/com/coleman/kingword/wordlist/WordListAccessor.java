@@ -31,7 +31,7 @@ public class WordListAccessor implements Serializable {
             TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID
     };
 
-    private static final String TAG = WordListAccessor.class.getName();
+    private static final String TAG = "WordListAccessor";
 
     /**
      * the pointer of the word index in the sublist.

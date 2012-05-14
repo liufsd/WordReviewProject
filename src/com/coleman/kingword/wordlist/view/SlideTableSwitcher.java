@@ -21,7 +21,7 @@ import com.coleman.kingword.wordlist.model.SubWordList;
 
 public class SlideTableSwitcher extends ViewSwitcher implements OnClickListener {
 
-    private static final String TAG = SlideTableSwitcher.class.getName();
+    private static final String TAG = "SlideTableSwitcher";
 
     Button[] btns = new Button[12];
 

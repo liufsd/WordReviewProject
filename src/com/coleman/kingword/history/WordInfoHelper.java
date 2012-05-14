@@ -39,7 +39,7 @@ public class WordInfoHelper {
             THistory.REVIEW_TIME
     };
 
-    private static final String TAG = WordInfoHelper.class.getName();
+    private static final String TAG = "WordInfoHelper";
 
     /**
      * You must make sure the word is not empty.

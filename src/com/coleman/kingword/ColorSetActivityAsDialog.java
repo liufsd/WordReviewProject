@@ -22,7 +22,7 @@ import com.coleman.util.AppSettings;
 
 public class ColorSetActivityAsDialog extends Activity implements OnClickListener,
         OnCheckedChangeListener, OnSeekBarChangeListener {
-    private static final String TAG = ColorSetActivityAsDialog.class.getName();
+    private static final String TAG = "ColorSetActivityAsDialog";
 
     private TextView textFont;
 

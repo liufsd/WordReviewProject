@@ -27,98 +27,37 @@ android.provider.Telephony$TextBasedSmsColumns
 android.provider.Telephony$Threads
 android.provider.Telephony$ThreadsColumns
 android.util.Patterns
-com.coleman.kingword.R
-com.coleman.kingword.R$anim
-com.coleman.kingword.R$array
-com.coleman.kingword.R$attr
-com.coleman.kingword.R$color
-com.coleman.kingword.R$drawable
-com.coleman.kingword.R$id
-com.coleman.kingword.R$layout
-com.coleman.kingword.R$menu
-com.coleman.kingword.R$string
-com.coleman.kingword.R$style
-com.coleman.kingword.dict.DictManager:
-    public static final java.lang.String DEFAULT_CUR_LIB
-    public static final java.lang.String DEFAULT_MORE_LIB
-com.coleman.kingword.dict.DictManager$ViewType
-com.coleman.kingword.dict.stardict.DictData:
-    private static final long serialVersionUID
-    154:166:java.lang.String removeSymbol()
-com.coleman.kingword.dict.stardict.DictInfo:
-    public int count
-com.coleman.kingword.dict.stardict.DictLibrary:
-    private static final java.lang.String DICTS_DIR
-com.coleman.kingword.info.InfoGather:
-    36:51:public static void setWeeklyGatherNotifaction(android.content.Context)
-com.coleman.kingword.info.email.GMailSender:
+com.coleman.http.json.connection.HttpHandler:
     private static final java.lang.String TAG
-com.coleman.kingword.info.email.GMailSender$ByteArrayDataSource
-com.coleman.kingword.inspirit.InspiritCenter
-com.coleman.kingword.inspirit.countdown.CountdownManager:
+    49:59:public static void cancelAllRequests()
+    65:70:public static void cancelForegroundRequests()
+    78:79:public void sendBackgroundRequest(com.coleman.http.json.connection.SLRequest)
+    93:93:public com.coleman.http.json.connection.SLResponse getResponse()
+com.coleman.http.json.connection.SLRequest:
+    private static final java.lang.String TAG
+    72:81:void disconnect()
+com.coleman.http.json.connection.SLResponse:
+    private static final java.lang.String TAG
+    48:48:public boolean isLoaded()
+    53:54:public void setResponse(java.lang.Object)
+com.coleman.http.json.core.SLParser:
+    private static final java.lang.String TAG
+com.coleman.http.json.core.SLWrapper:
+    private static final java.lang.String TAG
+com.coleman.http.json.exception.FieldNotInitException:
     private static final long serialVersionUID
-com.coleman.kingword.provider.DictIndexManager$DictIndexTable:
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$Achievement:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String TIME
-    public static final java.lang.String COUNT
-    public static final java.lang.String DESCRIBE
-    public static final java.lang.String SUBTYPE
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$IDictIndex
-com.coleman.kingword.provider.KingWord$SubWordsList:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String WORD_LIST_ID
-    public static final java.lang.String LEVEL
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$WordInfo:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String WORD
-    public static final java.lang.String IGNORE
-    public static final java.lang.String STUDY_COUNT
-    public static final java.lang.String ERROR_COUNT
-    public static final java.lang.String WEIGHT
-    public static final java.lang.String NEW_WORD
-    public static final java.lang.String REVIEW_TYPE
-    public static final java.lang.String REVIEW_TIME
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$WordListItem:
+    11:14:public FieldNotInitException(boolean,java.lang.String,java.lang.String)
+com.coleman.http.json.exception.UnknownTypeException:
     private static final long serialVersionUID
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String SUB_WORD_LIST_ID
-    public static final java.lang.String WORD
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$WordsList:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String DESCRIBE
-    public static final java.lang.String PATH_NAME
-    public static final java.lang.String SET_METHOD
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWordDBHepler:
-    private static final java.lang.String DB_NAME
-    private static final int DB_VERSION
-    private static final java.lang.String word_info_table
-    private static final java.lang.String achievement_table
-    private static final java.lang.String word_list_table
-    private static final java.lang.String sub_word_list_table
-    private static final java.lang.String word_list_item_table
-    private static final java.lang.String delete_sub_word_list_trigger
-    private static final java.lang.String delete_word_list_item_trigger
-com.coleman.kingword.provider.KingWordProvider:
-    public static final java.lang.String AUTHORITY
-    private static final int URI_WORDINFO
-    private static final int URI_WORDINFO_ID
-    private static final int URI_ACHIEVEMENT
-    private static final int URI_ACHIEVEMENT_ID
-    private static final int URI_WORDLIST
-    private static final int URI_WORDLIST_ID
-    private static final int URI_SUB_WORDLIST
-    private static final int URI_SUB_WORDLIST_ID
-    private static final int URI_WORDLISTITEM
-    private static final int URI_WORDLISTITEM_ID
-com.coleman.kingword.study.ColemanIntent
-com.coleman.kingword.study.CoreActivity:
+com.coleman.http.json.local.LocalDataHandler
+com.coleman.http.json.test.TestBean
+com.coleman.http.json.test.TestBean$InnerBean
+com.coleman.http.json.test.TestJSONTool
+com.coleman.kingword.ColemanIntent
+com.coleman.kingword.ColorSetActivityAsDialog:
+    private static final java.lang.String TAG
+com.coleman.kingword.CoreActivity:
+    private static final java.lang.String TAG
     private static final int SET_COLOR
     public static final byte SUBLIST_REACH_END
     public static final byte INSPIRIT_COMPLETE_STUDY
@@ -126,7 +65,7 @@ com.coleman.kingword.study.CoreActivity:
     public static final byte INSPIRIT_CONTINUE_NO_ACTION
     public static final byte INSPIRIT_ACHIEVEMETN_REPORT
     public static final int UPDATE_REMAINDER_TIME
-com.coleman.kingword.study.CoreActivity$ExpensiveTask:
+com.coleman.kingword.CoreActivity$ExpensiveTask:
     public static final byte INIT_RECOVERY_LIST
     public static final byte INIT_REVIEW_LIST
     public static final byte INIT_SCAN_LIST
@@ -141,73 +80,73 @@ com.coleman.kingword.study.CoreActivity$ExpensiveTask:
     private static final byte DEGRADE
     private static final byte IGNORE
     private static final byte UPDATE
-com.coleman.kingword.study.SettingsActivity$SimpleCrypto:
+com.coleman.kingword.R
+com.coleman.kingword.R$anim
+com.coleman.kingword.R$array
+com.coleman.kingword.R$attr
+com.coleman.kingword.R$color
+com.coleman.kingword.R$drawable
+com.coleman.kingword.R$id
+com.coleman.kingword.R$layout
+com.coleman.kingword.R$menu
+com.coleman.kingword.R$string
+com.coleman.kingword.R$style
+com.coleman.kingword.SettingsActivity:
+    protected static final java.lang.String TAG
+com.coleman.kingword.SettingsActivity$SimpleCrypto:
     private static final java.lang.String HEX
-    972:975:public static java.lang.String decrypt(java.lang.String,java.lang.String)
-    997:1001:private static byte[] decrypt(byte[],byte[])
-    1005:1005:public static java.lang.String toHex(java.lang.String)
-    1009:1009:public static java.lang.String fromHex(java.lang.String)
-    1013:1017:public static byte[] toByte(java.lang.String)
-com.coleman.kingword.study.WelcomeActivity:
-    236:262:void _DEL_REPEAT_WORDS()
-com.coleman.kingword.study.WelcomeActivity$1Info
-com.coleman.kingword.study.review.ebbinghaus.EbbinghausReminder:
+    931:934:public static java.lang.String decrypt(java.lang.String,java.lang.String)
+    956:960:private static byte[] decrypt(byte[],byte[])
+    964:964:public static java.lang.String toHex(java.lang.String)
+    968:968:public static java.lang.String fromHex(java.lang.String)
+    972:976:public static byte[] toByte(java.lang.String)
+com.coleman.kingword.UpgradeService:
+    private static final java.lang.String TAG
+com.coleman.kingword.WelcomeActivity:
+    private static final java.lang.String TAG
+    254:280:void _DEL_REPEAT_WORDS()
+com.coleman.kingword.WelcomeActivity$1Info
+com.coleman.kingword.dict.DictLoadService:
+    private static final java.lang.String TAG
+com.coleman.kingword.dict.DictManager:
+    private static final java.lang.String TAG
+    public static final java.lang.String DEFAULT_CUR_LIB
+    public static final java.lang.String DEFAULT_MORE_LIB
+    108:108:public com.coleman.kingword.dict.stardict.DictLibrary getLibrary(java.lang.String)
+    164:164:public boolean isInitialed(java.lang.String)
+    168:168:public boolean isInternal(java.lang.String)
+com.coleman.kingword.dict.DictManager$LibraryLoader:
+    private static final java.lang.String TAG
+    316:316:public boolean isInternal(java.lang.String)
+    320:324:public boolean isInitialed(java.lang.String)
+com.coleman.kingword.dict.DictManager$ViewType
+com.coleman.kingword.dict.stardict.DictData:
+    private static final long serialVersionUID
+    private static final java.lang.String TAG
+    154:166:java.lang.String removeSymbol()
+com.coleman.kingword.dict.stardict.DictIndex:
+    private static final java.lang.String TAG
+com.coleman.kingword.dict.stardict.DictInfo:
+    143:146:public static com.coleman.kingword.dict.stardict.DictInfo loadInfo(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
+    199:228:private static com.coleman.kingword.dict.stardict.DictInfo loadFromDB(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
+com.coleman.kingword.dict.stardict.DictLibrary:
+    private static final java.lang.String TAG
+    private static final java.lang.String DICTS_DIR
+    119:119:public java.lang.String getIfoFileName()
+com.coleman.kingword.ebbinghaus.EbbinghausReminder:
+    private static final java.lang.String TAG
     private static long mTime
     35:80:public static void setNotifaction(android.content.Context,byte)
     86:90:private static boolean checkOneHourTimeUp()
-com.coleman.kingword.study.review.ebbinghaus.receiver.KingWordReceiver:
+com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver:
     public static final java.lang.String ACTION_SEND_INFO_SILENT
+    private static final java.lang.String TAG
     93:119:java.lang.String getMessage(android.content.Context,byte)
-com.coleman.kingword.study.unit.SubWordListActivity$ExpensiveTask:
-    private static final byte INIT_QUERY
-com.coleman.kingword.study.unit.SubWordListActivity$PageControl:
-    167:167:public int getCurPageIndex()
-    171:172:public void setCurPageIndex(int)
-com.coleman.kingword.study.unit.model.FiniteStateMachine:
-    private static final long serialVersionUID
-    37:45:public FiniteStateMachine(com.coleman.kingword.study.unit.model.SliceWordList)
-    80:82:protected void addState(com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState,com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState)
-    93:93:public com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState getInitState()
-    97:98:public void sendMessage(android.os.Message)
-com.coleman.kingword.study.unit.model.FiniteStateMachine$CompleteState:
-    public static final int TYPE
-com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteState:
-    private static final long serialVersionUID
-    180:180:public boolean isCounted()
-com.coleman.kingword.study.unit.model.FiniteStateMachine$FiniteStateEngine:
-    private static final long serialVersionUID
-com.coleman.kingword.study.unit.model.FiniteStateMachine$IFSMCommand
-com.coleman.kingword.study.unit.model.FiniteStateMachine$InitState:
-    public static final int TYPE
-com.coleman.kingword.study.unit.model.FiniteStateMachine$MultipleState:
-    public static final int TYPE
-com.coleman.kingword.study.unit.model.SliceWordList:
-    private static final long serialVersionUID
-    public static final byte NULL_TYPE
-    public static final byte SUB_WORD_LIST
-    public static final byte REVIEW_LIST
-    public static final byte SCAN_LIST
-    public static final byte NEW_WORD_BOOK_LIST
-    public static final byte RECOVERY_LIST
-    public static final java.lang.String DEFAULT_VIEW_METHOD
-com.coleman.kingword.study.unit.model.SliceWordList$SubInfo:
-    private static final long serialVersionUID
-com.coleman.kingword.study.unit.model.WordItem:
-    private static final long serialVersionUID
-    93:95:public android.content.ContentValues toContentValues()
-    153:153:public boolean canUpgrade()
-    157:157:public boolean canDegrade()
-com.coleman.kingword.study.wordinfo.WordInfoHelper:
-    48:52:public static boolean upgrade(android.content.Context,java.lang.String)
-    59:63:public static boolean degrade(android.content.Context,java.lang.String)
-    70:72:public static boolean study(android.content.Context,java.lang.String)
-    79:81:public static boolean reportMiss(android.content.Context,java.lang.String)
-    88:90:public static boolean ignore(android.content.Context,java.lang.String)
-    193:195:public static int delete(android.content.Context,java.lang.String)
-com.coleman.kingword.study.wordinfo.WordInfoVO:
+com.coleman.kingword.history.WordInfo:
     private static final long serialVersionUID
     public static final byte MIN_WEIGHT
     public static final byte MAX_WEIGHT
+    private static final java.lang.String TAG
     public static final byte REVIEW_1_HOUR
     public static final byte REVIEW_12_HOUR
     public static final byte REVIEW_1_DAY
@@ -220,24 +159,156 @@ com.coleman.kingword.study.wordinfo.WordInfoVO:
     93:99:public boolean decreaseWeight()
     103:104:public boolean canUpgrade()
     108:108:public boolean canDegrade()
-com.coleman.kingword.study.wordlist.FileExplorer:
+com.coleman.kingword.history.WordInfoHelper:
+    private static final java.lang.String TAG
+    48:52:public static boolean upgrade(android.content.Context,java.lang.String)
+    59:63:public static boolean degrade(android.content.Context,java.lang.String)
+    70:72:public static boolean study(android.content.Context,java.lang.String)
+    79:81:public static boolean reportMiss(android.content.Context,java.lang.String)
+    88:90:public static boolean ignore(android.content.Context,java.lang.String)
+    193:195:public static int delete(android.content.Context,java.lang.String)
+com.coleman.kingword.inspirit.InspiritCenter
+com.coleman.kingword.inspirit.countdown.CountdownManager:
+    private static final long serialVersionUID
+    private static final java.lang.String TAG
+com.coleman.kingword.provider.KingWord$TAchievement
+com.coleman.kingword.provider.KingWord$TDict:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String DICT_NAME
+    public static final java.lang.String WORD_COUNT
+    public static final java.lang.String IDX_FILE_SIZE
+    public static final java.lang.String SAME_TYPE_SEQUENCE
+    public static final java.lang.String TYPE
+    public static final java.lang.String LOADED
+    public static final java.lang.String INTERNAL
+    public static final java.lang.String DICT_DIR_NAME
+    public static final java.lang.String DATE
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TDict$TDictIndex:
+    public static final java.lang.String TABLE_NAME_PREFIX
+com.coleman.kingword.provider.KingWord$THistory:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String WORD
+    public static final java.lang.String IGNORE
+    public static final java.lang.String STUDY_COUNT
+    public static final java.lang.String ERROR_COUNT
+    public static final java.lang.String WEIGHT
+    public static final java.lang.String NEW_WORD
+    public static final java.lang.String REVIEW_TYPE
+    public static final java.lang.String REVIEW_TIME
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TSubWordList:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String WORD_LIST_ID
+    public static final java.lang.String LEVEL
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TWordList:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String DESCRIBE
+    public static final java.lang.String PATH_NAME
+    public static final java.lang.String SET_METHOD
+    public static final java.lang.String WORDLIST_NAME
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    public static final java.lang.String CREATE_TABLE_SQL
+com.coleman.kingword.provider.KingWord$TWordList$TWordListItem:
+    private static final long serialVersionUID
+    public static final java.lang.String TABLE_NAME_PREFIX
+    public static final java.lang.String SUB_WORD_LIST_ID
+    public static final java.lang.String WORD
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    335:335:public android.net.Uri getContentUri()
+com.coleman.kingword.provider.KingWordDBHepler:
+    private static final java.lang.String DB_NAME
+    private static final java.lang.String TAG
+    private static final int DB_VERSION
+com.coleman.kingword.provider.KingWordProvider:
+    public static final java.lang.String AUTHORITY
+    private static final java.lang.String TAG
+com.coleman.kingword.wordlist.FileExplorer:
     public static final java.lang.String ACTION_EXPLORER
+    private static final java.lang.String TAG
     private static final java.lang.String ROOT_PATH
-com.coleman.kingword.study.wordlist.TextEditor:
+com.coleman.kingword.wordlist.FiniteStateMachine:
+    private static final long serialVersionUID
+    36:44:public FiniteStateMachine(com.coleman.kingword.wordlist.WordListAccessor)
+    79:81:protected void addState(com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState,com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState)
+    92:92:public com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState getInitState()
+    96:97:public void sendMessage(android.os.Message)
+com.coleman.kingword.wordlist.FiniteStateMachine$CompleteState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState:
+    private static final long serialVersionUID
+    180:180:public boolean isCounted()
+com.coleman.kingword.wordlist.FiniteStateMachine$FiniteStateEngine:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.FiniteStateMachine$IFSMCommand
+com.coleman.kingword.wordlist.FiniteStateMachine$InitState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.SubWordListActivity:
+    private static final java.lang.String TAG
+com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask:
+    private static final byte INIT_QUERY
+com.coleman.kingword.wordlist.SubWordListActivity$PageControl:
+    167:167:public int getCurPageIndex()
+    171:172:public void setCurPageIndex(int)
+com.coleman.kingword.wordlist.TextEditor:
     public static final java.lang.String ACTION_EDIT_FILE
-com.coleman.kingword.study.wordlist.TextEditor$ExpensiveTask:
+    private static final java.lang.String TAG
+com.coleman.kingword.wordlist.TextEditor$ExpensiveTask:
     private static final byte LOAD_FILE
-com.coleman.kingword.study.wordlist.WordListActivity:
+com.coleman.kingword.wordlist.WordAccessor:
+    private static final long serialVersionUID
+    private static final java.lang.String TAG
+    91:94:public android.content.ContentValues toContentValues()
+    152:152:public boolean canUpgrade()
+    156:156:public boolean canDegrade()
+com.coleman.kingword.wordlist.WordListAccessor:
+    private static final long serialVersionUID
+    private static final java.lang.String TAG
+    public static final byte NULL_TYPE
+    public static final byte SUB_WORD_LIST
+    public static final byte REVIEW_LIST
+    public static final byte SCAN_LIST
+    public static final byte NEW_WORD_BOOK_LIST
+    public static final byte RECOVERY_LIST
+    public static final java.lang.String DEFAULT_VIEW_METHOD
+com.coleman.kingword.wordlist.WordListActivity:
+    private static final java.lang.String TAG
     public static final java.lang.String EXTERNAL_FILE
     public static final java.lang.String EXTERNAL_FILE_PATH
-com.coleman.kingword.study.wordlist.WordListActivity$ExpensiveTask:
+com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask:
     private static final byte INIT_QUERY
     private static final byte LOAD_EXTERNAL
-com.coleman.kingword.study.wordlist.model.WordList$InternalWordList
-com.coleman.kingword.study.wordlist.model.WordList$SetMethod:
-    43:50:public com.coleman.kingword.study.wordlist.model.WordList$SetMethod getSetMethod(int)
-com.coleman.kingword.study.wordlist.model.WordListManager:
+com.coleman.kingword.wordlist.WordListManager:
+    private static final java.lang.String TAG
     public static final int DEFAULT_SPLIT_NUM
+com.coleman.kingword.wordlist.model.SubWordList:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.model.WordList:
+    private static final long serialVersionUID
+    private static final java.lang.String TAG
+com.coleman.kingword.wordlist.model.WordList$InternalWordList
+com.coleman.kingword.wordlist.model.WordList$SetMethod:
+    47:54:public com.coleman.kingword.wordlist.model.WordList$SetMethod getSetMethod(int)
+com.coleman.kingword.wordlist.model.WordListItem:
+    private static final long serialVersionUID
+    20:23:public android.content.ContentValues toContentValues()
+com.coleman.kingword.wordlist.view.SlideTableSwitcher:
+    private static final java.lang.String TAG
+com.coleman.tools.InfoGather:
+    private static final java.lang.String TAG
+    36:51:public static void setWeeklyGatherNotifaction(android.content.Context)
+com.coleman.tools.email.GMailSender:
+    private static final java.lang.String TAG
+com.coleman.tools.email.GMailSender$ByteArrayDataSource
 com.coleman.util.AppSettings:
     public static final java.lang.String TAG
     public static final java.lang.String SPLIT_NUM_KEY
@@ -259,11 +330,20 @@ com.coleman.util.AppSettings:
     public static final java.lang.String VIEW_SUMMARY_INFO_KEY
     public static final java.lang.String VIEW_DETAILED_INFO_KEY
     public static final java.lang.String SAVE_CACHE_KEY
+    170:179:public static java.lang.String getCurLibraryString(android.content.Context)
+    183:192:public static java.lang.String getMoreLibraryString(android.content.Context)
 com.coleman.util.Config:
     public static final java.lang.String ENCODE
+    public static final boolean isTestServer
 com.coleman.util.ConvertUtils:
     12:20:public static java.lang.String convert(java.lang.String,java.lang.String,java.lang.String)
     40:41:public static java.lang.String byteToHex(byte)
+com.coleman.util.DialogUtil
+com.coleman.util.DialogUtil$1
+com.coleman.util.DialogUtil$2
+com.coleman.util.DialogUtil$3
+com.coleman.util.GeneralParser:
+    private static final java.lang.String TAG
 com.coleman.util.Log:
     public static final int VERBOSE
     public static final int DEBUG
@@ -271,15 +351,18 @@ com.coleman.util.Log:
     public static final int WARN
     public static final int ERROR
     public static final int ASSERT
-    122:122:public static int v(java.lang.String,java.lang.String)
     134:134:public static int v(java.lang.String,java.lang.String,java.lang.Throwable)
     157:157:public static int d(java.lang.String,java.lang.String,java.lang.Throwable)
-    168:168:public static int i(java.lang.String,java.lang.String)
     180:180:public static int i(java.lang.String,java.lang.String,java.lang.Throwable)
     203:203:public static int w(java.lang.String,java.lang.String,java.lang.Throwable)
     public static native boolean isLoggable(java.lang.String,int)
     233:233:public static int w(java.lang.String,java.lang.Throwable)
+    244:244:public static int e(java.lang.String,java.lang.String)
     265:271:public static java.lang.String getStackTraceString(java.lang.Throwable)
+com.coleman.util.MyApp:
+    private static final java.lang.String TAG
+com.coleman.util.ThreadUtils:
+    65:65:public static java.util.concurrent.Future submit(java.util.concurrent.Callable)
 com.sun.activation.registries.LineTokenizer:
     private static final java.lang.String singles
     330:331:public void pushToken(java.lang.String)

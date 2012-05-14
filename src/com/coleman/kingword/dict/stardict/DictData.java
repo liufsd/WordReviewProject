@@ -20,7 +20,7 @@ import com.coleman.util.Log;
 public class DictData implements Serializable{
     private static final long serialVersionUID = -1508100039531151478L;
 
-    private static final String TAG = DictData.class.getName();
+    private static final String TAG = "DictData";
 
     public String symbol;
 

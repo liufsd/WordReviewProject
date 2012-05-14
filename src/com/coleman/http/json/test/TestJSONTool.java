@@ -17,7 +17,7 @@ import com.coleman.http.json.exception.UnknownTypeException;
 import com.coleman.http.json.test.TestBean.InnerBean;
 
 public class TestJSONTool {
-	private static final String TAG = TestJSONTool.class.getName();
+	private static final String TAG = "TestJSONTool";
 
 	public static String testWrap() {
 		TestBean bean = new TestBean();

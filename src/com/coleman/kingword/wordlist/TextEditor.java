@@ -32,7 +32,7 @@ import com.coleman.util.Log;
 public class TextEditor extends Activity implements OnClickListener {
     public static final String ACTION_EDIT_FILE = "edit_text";
 
-    private static final String TAG = TextEditor.class.getName();
+    private static final String TAG = "TextEditor";
 
     private EditText editText;
 

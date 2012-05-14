@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class RegisterActivity extends Activity {
-    private static final String TAG = RegisterActivity.class.getName();
+    private static final String TAG = "RegisterActivity";
 
     /** Called when the activity is first created. */
     @Override

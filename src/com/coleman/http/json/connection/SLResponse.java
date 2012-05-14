@@ -15,7 +15,7 @@ import com.coleman.util.MyApp;
 
 public class SLResponse<T> extends Observable
 {
-    private static final String TAG = SLResponse.class.getName();
+    private static final String TAG = "SLResponse";
     
     private boolean loaded = false;
     

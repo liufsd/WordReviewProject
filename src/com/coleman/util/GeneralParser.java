@@ -21,7 +21,7 @@ import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
  * @author coleman
  */
 public class GeneralParser {
-    private static final String TAG = GeneralParser.class.getName();
+    private static final String TAG = "GeneralParser";
 
     /**
      * Assets is pre-installed files.

@@ -19,7 +19,7 @@ import com.coleman.util.Log;
 
 public class SLParser
 {
-    private static final String TAG = SLParser.class.getName();
+    private static final String TAG = "SLParser";
     
     /**
      * Parse the JSONObject to the java object.
