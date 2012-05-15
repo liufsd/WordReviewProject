@@ -1174,8 +1174,6 @@ com.coleman.util.FileTransfer -> com.coleman.util.f:
 com.coleman.util.GeneralParser -> com.coleman.util.h:
     java.util.ArrayList parseFile(android.content.Context,java.lang.String,boolean,com.coleman.kingword.wordlist.WordListManager$IProgressNotifier) -> a
     java.util.ArrayList getWorldList(java.lang.CharSequence) -> a
-    java.util.HashMap parseFile(java.io.InputStream) -> a
-    java.util.HashMap getProperties(java.lang.String) -> a
 com.coleman.util.Log -> com.coleman.util.e:
     com.coleman.util.Log$LogType logType -> a
     com.coleman.util.Log$LogType getLogType() -> a

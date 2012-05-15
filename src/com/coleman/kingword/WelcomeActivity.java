@@ -1,9 +1,7 @@
 
 package com.coleman.kingword;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
-import com.coleman.util.GeneralParser;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -75,14 +73,16 @@ public class WelcomeActivity extends Activity implements Observer {
     private void upgradeCheck() {
         try {
             VersionCheckReq req = new VersionCheckReq();
-            String path = "kingword/release/release_note.txt";
-            InputStream is = getAssets().open(path);
-            HashMap<String, String> map = GeneralParser.parseFile(is);
-            req.setVersionCode(Integer.parseInt(map.get("versionCode")));
-            req.setVersionType(map.get("versionType"));
+            String appVersionName = null;
+            int appVersionCode;
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            appVersionName = info.versionName; // 版本名
+            appVersionCode = info.versionCode;
+            req.setVersionCode(appVersionCode);
+            req.setVersionType(appVersionName);
             SLRequest<VersionCheckReq> slReq = new SLRequest<VersionCheckReq>(req);
             WorkManager.getInstance().versionUpgrade(this, slReq);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

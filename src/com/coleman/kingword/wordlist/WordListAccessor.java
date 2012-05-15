@@ -146,13 +146,14 @@ public class WordListAccessor implements Serializable {
     public void loadReviewWordList(Context context) {
         loadViewMethod(context);
         ArrayList<WordInfo> infoList = WordInfoHelper.getWordInfoList(context, REVIEW_LIST);
-        WordAccessor item;
+        WordAccessor wa;
         for (WordInfo info : infoList) {
-            item = new WordAccessor(this);
-            item.item.word = info.word;
-            item.info = info;
-            list.add(item);
-            Log.d(TAG, "item:" + item + " status:" + item.getCurrentStatus());
+            wa = new WordAccessor(this);
+            wa.item = new WordListItem();
+            wa.item.word = info.word;
+            wa.info = info;
+            list.add(wa);
+            Log.d(TAG, "item:" + wa + " status:" + wa.getCurrentStatus());
         }
         infoList.clear();
     }
@@ -162,6 +163,7 @@ public class WordListAccessor implements Serializable {
         WordAccessor wa;
         for (WordInfo info : infoList) {
             wa = new WordAccessor(this);
+            wa.item = new WordListItem();
             wa.item.word = info.word;
             wa.info = info;
             list.add(wa);
