@@ -22,11 +22,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.coleman.http.json.bean.RFile;
 import com.coleman.http.json.bean.VersionCheckReq;
 import com.coleman.http.json.bean.VersionCheckResp;
+import com.coleman.http.json.bean.WordlistResp;
 import com.coleman.http.json.bussiness.WorkManager;
 import com.coleman.http.json.connection.SLRequest;
 import com.coleman.http.json.connection.SLResponse;
+import com.coleman.http.json.test.TestJSONTool;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
@@ -68,6 +71,8 @@ public class WelcomeActivity extends Activity implements Observer {
         init();
         // test versionUpgrade
         upgradeCheck();
+
+        TestJSONTool.testWordlist(this);
     }
 
     private void upgradeCheck() {
@@ -344,6 +349,20 @@ public class WelcomeActivity extends Activity implements Observer {
                                             }
                                         }).setNegativeButton(R.string.cancel, null).show();
                     }
+                } else {
+                    Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
+                }
+
+            } else {
+                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
+            }
+        } else if (((SLResponse<?>) observable).getResponse() instanceof WordlistResp) {
+            final WordlistResp bean = (WordlistResp) ((SLResponse<?>) observable).getResponse();
+            if (data == null) {
+                int rc = bean.getResultCode();
+                if (rc == 0) {
+                    RFile rfile = bean.getRfile();
+                    Log.i(TAG, "===coleman-debug-rfile.getName(): " + rfile.getName());
                 } else {
                     Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
                 }
