@@ -114,7 +114,7 @@ public class TextEditor extends Activity implements OnClickListener {
         }
 
         // load the wordlist
-        Intent intent = new Intent(this, WordListActivity.class);
+        Intent intent = new Intent(this, WordlistTabActivity.class);
         intent.putExtra(WordListActivity.EXTERNAL_FILE, true);
         intent.putExtra(WordListActivity.EXTERNAL_FILE_PATH, path);
         startActivity(intent);

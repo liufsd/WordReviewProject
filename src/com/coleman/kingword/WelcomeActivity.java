@@ -34,8 +34,8 @@ import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.wordlist.WordListAccessor;
-import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.WordListManager;
+import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -63,7 +63,7 @@ public class WelcomeActivity extends Activity implements Observer {
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(WelcomeActivity.this, WordListActivity.class));
+                startActivity(new Intent(WelcomeActivity.this, WordlistTabActivity.class));
             }
         });
 
@@ -72,7 +72,6 @@ public class WelcomeActivity extends Activity implements Observer {
         // test versionUpgrade
         upgradeCheck();
 
-        TestJSONTool.testWordlist(this);
     }
 
     private void upgradeCheck() {

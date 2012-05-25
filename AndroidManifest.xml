@@ -35,6 +35,16 @@
         <activity
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:name=".wordlist.WordlistTabActivity" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:name=".wordlist.RemoteFileExplorer" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:name=".wordlist.SubWordListActivity" >
         </activity>
         <activity
@@ -91,9 +101,19 @@
                 </action>
             </intent-filter>
         </receiver>
+        <receiver
+            android:label="@string/app_name"
+            android:name=".wordlist.OriginalDownloadReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" >
+                </action>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" >
+                </action>
+            </intent-filter>
+        </receiver>
         <!-- service -->
         <service android:name=".dict.DictLoadService" />
-         <service android:name=".UpgradeService" />
+        <service android:name=".UpgradeService" />
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

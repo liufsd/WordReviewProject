@@ -60,7 +60,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     private ListView listView;
 
-    private Button loadBtn;
+    private Button btnNew, btnIgnore;
 
     private ProgressBar progressBar;
 
@@ -80,11 +80,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         loadLayout = findViewById(R.id.loadLayout);
         emptyView = findViewById(R.id.view1);
         listView = (ListView) findViewById(R.id.listView1);
-        loadBtn = (Button) findViewById(R.id.button1);
+        btnNew = (Button) findViewById(R.id.button1);
+        btnIgnore = (Button) findViewById(R.id.button2);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
-        loadBtn.setOnClickListener(this);
+
+        btnNew.setOnClickListener(this);
+        btnIgnore.setOnClickListener(this);
 
     }
 
@@ -97,12 +100,18 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     protected void onResume() {
         super.onResume();
         boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
+        getIntent().removeExtra(EXTERNAL_FILE);
         if (loadExternal) {
             external_file_path = getIntent().getStringExtra(EXTERNAL_FILE_PATH);
+            getIntent().removeExtra(EXTERNAL_FILE_PATH);
             Log.d(TAG, "external_file_path:" + external_file_path);
             new ExpensiveTask(ExpensiveTask.LOAD_EXTERNAL).execute();
         } else {
-            new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+            if (c != null && !c.isClosed()) {
+                c.requery();
+            } else {
+                new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
+            }
         }
     }
 
@@ -162,22 +171,22 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.wordlist_option, menu);
+        // getMenuInflater().inflate(R.menu.wordlist_option, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_load:
-                startActivity(new Intent(this, FileExplorer.class));
-                break;
-            case R.id.menu_ignore_list:
-                Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", WordListAccessor.SCAN_LIST);
-                startActivity(intent);
-                break;
-        }
+        // switch (item.getItemId()) {
+        // case R.id.menu_load:
+        // startActivity(new Intent(this, FileExplorer.class));
+        // break;
+        // case R.id.menu_ignore_list:
+        // Intent intent = new Intent(this, CoreActivity.class);
+        // intent.putExtra("type", WordListAccessor.SCAN_LIST);
+        // startActivity(intent);
+        // break;
+        // }
         return true;
     }
 
@@ -249,6 +258,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 intent.putExtra("type", WordListAccessor.NEW_WORD_BOOK_LIST);
                 startActivity(intent);
                 break;
+            case R.id.button2:
+                intent = new Intent(this, CoreActivity.class);
+                intent.putExtra("type", WordListAccessor.SCAN_LIST);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -274,12 +288,15 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         protected void onPreExecute() {
             switch (type) {
                 case INIT_QUERY:
+                    listView.setVisibility(View.GONE);
                     loadLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
                 case LOAD_EXTERNAL:
                     listView.setVisibility(View.GONE);
                     loadLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
                 default:
@@ -355,6 +372,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         protected void onPostExecute(Void result) {
             switch (type) {
                 case INIT_QUERY:
+                    listView.setVisibility(View.VISIBLE);
                     adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
                     listView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);

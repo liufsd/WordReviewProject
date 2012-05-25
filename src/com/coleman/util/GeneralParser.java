@@ -66,15 +66,19 @@ public class GeneralParser {
     }
 
     private static ArrayList<String> getWorldList(CharSequence sb) {
-        final Pattern WORD = Pattern.compile("[a-zA-Z-]+\\b");
+        final Pattern WORD = Pattern.compile("[a-zA-Z]+-{0,1}[a-zA-Z]+\\b");
         final Pattern WORD_TYPE = Pattern.compile("^(prep|n|v(t|i|)|ad(j|v|)|[a-zA-Z])$");
         ArrayList<String> list = new ArrayList<String>();
         Matcher m = WORD.matcher(sb);
+        String tempStr;
         while (m.find()) {
             if (!WORD_TYPE.matcher(m.group()).find()) {
-                list.add(m.group());
+                tempStr = m.group();
+                if (!list.contains(tempStr)) {
+                    list.add(tempStr);
+                }
             } else {
-                Log.i(TAG, "skip word: " + m.group());
+                // Log.i(TAG, "skip word: " + m.group());
             }
         }
         return list;

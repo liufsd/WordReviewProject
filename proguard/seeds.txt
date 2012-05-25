@@ -1188,6 +1188,11 @@ javax.activation.FileTypeMap: void setDefaultFileTypeMap(javax.activation.FileTy
 javax.activation.FileTypeMap: javax.activation.FileTypeMap getDefaultFileTypeMap()
 com.sun.mail.smtp.SMTPTransport
 com.sun.mail.smtp.SMTPSSLTransport
+com.coleman.http.json.bean.WordlistReq
+com.coleman.http.json.bean.WordlistReq: java.lang.Integer type
+com.coleman.http.json.bean.WordlistReq: WordlistReq()
+com.coleman.http.json.bean.WordlistReq: void setType(java.lang.Integer)
+com.coleman.http.json.bean.WordlistReq: java.lang.Integer getType()
 com.coleman.http.json.bean.VersionCheckResp
 com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer resultCode
 com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer newVersionCode
@@ -1213,6 +1218,37 @@ com.coleman.http.json.bean.VersionCheckReq: java.lang.Integer getVersionCode()
 com.coleman.http.json.bean.VersionCheckReq: void setVersionCode(java.lang.Integer)
 com.coleman.http.json.bean.VersionCheckReq: java.lang.String getVersionType()
 com.coleman.http.json.bean.VersionCheckReq: void setVersionType(java.lang.String)
+com.coleman.http.json.bean.WordlistResp
+com.coleman.http.json.bean.WordlistResp: java.lang.Integer resultCode
+com.coleman.http.json.bean.WordlistResp: java.lang.String Description
+com.coleman.http.json.bean.WordlistResp: com.coleman.http.json.bean.RFile rfile
+com.coleman.http.json.bean.WordlistResp: WordlistResp()
+com.coleman.http.json.bean.WordlistResp: java.lang.Integer getResultCode()
+com.coleman.http.json.bean.WordlistResp: void setResultCode(java.lang.Integer)
+com.coleman.http.json.bean.WordlistResp: java.lang.String getDescription()
+com.coleman.http.json.bean.WordlistResp: void setDescription(java.lang.String)
+com.coleman.http.json.bean.WordlistResp: com.coleman.http.json.bean.RFile getRfile()
+com.coleman.http.json.bean.WordlistResp: void setRfile(com.coleman.http.json.bean.RFile)
+com.coleman.http.json.bean.RFile
+com.coleman.http.json.bean.RFile: java.lang.Boolean isRoot
+com.coleman.http.json.bean.RFile: java.lang.Boolean isFolder
+com.coleman.http.json.bean.RFile: com.coleman.http.json.bean.RFile[] chirldren
+com.coleman.http.json.bean.RFile: java.lang.String name
+com.coleman.http.json.bean.RFile: java.lang.String id
+com.coleman.http.json.bean.RFile: java.lang.String path
+com.coleman.http.json.bean.RFile: RFile()
+com.coleman.http.json.bean.RFile: java.lang.Boolean getIsRoot()
+com.coleman.http.json.bean.RFile: void setIsRoot(java.lang.Boolean)
+com.coleman.http.json.bean.RFile: java.lang.Boolean getIsFolder()
+com.coleman.http.json.bean.RFile: void setIsFolder(java.lang.Boolean)
+com.coleman.http.json.bean.RFile: com.coleman.http.json.bean.RFile[] getChirldren()
+com.coleman.http.json.bean.RFile: void setChirldren(com.coleman.http.json.bean.RFile[])
+com.coleman.http.json.bean.RFile: java.lang.String getName()
+com.coleman.http.json.bean.RFile: void setName(java.lang.String)
+com.coleman.http.json.bean.RFile: java.lang.String getId()
+com.coleman.http.json.bean.RFile: void setId(java.lang.String)
+com.coleman.http.json.bean.RFile: java.lang.String getPath()
+com.coleman.http.json.bean.RFile: void setPath(java.lang.String)
 com.coleman.http.json.annotation.KeyName
 com.coleman.http.json.annotation.KeyName: java.lang.String abbr()
 com.coleman.http.json.annotation.KeyName: boolean need()
@@ -1243,11 +1279,14 @@ com.coleman.kingword.wordlist.FileExplorer
 com.coleman.kingword.wordlist.WordListActivity
 com.coleman.kingword.ColorSetActivityAsDialog
 com.coleman.kingword.wordlist.TextEditor
+com.coleman.kingword.wordlist.RemoteFileExplorer
 com.coleman.kingword.SettingsActivity
 com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog
+com.coleman.kingword.wordlist.WordlistTabActivity
 com.coleman.util.MyApp
 com.coleman.kingword.dict.DictLoadService
 com.coleman.kingword.UpgradeService
+com.coleman.kingword.wordlist.OriginalDownloadReceiver
 com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver
 com.coleman.kingword.provider.KingWordProvider
 com.coleman.kingword.history.WordInfo

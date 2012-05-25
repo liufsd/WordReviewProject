@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="@drawable/item_bg_day">
-	<ImageView android:layout_width="wrap_content" android:src="@drawable/wordlist"
-		android:layout_height="wrap_content" android:id="@+id/imgView"
-		android:layout_gravity="center_vertical"></ImageView>
-	<TextView android:layout_width="fill_parent" android:minLines="3"
-		android:gravity="center_vertical|left" android:textColor="@color/black"
-		android:layout_height="wrap_content" android:id="@+id/textView1"
-		style="@style/wordlist_title" android:layout_gravity="center_vertical"></TextView>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/item_bg_day" >
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/wordlist" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/textView1"
+        style="@style/wordlist_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical|left"
+        android:minLines="3"
+        android:textColor="@color/black" >
+    </TextView>
+
 </LinearLayout>

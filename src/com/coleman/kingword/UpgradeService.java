@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import com.coleman.http.json.annotation.RequestObject;
 import com.coleman.http.json.bean.VersionCheckReq;
 import com.coleman.http.json.bean.VersionCheckResp;
+import com.coleman.util.Config;
 import com.coleman.util.FileTransfer;
 import com.coleman.util.Log;
 import com.coleman.util.ThreadUtils;
@@ -64,7 +65,8 @@ public class UpgradeService extends Service {
                 // 如果第三方下载地址不存在，尝试从自有服务器下载
                 String tempUrl = url;
                 if (TextUtils.isEmpty(tempUrl)) {
-                    tempUrl = VersionCheckReq.class.getAnnotation(RequestObject.class).hwUrl()
+                    RequestObject reqObj = VersionCheckReq.class.getAnnotation(RequestObject.class);
+                    tempUrl = (Config.isTestServer ? reqObj.url() : reqObj.hwUrl())
                             + "/ColemanServer/versionDownload?file=" + fileName;
                 }
                 new FileTransfer().downloadFile(tempUrl, file.getAbsolutePath());

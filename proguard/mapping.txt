@@ -1,3 +1,73 @@
+android.app2.DownloadManager -> b.a.b:
+    java.lang.String[] COLUMNS -> a
+    java.lang.String[] UNDERLYING_COLUMNS -> b
+    java.util.Set LONG_COLUMNS -> c
+    android.content.ContentResolver mResolver -> d
+    java.lang.String mPackageName -> e
+    android.net.Uri mBaseUri -> f
+    long enqueue(android.app2.DownloadManager$Request) -> a
+    android.database.Cursor query(android.app2.DownloadManager$Query) -> a
+    java.lang.String getWhereClauseForIds(long[]) -> a
+    java.lang.String[] getWhereArgsForIds(long[]) -> b
+    java.lang.String[] access$0() -> a
+    java.util.Set access$1() -> b
+android.app2.DownloadManager$CursorTranslator -> b.a.c:
+    android.net.Uri mBaseUri -> b
+    boolean $assertionsDisabled -> a
+    int getColumnIndex(java.lang.String) -> getColumnIndex
+    int getColumnIndexOrThrow(java.lang.String) -> getColumnIndexOrThrow
+    java.lang.String getColumnName(int) -> getColumnName
+    java.lang.String[] getColumnNames() -> getColumnNames
+    int getColumnCount() -> getColumnCount
+    byte[] getBlob(int) -> getBlob
+    double getDouble(int) -> getDouble
+    boolean isLongColumn(java.lang.String) -> a
+    float getFloat(int) -> getFloat
+    int getInt(int) -> getInt
+    long getLong(int) -> getLong
+    short getShort(int) -> getShort
+    java.lang.String getString(int) -> getString
+    java.lang.String translateString(java.lang.String) -> b
+    java.lang.String getLocalUri() -> a
+    long translateLong(java.lang.String) -> c
+    long getReason(int) -> a
+    long getPausedReason(int) -> b
+    long getErrorCode(int) -> c
+    long getUnderlyingLong(java.lang.String) -> d
+    java.lang.String getUnderlyingString(java.lang.String) -> e
+    int translateStatus(int) -> d
+android.app2.DownloadManager$Query -> b.a.d:
+    long[] mIds -> a
+    java.lang.Integer mStatusFlags -> b
+    java.lang.String mOrderByColumn -> c
+    int mOrderDirection -> d
+    boolean mOnlyIncludeVisibleInDownloadsUi -> e
+    android.app2.DownloadManager$Query setFilterById(long[]) -> a
+    android.database.Cursor runQuery(android.content.ContentResolver,java.lang.String[],android.net.Uri) -> a
+    java.lang.String joinStrings(java.lang.String,java.lang.Iterable) -> a
+    java.lang.String statusClause(java.lang.String,int) -> a
+android.app2.DownloadManager$Request -> b.a.a:
+    android.net.Uri mUri -> b
+    android.net.Uri mDestinationUri -> c
+    java.util.List mRequestHeaders -> d
+    java.lang.CharSequence mTitle -> e
+    java.lang.CharSequence mDescription -> f
+    boolean mShowNotification -> g
+    java.lang.String mMimeType -> h
+    boolean mRoamingAllowed -> i
+    int mAllowedNetworkTypes -> j
+    boolean mIsVisibleInDownloadsUi -> k
+    boolean $assertionsDisabled -> a
+    void setDestinationFromBase(java.io.File,java.lang.String) -> a
+    android.content.ContentValues toContentValues(java.lang.String) -> a
+    void encodeHttpHeaders(android.content.ContentValues) -> a
+    void putIfNonNull(android.content.ContentValues,java.lang.String,java.lang.Object) -> a
+android.provider.Downloads -> b.b.a:
+    android.net.Uri CONTENT_URI -> a
+    boolean isStatusError(int) -> a
+android.provider.Downloads$Impl -> b.b.b:
+    android.net.Uri CONTENT_URI -> a
+    android.net.Uri ALL_DOWNLOADS_CONTENT_URI -> b
 com.coleman.http.json.annotation.KeyName -> com.coleman.http.json.annotation.KeyName:
     java.lang.String abbr() -> abbr
     boolean need() -> need
@@ -9,6 +79,25 @@ com.coleman.http.json.annotation.RequestObject -> com.coleman.http.json.annotati
     java.lang.String hwUrl() -> hwUrl
 com.coleman.http.json.annotation.ResponseObject -> com.coleman.http.json.annotation.ResponseObject:
 com.coleman.http.json.annotation.ValueObject -> com.coleman.http.json.annotation.ValueObject:
+com.coleman.http.json.bean.RFile -> com.coleman.http.json.bean.RFile:
+    java.lang.Boolean isRoot -> isRoot
+    java.lang.Boolean isFolder -> isFolder
+    com.coleman.http.json.bean.RFile[] chirldren -> chirldren
+    java.lang.String name -> name
+    java.lang.String id -> id
+    java.lang.String path -> path
+    java.lang.Boolean getIsRoot() -> getIsRoot
+    void setIsRoot(java.lang.Boolean) -> setIsRoot
+    java.lang.Boolean getIsFolder() -> getIsFolder
+    void setIsFolder(java.lang.Boolean) -> setIsFolder
+    com.coleman.http.json.bean.RFile[] getChirldren() -> getChirldren
+    void setChirldren(com.coleman.http.json.bean.RFile[]) -> setChirldren
+    java.lang.String getName() -> getName
+    void setName(java.lang.String) -> setName
+    java.lang.String getId() -> getId
+    void setId(java.lang.String) -> setId
+    java.lang.String getPath() -> getPath
+    void setPath(java.lang.String) -> setPath
 com.coleman.http.json.bean.VersionCheckReq -> com.coleman.http.json.bean.VersionCheckReq:
     java.lang.Integer versionCode -> versionCode
     java.lang.String versionType -> versionType
@@ -32,10 +121,25 @@ com.coleman.http.json.bean.VersionCheckResp -> com.coleman.http.json.bean.Versio
     java.lang.Integer getResultCode() -> getResultCode
     void setThirdpartDownloadUrl(java.lang.String) -> setThirdpartDownloadUrl
     java.lang.String getThirdpartDownloadUrl() -> getThirdpartDownloadUrl
+com.coleman.http.json.bean.WordlistReq -> com.coleman.http.json.bean.WordlistReq:
+    java.lang.Integer type -> type
+    void setType(java.lang.Integer) -> setType
+    java.lang.Integer getType() -> getType
+com.coleman.http.json.bean.WordlistResp -> com.coleman.http.json.bean.WordlistResp:
+    java.lang.Integer resultCode -> resultCode
+    java.lang.String Description -> Description
+    com.coleman.http.json.bean.RFile rfile -> rfile
+    java.lang.Integer getResultCode() -> getResultCode
+    void setResultCode(java.lang.Integer) -> setResultCode
+    java.lang.String getDescription() -> getDescription
+    void setDescription(java.lang.String) -> setDescription
+    com.coleman.http.json.bean.RFile getRfile() -> getRfile
+    void setRfile(com.coleman.http.json.bean.RFile) -> setRfile
 com.coleman.http.json.bussiness.WorkManager -> com.coleman.http.json.d.a:
     com.coleman.http.json.bussiness.WorkManager manager -> a
     com.coleman.http.json.bussiness.WorkManager getInstance() -> a
     com.coleman.http.json.connection.SLResponse versionUpgrade(java.util.Observer,com.coleman.http.json.connection.SLRequest) -> a
+    com.coleman.http.json.connection.SLResponse getWordlist(java.util.Observer,com.coleman.http.json.connection.SLRequest) -> b
 com.coleman.http.json.connection.HttpHandler -> com.coleman.http.json.b.g:
     java.util.LinkedList cancelableList -> a
     java.util.LinkedList backgroundList -> b
@@ -420,7 +524,7 @@ com.coleman.kingword.SettingsActivity$10 -> com.coleman.kingword.f:
     java.util.ArrayList val$result -> c
     com.coleman.kingword.SettingsActivity$1Index val$selectIndex -> d
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$11 -> com.coleman.kingword.b:
+com.coleman.kingword.SettingsActivity$11 -> com.coleman.kingword.c:
     com.coleman.kingword.SettingsActivity this$0 -> a
     int[] val$debugLevNums -> b
     java.lang.String[] val$debugLevs -> c
@@ -511,7 +615,7 @@ com.coleman.kingword.SettingsActivity$9 -> com.coleman.kingword.aq:
     android.widget.Spinner val$spinner1 -> d
     android.widget.ArrayAdapter val$listViewAdapter -> e
     void onClick(android.view.View) -> onClick
-com.coleman.kingword.SettingsActivity$SettingsAdapter -> com.coleman.kingword.c:
+com.coleman.kingword.SettingsActivity$SettingsAdapter -> com.coleman.kingword.b:
     android.view.LayoutInflater inflater -> b
     com.coleman.kingword.SettingsActivity this$0 -> a
     int getCount() -> getCount
@@ -795,10 +899,10 @@ com.coleman.kingword.wordlist.FileExplorer -> com.coleman.kingword.wordlist.File
     java.io.File access$1(com.coleman.kingword.wordlist.FileExplorer) -> a
     void access$2(com.coleman.kingword.wordlist.FileExplorer,java.util.ArrayList,java.io.File) -> a
     void access$3(com.coleman.kingword.wordlist.FileExplorer,java.lang.String) -> a
-com.coleman.kingword.wordlist.FileExplorer$1 -> com.coleman.kingword.wordlist.f:
+com.coleman.kingword.wordlist.FileExplorer$1 -> com.coleman.kingword.wordlist.g:
     com.coleman.kingword.wordlist.FileExplorer this$0 -> a
     void onClick(android.view.View) -> onClick
-com.coleman.kingword.wordlist.FileExplorer$FileAdapter -> com.coleman.kingword.wordlist.h:
+com.coleman.kingword.wordlist.FileExplorer$FileAdapter -> com.coleman.kingword.wordlist.i:
     android.view.LayoutInflater inflater -> b
     java.util.ArrayList list -> c
     com.coleman.kingword.wordlist.FileExplorer this$0 -> a
@@ -826,10 +930,10 @@ com.coleman.kingword.wordlist.FiniteStateMachine -> com.coleman.kingword.wordlis
     com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState access$1(com.coleman.kingword.wordlist.FiniteStateMachine) -> b
     void access$2(com.coleman.kingword.wordlist.FiniteStateMachine,com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState) -> a
     java.util.ArrayList access$3(com.coleman.kingword.wordlist.FiniteStateMachine) -> c
-com.coleman.kingword.wordlist.FiniteStateMachine$CompleteState -> com.coleman.kingword.wordlist.s:
+com.coleman.kingword.wordlist.FiniteStateMachine$CompleteState -> com.coleman.kingword.wordlist.w:
     com.coleman.kingword.wordlist.FiniteStateMachine this$0 -> a
     void enter() -> a
-com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState -> com.coleman.kingword.wordlist.t:
+com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState -> com.coleman.kingword.wordlist.x:
     java.util.Random ran -> a
     com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState nextState -> b
     boolean counted -> c
@@ -848,14 +952,70 @@ com.coleman.kingword.wordlist.FiniteStateMachine$FiniteStateEngine -> com.colema
     void transitionTo(com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState) -> a
     void reset() -> a
     void complete() -> b
-com.coleman.kingword.wordlist.FiniteStateMachine$InitState -> com.coleman.kingword.wordlist.x:
+com.coleman.kingword.wordlist.FiniteStateMachine$InitState -> com.coleman.kingword.wordlist.ab:
     com.coleman.kingword.wordlist.FiniteStateMachine this$0 -> a
     void exit() -> b
     java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.wordlist.WordAccessor,java.util.ArrayList) -> a
-com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState -> com.coleman.kingword.wordlist.y:
+com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState -> com.coleman.kingword.wordlist.ac:
     com.coleman.kingword.wordlist.FiniteStateMachine this$0 -> a
     void exit() -> b
     java.util.ArrayList getDictData(android.content.Context,com.coleman.kingword.wordlist.WordAccessor,java.util.ArrayList) -> a
+com.coleman.kingword.wordlist.OriginalDownloadReceiver -> com.coleman.kingword.wordlist.OriginalDownloadReceiver:
+    java.lang.String TAG -> a
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.coleman.kingword.wordlist.OriginalDownloadReceiver$1 -> com.coleman.kingword.wordlist.v:
+    com.coleman.kingword.wordlist.OriginalDownloadReceiver this$0 -> a
+    java.lang.String val$path -> b
+    android.content.Context val$context -> c
+    void run() -> run
+com.coleman.kingword.wordlist.RemoteFileExplorer -> com.coleman.kingword.wordlist.RemoteFileExplorer:
+    java.lang.String TAG -> a
+    android.widget.ListView lv -> b
+    com.coleman.http.json.bean.RFile root -> c
+    android.widget.TextView pathView -> d
+    android.widget.ProgressBar pb -> e
+    com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter rAdapter -> f
+    java.util.Comparator comparator -> g
+    void onCreate(android.os.Bundle) -> onCreate
+    void getWordlist(java.util.Observer) -> a
+    void onBackPressed() -> onBackPressed
+    com.coleman.http.json.bean.RFile getParentFile(com.coleman.http.json.bean.RFile,com.coleman.http.json.bean.RFile) -> a
+    void listFiles(java.util.List,com.coleman.http.json.bean.RFile) -> a
+    void showFilePath(com.coleman.http.json.bean.RFile) -> a
+    void update(java.util.Observable,java.lang.Object) -> update
+    com.coleman.http.json.bean.RFile access$0(com.coleman.kingword.wordlist.RemoteFileExplorer) -> a
+    java.util.Comparator access$1(com.coleman.kingword.wordlist.RemoteFileExplorer) -> b
+    void access$2(com.coleman.kingword.wordlist.RemoteFileExplorer,com.coleman.http.json.bean.RFile) -> a
+    void access$3(com.coleman.kingword.wordlist.RemoteFileExplorer,java.util.List,com.coleman.http.json.bean.RFile) -> a
+    java.lang.String access$4() -> a
+com.coleman.kingword.wordlist.RemoteFileExplorer$1 -> com.coleman.kingword.wordlist.n:
+    com.coleman.kingword.wordlist.RemoteFileExplorer this$0 -> a
+    int compare(com.coleman.http.json.bean.RFile,com.coleman.http.json.bean.RFile) -> a
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.coleman.kingword.wordlist.RemoteFileExplorer$2 -> com.coleman.kingword.wordlist.l:
+    com.coleman.kingword.wordlist.RemoteFileExplorer this$0 -> a
+    void onClick(android.view.View) -> onClick
+com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter -> com.coleman.kingword.wordlist.c:
+    android.view.LayoutInflater inflater -> b
+    com.coleman.http.json.bean.RFile subRoot -> c
+    java.util.ArrayList list -> d
+    com.coleman.kingword.wordlist.RemoteFileExplorer this$0 -> a
+    int getCount() -> getCount
+    com.coleman.http.json.bean.RFile getItem(int) -> a
+    long getItemId(int) -> getItemId
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    void showDownloadTip(com.coleman.http.json.bean.RFile) -> a
+    void doDownload(com.coleman.http.json.bean.RFile) -> b
+    java.lang.Object getItem(int) -> getItem
+    void access$1(com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter,com.coleman.http.json.bean.RFile) -> a
+    com.coleman.http.json.bean.RFile access$2(com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter) -> a
+    void access$3(com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter,com.coleman.http.json.bean.RFile) -> b
+    java.util.ArrayList access$4(com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter) -> b
+com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter$1 -> com.coleman.kingword.wordlist.ad:
+    com.coleman.kingword.wordlist.RemoteFileExplorer$RFileAdapter this$1 -> a
+    com.coleman.http.json.bean.RFile val$item -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
 com.coleman.kingword.wordlist.SubWordListActivity -> com.coleman.kingword.wordlist.SubWordListActivity:
     android.widget.ProgressBar progressBar -> c
     android.widget.ProgressBar preProgress -> d
@@ -873,7 +1033,7 @@ com.coleman.kingword.wordlist.SubWordListActivity -> com.coleman.kingword.wordli
     void access$2(com.coleman.kingword.wordlist.SubWordListActivity,com.coleman.kingword.wordlist.SubWordListActivity$PageControl) -> a
     com.coleman.kingword.wordlist.SubWordListActivity$PageControl access$3(com.coleman.kingword.wordlist.SubWordListActivity) -> c
     com.coleman.kingword.wordlist.view.SlideTableSwitcher access$4(com.coleman.kingword.wordlist.SubWordListActivity) -> d
-com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask -> com.coleman.kingword.wordlist.l:
+com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask -> com.coleman.kingword.wordlist.o:
     byte type -> b
     com.coleman.kingword.wordlist.SubWordListActivity this$0 -> a
     void onPreExecute() -> onPreExecute
@@ -881,7 +1041,7 @@ com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask -> com.coleman.k
     void onPostExecute(java.lang.Void) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.coleman.kingword.wordlist.SubWordListActivity$PageControl -> com.coleman.kingword.wordlist.d:
+com.coleman.kingword.wordlist.SubWordListActivity$PageControl -> com.coleman.kingword.wordlist.e:
     java.util.ArrayList mlist -> a
     int curIndex -> b
     int MAX_PAGE_ITEM -> c
@@ -903,7 +1063,7 @@ com.coleman.kingword.wordlist.TextEditor -> com.coleman.kingword.wordlist.TextEd
     void doSave() -> a
     java.lang.String access$0(com.coleman.kingword.wordlist.TextEditor) -> a
     android.widget.EditText access$1(com.coleman.kingword.wordlist.TextEditor) -> b
-com.coleman.kingword.wordlist.TextEditor$ExpensiveTask -> com.coleman.kingword.wordlist.m:
+com.coleman.kingword.wordlist.TextEditor$ExpensiveTask -> com.coleman.kingword.wordlist.p:
     byte type -> b
     java.lang.String content -> c
     com.coleman.kingword.wordlist.TextEditor this$0 -> a
@@ -912,11 +1072,11 @@ com.coleman.kingword.wordlist.TextEditor$ExpensiveTask -> com.coleman.kingword.w
     void onPostExecute(java.lang.Void) -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.coleman.kingword.wordlist.TextEditor$FileLoader -> com.coleman.kingword.wordlist.g:
+com.coleman.kingword.wordlist.TextEditor$FileLoader -> com.coleman.kingword.wordlist.h:
     java.lang.String content -> b
     com.coleman.kingword.wordlist.TextEditor this$0 -> a
     java.lang.String getContent() -> a
-com.coleman.kingword.wordlist.WordAccessor -> com.coleman.kingword.wordlist.e:
+com.coleman.kingword.wordlist.WordAccessor -> com.coleman.kingword.wordlist.f:
     com.coleman.kingword.wordlist.model.WordListItem item -> a
     com.coleman.kingword.history.WordInfo info -> b
     boolean reviewed -> c
@@ -948,7 +1108,7 @@ com.coleman.kingword.wordlist.WordAccessor -> com.coleman.kingword.wordlist.e:
     boolean removeIgnore(android.content.Context) -> l
     boolean isNewWord() -> f
     void clear() -> g
-com.coleman.kingword.wordlist.WordListAccessor -> com.coleman.kingword.wordlist.o:
+com.coleman.kingword.wordlist.WordListAccessor -> com.coleman.kingword.wordlist.r:
     com.coleman.kingword.wordlist.model.SubWordList subinfo -> i
     java.util.ArrayList list -> j
     java.lang.String[] projection -> k
@@ -985,10 +1145,11 @@ com.coleman.kingword.wordlist.WordListActivity -> com.coleman.kingword.wordlist.
     java.lang.String[] projection -> c
     java.lang.String external_file_path -> d
     android.widget.ListView listView -> e
-    android.widget.Button loadBtn -> f
-    android.widget.ProgressBar progressBar -> g
-    android.view.View loadLayout -> h
-    android.view.View emptyView -> i
+    android.widget.Button btnNew -> f
+    android.widget.Button btnIgnore -> g
+    android.widget.ProgressBar progressBar -> h
+    android.view.View loadLayout -> i
+    android.view.View emptyView -> j
     void onNewIntent(android.content.Intent) -> onNewIntent
     void onCreate(android.os.Bundle) -> onCreate
     void onStart() -> onStart
@@ -1003,26 +1164,26 @@ com.coleman.kingword.wordlist.WordListActivity -> com.coleman.kingword.wordlist.
     void showRenameDialog(long) -> a
     void onClick(android.view.View) -> onClick
     boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
-    android.view.View access$0(com.coleman.kingword.wordlist.WordListActivity) -> a
+    android.widget.ListView access$0(com.coleman.kingword.wordlist.WordListActivity) -> a
     android.view.View access$1(com.coleman.kingword.wordlist.WordListActivity) -> b
-    android.widget.ListView access$2(com.coleman.kingword.wordlist.WordListActivity) -> c
-    java.lang.String[] access$3() -> a
-    void access$4(com.coleman.kingword.wordlist.WordListActivity,android.database.Cursor) -> a
-    android.database.Cursor access$5(com.coleman.kingword.wordlist.WordListActivity) -> d
-    java.lang.String access$6(com.coleman.kingword.wordlist.WordListActivity) -> e
-    android.widget.ProgressBar access$7(com.coleman.kingword.wordlist.WordListActivity) -> f
+    android.widget.ProgressBar access$2(com.coleman.kingword.wordlist.WordListActivity) -> c
+    android.view.View access$3(com.coleman.kingword.wordlist.WordListActivity) -> d
+    java.lang.String[] access$4() -> a
+    void access$5(com.coleman.kingword.wordlist.WordListActivity,android.database.Cursor) -> a
+    android.database.Cursor access$6(com.coleman.kingword.wordlist.WordListActivity) -> e
+    java.lang.String access$7(com.coleman.kingword.wordlist.WordListActivity) -> f
     void access$8(com.coleman.kingword.wordlist.WordListActivity,com.coleman.kingword.wordlist.WordListActivity$WordListAdapter) -> a
     com.coleman.kingword.wordlist.WordListActivity$WordListAdapter access$9(com.coleman.kingword.wordlist.WordListActivity) -> g
-com.coleman.kingword.wordlist.WordListActivity$1 -> com.coleman.kingword.wordlist.u:
+com.coleman.kingword.wordlist.WordListActivity$1 -> com.coleman.kingword.wordlist.y:
     com.coleman.kingword.wordlist.WordListActivity this$0 -> a
     long val$id -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.wordlist.WordListActivity$2 -> com.coleman.kingword.wordlist.v:
+com.coleman.kingword.wordlist.WordListActivity$2 -> com.coleman.kingword.wordlist.z:
     com.coleman.kingword.wordlist.WordListActivity this$0 -> a
     android.widget.EditText val$et -> b
     long val$id -> c
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask -> com.coleman.kingword.wordlist.w:
+com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask -> com.coleman.kingword.wordlist.aa:
     byte type -> b
     com.coleman.kingword.wordlist.WordListActivity this$0 -> a
     void onPreExecute() -> onPreExecute
@@ -1033,18 +1194,18 @@ com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask -> com.coleman.king
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
     void onProgressUpdate(java.lang.Object[]) -> onProgressUpdate
     void access$3(com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask,java.lang.Object[]) -> a
-com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask$1 -> com.coleman.kingword.wordlist.p:
+com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask$1 -> com.coleman.kingword.wordlist.s:
     com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask this$1 -> a
     void notify(int) -> a
-com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask$2 -> com.coleman.kingword.wordlist.q:
+com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask$2 -> com.coleman.kingword.wordlist.t:
     com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask this$1 -> a
     void notify(int) -> a
-com.coleman.kingword.wordlist.WordListActivity$WordListAdapter -> com.coleman.kingword.wordlist.n:
+com.coleman.kingword.wordlist.WordListActivity$WordListAdapter -> com.coleman.kingword.wordlist.q:
     com.coleman.kingword.wordlist.WordListActivity this$0 -> a
     void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
     android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
     java.lang.String getName(java.lang.String) -> a
-com.coleman.kingword.wordlist.WordListManager -> com.coleman.kingword.wordlist.c:
+com.coleman.kingword.wordlist.WordListManager -> com.coleman.kingword.wordlist.d:
     com.coleman.kingword.wordlist.WordListManager manager -> a
     int[] $SWITCH_TABLE$com$coleman$kingword$wordlist$model$WordList$SetMethod -> b
     com.coleman.kingword.wordlist.WordListManager getInstance() -> a
@@ -1059,18 +1220,28 @@ com.coleman.kingword.wordlist.WordListManager -> com.coleman.kingword.wordlist.c
     void update(android.content.Context,long) -> a
     void sort(java.util.ArrayList) -> a
     int[] $SWITCH_TABLE$com$coleman$kingword$wordlist$model$WordList$SetMethod() -> b
-com.coleman.kingword.wordlist.WordListManager$1 -> com.coleman.kingword.wordlist.k:
+com.coleman.kingword.wordlist.WordListManager$1 -> com.coleman.kingword.wordlist.m:
     com.coleman.kingword.wordlist.WordListManager this$0 -> a
     void notify(int) -> a
-com.coleman.kingword.wordlist.WordListManager$2 -> com.coleman.kingword.wordlist.j:
+com.coleman.kingword.wordlist.WordListManager$2 -> com.coleman.kingword.wordlist.k:
     com.coleman.kingword.wordlist.WordListManager this$0 -> a
     void notify(int) -> a
-com.coleman.kingword.wordlist.WordListManager$3 -> com.coleman.kingword.wordlist.i:
+com.coleman.kingword.wordlist.WordListManager$3 -> com.coleman.kingword.wordlist.j:
     com.coleman.kingword.wordlist.WordListManager this$0 -> a
     int compare(java.lang.String,java.lang.String) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.coleman.kingword.wordlist.WordListManager$IProgressNotifier -> com.coleman.kingword.wordlist.r:
+com.coleman.kingword.wordlist.WordListManager$IProgressNotifier -> com.coleman.kingword.wordlist.u:
     void notify(int) -> a
+com.coleman.kingword.wordlist.WordlistTabActivity -> com.coleman.kingword.wordlist.WordlistTabActivity:
+    java.lang.String TAG -> a
+    android.widget.TabHost mTabHost -> b
+    void onNewIntent(android.content.Intent) -> onNewIntent
+    void onCreate(android.os.Bundle) -> onCreate
+    void setupLoadRemoteWordList() -> a
+    void setupLoadLocalWordList() -> b
+    void setupLoadedList(android.content.Intent) -> a
+    void setCurrentTab(android.content.Intent) -> b
+    void onTabChanged(java.lang.String) -> onTabChanged
 com.coleman.kingword.wordlist.model.SubWordList -> com.coleman.kingword.wordlist.model.SubWordList:
     long id -> a
     long word_list_id -> b
@@ -1166,15 +1337,15 @@ com.coleman.util.Config -> com.coleman.util.b:
     boolean isSimulator(android.content.Context) -> a
     boolean isExternalMediaMounted() -> a
     java.lang.String getDeviceId(android.content.Context) -> b
-com.coleman.util.ConvertUtils -> com.coleman.util.g:
+com.coleman.util.ConvertUtils -> com.coleman.util.i:
     int unsignedByteToInt(byte) -> a
     long unsigned4BytesToInt(byte[],int) -> a
-com.coleman.util.FileTransfer -> com.coleman.util.f:
+com.coleman.util.FileTransfer -> com.coleman.util.h:
     void downloadFile(java.lang.String,java.lang.String) -> a
-com.coleman.util.GeneralParser -> com.coleman.util.h:
+com.coleman.util.GeneralParser -> com.coleman.util.j:
     java.util.ArrayList parseFile(android.content.Context,java.lang.String,boolean,com.coleman.kingword.wordlist.WordListManager$IProgressNotifier) -> a
     java.util.ArrayList getWorldList(java.lang.CharSequence) -> a
-com.coleman.util.Log -> com.coleman.util.e:
+com.coleman.util.Log -> com.coleman.util.f:
     com.coleman.util.Log$LogType logType -> a
     com.coleman.util.Log$LogType getLogType() -> a
     void init(android.content.Context) -> a
@@ -1185,7 +1356,7 @@ com.coleman.util.Log -> com.coleman.util.e:
     int w(java.lang.String,java.lang.String) -> d
     int e(java.lang.String,java.lang.String,java.lang.Throwable) -> a
     int coleamnPrintln(int,java.lang.String,java.lang.String) -> a
-com.coleman.util.Log$LogType -> com.coleman.util.c:
+com.coleman.util.Log$LogType -> com.coleman.util.d:
     com.coleman.util.Log$LogType verbose -> a
     com.coleman.util.Log$LogType debug -> b
     com.coleman.util.Log$LogType info -> c
@@ -1203,11 +1374,21 @@ com.coleman.util.MyApp -> com.coleman.util.MyApp:
     android.os.Handler hander -> b
     void onCreate() -> onCreate
     void onTerminate() -> onTerminate
-com.coleman.util.ThreadUtils -> com.coleman.util.d:
+com.coleman.util.ThreadUtils -> com.coleman.util.e:
     java.util.concurrent.ExecutorService executor -> a
     void prepare() -> a
     void shutdown() -> b
     void execute(java.lang.Runnable) -> a
+com.coleman.util.ToastUtil -> com.coleman.util.g:
+    android.os.Handler handler -> a
+    android.content.Context context -> b
+    void show(java.lang.String,int) -> a
+    void showMsg(java.lang.String,int) -> b
+    android.content.Context access$0() -> a
+com.coleman.util.ToastUtil$1 -> com.coleman.util.c:
+    java.lang.String val$msg -> a
+    int val$length -> b
+    void run() -> run
 com.sun.activation.registries.LineTokenizer -> com.sun.a.a.b:
     int currentPosition -> a
     int maxPosition -> b
@@ -2807,7 +2988,7 @@ myjava.awt.datatransfer.MimeTypeProcessor$StringPosition -> a.a.a.c:
 myjava.awt.datatransfer.Transferable -> a.a.a.e:
     java.lang.Object getTransferData(myjava.awt.datatransfer.DataFlavor) -> getTransferData
 myjava.awt.datatransfer.UnsupportedFlavorException -> a.a.a.b:
-org.apache.harmony.awt.ContextStorage -> b.a.a.a.b:
+org.apache.harmony.awt.ContextStorage -> c.a.a.a.b:
     boolean shutdownPending -> a
     org.apache.harmony.awt.ContextStorage globalContext -> b
     org.apache.harmony.awt.datatransfer.DTK dtk -> c
@@ -2817,9 +2998,9 @@ org.apache.harmony.awt.ContextStorage -> b.a.a.a.b:
     java.lang.Object getContextLock() -> b
     org.apache.harmony.awt.ContextStorage getCurrentContext() -> d
     boolean shutdownPending() -> c
-org.apache.harmony.awt.ContextStorage$ContextLock -> b.a.a.a.a:
+org.apache.harmony.awt.ContextStorage$ContextLock -> c.a.a.a.a:
     org.apache.harmony.awt.ContextStorage this$0 -> a
-org.apache.harmony.awt.datatransfer.DTK -> b.a.a.a.b.c:
+org.apache.harmony.awt.datatransfer.DTK -> c.a.a.a.b.c:
     org.apache.harmony.awt.datatransfer.NativeClipboard nativeClipboard -> b
     org.apache.harmony.awt.datatransfer.NativeClipboard nativeSelection -> c
     org.apache.harmony.awt.datatransfer.DataTransferThread dataTransferThread -> a
@@ -2828,24 +3009,24 @@ org.apache.harmony.awt.datatransfer.DTK -> b.a.a.a.b.c:
     void runEventLoop() -> c
     org.apache.harmony.awt.datatransfer.DTK createDTK() -> e
     java.lang.String getDefaultCharset() -> d
-org.apache.harmony.awt.datatransfer.DataTransferThread -> b.a.a.a.b.a:
+org.apache.harmony.awt.datatransfer.DataTransferThread -> c.a.a.a.b.a:
     org.apache.harmony.awt.datatransfer.DTK dtk -> a
     void run() -> run
     void start() -> start
-org.apache.harmony.awt.datatransfer.NativeClipboard -> b.a.a.a.b.b:
-org.apache.harmony.awt.internal.nls.Messages -> b.a.a.a.a.a.a:
+org.apache.harmony.awt.datatransfer.NativeClipboard -> c.a.a.a.b.b:
+org.apache.harmony.awt.internal.nls.Messages -> c.a.a.a.a.a.a:
     java.util.ResourceBundle bundle -> a
     java.lang.String getString(java.lang.String) -> a
     java.lang.String getString(java.lang.String,java.lang.Object) -> a
     java.lang.String getString(java.lang.String,java.lang.Object[]) -> a
     java.lang.String format(java.lang.String,java.lang.Object[]) -> b
     java.util.ResourceBundle setLocale(java.util.Locale,java.lang.String) -> a
-org.apache.harmony.awt.internal.nls.Messages$1 -> b.a.a.a.a.a.b:
+org.apache.harmony.awt.internal.nls.Messages$1 -> c.a.a.a.a.a.b:
     java.lang.String val$resource -> a
     java.util.Locale val$locale -> b
     java.lang.ClassLoader val$loader -> c
     java.lang.Object run() -> run
-org.apache.harmony.misc.SystemUtils -> b.a.a.b.a:
+org.apache.harmony.misc.SystemUtils -> c.a.a.b.a:
     int os -> a
     int arc -> b
     int getOS() -> a

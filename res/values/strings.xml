@@ -45,7 +45,7 @@
     <string name="night_mode">夜晚模式</string>
     <string name="day_mode">白天模式</string>
     <string name="view_new_book">进入生词本</string>
-    <string name="view_ignore_list">浏览过滤列表</string>
+    <string name="view_ignore_list">浏览过滤表</string>
     <string name="study_new_word_book_end">你完成了生词本的学习！</string>
     <string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
     <string name="continue_hit_count">%d Hit!</string>
@@ -205,5 +205,16 @@
     <string name="server_msg_title">服务端提示</string>
     <string name="server_msg_default">未知错误，请稍后再试！</string>
     <string name="upgrade_tip">软件升级</string>
+    <string name="title_download_wordlist">下载提示</string>
+    <string name="msg_download_wordlist">如果你选择确定，应用会在后台下载你选择的单词表，并且自动加载这个单词表，下载需要消耗一定的网络流量，请确认是否要下载？</string>
+    <!-- WordList TabHost -->
+    <string name="remote_file_explorer">远程目录</string>
+    <string name="file_explorer">本地目录</string>
+    <string name="wordlist_loaded">已加载</string>
+    <string name="remote_root">远程目录</string>
+    <string name="remote_path">远程目录:%s</string>
+    <string name="down_wordlist_begin">%s开始下载！</string>
+    <string name="down_wordlist_success">%s下载成功！</string>
+    <string name="load_wordlist_success">%s加载成功！</string>
 
 </resources>

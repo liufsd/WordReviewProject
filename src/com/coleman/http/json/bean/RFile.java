@@ -15,17 +15,14 @@ public class RFile
     @KeyName(abbr = "c")
     private RFile[] chirldren;
     
-    @KeyName(abbr = "p")
-    private RFile parent;
-    
     @KeyName(abbr = "n")
     private String name;
     
     @KeyName(abbr = "i")
     private String id;
     
-    @KeyName(abbr = "u")
-    private String url;
+    @KeyName(abbr = "p")
+    private String path;
     
     public Boolean getIsRoot()
     {
@@ -57,16 +54,6 @@ public class RFile
         this.chirldren = chirldren;
     }
     
-    public RFile getParent()
-    {
-        return parent;
-    }
-    
-    public void setParent(RFile parent)
-    {
-        this.parent = parent;
-    }
-    
     public String getName()
     {
         return name;
@@ -87,14 +74,14 @@ public class RFile
         this.id = id;
     }
     
-    public String getUrl()
+    public String getPath()
     {
-        return url;
+        return path;
     }
     
-    public void setUrl(String url)
+    public void setPath(String url)
     {
-        this.url = url;
+        this.path = url;
     }
     
 }

@@ -1,3 +1,204 @@
+android.app2.DownloadManager:
+    private static final java.lang.String TAG
+    public static final java.lang.String COLUMN_ID
+    public static final java.lang.String COLUMN_TITLE
+    public static final java.lang.String COLUMN_DESCRIPTION
+    public static final java.lang.String COLUMN_URI
+    public static final java.lang.String COLUMN_MEDIA_TYPE
+    public static final java.lang.String COLUMN_TOTAL_SIZE_BYTES
+    public static final java.lang.String COLUMN_LOCAL_URI
+    public static final java.lang.String COLUMN_STATUS
+    public static final java.lang.String COLUMN_REASON
+    public static final java.lang.String COLUMN_BYTES_DOWNLOADED_SO_FAR
+    public static final java.lang.String COLUMN_LAST_MODIFIED_TIMESTAMP
+    public static final java.lang.String COLUMN_MEDIAPROVIDER_URI
+    public static final int STATUS_PENDING
+    public static final int STATUS_RUNNING
+    public static final int STATUS_PAUSED
+    public static final int STATUS_SUCCESSFUL
+    public static final int STATUS_FAILED
+    public static final int ERROR_UNKNOWN
+    public static final int ERROR_FILE_ERROR
+    public static final int ERROR_UNHANDLED_HTTP_CODE
+    public static final int ERROR_HTTP_DATA_ERROR
+    public static final int ERROR_TOO_MANY_REDIRECTS
+    public static final int ERROR_INSUFFICIENT_SPACE
+    public static final int ERROR_DEVICE_NOT_FOUND
+    public static final int ERROR_CANNOT_RESUME
+    public static final int ERROR_FILE_ALREADY_EXISTS
+    public static final int PAUSED_WAITING_TO_RETRY
+    public static final int PAUSED_WAITING_FOR_NETWORK
+    public static final int PAUSED_QUEUED_FOR_WIFI
+    public static final int PAUSED_UNKNOWN
+    public static final java.lang.String ACTION_DOWNLOAD_COMPLETE
+    public static final java.lang.String ACTION_NOTIFICATION_CLICKED
+    public static final java.lang.String ACTION_VIEW_DOWNLOADS
+    public static final java.lang.String EXTRA_DOWNLOAD_ID
+    703:708:public void setAccessAllDownloads(boolean)
+    735:741:public int markRowDeleted(long[])
+    754:758:public int remove(long[])
+    782:782:public android.os.ParcelFileDescriptor openDownloadedFile(long)
+    792:811:public void restartDownload(long[])
+    817:817:android.net.Uri getDownloadUri(long)
+android.app2.DownloadManager$Query:
+    public static final int ORDER_ASCENDING
+    public static final int ORDER_DESCENDING
+    571:572:public android.app2.DownloadManager$Query setFilterByStatus(int)
+    584:585:public android.app2.DownloadManager$Query setOnlyIncludeVisibleInDownloadsUi(boolean)
+    599:611:public android.app2.DownloadManager$Query orderBy(java.lang.String,int)
+android.app2.DownloadManager$Request:
+    public static final int NETWORK_MOBILE
+    public static final int NETWORK_WIFI
+    365:366:public android.app2.DownloadManager$Request setDestinationUri(android.net.Uri)
+    386:396:public android.app2.DownloadManager$Request addRequestHeader(java.lang.String,java.lang.String)
+    406:407:public android.app2.DownloadManager$Request setTitle(java.lang.CharSequence)
+    415:416:public android.app2.DownloadManager$Request setDescription(java.lang.CharSequence)
+    427:428:public android.app2.DownloadManager$Request setMimeType(java.lang.String)
+    444:445:public android.app2.DownloadManager$Request setShowRunningNotification(boolean)
+    455:456:public android.app2.DownloadManager$Request setAllowedNetworkTypes(int)
+    466:467:public android.app2.DownloadManager$Request setAllowedOverRoaming(boolean)
+    477:478:public android.app2.DownloadManager$Request setVisibleInDownloadsUi(boolean)
+android.provider.Downloads:
+    public static final java.lang.String PERMISSION_ACCESS
+    public static final java.lang.String PERMISSION_ACCESS_ADVANCED
+    public static final java.lang.String PERMISSION_CACHE
+    public static final java.lang.String PERMISSION_SEND_INTENTS
+    public static final java.lang.String ACTION_DOWNLOAD_COMPLETED
+    public static final java.lang.String ACTION_NOTIFICATION_CLICKED
+    public static final java.lang.String COLUMN_URI
+    public static final java.lang.String COLUMN_APP_DATA
+    public static final java.lang.String COLUMN_NO_INTEGRITY
+    public static final java.lang.String COLUMN_FILE_NAME_HINT
+    public static final java.lang.String _DATA
+    public static final java.lang.String COLUMN_MIME_TYPE
+    public static final java.lang.String COLUMN_DESTINATION
+    public static final java.lang.String COLUMN_VISIBILITY
+    public static final java.lang.String COLUMN_CONTROL
+    public static final java.lang.String COLUMN_STATUS
+    public static final java.lang.String COLUMN_LAST_MODIFICATION
+    public static final java.lang.String COLUMN_NOTIFICATION_PACKAGE
+    public static final java.lang.String COLUMN_NOTIFICATION_CLASS
+    public static final java.lang.String COLUMN_NOTIFICATION_EXTRAS
+    public static final java.lang.String COLUMN_COOKIE_DATA
+    public static final java.lang.String COLUMN_USER_AGENT
+    public static final java.lang.String COLUMN_REFERER
+    public static final java.lang.String COLUMN_TOTAL_BYTES
+    public static final java.lang.String COLUMN_CURRENT_BYTES
+    public static final java.lang.String COLUMN_OTHER_UID
+    public static final java.lang.String COLUMN_TITLE
+    public static final java.lang.String COLUMN_DESCRIPTION
+    public static final java.lang.String COLUMN_DELETED
+    public static final int DESTINATION_EXTERNAL
+    public static final int DESTINATION_CACHE_PARTITION
+    public static final int DESTINATION_CACHE_PARTITION_PURGEABLE
+    public static final int DESTINATION_CACHE_PARTITION_NOROAMING
+    public static final int CONTROL_RUN
+    public static final int CONTROL_PAUSED
+    public static final int STATUS_PENDING
+    public static final int STATUS_RUNNING
+    public static final int STATUS_SUCCESS
+    public static final int STATUS_BAD_REQUEST
+    public static final int STATUS_NOT_ACCEPTABLE
+    public static final int STATUS_LENGTH_REQUIRED
+    public static final int STATUS_PRECONDITION_FAILED
+    public static final int STATUS_CANCELED
+    public static final int STATUS_UNKNOWN_ERROR
+    public static final int STATUS_FILE_ERROR
+    public static final int STATUS_UNHANDLED_REDIRECT
+    public static final int STATUS_UNHANDLED_HTTP_CODE
+    public static final int STATUS_HTTP_DATA_ERROR
+    public static final int STATUS_HTTP_EXCEPTION
+    public static final int STATUS_TOO_MANY_REDIRECTS
+    public static final int STATUS_INSUFFICIENT_SPACE_ERROR
+    public static final int STATUS_DEVICE_NOT_FOUND_ERROR
+    public static final int VISIBILITY_VISIBLE
+    public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+    public static final int VISIBILITY_HIDDEN
+    386:386:public static boolean isStatusInformational(int)
+    394:394:public static boolean isStatusSuccess(int)
+    410:410:public static boolean isStatusClientError(int)
+    418:418:public static boolean isStatusServerError(int)
+    427:427:public static boolean isStatusCompleted(int)
+android.provider.Downloads$Impl:
+    public static final java.lang.String PERMISSION_ACCESS
+    public static final java.lang.String PERMISSION_ACCESS_ADVANCED
+    public static final java.lang.String PERMISSION_ACCESS_ALL
+    public static final java.lang.String PERMISSION_CACHE
+    public static final java.lang.String PERMISSION_SEND_INTENTS
+    public static final java.lang.String PERMISSION_CACHE_NON_PURGEABLE
+    public static final java.lang.String PERMISSION_NO_NOTIFICATION
+    public static final java.lang.String ACTION_DOWNLOAD_COMPLETED
+    public static final java.lang.String ACTION_NOTIFICATION_CLICKED
+    public static final java.lang.String COLUMN_URI
+    public static final java.lang.String COLUMN_APP_DATA
+    public static final java.lang.String COLUMN_NO_INTEGRITY
+    public static final java.lang.String COLUMN_FILE_NAME_HINT
+    public static final java.lang.String _DATA
+    public static final java.lang.String COLUMN_MIME_TYPE
+    public static final java.lang.String COLUMN_DESTINATION
+    public static final java.lang.String COLUMN_VISIBILITY
+    public static final java.lang.String COLUMN_CONTROL
+    public static final java.lang.String COLUMN_STATUS
+    public static final java.lang.String COLUMN_LAST_MODIFICATION
+    public static final java.lang.String COLUMN_NOTIFICATION_PACKAGE
+    public static final java.lang.String COLUMN_NOTIFICATION_CLASS
+    public static final java.lang.String COLUMN_NOTIFICATION_EXTRAS
+    public static final java.lang.String COLUMN_COOKIE_DATA
+    public static final java.lang.String COLUMN_USER_AGENT
+    public static final java.lang.String COLUMN_REFERER
+    public static final java.lang.String COLUMN_TOTAL_BYTES
+    public static final java.lang.String COLUMN_CURRENT_BYTES
+    public static final java.lang.String COLUMN_OTHER_UID
+    public static final java.lang.String COLUMN_TITLE
+    public static final java.lang.String COLUMN_DESCRIPTION
+    public static final java.lang.String COLUMN_IS_PUBLIC_API
+    public static final java.lang.String COLUMN_ALLOW_ROAMING
+    public static final java.lang.String COLUMN_ALLOWED_NETWORK_TYPES
+    public static final java.lang.String COLUMN_IS_VISIBLE_IN_DOWNLOADS_UI
+    public static final java.lang.String COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT
+    public static final java.lang.String COLUMN_DELETED
+    public static final java.lang.String COLUMN_MEDIAPROVIDER_URI
+    public static final int DESTINATION_EXTERNAL
+    public static final int DESTINATION_CACHE_PARTITION
+    public static final int DESTINATION_CACHE_PARTITION_PURGEABLE
+    public static final int DESTINATION_CACHE_PARTITION_NOROAMING
+    public static final int DESTINATION_FILE_URI
+    public static final int CONTROL_RUN
+    public static final int CONTROL_PAUSED
+    public static final int STATUS_PENDING
+    public static final int STATUS_RUNNING
+    public static final int STATUS_PAUSED_BY_APP
+    public static final int STATUS_WAITING_TO_RETRY
+    public static final int STATUS_WAITING_FOR_NETWORK
+    public static final int STATUS_QUEUED_FOR_WIFI
+    public static final int STATUS_SUCCESS
+    public static final int STATUS_BAD_REQUEST
+    public static final int STATUS_NOT_ACCEPTABLE
+    public static final int STATUS_LENGTH_REQUIRED
+    public static final int STATUS_PRECONDITION_FAILED
+    public static final int MIN_ARTIFICIAL_ERROR_STATUS
+    public static final int STATUS_FILE_ALREADY_EXISTS_ERROR
+    public static final int STATUS_CANNOT_RESUME
+    public static final int STATUS_CANCELED
+    public static final int STATUS_UNKNOWN_ERROR
+    public static final int STATUS_FILE_ERROR
+    public static final int STATUS_UNHANDLED_REDIRECT
+    public static final int STATUS_UNHANDLED_HTTP_CODE
+    public static final int STATUS_HTTP_DATA_ERROR
+    public static final int STATUS_HTTP_EXCEPTION
+    public static final int STATUS_TOO_MANY_REDIRECTS
+    public static final int STATUS_INSUFFICIENT_SPACE_ERROR
+    public static final int STATUS_DEVICE_NOT_FOUND_ERROR
+    public static final int VISIBILITY_VISIBLE
+    public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+    public static final int VISIBILITY_HIDDEN
+    990:990:public static boolean isStatusInformational(int)
+    997:997:public static boolean isStatusSuccess(int)
+    1004:1004:public static boolean isStatusError(int)
+    1011:1011:public static boolean isStatusClientError(int)
+    1018:1018:public static boolean isStatusServerError(int)
+    1026:1026:public static boolean isStatusCompleted(int)
+android.provider.Downloads$Impl$RequestHeaders
 android.provider.Telephony
 android.provider.Telephony$BaseMmsColumns
 android.provider.Telephony$CanonicalAddressesColumns
@@ -104,7 +305,7 @@ com.coleman.kingword.UpgradeService:
     private static final java.lang.String TAG
 com.coleman.kingword.WelcomeActivity:
     private static final java.lang.String TAG
-    254:280:void _DEL_REPEAT_WORDS()
+    258:284:void _DEL_REPEAT_WORDS()
 com.coleman.kingword.WelcomeActivity$1Info
 com.coleman.kingword.dict.DictLoadService:
     private static final java.lang.String TAG
@@ -252,6 +453,8 @@ com.coleman.kingword.wordlist.FiniteStateMachine$InitState:
 com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState:
     private static final long serialVersionUID
     public static final int TYPE
+com.coleman.kingword.wordlist.RemoteFileExplorer:
+    private static final java.lang.String ROOT_PATH
 com.coleman.kingword.wordlist.SubWordListActivity:
     private static final java.lang.String TAG
 com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask:
@@ -332,6 +535,10 @@ com.coleman.util.AppSettings:
     public static final java.lang.String SAVE_CACHE_KEY
     170:179:public static java.lang.String getCurLibraryString(android.content.Context)
     183:192:public static java.lang.String getMoreLibraryString(android.content.Context)
+com.coleman.util.Base64
+com.coleman.util.Base64$Coder
+com.coleman.util.Base64$Decoder
+com.coleman.util.Base64$Encoder
 com.coleman.util.Config:
     public static final java.lang.String ENCODE
     public static final boolean isTestServer
@@ -344,8 +551,8 @@ com.coleman.util.DialogUtil$2
 com.coleman.util.DialogUtil$3
 com.coleman.util.GeneralParser:
     private static final java.lang.String TAG
-    93:103:public static java.util.HashMap parseFile(java.io.InputStream)
-    107:115:private static java.util.HashMap getProperties(java.lang.String)
+    97:107:public static java.util.HashMap parseFile(java.io.InputStream)
+    111:119:private static java.util.HashMap getProperties(java.lang.String)
 com.coleman.util.Log:
     public static final int VERBOSE
     public static final int DEBUG
@@ -365,6 +572,8 @@ com.coleman.util.MyApp:
     private static final java.lang.String TAG
 com.coleman.util.ThreadUtils:
     65:65:public static java.util.concurrent.Future submit(java.util.concurrent.Callable)
+com.coleman.util.ToastUtil:
+    16:17:public static void show(java.lang.String)
 com.sun.activation.registries.LineTokenizer:
     private static final java.lang.String singles
     330:331:public void pushToken(java.lang.String)
