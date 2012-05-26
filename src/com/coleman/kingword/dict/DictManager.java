@@ -142,6 +142,22 @@ public class DictManager {
         return wordData;
     }
 
+    /**
+     * Used to filter the word can not found at the current library.
+     */
+    public boolean hasWord(Context context, String word) {
+        boolean has = true;
+        DictLibrary library = libmap.get(curLib);
+        if (library != null) {
+            has = false;
+            DictIndex index = library.getDictIndex(context, word);
+            if (index != null) {
+                has = true;
+            }
+        }
+        return has;
+    }
+
     public DictData viewMore(Context context, String word) {
         DictLibrary library = libmap.get(moreLib);
         if (library == null) {

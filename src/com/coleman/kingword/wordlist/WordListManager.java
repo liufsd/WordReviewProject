@@ -72,6 +72,7 @@ public class WordListManager {
         ArrayList<String> list = null;
         try {
             list = GeneralParser.parseFile(context, wordlistName, false, notifier);
+            // WordlistArranger.tidy(list, wordlistName);
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -106,6 +107,7 @@ public class WordListManager {
         ArrayList<String> list = null;
         try {
             list = GeneralParser.parseFile(context, wordlistName, true, notifier);
+            // WordlistArranger.tidy(list, wordlistName);
         } catch (IOException e) {
             e.printStackTrace();
             return;

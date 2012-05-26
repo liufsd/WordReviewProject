@@ -314,12 +314,13 @@ com.coleman.kingword.dict.DictManager:
     public static final java.lang.String DEFAULT_CUR_LIB
     public static final java.lang.String DEFAULT_MORE_LIB
     108:108:public com.coleman.kingword.dict.stardict.DictLibrary getLibrary(java.lang.String)
-    164:164:public boolean isInitialed(java.lang.String)
-    168:168:public boolean isInternal(java.lang.String)
+    149:158:public boolean hasWord(android.content.Context,java.lang.String)
+    180:180:public boolean isInitialed(java.lang.String)
+    184:184:public boolean isInternal(java.lang.String)
 com.coleman.kingword.dict.DictManager$LibraryLoader:
     private static final java.lang.String TAG
-    316:316:public boolean isInternal(java.lang.String)
-    320:324:public boolean isInitialed(java.lang.String)
+    332:332:public boolean isInternal(java.lang.String)
+    336:340:public boolean isInitialed(java.lang.String)
 com.coleman.kingword.dict.DictManager$ViewType
 com.coleman.kingword.dict.stardict.DictData:
     private static final long serialVersionUID
@@ -500,7 +501,7 @@ com.coleman.kingword.wordlist.model.WordList:
     private static final java.lang.String TAG
 com.coleman.kingword.wordlist.model.WordList$InternalWordList
 com.coleman.kingword.wordlist.model.WordList$SetMethod:
-    47:54:public com.coleman.kingword.wordlist.model.WordList$SetMethod getSetMethod(int)
+    45:52:public com.coleman.kingword.wordlist.model.WordList$SetMethod getSetMethod(int)
 com.coleman.kingword.wordlist.model.WordListItem:
     private static final long serialVersionUID
     20:23:public android.content.ContentValues toContentValues()
@@ -509,6 +510,7 @@ com.coleman.kingword.wordlist.view.SlideTableSwitcher:
 com.coleman.tools.InfoGather:
     private static final java.lang.String TAG
     36:51:public static void setWeeklyGatherNotifaction(android.content.Context)
+com.coleman.tools.WordlistArranger
 com.coleman.tools.email.GMailSender:
     private static final java.lang.String TAG
 com.coleman.tools.email.GMailSender$ByteArrayDataSource
@@ -551,8 +553,8 @@ com.coleman.util.DialogUtil$2
 com.coleman.util.DialogUtil$3
 com.coleman.util.GeneralParser:
     private static final java.lang.String TAG
-    97:107:public static java.util.HashMap parseFile(java.io.InputStream)
-    111:119:private static java.util.HashMap getProperties(java.lang.String)
+    98:108:public static java.util.HashMap parseFile(java.io.InputStream)
+    112:120:private static java.util.HashMap getProperties(java.lang.String)
 com.coleman.util.Log:
     public static final int VERBOSE
     public static final int DEBUG

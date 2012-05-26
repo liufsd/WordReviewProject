@@ -7,13 +7,11 @@ import android.content.ContentValues;
 
 import com.coleman.kingword.provider.KingWord.TWordList;
 
-public class WordList implements Serializable{
+public class WordList implements Serializable {
     private static final long serialVersionUID = -5031315199643078115L;
 
     public static interface InternalWordList {
-        String POSTGRADUATE_WORDLIST = "kingword/wordlist/postgraduate/postgraduate.wl";
-
-        String POSTGRADUATE_PHRASE_WORDLIST = "kingword/wordlist/postgraduate/phrase.wl";
+        String POSTGRADUATE_WORDLIST = "kingword/wordlist/cet4.txt";
     }
 
     private static final String TAG = "WordList";

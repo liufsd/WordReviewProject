@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 
 /**
