@@ -23,10 +23,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.coleman.http.json.bean.RFile;
 import com.coleman.http.json.bean.VersionCheckReq;
 import com.coleman.http.json.bean.VersionCheckResp;
-import com.coleman.http.json.bean.WordlistResp;
 import com.coleman.http.json.bussiness.WorkManager;
 import com.coleman.http.json.connection.SLRequest;
 import com.coleman.http.json.connection.SLResponse;
@@ -37,6 +35,7 @@ import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
+import com.coleman.util.DialogUtil;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -69,7 +68,9 @@ public class WelcomeActivity extends Activity implements Observer {
         // initial the environment
         init();
         // test versionUpgrade
-        upgradeCheck();
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("version_check", false)) {
+            upgradeCheck();
+        }
 
     }
 
@@ -181,6 +182,9 @@ public class WelcomeActivity extends Activity implements Observer {
                 break;
             case R.id.menu_about_dev:
                 showAboutDev();
+                break;
+            case R.id.menu_version:
+                upgradeCheck();
                 break;
             default:
                 break;
@@ -349,25 +353,11 @@ public class WelcomeActivity extends Activity implements Observer {
                                         }).setNegativeButton(R.string.cancel, null).show();
                     }
                 } else {
-                    Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
+                    DialogUtil.showServerMessage(this, bean.getDescription());
                 }
 
             } else {
-                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
-            }
-        } else if (((SLResponse<?>) observable).getResponse() instanceof WordlistResp) {
-            final WordlistResp bean = (WordlistResp) ((SLResponse<?>) observable).getResponse();
-            if (data == null) {
-                int rc = bean.getResultCode();
-                if (rc == 0) {
-                    RFile rfile = bean.getRfile();
-                    Log.i(TAG, "===coleman-debug-rfile.getName(): " + rfile.getName());
-                } else {
-                    Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
-                }
-
-            } else {
-                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
+                DialogUtil.showErrorMessage(this, data);
             }
         }
 

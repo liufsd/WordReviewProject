@@ -19,6 +19,12 @@
             android:key="level"
             android:summary=""
             android:title="@string/level_name_settings" />
+
+        <CheckBoxPreference
+            android:key="version_check"
+            android:summaryOn="@string/auto_check_open"
+            android:summaryOff="@string/auto_check_close"
+            android:title="@string/version_auto_check" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/high_level_settings" >

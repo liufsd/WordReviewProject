@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/menu_set" android:title="@string/settings"></item>
-	<item android:id="@+id/menu_level_info" android:title="@string/level_info"></item>
-	<item android:id="@+id/menu_about_dev" android:title="@string/about_dev"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_set"
+        android:title="@string/settings"></item>
+
+    <item
+        android:id="@+id/menu_level_info"
+        android:title="@string/level_info"></item>
+
+    <item
+        android:id="@+id/menu_about_dev"
+        android:title="@string/about_dev"></item>
+
+    <item
+        android:id="@+id/menu_version"
+        android:title="@string/version_check"></item>
+
 </menu>

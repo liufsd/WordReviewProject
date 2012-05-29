@@ -188,6 +188,10 @@
     <string name="view_ignore_complete_title">过滤列表学习</string>
     <string name="request_pw">申请密码</string>
     <string name="version">版本号：</string>
+    <string name="version_check">版本更新</string>
+    <string name="version_auto_check">软件自动更新</string>
+    <string name="auto_check_open">自动更新启用</string>
+    <string name="auto_check_close">自动更新关闭</string>
     <string name="mail">联系作者：</string>
     <string name="copyright">Copyright@2009-2013 Coleman</string>
     <string name="language_settings">数据库设定</string>
