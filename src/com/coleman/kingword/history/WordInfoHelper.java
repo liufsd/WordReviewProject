@@ -116,15 +116,27 @@ public class WordInfoHelper {
     }
 
     /**
-     * get a list of wordinfo
+     * Check if has specified word info.
      * 
      * @param context
-     * @param type map the value of SubWordListActivity's type.
+     * @param type WordListAccessor.NEW_WORD_BOOK_LIST,
+     *            WordListAccessor.SCAN_LIST,WordListAccessor.REVIEW_LIST
      * @return
      */
-    public static ArrayList<WordInfo> getWordInfoList(Context context, byte type) {
-        ArrayList<WordInfo> list = new ArrayList<WordInfo>();
+    public static boolean hasWordInfo(Context context, byte type) {
+        boolean has = false;
         Cursor c = null;
+        c = queryWordInfo(context, type, c);
+        if (c != null && c.moveToFirst()) {
+            has = true;
+        }
+        if (c != null) {
+            c.close();
+        }
+        return has;
+    }
+
+    private static Cursor queryWordInfo(Context context, byte type, Cursor c) {
         switch (type) {
             case WordListAccessor.NEW_WORD_BOOK_LIST:
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
@@ -153,17 +165,31 @@ public class WordInfoHelper {
                         + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")"
                         + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY
                         + " and " + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l)
-                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "="
-                        + WordInfo.REVIEW_40_DAY + " and " + THistory.REVIEW_TIME + "<="
-                        + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
-                        + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_40_DAY
+                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l)
+                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY
+                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l)
+                        + ")";
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection, selection,
                         null, null);
                 break;
             default:
                 break;
         }
+        return c;
+    }
+
+    /**
+     * get a list of wordinfo
+     * 
+     * @param context
+     * @param type map the value of SubWordListActivity's type.
+     * @return
+     */
+    public static ArrayList<WordInfo> getWordInfoList(Context context, byte type) {
+        ArrayList<WordInfo> list = new ArrayList<WordInfo>();
+        Cursor c = null;
+        c = queryWordInfo(context, type, c);
         if (c != null && c.moveToFirst()) {
             while (!c.isAfterLast()) {
                 WordInfo wi = new WordInfo("");

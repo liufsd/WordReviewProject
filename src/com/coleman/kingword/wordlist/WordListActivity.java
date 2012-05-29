@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
@@ -160,13 +161,17 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (!DictManager.getInstance().isCurLibInitialized()) {
-            new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
-                    .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
+            showDBInitHint();
         } else {
             Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
             i.putExtra(TWordList._ID, (Long) view.getTag());
             startActivity(i);
         }
+    }
+
+    private void showDBInitHint() {
+        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+                .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override
@@ -254,18 +259,41 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button1:
-                Intent intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", WordListAccessor.NEW_WORD_BOOK_LIST);
-                startActivity(intent);
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (!WordInfoHelper.hasWordInfo(this, WordListAccessor.NEW_WORD_BOOK_LIST)) {
+                    showNoNewWordHint();
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", WordListAccessor.NEW_WORD_BOOK_LIST);
+                    startActivity(intent);
+                }
                 break;
             case R.id.button2:
-                intent = new Intent(this, CoreActivity.class);
-                intent.putExtra("type", WordListAccessor.SCAN_LIST);
-                startActivity(intent);
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (!WordInfoHelper.hasWordInfo(this, WordListAccessor.SCAN_LIST)) {
+                    showNoIgnoreWordHint();
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", WordListAccessor.SCAN_LIST);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    private void showNoNewWordHint() {
+        new AlertDialog.Builder(this).setTitle(R.string.view_new_book)
+                .setMessage(R.string.no_new_word_found).setPositiveButton(R.string.ok, null).show();
+    }
+
+    private void showNoIgnoreWordHint() {
+        new AlertDialog.Builder(this).setTitle(R.string.view_ignore_list)
+                .setMessage(R.string.no_ignore_word_found).setPositiveButton(R.string.ok, null)
+                .show();
     }
 
     @Override
