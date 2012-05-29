@@ -2,25 +2,18 @@
 package com.coleman.kingword.ebbinghaus;
 
 import java.util.Calendar;
-import java.util.Timer;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.text.format.Time;
-import com.coleman.util.Log;
-import android.util.TimeUtils;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.ReviewSettings;
-import com.coleman.kingword.Settings;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Log;
 
 public class EbbinghausReminder {
     private static final String TAG = "EbbinghausReminder";
@@ -160,13 +153,11 @@ public class EbbinghausReminder {
                 "12:00", context.getString(R.string.not_set), context.getString(R.string.not_set)
         };
         String keys[] = new String[] {
-                ReviewSettings.TIME1, ReviewSettings.TIME2, ReviewSettings.TIME3
+                AppSettings.TIME1, AppSettings.TIME2, AppSettings.TIME3
         };
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
-                .putBoolean(ReviewSettings.FIXED_TIME_REVIEW, true).commit();
+        AppSettings.saveBoolean(AppSettings.FIXED_TIME_REVIEW, true);
         for (int i = 0; i < AppSettings.REVIEW_TIME_KEY.length; i++) {
-            PreferenceManager.getDefaultSharedPreferences(context).edit()
-                    .putString(keys[i], time[i]).commit();
+            AppSettings.saveString(keys[i], time[i]);
             if (!context.getString(R.string.not_set).equals(time[i])) {
                 setRepeatNotifaction(context, i, time[i]);
             }
@@ -182,7 +173,7 @@ public class EbbinghausReminder {
     public static void setNotifactionAfterReboot(Context context) {
         String time[] = new String[AppSettings.REVIEW_TIME_KEY.length];
         for (int i = 0; i < time.length; i++) {
-            time[i] = AppSettings.getString(context, AppSettings.REVIEW_TIME_KEY[i],
+            time[i] = AppSettings.getString(AppSettings.REVIEW_TIME_KEY[i],
                     context.getString(R.string.not_set));
             removeRepeatNotifaction(context, i);
             if (!context.getString(R.string.not_set).equals(time[i])) {

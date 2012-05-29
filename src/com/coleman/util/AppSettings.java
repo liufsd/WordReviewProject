@@ -8,16 +8,14 @@
 
 package com.coleman.util;
 
-import com.coleman.kingword.dict.DictManager;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.coleman.kingword.dict.DictManager;
 
 public class AppSettings {
     public static final String TAG = "AppSettings";
-
-    // key fields
-    public static final String SPLIT_NUM_KEY = "split_num";
 
     public static final String ANIM_TYPE = "anim_type";
 
@@ -26,8 +24,6 @@ public class AppSettings {
     public static final String FIRST_STARTED_KEY = "first_started";
 
     public static final String SELECT_COLOR_MODE_KEY = "select_color_mode";
-
-    public static final String LEVEL_TYPE_KEY = "level_type";
 
     public static final String FIRST_STARTED_TIME_KEY = "first_started_time";
 
@@ -54,15 +50,9 @@ public class AppSettings {
     public static final String LOG_TYPE_KEY = "log_type";
 
     /**
-     * if less than cur lev, upgrade and send a msg to author.
+     * if less than cur level, upgrade and send a message to author.
      */
     public static final String MARK_SEND_MSG_LEVEL_KEY = "mark_send_msg_level";
-
-    public static final String VIEW_METHOD_KEY = "view_method";
-
-    public static final String LANGUAGE_TYPE = "explain_language_type";
-
-    public static final String DB_VERSION_KEY = "db_version";
 
     public static final String DICTS_KEY = "dicts";
 
@@ -72,14 +62,38 @@ public class AppSettings {
 
     public static final String SAVE_CACHE_KEY = "save_cache";
 
-    public static void saveBoolean(Context context, String key, boolean value) {
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+    /* Following key is used in settings.xml and review_settings.xml */
+
+    public static final String SPLIT = "split";
+
+    public static final String LEVEL = "level";
+
+    public static final String VERSION_CHECK = "version_check";
+
+    public static final String FIXED_TIME_REVIEW = "fixed_time_review";
+
+    public static final String TIME3 = "time3";
+
+    public static final String TIME2 = "time2";
+
+    public static final String TIME1 = "time1";
+
+    public static final String VIEW_METHOD = "view_method";
+
+    public static final String DATABASE_SET = "database_set";
+
+    public static final String RESTORE = "restore";
+
+    public static final String BACKUP = "backup";
+
+    public static void saveBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
 
-    public static boolean getBoolean(Context context, String key, boolean defvalue) {
-        return getSharedPreferences(context).getBoolean(key, defvalue);
+    public static boolean getBoolean(String key, boolean defvalue) {
+        return getSharedPreferences().getBoolean(key, defvalue);
     }
 
     /**
@@ -89,8 +103,8 @@ public class AppSettings {
      * @param key to mark the store value.
      * @param value to saved value.
      */
-    public static void saveString(Context context, String key, String value) {
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+    public static void saveString(String key, String value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
         editor.commit();
     }
@@ -102,8 +116,8 @@ public class AppSettings {
      * @param key to retrieve the value.
      * @return the string value returned.
      */
-    public static String getString(Context context, String key, String def) {
-        return getSharedPreferences(context).getString(key, def);
+    public static String getString(String key, String def) {
+        return getSharedPreferences().getString(key, def);
     }
 
     /**
@@ -113,8 +127,8 @@ public class AppSettings {
      * @param key to mark the store value.
      * @param value to saved value.
      */
-    public static void saveInt(Context context, String key, int value) {
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+    public static void saveInt(String key, int value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putInt(key, value);
         editor.commit();
 
@@ -127,8 +141,8 @@ public class AppSettings {
      * @param key to retrieve the value.
      * @return the integer value returned.
      */
-    public static int getInt(Context context, String key, int def) {
-        return getSharedPreferences(context).getInt(key, def);
+    public static int getInt(String key, int def) {
+        return getSharedPreferences().getInt(key, def);
     }
 
     /**
@@ -138,8 +152,8 @@ public class AppSettings {
      * @param key to mark the store value.
      * @param value to saved value.
      */
-    public static void saveLong(Context context, String key, long value) {
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+    public static void saveLong(String key, long value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putLong(key, value);
         editor.commit();
 
@@ -152,8 +166,8 @@ public class AppSettings {
      * @param key to retrieve the value.
      * @return the integer value returned.
      */
-    public static long getLong(Context context, String key, long def) {
-        return getSharedPreferences(context).getLong(key, def);
+    public static long getLong(String key, long def) {
+        return getSharedPreferences().getLong(key, def);
     }
 
     /**
@@ -162,12 +176,12 @@ public class AppSettings {
      * @param context
      * @return
      */
-    private static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+    private static SharedPreferences getSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(MyApp.context);
     }
 
     public static String getCurLibraryString(Context context) {
-        String str = getString(context, DICTS_KEY, "");
+        String str = getString(DICTS_KEY, "");
         String temps[] = str.split(";");
         for (String string : temps) {
             String subs[] = string.split(",");
@@ -180,7 +194,7 @@ public class AppSettings {
     }
 
     public static String getMoreLibraryString(Context context) {
-        String str = getString(context, DICTS_KEY, "");
+        String str = getString(DICTS_KEY, "");
         String temps[] = str.split(";");
         for (String string : temps) {
             String subs[] = string.split(",");

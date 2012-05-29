@@ -14,7 +14,6 @@ import android.os.Message;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,17 +31,12 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.Log;
 
 public class Settings extends PreferenceActivity implements OnPreferenceClickListener {
-    public static final String RESTORE = "restore";
 
-    public static final String BACKUP = "backup";
-
-    public static final String DATABASE_SET = "database_set";
-
-    public static final String VIEW_METHOD = "view_method";
 
     protected static final String TAG = Settings.class.getName();
 
@@ -52,10 +46,10 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
-        prefViewMethod = (Preference) findPreference(VIEW_METHOD);
-        prefDatabaseSet = (Preference) findPreference(DATABASE_SET);
-        prefBackup = (Preference) findPreference(BACKUP);
-        prefRestore = (Preference) findPreference(RESTORE);
+        prefViewMethod = (Preference) findPreference(AppSettings.VIEW_METHOD);
+        prefDatabaseSet = (Preference) findPreference(AppSettings.DATABASE_SET);
+        prefBackup = (Preference) findPreference(AppSettings.BACKUP);
+        prefRestore = (Preference) findPreference(AppSettings.RESTORE);
         prefViewMethod.setOnPreferenceClickListener(this);
         prefDatabaseSet.setOnPreferenceClickListener(this);
         prefBackup.setOnPreferenceClickListener(this);
@@ -357,8 +351,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         final ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(this,
                 R.layout.textview_item_white, list);
         final Index selectIndex = new Index();
-        String viewMtd = PreferenceManager.getDefaultSharedPreferences(this).getString(VIEW_METHOD,
-                WordListAccessor.DEFAULT_VIEW_METHOD);
+        String viewMtd = AppSettings.getString(AppSettings.VIEW_METHOD, WordListAccessor.DEFAULT_VIEW_METHOD);
         String scrap[] = viewMtd.split("#");
         for (int i = 0; i < scrap.length; i++) {
             String ss[] = scrap[i].split(",");
@@ -474,8 +467,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
                             }
                         }
                         Log.d(TAG, "===============set new view method: " + rstr);
-                        PreferenceManager.getDefaultSharedPreferences(Settings.this).edit()
-                                .putString(VIEW_METHOD, rstr).commit();
+                        AppSettings.saveString(AppSettings.VIEW_METHOD, rstr);
                         Toast.makeText(Settings.this, R.string.view_method_success_hint,
                                 Toast.LENGTH_SHORT).show();
                         break;

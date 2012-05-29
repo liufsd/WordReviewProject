@@ -136,8 +136,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        anim = Anim.getAnim(AppSettings.getInt(this, AppSettings.ANIM_TYPE,
-                Anim.ANIM_FADE.getType()));
+        anim = Anim.getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE, Anim.ANIM_FADE.getType()));
         initView();
 
         Intent intent = getIntent();
@@ -258,7 +257,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     default:// ignore
                         break;
                 }
-                AppSettings.saveInt(CoreActivity.this, AppSettings.ANIM_TYPE, anim.getType());
+                AppSettings.saveInt(AppSettings.ANIM_TYPE, anim.getType());
             }
         };
         new AlertDialog.Builder(this).setItems(R.array.anim_select, listener).show();
@@ -278,10 +277,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private int textColor, bgColor, selectColor;
 
     private void setReadMode() {
-        selectMode = AppSettings.getInt(this, AppSettings.SELECT_COLOR_MODE_KEY, 0);
-        textColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][0], Color.BLACK);
-        bgColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
-        selectColor = AppSettings.getInt(this, AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);
+        selectMode = AppSettings.getInt(AppSettings.SELECT_COLOR_MODE_KEY, 0);
+        textColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][0], Color.BLACK);
+        bgColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
+        selectColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);
 
         findViewById(R.id.container).setBackgroundColor(bgColor);
         textView.setTextColor(textColor);
@@ -372,8 +371,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                                 "/sdcard/kingword/obj.save"));
                         oos.writeObject(wordlist);
                         oos.writeObject(countdownManager);
-                        AppSettings
-                                .saveBoolean(CoreActivity.this, AppSettings.SAVE_CACHE_KEY, true);
+                        AppSettings.saveBoolean(AppSettings.SAVE_CACHE_KEY, true);
                         Log.d(TAG, "------------------------save cache");
                     } catch (Exception e) {
                         e.printStackTrace();

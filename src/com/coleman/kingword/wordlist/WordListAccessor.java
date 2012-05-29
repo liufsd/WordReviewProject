@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.Settings;
@@ -19,6 +18,7 @@ import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.model.WordListItem;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
 
 public class WordListAccessor implements Serializable {
@@ -91,8 +91,7 @@ public class WordListAccessor implements Serializable {
     }
 
     private void loadViewMethod(Context context) {
-        String vmtd = PreferenceManager.getDefaultSharedPreferences(context).getString(
-                Settings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
+        String vmtd = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         String scrap[] = vmtd.split("#");
         for (int i = 0; i < scrap.length; i++) {
             String ss[] = scrap[i].split(",");

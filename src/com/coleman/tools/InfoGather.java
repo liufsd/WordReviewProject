@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
 import com.coleman.kingword.R;
@@ -17,7 +16,6 @@ import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Config;
 import com.coleman.util.Log;
 
 /**
@@ -40,7 +38,7 @@ public class InfoGather {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         Calendar calendar = Calendar.getInstance();
-        long time = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
+        long time = AppSettings.getLong(AppSettings.FIRST_STARTED_TIME_KEY, 0);
         long period = 7 * 24 * 3600 * 1000;
         if (time != 0) {
             time += period;
@@ -59,16 +57,16 @@ public class InfoGather {
      * @param context
      */
     public static void checkLevelUpgrade(Context context, int curLevel) {
-        int markLevel = AppSettings.getInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, -1);
+        int markLevel = AppSettings.getInt(AppSettings.MARK_SEND_MSG_LEVEL_KEY, -1);
         if (markLevel == -1) {
             // sendBySms(context);
             sendByEmail(context);
-            AppSettings.saveInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, 0);
+            AppSettings.saveInt(AppSettings.MARK_SEND_MSG_LEVEL_KEY, 0);
         } else {
             if (markLevel < curLevel) {
                 // sendBySms(context);
                 sendByEmail(context);
-                AppSettings.saveInt(context, AppSettings.MARK_SEND_MSG_LEVEL_KEY, curLevel);
+                AppSettings.saveInt(AppSettings.MARK_SEND_MSG_LEVEL_KEY, curLevel);
             } else {
                 Log.d(TAG, "history level is " + markLevel);
             }
@@ -124,13 +122,13 @@ public class InfoGather {
             msgBody += "Phone: " + phoneInfo + "\n";
 
             // 2. user first start application time
-            long firstTime = AppSettings.getLong(context, AppSettings.FIRST_STARTED_TIME_KEY, 0);
+            long firstTime = AppSettings.getLong(AppSettings.FIRST_STARTED_TIME_KEY, 0);
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(firstTime);
             msgBody += "Installed: " + c.getTime().toLocaleString() + "\n";
 
             // 3. user start application total times
-            int totalTimes = AppSettings.getInt(context, AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
+            int totalTimes = AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
             msgBody += "Total start times: " + totalTimes + "\n";
 
             // 4. user learning words' total number
@@ -177,7 +175,7 @@ public class InfoGather {
         // int levelType = context.getSharedPreferences(
         // Config.getDefaultSharedPreferenceName(context), 0).getInt("level",
         // 0);
-        int levelType = PreferenceManager.getDefaultSharedPreferences(context).getInt("level", 0);
+        int levelType = AppSettings.getInt(AppSettings.LEVEL, 0);
         int[] levelNums = context.getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType == 0 ? context.getResources().getStringArray(
                 R.array.military_rank) : (levelType == 1 ? context.getResources().getStringArray(

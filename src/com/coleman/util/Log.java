@@ -98,17 +98,18 @@ public final class Log {
         return logType;
     }
 
-    public static void init(Context context) {
-        if (Config.isSimulator(context) || "A0000022C343AF".equals(Config.getDeviceId(context))) {// A0000022C343AF
-            setLogType(context, LogType.verbose);
+    public static void init() {
+        if (Config.isSimulator(MyApp.context)
+                || "A0000022C343AF".equals(Config.getDeviceId(MyApp.context))) {// A0000022C343AF
+            setLogType(LogType.verbose);
         } else {
-            setLogType(context, LogType.warn);
+            setLogType(LogType.warn);
         }
     }
 
-    public static void setLogType(Context context, LogType logType) {
+    public static void setLogType(LogType logType) {
         Log.logType = logType;
-        AppSettings.saveInt(context, AppSettings.LOG_TYPE_KEY, logType.value());
+        AppSettings.saveInt(AppSettings.LOG_TYPE_KEY, logType.value());
     }
 
     /**

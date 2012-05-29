@@ -15,7 +15,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,7 +72,7 @@ public class WelcomeActivity extends Activity implements Observer {
         // initial the environment
         init();
         // test versionUpgrade
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("version_check", false)) {
+        if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
             upgradeCheck();
         }
 
@@ -98,11 +97,11 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     private void init() {
-        boolean firstStarted = AppSettings.getBoolean(this, AppSettings.FIRST_STARTED_KEY, true);
+        boolean firstStarted = AppSettings.getBoolean(AppSettings.FIRST_STARTED_KEY, true);
         if (firstStarted) {
 
             // mark first start app
-            AppSettings.saveBoolean(this, AppSettings.FIRST_STARTED_KEY, false);
+            AppSettings.saveBoolean(AppSettings.FIRST_STARTED_KEY, false);
 
             // init ebbinghaus notification
             EbbinghausReminder.setNotifactionAfterInstalled(this);
@@ -113,18 +112,17 @@ public class WelcomeActivity extends Activity implements Observer {
             // /////////////////////////////////////////////////////
 
             // save first start app time
-            AppSettings.saveLong(this, AppSettings.FIRST_STARTED_TIME_KEY,
-                    System.currentTimeMillis());
+            AppSettings.saveLong(AppSettings.FIRST_STARTED_TIME_KEY, System.currentTimeMillis());
 
             // set default log type to warn
-            Log.init(this);
+            Log.init();
 
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
             String k[][] = AppSettings.COLOR_MODE;
             for (int i = 0; i < c.length; i++) {
                 for (int j = 0; j < c[i].length; j++) {
-                    AppSettings.saveInt(this, k[i][j], c[i][j]);
+                    AppSettings.saveInt(k[i][j], c[i][j]);
                 }
             }
 
@@ -133,17 +131,17 @@ public class WelcomeActivity extends Activity implements Observer {
             // WordInfoHelper.restoreWordInfoDB(this, false);
             // ///////////////////////////////////////////////d
         } else {
-            AppSettings.saveInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY,
-                    AppSettings.getInt(this, AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
-            Log.setLogType(this, LogType.instanse(AppSettings.getInt(this,
-                    AppSettings.LOG_TYPE_KEY, LogType.verbose.value())));
+            AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
+                    AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
+            Log.setLogType(LogType.instanse(AppSettings.getInt(AppSettings.LOG_TYPE_KEY,
+                    LogType.verbose.value())));
         }
 
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
 
         // set last study restore
-        boolean isSave = AppSettings.getBoolean(this, AppSettings.SAVE_CACHE_KEY, false);
+        boolean isSave = AppSettings.getBoolean(AppSettings.SAVE_CACHE_KEY, false);
         if (isSave) {
             new AlertDialog.Builder(this).setTitle(R.string.recovery_tip)
                     .setMessage(R.string.recovery_message)
@@ -155,7 +153,7 @@ public class WelcomeActivity extends Activity implements Observer {
                             startActivity(i);
                         }
                     }).setNegativeButton(R.string.cancel, null).show();
-            AppSettings.saveBoolean(this, AppSettings.SAVE_CACHE_KEY, false);
+            AppSettings.saveBoolean(AppSettings.SAVE_CACHE_KEY, false);
         }
     }
 
@@ -205,8 +203,7 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private void showLevelInfo() {
         String entries[] = getResources().getStringArray(R.array.level_type);
-        String levelType = PreferenceManager.getDefaultSharedPreferences(this).getString("level",
-                entries[0]);
+        String levelType = AppSettings.getString(AppSettings.LEVEL, entries[0]);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType.equals(entries[0]) ? getResources().getStringArray(
                 R.array.military_rank) : (levelType.equals(entries[1]) ? getResources()
@@ -301,8 +298,7 @@ public class WelcomeActivity extends Activity implements Observer {
         String curLev = getString(R.string.cur_leve);
         String nextLev = getString(R.string.next_level);
         String entries[] = getResources().getStringArray(R.array.level_type);
-        String levelType = PreferenceManager.getDefaultSharedPreferences(this).getString("level",
-                entries[0]);
+        String levelType = AppSettings.getString(AppSettings.LEVEL, entries[0]);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType.equals(entries[0]) ? getResources().getStringArray(
                 R.array.military_rank) : (levelType.equals(entries[1]) ? getResources()
