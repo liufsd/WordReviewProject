@@ -9,11 +9,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import com.coleman.util.Log;
 import android.util.TimeUtils;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.ReviewSettings;
+import com.coleman.kingword.Settings;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.wordlist.WordListAccessor;
@@ -154,10 +157,16 @@ public class EbbinghausReminder {
      */
     public static void setNotifactionAfterInstalled(Context context) {
         String time[] = new String[] {
-                "08:00", "22:00", context.getString(R.string.not_set)
+                "12:00", context.getString(R.string.not_set), context.getString(R.string.not_set)
         };
+        String keys[] = new String[] {
+                ReviewSettings.TIME1, ReviewSettings.TIME2, ReviewSettings.TIME3
+        };
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putBoolean(ReviewSettings.FIXED_TIME_REVIEW, true).commit();
         for (int i = 0; i < AppSettings.REVIEW_TIME_KEY.length; i++) {
-            AppSettings.saveString(context, AppSettings.REVIEW_TIME_KEY[i], time[i]);
+            PreferenceManager.getDefaultSharedPreferences(context).edit()
+                    .putString(keys[i], time[i]).commit();
             if (!context.getString(R.string.not_set).equals(time[i])) {
                 setRepeatNotifaction(context, i, time[i]);
             }

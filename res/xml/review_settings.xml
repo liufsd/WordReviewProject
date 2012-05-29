@@ -3,7 +3,7 @@
     android:title="@string/review_set" >
 
     <CheckBoxPreference
-        android:key="review"
+        android:key="fixed_time_review"
         android:summaryOff="@string/fixed_time_mode_discard"
         android:summaryOn="@string/fixed_time_mode_used"
         android:title="@string/fixed_time_mode" />

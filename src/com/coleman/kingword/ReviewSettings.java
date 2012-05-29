@@ -18,6 +18,14 @@ import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.util.Log;
 
 public class ReviewSettings extends PreferenceActivity implements OnPreferenceClickListener {
+    public static final String FIXED_TIME_REVIEW = "fixed_time_review";
+
+    public static final String TIME3 = "time3";
+
+    public static final String TIME2 = "time2";
+
+    public static final String TIME1 = "time1";
+
     protected static final String TAG = ReviewSettings.class.getName();
 
     private Preference time1, time2, time3;
@@ -30,10 +38,10 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.review_settings);
-        time1 = findPreference("time1");
-        time2 = findPreference("time2");
-        time3 = findPreference("time3");
-        cbpre = (CheckBoxPreference) findPreference("review");
+        time1 = findPreference(TIME1);
+        time2 = findPreference(TIME2);
+        time3 = findPreference(TIME3);
+        cbpre = (CheckBoxPreference) findPreference(FIXED_TIME_REVIEW);
         time1.setOnPreferenceClickListener(this);
         time2.setOnPreferenceClickListener(this);
         time3.setOnPreferenceClickListener(this);
@@ -44,9 +52,9 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
 
     private void initUI() {
         String notSet = getString(R.string.not_set);
-        String t1 = getPreferenceScreen().getSharedPreferences().getString("time1", notSet);
-        String t2 = getPreferenceScreen().getSharedPreferences().getString("time2", notSet);
-        String t3 = getPreferenceScreen().getSharedPreferences().getString("time3", notSet);
+        String t1 = getPreferenceScreen().getSharedPreferences().getString(TIME1, notSet);
+        String t2 = getPreferenceScreen().getSharedPreferences().getString(TIME2, notSet);
+        String t3 = getPreferenceScreen().getSharedPreferences().getString(TIME3, notSet);
         time1.setTitle(t1);
         time2.setTitle(t2);
         time3.setTitle(t3);
@@ -84,9 +92,9 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
     private void checkFixedModeSelect() {
         if (cbpre.isChecked()) {
             String notSet = getString(R.string.not_set);
-            String t1 = getPreferenceScreen().getSharedPreferences().getString("time1", notSet);
-            String t2 = getPreferenceScreen().getSharedPreferences().getString("time2", notSet);
-            String t3 = getPreferenceScreen().getSharedPreferences().getString("time3", notSet);
+            String t1 = getPreferenceScreen().getSharedPreferences().getString(TIME1, notSet);
+            String t2 = getPreferenceScreen().getSharedPreferences().getString(TIME2, notSet);
+            String t3 = getPreferenceScreen().getSharedPreferences().getString(TIME3, notSet);
             if (!notSet.equals(t1)) {
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, 0, t1);
             }
@@ -104,9 +112,9 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
     }
 
     private void checkDepandency() {
-        time1.setDependency("review");
-        time2.setDependency("review");
-        time3.setDependency("review");
+        time1.setDependency(FIXED_TIME_REVIEW);
+        time2.setDependency(FIXED_TIME_REVIEW);
+        time3.setDependency(FIXED_TIME_REVIEW);
     }
 
     private void showSetReviewTime(final Preference pre, final int which, String time) {
