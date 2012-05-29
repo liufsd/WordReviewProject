@@ -7,6 +7,7 @@ import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -48,6 +49,10 @@ public class WelcomeActivity extends Activity implements Observer {
     private Button startButton;
 
     private TextView curTV, nextTV;
+
+    private boolean userCheck;
+
+    private Dialog versionCheckDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,12 +189,18 @@ public class WelcomeActivity extends Activity implements Observer {
                 showAboutDev();
                 break;
             case R.id.menu_version:
-                upgradeCheck();
+                userCheck();
                 break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void userCheck() {
+        upgradeCheck();
+        versionCheckDialog = DialogUtil.showLoadingDialog(this, R.string.version_checking);
+        userCheck = true;
     }
 
     private void showLevelInfo() {
@@ -351,16 +362,45 @@ public class WelcomeActivity extends Activity implements Observer {
                                                         WelcomeActivity.this, bean);
                                             }
                                         }).setNegativeButton(R.string.cancel, null).show();
+                    } else {
+                        if (userCheck) {
+                            dismiss(versionCheckDialog);
+                            userCheck = false;
+                            DialogUtil.showServerMessage(this, bean.getDescription());
+                        } else {
+                            Log.i(TAG,
+                                    "===coleman-debug-bean.getDescription(): "
+                                            + bean.getDescription());
+                        }
                     }
                 } else {
-                    DialogUtil.showServerMessage(this, bean.getDescription());
+                    if (userCheck) {
+                        dismiss(versionCheckDialog);
+                        userCheck = false;
+                        DialogUtil.showServerMessage(this, bean.getDescription());
+                    } else {
+                        Log.i(TAG,
+                                "===coleman-debug-bean.getDescription(): " + bean.getDescription());
+                    }
                 }
 
             } else {
-                DialogUtil.showErrorMessage(this, data);
+                if (userCheck) {
+                    dismiss(versionCheckDialog);
+                    userCheck = false;
+                    DialogUtil.showErrorMessage(this, data);
+                } else {
+                    Log.i(TAG, "===coleman-debug-bean.getDescription(): " + data == null ? ""
+                            : data.toString());
+                }
             }
         }
+    }
 
+    private void dismiss(Dialog versionCheckDialog) {
+        if (versionCheckDialog != null && versionCheckDialog.isShowing()) {
+            versionCheckDialog.dismiss();
+        }
     }
 
 }
