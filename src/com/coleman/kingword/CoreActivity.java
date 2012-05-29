@@ -105,7 +105,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private TextToSpeech tts;
 
     public static enum Anim {
-        ANIM_3D(0), ANIM_SLIDE(1), ANIM_FADE(2);
+        ANIM_3D(0), ANIM_FADE(1), ANIM_SLIDE(2);
         private final int type;
 
         private Anim(int animType) {
@@ -118,11 +118,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         public static Anim getAnim(int animType) {
             switch (animType) {
-                case 1:
-                    return ANIM_SLIDE;
-                case 2:
-                    return ANIM_FADE;
                 case 0:
+                    return ANIM_3D;
+                case 1:
+                    return ANIM_FADE;
+                case 2:
+                    return ANIM_SLIDE;
                 default:
                     return ANIM_3D;
             }
@@ -1263,10 +1264,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                                 apply3DAnim(0, 90);
                                 break;
                             case ANIM_FADE:
-                                applySlideAnim();
+                                applyFadeAnim();
                                 break;
                             case ANIM_SLIDE:
-                                applyFadeAnim();
+                                applySlideAnim();
                                 break;
                         }
                         if (nextWordItem.isAddToNew()) {

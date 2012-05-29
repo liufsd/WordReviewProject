@@ -1,45 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<TableLayout android:layout_width="fill_parent" android:id="@+id/tableLayout1"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:layout_alignParentTop="true">
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<RadioButton android:layout_height="wrap_content"
-				android:id="@+id/radio0" android:layout_width="wrap_content"
-				android:checked="true" android:text="@string/sub_settings"></RadioButton>
-			<RadioButton android:layout_height="wrap_content"
-				android:id="@+id/radio1" android:layout_width="wrap_content"
-				android:text="@string/review_settings" android:layout_marginLeft="20dp"></RadioButton>
-		</TableRow>
-		<TableRow android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<RadioButton android:layout_height="wrap_content"
-				android:id="@+id/radio2" android:layout_width="wrap_content"
-				android:text="@string/newbook_settings"></RadioButton>
-			<RadioButton android:layout_height="wrap_content"
-				android:id="@+id/radio3" android:layout_width="wrap_content"
-				android:text="@string/ignore_settings" android:layout_marginLeft="20dp"></RadioButton>
-		</TableRow>
-	</TableLayout>
-	<LinearLayout android:layout_width="fill_parent"
-		android:id="@+id/linearLayout1" android:layout_height="50dp"
-		android:layout_alignParentBottom="true">
-		<Button android:id="@+id/button0"
-			android:layout_alignParentBottom="true" android:layout_width="120dp"
-			android:layout_height="fill_parent" android:text="@string/add_method"
-			android:layout_weight="1"></Button>
-		<Button android:id="@+id/button1"
-			android:layout_alignParentBottom="true" android:layout_width="120dp"
-			android:layout_height="fill_parent" android:text="@string/clear"
-			android:layout_weight="1"></Button>
-	</LinearLayout>
-	<Spinner android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/spinner1"
-		android:layout_above="@id/linearLayout1"></Spinner>
-	<ListView android:id="@+id/listView1" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:layout_below="@id/tableLayout1"
-		android:layout_above="@id/spinner1"></ListView>
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radio0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/sub_settings" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/review_settings" >
+            </RadioButton>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newbook_settings" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/ignore_settings" >
+            </RadioButton>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_weight="1"
+        android:text="@string/clear_all" >
+    </Button>
+
+    <LinearLayout
+        android:id="@id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true" >
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+        </Spinner>
+
+        <ImageButton
+            android:id="@+id/button0"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:clickable="true"
+            android:src="@drawable/menu_add" >
+        </ImageButton>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/button1"
+        android:layout_below="@id/tableLayout1" >
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+    </LinearLayout>
 
 </RelativeLayout>

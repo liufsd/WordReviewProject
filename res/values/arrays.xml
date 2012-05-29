@@ -13,8 +13,8 @@
     </string-array>
     <string-array name="anim_select">
         <item>3D特效</item>
+        <item>渐变特效</item>
         <item>滑动特效</item>
-        <item>无特效</item>
     </string-array>
     <!-- 列兵、少尉、中尉、上尉、少校、中校、上校、大校、少将、中将、上将、三军统帅 -->
     <string-array name="military_rank">

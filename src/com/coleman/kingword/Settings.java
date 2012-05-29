@@ -5,15 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.dict.stardict.DictLibrary;
-import com.coleman.kingword.history.WordInfoHelper;
-import com.coleman.kingword.wordlist.WordListAccessor;
-import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
-import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
-import com.coleman.util.Config;
-import com.coleman.util.Log;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,10 +20,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.dict.stardict.DictLibrary;
+import com.coleman.kingword.history.WordInfoHelper;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
+import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.util.Config;
+import com.coleman.util.Log;
 
 public class Settings extends PreferenceActivity implements OnPreferenceClickListener {
     public static final String RESTORE = "restore";
@@ -342,7 +343,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         final RadioButton radioIgnore = (RadioButton) view.findViewById(R.id.radio3);
         final ListView listview = (ListView) view.findViewById(R.id.listView1);
         final Spinner spinner1 = (Spinner) view.findViewById(R.id.spinner1);
-        final Button addBtn = (Button) view.findViewById(R.id.button0);
+        final ImageButton addBtn = (ImageButton) view.findViewById(R.id.button0);
         final Button clearBtn = (Button) view.findViewById(R.id.button1);
         final ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
         for (int i = 0; i < 4; i++) {

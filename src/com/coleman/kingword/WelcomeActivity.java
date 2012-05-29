@@ -30,16 +30,13 @@ import com.coleman.http.json.bean.WordlistResp;
 import com.coleman.http.json.bussiness.WorkManager;
 import com.coleman.http.json.connection.SLRequest;
 import com.coleman.http.json.connection.SLResponse;
-import com.coleman.http.json.test.TestJSONTool;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.wordlist.WordListAccessor;
-import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Config;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -115,10 +112,6 @@ public class WelcomeActivity extends Activity implements Observer {
 
             // set default log type to warn
             Log.init(this);
-
-            // // set default unit split number
-            // AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY,
-            // WordListManager.DEFAULT_SPLIT_NUM);
 
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;

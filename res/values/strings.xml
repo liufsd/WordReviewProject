@@ -96,6 +96,7 @@
     <string name="exit">退出</string>
     <string name="split">分割</string>
     <string name="clear">清除</string>
+    <string name="clear_all">全部清除</string>
     <string name="select_all">全部选择</string>
     <string name="none_select">取消选择</string>
     <string name="load">单词表加载</string>
