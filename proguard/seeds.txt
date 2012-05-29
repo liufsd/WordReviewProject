@@ -1283,6 +1283,8 @@ com.coleman.kingword.wordlist.RemoteFileExplorer
 com.coleman.kingword.SettingsActivity
 com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog
 com.coleman.kingword.wordlist.WordlistTabActivity
+com.coleman.kingword.Settings
+com.coleman.kingword.ReviewSettings
 com.coleman.util.MyApp
 com.coleman.kingword.dict.DictLoadService
 com.coleman.kingword.UpgradeService

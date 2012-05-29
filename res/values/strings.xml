@@ -32,9 +32,11 @@
     <string name="hour">小时</string>
     <string name="day">天</string>
     <string name="backup">备份</string>
+    <string name="backup_settings">备份</string>
     <string name="backup_msg">备份后的数据保存在"/sdcard/kingword/backup"文件中，你确定要备份吗？
 	</string>
     <string name="restore">恢复</string>
+    <string name="restore_settings">恢复</string>
     <string name="restore_msg">恢复数据有可能会删除当前用户词库，如果没有备份文件，不会删除当前词库，你确定要恢复吗？
 	</string>
     <string name="welcome">欢迎使用单词王！</string>
@@ -44,7 +46,7 @@
     <string name="not_enable3d">关闭3D特效</string>
     <string name="night_mode">夜晚模式</string>
     <string name="day_mode">白天模式</string>
-    <string name="view_new_book">进入生词本</string>
+    <string name="view_new_book">学习生词本</string>
     <string name="view_ignore_list">浏览过滤表</string>
     <string name="study_new_word_book_end">你完成了生词本的学习！</string>
     <string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
@@ -60,7 +62,16 @@
     <string formatted="false" name="show_complete_study">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
     <string name="set_split_num_hint">设置单元单词数量</string>
+    <string name="split_num_settings">每单元单词数量</string>
     <string name="set_review_time">设置复习时间点</string>
+    <string name="review_time_settings">复习</string>
+    <string name="review_set">复习设置</string>
+    <string name="fixed_time_mode">定时模式</string>
+    <string name="ebbinghaus_mode">艾宾浩斯模式</string>
+    <string name="fixed_time_mode_used">定时模式启用</string>
+    <string name="fixed_time_mode_discard">定时模式关闭</string>
+    <string name="ebbinghaus_mode_used">艾宾浩斯模式启用</string>
+    <string name="ebbinghaus_mode_discard">艾宾浩斯模式关闭</string>
     <string name="upgrade_success">单词升级成功</string>
     <string name="degrade_success">单词降级成功</string>
     <string name="ignore_success">单词忽略成功</string>
@@ -92,6 +103,7 @@
     <string name="path">路径:%s</string>
     <string name="settings">设置</string>
     <string name="not_set">未设置</string>
+    <string name="fixed_time_hint">每天%s启动定时复习模式</string>
     <string name="help">帮助</string>
     <string name="about">关于</string>
     <string name="option">选项</string>
@@ -135,6 +147,7 @@
     <string formatted="false" name="next_level">下一等级: %s(%d词)</string>
     <string name="top_level">你已经到达最高等级！</string>
     <string name="learning_level_name_set">设置等级称号</string>
+    <string name="level_name_settings">等级称号</string>
     <string name="level_info">等级榜说明</string>
     <string formatted="false" name="level_info_item">等级%d：%s（%d词）\n</string>
     <string name="security_set">高级安全设置</string>
@@ -155,11 +168,12 @@
 	</string>
     <string name="pw_failed">你输入的密码有误，认证失败！</string>
     <string name="pw_successed">密码正确，认证成功！</string>
-    <string name="high_level_settings">高级安全设置</string>
+    <string name="high_level_settings">高级设置</string>
     <string name="msg_dialog_title">消息提示</string>
     <string formatted="false" name="loop_info">第%d轮（%d/%d词）</string>
     <string formatted="false" name="enter_next_loop">进入第%d轮！</string>
-    <string name="view_method_dialog_title">查看方式设定</string>
+    <string name="view_method_dialog_title">设置查看方式</string>
+    <string name="view_method_settings">学习</string>
     <string name="sub_settings">查看单元</string>
     <string name="review_settings">查看复习</string>
     <string name="newbook_settings">查看生词</string>
@@ -176,6 +190,7 @@
     <string name="mail">联系作者：</string>
     <string name="copyright">Copyright@2009-2013 Coleman</string>
     <string name="language_settings">数据库设定</string>
+    <string name="database_settings">数据库选择</string>
     <string name="auth_introduce">免责声明：本软件仅供学习研究使用，所涉及的资源系网上搜集所得，如有涉嫌侵权请联系软件作者，在未收到相关通知前使用本软件所造成的相关法律责任一概与软件作者无关。
 	</string>
     <string name="init_db">首次安装会在后台初使化数据库，此动作大概会持续30秒～5分钟，视你的机器性能而定，请稍候再试！
@@ -216,5 +231,7 @@
     <string name="down_wordlist_begin">%s开始下载！</string>
     <string name="down_wordlist_success">%s下载成功！</string>
     <string name="load_wordlist_success">%s加载成功！</string>
+    <string name="basic_settings">基本设置</string>
+    <string name="backup_restore_settings">备份恢复设置</string>
 
 </resources>

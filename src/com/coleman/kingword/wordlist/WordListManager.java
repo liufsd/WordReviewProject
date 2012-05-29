@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList;
@@ -20,6 +21,7 @@ import com.coleman.kingword.provider.KingWordDBHepler;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.model.WordList;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.GeneralParser;
 import com.coleman.util.Log;
 
@@ -127,7 +129,14 @@ public class WordListManager {
 
     private void splitAndInsertSubWordList(Context context, ArrayList<String> list,
             WordList wordlist, IProgressNotifier notifier) {
-        int suggest = AppSettings.getInt(context, AppSettings.SPLIT_NUM_KEY, DEFAULT_SPLIT_NUM);
+        // int suggest = AppSettings.getInt(context, AppSettings.SPLIT_NUM_KEY,
+        // DEFAULT_SPLIT_NUM);
+        // int suggest =
+        // context.getSharedPreferences(Config.getDefaultSharedPreferenceName(context),
+        // 0).getInt(AppSettings.SPLIT_NUM_KEY, DEFAULT_SPLIT_NUM);
+        String strSuggest = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                "split", "" + DEFAULT_SPLIT_NUM);
+        int suggest = Integer.parseInt(strSuggest);
         ArrayList<List<String>> sublist = new ArrayList<List<String>>();
         switch (wordlist.set_method) {
             case AVARAGE_DEVIDE: {

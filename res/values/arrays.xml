@@ -1,121 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string-array name="split_num">
-		<item>50</item>
-		<item>100</item>
-		<item>150</item>
-		<item>200</item>
-		<item>250</item>
-		<item>300</item>
-		<item>350</item>
-		<item>400</item>
-	</string-array>
-	<string-array name="anim_select">
-		<item>3D特效</item>
-		<item>滑动特效</item>
-		<item>无特效</item>
-	</string-array>
-	<!-- 列兵、少尉、中尉、上尉、少校、中校、上校、大校、少将、中将、上将、三军统帅 -->
-	<string-array name="military_rank">
-		<item>列兵</item>
-		<item>少尉</item>
-		<item>中尉</item>
-		<item>上尉</item>
-		<item>少校</item>
-		<item>中校</item>
-		<item>上校</item>
-		<item>大校</item>
-		<item>少将</item>
-		<item>中将</item>
-		<item>上将</item>
-		<item>元帅</item>
-	</string-array>
-	<!-- 学童、小学生、中学生、学士、硕士、博士、博士后、学者、大学者、宗师、泰斗、圣贤 -->
-	<string-array name="leaning_level">
-		<item>学童</item>
-		<item>小学生</item>
-		<item>中学生</item>
-		<item>学士</item>
-		<item>硕士</item>
-		<item>博士</item>
-		<item>博士后</item>
-		<item>学者</item>
-		<item>大学者</item>
-		<item>宗师</item>
-		<item>泰斗</item>
-		<item>圣贤</item>
-	</string-array>
-	<!-- 入门、筑基、旋照、融合、心动、灵寂、元婴、出窍、分神、合体、度劫、大乘 -->
-	<string-array name="xiuzhen_level">
-		<item>入门</item>
-		<item>筑基</item>
-		<item>旋照</item>
-		<item>融合</item>
-		<item>心动</item>
-		<item>灵寂</item>
-		<item>元婴</item>
-		<item>出窍</item>
-		<item>分神</item>
-		<item>合体</item>
-		<item>度劫</item>
-		<item>大乘</item>
-	</string-array>
-	<string-array name="level_type">
-		<item>军衔</item>
-		<item>学识</item>
-		<item>修真</item>
-	</string-array>
-	<integer-array name="level_num">
-		<item>300</item>
-		<item>1000</item>
-		<item>3000</item>
-		<item>5000</item>
-		<item>8000</item>
-		<item>12000</item>
-		<item>17000</item>
-		<item>23000</item>
-		<item>30000</item>
-		<item>38000</item>
-		<item>47000</item>
-		<item>57000</item>
-	</integer-array>
-	<string-array name="high_level_settings">
-		<item>调试等级</item>
-		<item>备份数据</item>
-		<item>恢复数据</item>
-		<item>学习方式设定</item>
-		<item>数据库设定</item>
-	</string-array>
-	<string-array name="debug_level">
-		<item>VERBOSE</item>
-		<item>DEBUG</item>
-		<item>INFO</item>
-		<item>WARN</item>
-		<item>ERROR</item>
-		<item>ASSERT</item>
-	</string-array>
-	<integer-array name="debug_level_value">
-		<item>2</item>
-		<item>3</item>
-		<item>4</item>
-		<item>5</item>
-		<item>6</item>
-		<item>7</item>
-	</integer-array>
-	<string-array name="view_methods">
-		<item>查看简要</item>
-		<item>多项选择</item>
-	</string-array>
-	<string-array name="restore">
-		<item>恢复全部数据库</item>
-		<item>恢复学习历史记录</item>
-	</string-array>
-	<string-array name="backup">
-		<item>备份全部数据库</item>
-		<item>备份学习历史记录</item>
-	</string-array>
-	<string-array name="language_settings">
-		<item>选择简明数据库</item>
-		<item>选择详情数据库</item>
-	</string-array>
+
+    <string-array name="split_num">
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+        <item>300</item>
+        <item>350</item>
+        <item>400</item>
+    </string-array>
+    <string-array name="anim_select">
+        <item>3D特效</item>
+        <item>滑动特效</item>
+        <item>无特效</item>
+    </string-array>
+    <!-- 列兵、少尉、中尉、上尉、少校、中校、上校、大校、少将、中将、上将、三军统帅 -->
+    <string-array name="military_rank">
+        <item>列兵</item>
+        <item>少尉</item>
+        <item>中尉</item>
+        <item>上尉</item>
+        <item>少校</item>
+        <item>中校</item>
+        <item>上校</item>
+        <item>大校</item>
+        <item>少将</item>
+        <item>中将</item>
+        <item>上将</item>
+        <item>元帅</item>
+    </string-array>
+    <!-- 学童、小学生、中学生、学士、硕士、博士、博士后、学者、大学者、宗师、泰斗、圣贤 -->
+    <string-array name="leaning_level">
+        <item>学童</item>
+        <item>小学生</item>
+        <item>中学生</item>
+        <item>学士</item>
+        <item>硕士</item>
+        <item>博士</item>
+        <item>博士后</item>
+        <item>学者</item>
+        <item>大学者</item>
+        <item>宗师</item>
+        <item>泰斗</item>
+        <item>圣贤</item>
+    </string-array>
+    <!-- 入门、筑基、旋照、融合、心动、灵寂、元婴、出窍、分神、合体、度劫、大乘 -->
+    <string-array name="xiuzhen_level">
+        <item>入门</item>
+        <item>筑基</item>
+        <item>旋照</item>
+        <item>融合</item>
+        <item>心动</item>
+        <item>灵寂</item>
+        <item>元婴</item>
+        <item>出窍</item>
+        <item>分神</item>
+        <item>合体</item>
+        <item>度劫</item>
+        <item>大乘</item>
+    </string-array>
+    <string-array name="level_type">
+        <item>军衔</item>
+        <item>学识</item>
+        <item>修真</item>
+    </string-array>
+
+    <integer-array name="level_num">
+        <item>300</item>
+        <item>1000</item>
+        <item>3000</item>
+        <item>5000</item>
+        <item>8000</item>
+        <item>12000</item>
+        <item>17000</item>
+        <item>23000</item>
+        <item>30000</item>
+        <item>38000</item>
+        <item>47000</item>
+        <item>57000</item>
+    </integer-array>
+
+    <string-array name="high_level_settings">
+        <item>调试等级</item>
+        <item>备份数据</item>
+        <item>恢复数据</item>
+        <item>学习方式设定</item>
+        <item>数据库设定</item>
+    </string-array>
+    <string-array name="debug_level">
+        <item>VERBOSE</item>
+        <item>DEBUG</item>
+        <item>INFO</item>
+        <item>WARN</item>
+        <item>ERROR</item>
+        <item>ASSERT</item>
+    </string-array>
+
+    <integer-array name="debug_level_value">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </integer-array>
+
+    <string-array name="view_methods">
+        <item>查看简要</item>
+        <item>多项选择</item>
+    </string-array>
+    <string-array name="restore">
+        <item>恢复全部数据库</item>
+        <item>恢复学习历史记录</item>
+    </string-array>
+    <string-array name="backup">
+        <item>备份全部数据库</item>
+        <item>备份学习历史记录</item>
+    </string-array>
+    <string-array name="language_settings">
+        <item>选择简明数据库</item>
+        <item>选择详情数据库</item>
+    </string-array>
+
 </resources>

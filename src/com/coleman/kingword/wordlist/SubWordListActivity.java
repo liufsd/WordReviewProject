@@ -8,8 +8,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
@@ -19,14 +18,15 @@ import com.coleman.kingword.wordlist.view.SlideTableSwitcher;
 
 public class SubWordListActivity extends Activity {
 
-    private static final String TAG = "SubWordListActivity";
+    private static final String TAG = SubWordListActivity.class.getName();
 
-    private ProgressBar progressBar;
+    // private ProgressBar progressBar;
+    private TextView tvPage;
 
     /**
      * Loading when first entering.
      */
-    private ProgressBar preProgress;
+    // private ProgressBar preProgress;
 
     private SlideTableSwitcher mSwitcher;
 
@@ -54,8 +54,9 @@ public class SubWordListActivity extends Activity {
 
     private void initViews() {
         mSwitcher = (SlideTableSwitcher) findViewById(R.id.viewSwitcher1);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-        preProgress = (ProgressBar) findViewById(R.id.progressBar2);
+        // progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        tvPage = (TextView) findViewById(R.id.tvPage);
+        // preProgress = (ProgressBar) findViewById(R.id.progressBar2);
     }
 
     private class ExpensiveTask extends AsyncTask<Bundle, Void, Void> {
@@ -71,8 +72,8 @@ public class SubWordListActivity extends Activity {
         protected void onPreExecute() {
             switch (type) {
                 case INIT_QUERY:
-                    progressBar.setVisibility(View.GONE);
-                    preProgress.setVisibility(View.VISIBLE);
+                    // progressBar.setVisibility(View.GONE);
+                    // preProgress.setVisibility(View.VISIBLE);
                     break;
                 default:// ignore
                     break;
@@ -114,11 +115,13 @@ public class SubWordListActivity extends Activity {
         protected void onPostExecute(Void result) {
             switch (type) {
                 case INIT_QUERY:
-                    progressBar.setVisibility(View.VISIBLE);
-                    preProgress.setVisibility(View.GONE);
+                    // progressBar.setVisibility(View.VISIBLE);
+                    // preProgress.setVisibility(View.GONE);
                     SubWordList[] sub_ids = pageControl.getPageInfo();
                     mSwitcher.showCurrentScreen(sub_ids);
-                    progressBar.setProgress(pageControl.getProgress());
+                    tvPage.setText((pageControl.getCurPageIndex() + 1) + "/"
+                            + pageControl.getTotalPages());
+                    // progressBar.setProgress(pageControl.getProgress());
                     break;
                 default:// ignore
                     break;
@@ -161,6 +164,10 @@ public class SubWordListActivity extends Activity {
                 return 100;
             }
             return curIndex * 100 / (mlist.size() - 1);
+        }
+
+        public int getTotalPages() {
+            return mlist.size();
         }
 
         public int getCurPageIndex() {
@@ -212,13 +219,17 @@ public class SubWordListActivity extends Activity {
                 if (pageControl.hasPreviousPage()) {
                     SubWordList sub_ids[] = pageControl.moveToPrePage();
                     mSwitcher.showPreviousScreen(sub_ids);
-                    progressBar.setProgress(pageControl.getProgress());
+                    // progressBar.setProgress(pageControl.getProgress());
+                    tvPage.setText((pageControl.getCurPageIndex() + 1) + "/"
+                            + pageControl.getTotalPages());
                 }
             } else if (d_x - u_x > getWindowManager().getDefaultDisplay().getWidth() / 5) {
                 if (pageControl.hasNextPage()) {
                     SubWordList sub_ids[] = pageControl.moveToNextPage();
                     mSwitcher.showNextScreen(sub_ids);
-                    progressBar.setProgress(pageControl.getProgress());
+                    // progressBar.setProgress(pageControl.getProgress());
+                    tvPage.setText((pageControl.getCurPageIndex() + 1) + "/"
+                            + pageControl.getTotalPages());
                 }
             }
         }

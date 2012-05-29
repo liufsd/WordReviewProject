@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings" >
+
+    <PreferenceCategory android:title="@string/basic_settings" >
+
+        <ListPreference
+            android:dialogTitle="@string/set_split_num_hint"
+            android:entries="@array/split_num"
+            android:entryValues="@array/split_num"
+            android:key="split"
+            android:summary=""
+            android:title="@string/split_num_settings" />
+
+        <ListPreference
+            android:dialogTitle="@string/learning_level_name_set"
+            android:entries="@array/level_type"
+            android:entryValues="@array/level_type"
+            android:key="level"
+            android:summary=""
+            android:title="@string/level_name_settings" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/high_level_settings" >
+
+        <PreferenceScreen
+            android:key="review_screen"
+            android:summary=""
+            android:title="@string/review_time_settings" >
+
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.coleman.kingword.ReviewSettings"
+                android:targetPackage="com.coleman.kingword" />
+        </PreferenceScreen>
+
+        <Preference
+            android:key="view_method"
+            android:summary=""
+            android:title="@string/view_method_settings" />
+
+        <Preference
+            android:key="database_set"
+            android:summary=""
+            android:title="@string/database_settings" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/backup_restore_settings" >
+
+        <Preference
+            android:key="backup"
+            android:summary=""
+            android:title="@string/backup_settings" />
+
+        <Preference
+            android:key="restore"
+            android:summary=""
+            android:title="@string/restore_settings" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

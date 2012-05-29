@@ -30,7 +30,8 @@ public final class Config {
      * App read file encoding.
      */
     public static final String ENCODE = "GBK";
-	public static final boolean isTestServer = false;
+
+    public static final boolean isTestServer = false;
 
     public static boolean isSimulator(Context context) {
         TelephonyManager telmgr = (TelephonyManager) context
@@ -52,4 +53,5 @@ public final class Config {
                 .getSystemService(Context.TELEPHONY_SERVICE);
         return tm.getDeviceId();
     }
+
 }

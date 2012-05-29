@@ -11,29 +11,29 @@ package com.coleman.kingword.wordlist;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
-import com.coleman.kingword.R;
-import com.coleman.util.Config;
-import com.coleman.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.coleman.kingword.R;
+import com.coleman.util.Config;
+import com.coleman.util.Log;
 
 public class FileExplorer extends Activity {
     public static final String ACTION_EXPLORER = "com.coleman.sms.activity.EXPLORER";
@@ -99,18 +99,18 @@ public class FileExplorer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = new MenuInflater(this);
-        inflater.inflate(R.menu.explorer_option, menu);
+        // MenuInflater inflater = new MenuInflater(this);
+        // inflater.inflate(R.menu.explorer_option, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_back:
-                finish();
-                break;
-        }
+        // switch (item.getItemId()) {
+        // case R.id.menu_back:
+        // finish();
+        // break;
+        // }
         return true;
     }
 

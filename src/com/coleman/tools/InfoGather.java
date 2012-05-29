@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
 import com.coleman.kingword.R;
@@ -16,6 +17,7 @@ import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.Log;
 
 /**
@@ -170,7 +172,12 @@ public class InfoGather {
     private static String getCurLevelInfo(Context context) {
         int count = 0, index = 0;
         String curLev = context.getString(R.string.cur_leve);
-        int levelType = AppSettings.getInt(context, AppSettings.LEVEL_TYPE_KEY, 0);
+        // int levelType = AppSettings.getInt(context,
+        // AppSettings.LEVEL_TYPE_KEY, 0);
+        // int levelType = context.getSharedPreferences(
+        // Config.getDefaultSharedPreferenceName(context), 0).getInt("level",
+        // 0);
+        int levelType = PreferenceManager.getDefaultSharedPreferences(context).getInt("level", 0);
         int[] levelNums = context.getResources().getIntArray(R.array.level_num);
         String[] levelNames = (levelType == 0 ? context.getResources().getStringArray(
                 R.array.military_rank) : (levelType == 1 ? context.getResources().getStringArray(

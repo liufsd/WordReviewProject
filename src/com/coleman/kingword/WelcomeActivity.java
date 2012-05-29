@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import com.coleman.kingword.wordlist.WordListManager;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
 
@@ -114,8 +116,9 @@ public class WelcomeActivity extends Activity implements Observer {
             // set default log type to warn
             Log.init(this);
 
-            // set default unit split number
-            AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY, WordListManager.DEFAULT_SPLIT_NUM);
+            // // set default unit split number
+            // AppSettings.saveInt(this, AppSettings.SPLIT_NUM_KEY,
+            // WordListManager.DEFAULT_SPLIT_NUM);
 
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
@@ -193,10 +196,12 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     private void showLevelInfo() {
-        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE_KEY, 0);
+        String entries[] = getResources().getStringArray(R.array.level_type);
+        String levelType = PreferenceManager.getDefaultSharedPreferences(this).getString("level",
+                entries[0]);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
-        String[] levelNames = (levelType == 0 ? getResources()
-                .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
+        String[] levelNames = (levelType.equals(entries[0]) ? getResources().getStringArray(
+                R.array.military_rank) : (levelType.equals(entries[1]) ? getResources()
                 .getStringArray(R.array.leaning_level) : getResources().getStringArray(
                 R.array.xiuzhen_level)));
         StringBuilder sb = new StringBuilder();
@@ -210,7 +215,7 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     private void showSettings() {
-        Intent it = new Intent(this, SettingsActivity.class);
+        Intent it = new Intent(this, Settings.class);
         startActivity(it);
     }
 
@@ -287,10 +292,12 @@ public class WelcomeActivity extends Activity implements Observer {
         int count = 0, index = 0;
         String curLev = getString(R.string.cur_leve);
         String nextLev = getString(R.string.next_level);
-        int levelType = AppSettings.getInt(this, AppSettings.LEVEL_TYPE_KEY, 0);
+        String entries[] = getResources().getStringArray(R.array.level_type);
+        String levelType = PreferenceManager.getDefaultSharedPreferences(this).getString("level",
+                entries[0]);
         int[] levelNums = getResources().getIntArray(R.array.level_num);
-        String[] levelNames = (levelType == 0 ? getResources()
-                .getStringArray(R.array.military_rank) : (levelType == 1 ? getResources()
+        String[] levelNames = (levelType.equals(entries[0]) ? getResources().getStringArray(
+                R.array.military_rank) : (levelType.equals(entries[1]) ? getResources()
                 .getStringArray(R.array.leaning_level) : getResources().getStringArray(
                 R.array.xiuzhen_level)));
         Cursor c = getContentResolver().query(THistory.CONTENT_URI, new String[] {

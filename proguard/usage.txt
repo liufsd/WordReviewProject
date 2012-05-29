@@ -292,6 +292,7 @@ com.coleman.kingword.R$layout
 com.coleman.kingword.R$menu
 com.coleman.kingword.R$string
 com.coleman.kingword.R$style
+com.coleman.kingword.R$xml
 com.coleman.kingword.SettingsActivity:
     protected static final java.lang.String TAG
 com.coleman.kingword.SettingsActivity$SimpleCrypto:
@@ -305,7 +306,7 @@ com.coleman.kingword.UpgradeService:
     private static final java.lang.String TAG
 com.coleman.kingword.WelcomeActivity:
     private static final java.lang.String TAG
-    258:284:void _DEL_REPEAT_WORDS()
+    259:285:void _DEL_REPEAT_WORDS()
 com.coleman.kingword.WelcomeActivity$1Info
 com.coleman.kingword.dict.DictLoadService:
     private static final java.lang.String TAG

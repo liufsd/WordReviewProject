@@ -135,8 +135,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        anim = Anim
-                .getAnim(AppSettings.getInt(this, AppSettings.ANIM_TYPE, Anim.ANIM_3D.getType()));
+        anim = Anim.getAnim(AppSettings.getInt(this, AppSettings.ANIM_TYPE,
+                Anim.ANIM_FADE.getType()));
         initView();
 
         Intent intent = getIntent();
@@ -489,8 +489,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 if (!autoSpeak) {
                     btnSpeak.setBackgroundResource(R.drawable.speak_auto);
                     playVoice(nextWordItem.item.word);
-                }
-                else{
+                } else {
                     btnSpeak.setBackgroundResource(R.drawable.speak);
                 }
                 autoSpeak = !autoSpeak;
@@ -1131,7 +1130,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     if (!wordlist.allComplete()) {
                         nextWordItem = wordlist.getNext();
                         lookupInDict(nextWordItem);
-                        if(autoSpeak){
+                        if (autoSpeak) {
                             playVoice(nextWordItem.item.word);
                         }
                         bundle.putBoolean("next", true);

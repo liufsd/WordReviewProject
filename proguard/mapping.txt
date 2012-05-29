@@ -458,6 +458,27 @@ com.coleman.kingword.CoreActivity$SwapViews$1 -> com.coleman.kingword.aa:
     void onAnimationStart(android.view.animation.Animation) -> onAnimationStart
     void onAnimationRepeat(android.view.animation.Animation) -> onAnimationRepeat
     void onAnimationEnd(android.view.animation.Animation) -> onAnimationEnd
+com.coleman.kingword.ReviewSettings -> com.coleman.kingword.ReviewSettings:
+    java.lang.String TAG -> a
+    android.preference.Preference time1 -> b
+    android.preference.Preference time2 -> c
+    android.preference.Preference time3 -> d
+    android.preference.CheckBoxPreference cbpre -> e
+    java.text.SimpleDateFormat format -> f
+    void onCreate(android.os.Bundle) -> onCreate
+    void initUI() -> b
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+    void checkFixedModeSelect() -> c
+    void checkDepandency() -> d
+    void showSetReviewTime(android.preference.Preference,int,java.lang.String) -> a
+    java.text.SimpleDateFormat access$0() -> a
+com.coleman.kingword.ReviewSettings$1 -> com.coleman.kingword.am:
+    com.coleman.kingword.ReviewSettings this$0 -> a
+    android.preference.Preference val$pre -> b
+    int val$which -> c
+    void onTimeSet(android.widget.TimePicker,int,int) -> onTimeSet
+com.coleman.kingword.Settings -> com.coleman.kingword.Settings:
+    void onCreate(android.os.Bundle) -> onCreate
 com.coleman.kingword.SettingsActivity -> com.coleman.kingword.SettingsActivity:
     android.widget.ListView listView -> a
     com.coleman.kingword.SettingsActivity$SettingsAdapter adapter -> b
@@ -514,7 +535,7 @@ com.coleman.kingword.SettingsActivity -> com.coleman.kingword.SettingsActivity:
     void access$16(com.coleman.kingword.SettingsActivity,android.content.Context,boolean) -> a
     void access$17(com.coleman.kingword.SettingsActivity) -> k
     void access$18(com.coleman.kingword.SettingsActivity,int,java.lang.String) -> a
-com.coleman.kingword.SettingsActivity$1 -> com.coleman.kingword.an:
+com.coleman.kingword.SettingsActivity$1 -> com.coleman.kingword.ao:
     com.coleman.kingword.SettingsActivity this$0 -> a
     android.widget.EditText val$et -> b
     void onClick(android.content.DialogInterface,int) -> onClick
@@ -557,47 +578,47 @@ com.coleman.kingword.SettingsActivity$19 -> com.coleman.kingword.g:
     boolean val$toast -> a
     android.content.Context val$context -> b
     void handleMessage(android.os.Message) -> handleMessage
-com.coleman.kingword.SettingsActivity$1Index -> com.coleman.kingword.am:
+com.coleman.kingword.SettingsActivity$1Index -> com.coleman.kingword.an:
     int i -> a
     com.coleman.kingword.SettingsActivity this$0 -> b
-com.coleman.kingword.SettingsActivity$2 -> com.coleman.kingword.ap:
+com.coleman.kingword.SettingsActivity$2 -> com.coleman.kingword.aq:
     com.coleman.kingword.SettingsActivity this$0 -> a
     android.widget.EditText val$et -> b
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.coleman.kingword.SettingsActivity$20 -> com.coleman.kingword.as:
+com.coleman.kingword.SettingsActivity$20 -> com.coleman.kingword.at:
     android.os.Handler val$handler -> a
     void run() -> run
-com.coleman.kingword.SettingsActivity$21 -> com.coleman.kingword.at:
+com.coleman.kingword.SettingsActivity$21 -> com.coleman.kingword.au:
     com.coleman.kingword.SettingsActivity this$0 -> a
     java.lang.String[] val$time -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$22 -> com.coleman.kingword.au:
+com.coleman.kingword.SettingsActivity$22 -> com.coleman.kingword.av:
     com.coleman.kingword.SettingsActivity this$0 -> a
     int val$which -> b
     void onTimeSet(android.widget.TimePicker,int,int) -> onTimeSet
-com.coleman.kingword.SettingsActivity$23 -> com.coleman.kingword.aw:
+com.coleman.kingword.SettingsActivity$23 -> com.coleman.kingword.ay:
     com.coleman.kingword.SettingsActivity this$0 -> a
     java.lang.String[] val$nums -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$3 -> com.coleman.kingword.ao:
+com.coleman.kingword.SettingsActivity$3 -> com.coleman.kingword.ap:
     com.coleman.kingword.SettingsActivity this$0 -> a
     android.widget.EditText val$et -> b
     void onClick(android.content.DialogInterface,int) -> onClick
 com.coleman.kingword.SettingsActivity$4 -> com.coleman.kingword.ax:
     com.coleman.kingword.SettingsActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$5 -> com.coleman.kingword.av:
+com.coleman.kingword.SettingsActivity$5 -> com.coleman.kingword.aw:
     com.coleman.kingword.SettingsActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$6 -> com.coleman.kingword.az:
-    com.coleman.kingword.SettingsActivity this$0 -> a
-    java.lang.String[] val$names -> b
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$7 -> com.coleman.kingword.ay:
+com.coleman.kingword.SettingsActivity$6 -> com.coleman.kingword.ba:
     com.coleman.kingword.SettingsActivity this$0 -> a
     java.lang.String[] val$names -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.coleman.kingword.SettingsActivity$8 -> com.coleman.kingword.ar:
+com.coleman.kingword.SettingsActivity$7 -> com.coleman.kingword.az:
+    com.coleman.kingword.SettingsActivity this$0 -> a
+    java.lang.String[] val$names -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.coleman.kingword.SettingsActivity$8 -> com.coleman.kingword.as:
     com.coleman.kingword.SettingsActivity this$0 -> a
     android.widget.RadioButton val$radioSub -> b
     android.widget.RadioButton val$radioReview -> c
@@ -608,7 +629,7 @@ com.coleman.kingword.SettingsActivity$8 -> com.coleman.kingword.ar:
     com.coleman.kingword.SettingsActivity$1Index val$selectIndex -> h
     android.widget.ArrayAdapter val$listViewAdapter -> i
     void onClick(android.view.View) -> onClick
-com.coleman.kingword.SettingsActivity$9 -> com.coleman.kingword.aq:
+com.coleman.kingword.SettingsActivity$9 -> com.coleman.kingword.ar:
     com.coleman.kingword.SettingsActivity this$0 -> a
     java.util.ArrayList val$list -> b
     java.lang.String[] val$spinnerArr -> c
@@ -1337,6 +1358,7 @@ com.coleman.util.Config -> com.coleman.util.b:
     boolean isSimulator(android.content.Context) -> a
     boolean isExternalMediaMounted() -> a
     java.lang.String getDeviceId(android.content.Context) -> b
+    java.lang.String getDefaultSharedPreferenceName(android.content.Context) -> c
 com.coleman.util.ConvertUtils -> com.coleman.util.i:
     int unsignedByteToInt(byte) -> a
     long unsigned4BytesToInt(byte[],int) -> a
