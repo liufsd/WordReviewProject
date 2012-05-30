@@ -45,9 +45,12 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
 
     private void initUI() {
         String notSet = getString(R.string.not_set);
-        String t1 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME1, notSet);
-        String t2 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME2, notSet);
-        String t3 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME3, notSet);
+        String t1 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME1,
+                notSet);
+        String t2 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME2,
+                notSet);
+        String t3 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME3,
+                notSet);
         time1.setTitle(t1);
         time2.setTitle(t2);
         time3.setTitle(t3);
@@ -83,11 +86,15 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
     }
 
     private void checkFixedModeSelect() {
+        for (int j = 0; j < 3; j++) {
+            EbbinghausReminder.removeRepeatNotifaction(ReviewSettings.this, j);
+        }
+
         if (cbpre.isChecked()) {
             String notSet = getString(R.string.not_set);
-            String t1 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME1, notSet);
-            String t2 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME2, notSet);
-            String t3 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME3, notSet);
+            String t1 = AppSettings.getString(AppSettings.TIME1, notSet);
+            String t2 = AppSettings.getString(AppSettings.TIME2, notSet);
+            String t3 = AppSettings.getString(AppSettings.TIME3, notSet);
             if (!notSet.equals(t1)) {
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, 0, t1);
             }
@@ -96,10 +103,6 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
             }
             if (!notSet.equals(t3)) {
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, 2, t3);
-            }
-        } else {
-            for (int j = 0; j < 3; j++) {
-                EbbinghausReminder.removeRepeatNotifaction(ReviewSettings.this, j);
             }
         }
     }
@@ -121,8 +124,7 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
                 String strTime = format.format(c.getTime());
                 pre.setTitle(strTime);
                 pre.setSummary(String.format(getString(R.string.fixed_time_hint), strTime));
-                getPreferenceScreen().getSharedPreferences().edit()
-                        .putString(pre.getKey(), strTime).commit();
+                AppSettings.saveString(pre.getKey(), strTime);
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, which, strTime);
                 Log.d(TAG, "set new review time: " + strTime);
             }

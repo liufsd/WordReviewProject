@@ -122,7 +122,7 @@ public class EbbinghausReminder {
         Intent intent = new Intent("review_time_" + which);
         intent.putExtra("type", WordListAccessor.REVIEW_LIST);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         int idx = time.indexOf(":");
         int h = Integer.parseInt(time.substring(0, idx));

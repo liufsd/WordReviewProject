@@ -56,7 +56,9 @@ import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.wordlist.WordAccessor;
 import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -523,6 +525,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     public void onBackPressed() {
+        if (sliceListType == WordListAccessor.REVIEW_LIST) {
+            startActivity(new Intent(this, WordlistTabActivity.class));
+        }
         super.finish();
     }
 
