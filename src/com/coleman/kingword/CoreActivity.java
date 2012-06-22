@@ -54,11 +54,10 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.WordAccessor;
 import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
-import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
-import com.coleman.kingword.wordlist.WordListActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -138,7 +137,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        anim = Anim.getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE, Anim.ANIM_FADE.getType()));
+        anim = Anim.getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE_KEY, Anim.ANIM_FADE.getType()));
         initView();
 
         Intent intent = getIntent();
@@ -159,6 +158,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
             case WordListAccessor.REVIEW_LIST:
+                AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
+                        AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 wordlist = new WordListAccessor(sliceListType);
@@ -259,7 +260,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     default:// ignore
                         break;
                 }
-                AppSettings.saveInt(AppSettings.ANIM_TYPE, anim.getType());
+                AppSettings.saveInt(AppSettings.ANIM_TYPE_KEY, anim.getType());
             }
         };
         new AlertDialog.Builder(this).setItems(R.array.anim_select, listener).show();

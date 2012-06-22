@@ -2,8 +2,6 @@
 package com.coleman.kingword;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,18 +21,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.coleman.http.json.bean.VersionCheckReq;
-import com.coleman.http.json.bean.VersionCheckResp;
-import com.coleman.http.json.bussiness.WorkManager;
-import com.coleman.http.json.connection.SLRequest;
-import com.coleman.http.json.connection.SLResponse;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.wordlist.WordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
+import com.coleman.ojm.bean.LoginReq;
+import com.coleman.ojm.bean.LoginResp;
+import com.coleman.ojm.bean.VersionCheckReq;
+import com.coleman.ojm.bean.VersionCheckResp;
+import com.coleman.ojm.bussiness.WorkManager;
+import com.coleman.ojm.core.Observer;
+import com.coleman.ojm.http.SLRequest;
 import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.DialogUtil;
 import com.coleman.util.Log;
 import com.coleman.util.Log.LogType;
@@ -71,11 +72,23 @@ public class WelcomeActivity extends Activity implements Observer {
 
         // initial the environment
         init();
+        // login
+        login();
         // test versionUpgrade
         if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
             upgradeCheck();
         }
 
+    }
+
+    private void login() {
+        LoginReq req = InfoGather.gatherLoginInfo(this);
+        req.setIMEI(Config.getDeviceId(this));
+        req.setUserName(Config.getDeviceId(this));
+        req.setPassword("");
+        SLRequest<LoginReq> slReq = new SLRequest<LoginReq>(req);
+        slReq.addObserver(this);
+        WorkManager.getInstance().login(slReq);
     }
 
     private void upgradeCheck() {
@@ -90,7 +103,8 @@ public class WelcomeActivity extends Activity implements Observer {
             req.setVersionCode(appVersionCode);
             req.setVersionType(appVersionName);
             SLRequest<VersionCheckReq> slReq = new SLRequest<VersionCheckReq>(req);
-            WorkManager.getInstance().versionUpgrade(this, slReq);
+            slReq.addObserver(this);
+            WorkManager.getInstance().versionUpgrade(slReq);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,7 +211,8 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private void userCheck() {
         upgradeCheck();
-        versionCheckDialog = DialogUtil.showLoadingDialog(this, R.string.version_checking);
+        // versionCheckDialog = DialogUtil.showLoadingDialog(this,
+        // R.string.version_checking);
         userCheck = true;
     }
 
@@ -323,8 +338,11 @@ public class WelcomeActivity extends Activity implements Observer {
             }
         }
         curLev = String.format(curLev, levelNames[index], count);
+        // ******************************************
         // check if send a msg to author
-        InfoGather.checkLevelUpgrade(this, index);
+        // this method is deprecated
+        // InfoGather.checkLevelUpgrade(this, index);
+        // ******************************************
         index++;
         curTV.setText(curLev);
         if (index >= levelNames.length) {
@@ -336,39 +354,20 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        if (!(observable instanceof SLResponse<?>)) {
-            return;
-        }
-        if (((SLResponse<?>) observable).getResponse() instanceof VersionCheckResp) {
-            final VersionCheckResp bean = (VersionCheckResp) ((SLResponse<?>) observable)
-                    .getResponse();
-            if (data == null) {
-                int rc = bean.getResultCode();
-                if (rc == 0) {
-                    if (bean.getNewVersionCode() != -1) {
-                        new AlertDialog.Builder(this)
-                                .setTitle(R.string.upgrade_tip)
-                                .setMessage(bean.getDescription())
-                                .setPositiveButton(R.string.ok,
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                UpgradeService.downloadVersion(
-                                                        WelcomeActivity.this, bean);
-                                            }
-                                        }).setNegativeButton(R.string.cancel, null).show();
-                    } else {
-                        if (userCheck) {
-                            dismiss(versionCheckDialog);
-                            userCheck = false;
-                            DialogUtil.showServerMessage(this, bean.getDescription());
-                        } else {
-                            Log.i(TAG,
-                                    "===coleman-debug-bean.getDescription(): "
-                                            + bean.getDescription());
-                        }
-                    }
+    public void update(Object data) {
+        if (data instanceof VersionCheckResp) {
+            final VersionCheckResp bean = (VersionCheckResp) data;
+            int rc = bean.getResultCode();
+            if (rc == 0) {
+                if (bean.getNewVersionCode() != -1) {
+                    new AlertDialog.Builder(this).setTitle(R.string.upgrade_tip)
+                            .setMessage(bean.getDescription())
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    UpgradeService.downloadVersion(WelcomeActivity.this, bean);
+                                }
+                            }).setNegativeButton(R.string.cancel, null).show();
                 } else {
                     if (userCheck) {
                         dismiss(versionCheckDialog);
@@ -384,12 +383,17 @@ public class WelcomeActivity extends Activity implements Observer {
                 if (userCheck) {
                     dismiss(versionCheckDialog);
                     userCheck = false;
-                    DialogUtil.showErrorMessage(this, data);
+                    DialogUtil.showErrorMessage(this, bean.getDescription());
                 } else {
                     Log.i(TAG, "===coleman-debug-bean.getDescription(): " + data == null ? ""
                             : data.toString());
                 }
             }
+        } else if (data instanceof LoginResp) {
+            final LoginResp bean = (LoginResp) data;
+            int rc = bean.getResultCode();
+            String desc = bean.getDescription();
+            Log.i(TAG, "===coleman-debug-rc: " + rc + " desc:" + desc);
         }
     }
 

@@ -1,0 +1,11 @@
+package com.coleman.ojm.exception;
+
+public class UnknownTypeException extends Exception
+{
+    private static final long serialVersionUID = 8395496083454464201L;
+    
+    public UnknownTypeException(String typeName)
+    {
+        super("Not recognized filed type: " + typeName);
+    }
+}

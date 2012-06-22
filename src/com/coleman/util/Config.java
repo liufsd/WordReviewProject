@@ -16,9 +16,15 @@
 
 package com.coleman.util;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * Build configuration. The constants in this class vary depending on release
@@ -54,4 +60,24 @@ public final class Config {
         return tm.getDeviceId();
     }
 
+    public static String getTopActivityClassName() {
+        ActivityManager am = (ActivityManager) MyApp.context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        String cName = cn.getClassName();
+        return cName;
+    }
+
+    public static int getVersionCode() {
+        PackageManager manager = MyApp.context.getPackageManager();
+        PackageInfo info = null;
+        int appVersionCode = -1;
+        try {
+            info = manager.getPackageInfo(MyApp.context.getPackageName(), 0);
+            appVersionCode = info.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return appVersionCode;
+    }
 }

@@ -156,7 +156,7 @@ public class EbbinghausReminder {
                 AppSettings.TIME1, AppSettings.TIME2, AppSettings.TIME3
         };
         AppSettings.saveBoolean(AppSettings.FIXED_TIME_REVIEW, true);
-        for (int i = 0; i < AppSettings.REVIEW_TIME_KEY.length; i++) {
+        for (int i = 0; i < keys.length; i++) {
             AppSettings.saveString(keys[i], time[i]);
             if (!context.getString(R.string.not_set).equals(time[i])) {
                 setRepeatNotifaction(context, i, time[i]);
@@ -171,10 +171,12 @@ public class EbbinghausReminder {
      * @param context
      */
     public static void setNotifactionAfterReboot(Context context) {
-        String time[] = new String[AppSettings.REVIEW_TIME_KEY.length];
+        String keys[] = new String[] {
+                AppSettings.TIME1, AppSettings.TIME2, AppSettings.TIME3
+        };
+        String time[] = new String[keys.length];
         for (int i = 0; i < time.length; i++) {
-            time[i] = AppSettings.getString(AppSettings.REVIEW_TIME_KEY[i],
-                    context.getString(R.string.not_set));
+            time[i] = AppSettings.getString(keys[i], context.getString(R.string.not_set));
             removeRepeatNotifaction(context, i);
             if (!context.getString(R.string.not_set).equals(time[i])) {
                 setRepeatNotifaction(context, i, time[i]);

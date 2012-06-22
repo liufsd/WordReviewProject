@@ -8,16 +8,29 @@
 
 package com.coleman.util;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.coleman.kingword.dict.DictManager;
-
+/**
+ * 在res/xml中定义的参数必须也定义到AppSettings中
+ * 
+ * @author coleman
+ * @version [version, Jun 21, 2012]
+ * @see [relevant class/method]
+ * @since [product/module version]
+ */
 public class AppSettings {
     public static final String TAG = "AppSettings";
 
-    public static final String ANIM_TYPE = "anim_type";
+    /* 升级数据库需要保存的参数 */
+    /**
+     * 默认值是6，其值对应软件的版本号。
+     */
+    public static final String SAVED_DB_VERSION_KEY = "saved_db_version_key";
+
+    /* CoreActivity中需要保存的参数 */
+
+    public static final String ANIM_TYPE_KEY = "anim_type";
 
     public static final String IS_NIGHT_MODE_KEY = "isNightMode";
 
@@ -39,44 +52,21 @@ public class AppSettings {
             }
     };
 
-    public static final String REVIEW_TIME_KEY[] = new String[] {
-            "review_time_1", "review_time_2", "review_time_3"
-    };
-
-    public static final String LAST_SEND_GET_PW_REQUEST_TIME_KEY = "last_send_get_pw_request_time";
-
-    public static final String SAVED_PW_KEY = "saved_pw_key";
-
-    public static final String LOG_TYPE_KEY = "log_type";
-
-    /**
-     * if less than cur level, upgrade and send a message to author.
-     */
-    public static final String MARK_SEND_MSG_LEVEL_KEY = "mark_send_msg_level";
-
-    public static final String DICTS_KEY = "dicts";
-
-    public static final String VIEW_SUMMARY_INFO_KEY = "view_summary_info";
-
-    public static final String VIEW_DETAILED_INFO_KEY = "view_detailed_info";
-
     public static final String SAVE_CACHE_KEY = "save_cache";
 
-    /* Following key is used in settings.xml and review_settings.xml */
+    /* WelcomeActivity中需要保存的参数 */
+    public static final String LOG_TYPE_KEY = "log_type";
+
+    // if less than cur level, upgrade and send a message to author.
+    public static final String MARK_SEND_MSG_LEVEL_KEY = "mark_send_msg_level";
+
+    /* settings.xml 中定义的KEY */
 
     public static final String SPLIT = "split";
 
     public static final String LEVEL = "level";
 
     public static final String VERSION_CHECK = "version_check";
-
-    public static final String FIXED_TIME_REVIEW = "fixed_time_review";
-
-    public static final String TIME3 = "time3";
-
-    public static final String TIME2 = "time2";
-
-    public static final String TIME1 = "time1";
 
     public static final String VIEW_METHOD = "view_method";
 
@@ -85,6 +75,15 @@ public class AppSettings {
     public static final String RESTORE = "restore";
 
     public static final String BACKUP = "backup";
+
+    /* review_settings.xml 中定义的KEY */
+    public static final String FIXED_TIME_REVIEW = "fixed_time_review";
+
+    public static final String TIME3 = "time3";
+
+    public static final String TIME2 = "time2";
+
+    public static final String TIME1 = "time1";
 
     public static void saveBoolean(String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
@@ -180,29 +179,4 @@ public class AppSettings {
         return PreferenceManager.getDefaultSharedPreferences(MyApp.context);
     }
 
-    public static String getCurLibraryString(Context context) {
-        String str = getString(DICTS_KEY, "");
-        String temps[] = str.split(";");
-        for (String string : temps) {
-            String subs[] = string.split(",");
-            int type = Integer.parseInt(subs[4]);
-            if (type == 1 || type == 3) {
-                return subs[0];
-            }
-        }
-        return DictManager.DEFAULT_CUR_LIB;
-    }
-
-    public static String getMoreLibraryString(Context context) {
-        String str = getString(DICTS_KEY, "");
-        String temps[] = str.split(";");
-        for (String string : temps) {
-            String subs[] = string.split(",");
-            int type = Integer.parseInt(subs[4]);
-            if (type == 2 || type == 3) {
-                return subs[0];
-            }
-        }
-        return DictManager.DEFAULT_MORE_LIB;
-    }
 }

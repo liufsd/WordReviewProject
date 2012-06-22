@@ -52,7 +52,8 @@ public class KingWordReceiver extends BroadcastReceiver {
         String cName = cn.getClassName();
         Log.d(TAG, "##############" + cn);
 
-        if (!needReview(context)) {
+        int needReview = needReview(context);
+        if (needReview <= 0) {
             Log.d(TAG, "##############there is no words need to be reviewed!");
             if (cName != null && cName.contains("com.coleman.kingword")) {
                 Toast.makeText(context, context.getString(R.string.no_need_review),
@@ -66,7 +67,8 @@ public class KingWordReceiver extends BroadcastReceiver {
                 || EbbinghausActivityAsDialog.class.getName().equals(cName)) {
             Intent it = new Intent(context, EbbinghausActivityAsDialog.class);
             it.putExtra("title", context.getString(R.string.review));
-            it.putExtra("message", context.getString(R.string.review_notify));
+            it.putExtra("message",
+                    String.format(context.getString(R.string.review_msg), needReview));
             it.putExtra("positive", context.getString(R.string.ok));
             it.putExtra("negative", context.getString(R.string.delay));
             it.putExtra("type", type);
@@ -82,7 +84,7 @@ public class KingWordReceiver extends BroadcastReceiver {
             Notification notification = new Notification(R.drawable.icon,
                     context.getString(R.string.review), System.currentTimeMillis());
             notification.setLatestEventInfo(context, context.getString(R.string.review),
-                    context.getString(R.string.review_notify), sender);
+                    String.format(context.getString(R.string.review_msg), needReview), sender);
             notification.flags |= Notification.FLAG_AUTO_CANCEL;
             notification.defaults |= Notification.DEFAULT_SOUND;
             manager.notify(hashCode(), notification);
@@ -119,8 +121,8 @@ public class KingWordReceiver extends BroadcastReceiver {
         return msg;
     }
 
-    private boolean needReview(Context context) {
-        boolean needed = false;
+    private int needReview(Context context) {
+        int count = 0;
         long ct = System.currentTimeMillis();
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         String selection = (hour >= 18 ? THistory.NEW_WORD + " = 2 or " : "") + "("
@@ -141,13 +143,11 @@ public class KingWordReceiver extends BroadcastReceiver {
         Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, null, selection, null,
                 null);
         Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct));
-        if (c.moveToFirst()) {
-            needed = true;
-        }
+        count = c.getCount();
         if (c != null) {
             c.close();
             c = null;
         }
-        return needed;
+        return count;
     }
 }

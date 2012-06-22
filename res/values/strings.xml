@@ -28,7 +28,7 @@
     <string name="delay">延迟10分钟</string>
     <string formatted="false" name="review_reminder">距离你上次学习已经有%s，单击进入复习模式！
 	</string>
-    <string name="review_notify">你有一些单词需要复习了！</string>
+    <string name="review_msg">你有%s个单词需要复习！</string>
     <string name="hour">小时</string>
     <string name="day">天</string>
     <string name="backup">备份</string>
@@ -64,7 +64,7 @@
     <string name="set_split_num_hint">设置单元单词数量</string>
     <string name="split_num_settings">每单元单词数量</string>
     <string name="set_review_time">设置复习时间点</string>
-    <string name="review_time_settings">复习</string>
+    <string name="review_time_settings">复习设定</string>
     <string name="review_set">复习设置</string>
     <string name="fixed_time_mode">定时模式</string>
     <string name="ebbinghaus_mode">艾宾浩斯模式</string>
@@ -174,7 +174,7 @@
     <string formatted="false" name="loop_info">第%d轮（%d/%d词）</string>
     <string formatted="false" name="enter_next_loop">进入第%d轮！</string>
     <string name="view_method_dialog_title">设置查看方式</string>
-    <string name="view_method_settings">学习</string>
+    <string name="view_method_settings">学习设定</string>
     <string name="sub_settings">查看单元</string>
     <string name="review_settings">查看复习</string>
     <string name="newbook_settings">查看生词</string>
@@ -241,5 +241,6 @@
     <string name="backup_restore_settings">备份恢复设置</string>
     <string name="no_new_word_found">生词本中没有需要学习的单词！</string>
     <string name="no_ignore_word_found">过滤列表中没有单词！</string>
+    <string name="upgrade_db_failed">数据库升级失败，请卸载后重新安装软件！</string>
 
 </resources>

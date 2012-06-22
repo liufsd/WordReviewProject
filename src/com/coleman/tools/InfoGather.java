@@ -14,6 +14,7 @@ import android.telephony.TelephonyManager;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.ojm.bean.LoginReq;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Log;
@@ -112,6 +113,45 @@ public class InfoGather {
                 }
             };
         }.start();
+    }
+
+    public static LoginReq gatherLoginInfo(Context context) {
+        LoginReq req = new LoginReq();
+        try {
+            // 1. user phone info
+            String phoneInfo = Build.MODEL;
+            req.setModel(phoneInfo);
+
+            // 2. user first start application time
+            long firstTime = AppSettings.getLong(AppSettings.FIRST_STARTED_TIME_KEY, 0);
+            req.setInstalledTime(firstTime);
+
+            // 3. user start application total times
+            int totalTimes = AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1);
+            req.setStartTimes(totalTimes);
+
+            // 4. user learning words' total number
+            String curLevel = getCurLevelInfo(context);
+            req.setCurrentLevel(curLevel);
+
+            // 5. get phone number
+            TelephonyManager tm = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            String phoneNum = tm.getLine1Number();
+            req.setPhoneNumber(phoneNum);
+
+            // release version code, e.g. 2.1
+            String version = Build.VERSION.RELEASE;
+            req.setVersion(version);
+
+            // compile version, e.g. generic
+            String device = Build.DEVICE;
+            req.setDevice(device);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return req;
     }
 
     private static String gatherDetail(Context context) {

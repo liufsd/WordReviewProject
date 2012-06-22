@@ -10,8 +10,6 @@ import com.coleman.kingword.provider.KingWord.TDict;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList;
-import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
-import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.util.Log;
 
 public class KingWordDBHepler extends SQLiteOpenHelper {
@@ -45,10 +43,10 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
         // create trigger
         // handle delete word list
-        db.execSQL("CREATE TRIGGER sub_list AFTER DELETE ON " + TWordList.TABLE_NAME + " " + "BEGIN "
-                + "  DELETE FROM " + TSubWordList.TABLE_NAME + "  WHERE "
+        db.execSQL("CREATE TRIGGER sub_list AFTER DELETE ON " + TWordList.TABLE_NAME + " "
+                + "BEGIN " + "  DELETE FROM " + TSubWordList.TABLE_NAME + "  WHERE "
                 + TSubWordList.WORD_LIST_ID + "=old._id;" + "END;");
-        
+
         Log.d(TAG, "=========================db onCreate");
     }
 

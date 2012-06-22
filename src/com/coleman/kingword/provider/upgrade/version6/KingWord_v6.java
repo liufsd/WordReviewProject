@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.provider;
+package com.coleman.kingword.provider.upgrade.version6;
 
 /*
  * Name        : Pet.java
@@ -12,10 +12,12 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import com.coleman.kingword.provider.KingWordProvider;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public class KingWord {
+public class KingWord_v6 {
     public static final HashMap<String, HashMap<String, String>> maps = new HashMap<String, HashMap<String, String>>();
 
     public static final class TDict implements BaseColumns {
@@ -245,33 +247,10 @@ public class KingWord {
 
         public static final String LEVEL = "level";
 
-        /**
-         * 浏览单词的方式，单词以a－z排序还是数据库id排序
-         * 
-         * @v7 added
-         */
-        public static final String METHOD = "method";
-
-        /**
-         * 浏览的循环计数
-         * 
-         * @v7 added
-         */
-        public static final String LOOP = "loop";
-
-        /**
-         * 某次循环查看的单词位置
-         * 
-         * @v7 added
-         */
-        public static final String POSITION = "position";
-
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
                 + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
-                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " integer ,"
-                + TSubWordList.LOOP + " integer ," + TSubWordList.POSITION + " integer ,"
-                + TSubWordList.LEVEL + " integer )";
+                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.LEVEL + " integer )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -282,7 +261,6 @@ public class KingWord {
             projectionMap.put(_ID, _ID);
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
             projectionMap.put(LEVEL, LEVEL);
-
         }
 
     }

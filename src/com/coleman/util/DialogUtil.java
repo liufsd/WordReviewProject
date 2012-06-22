@@ -9,8 +9,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.text.TextUtils;
 
-import com.coleman.http.json.connection.HttpHandler;
 import com.coleman.kingword.R;
+import com.coleman.ojm.http.HttpHandler;
 
 public class DialogUtil
 {

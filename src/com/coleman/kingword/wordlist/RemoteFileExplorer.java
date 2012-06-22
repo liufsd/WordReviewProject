@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,15 +31,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coleman.http.json.annotation.RequestObject;
-import com.coleman.http.json.bean.RFile;
-import com.coleman.http.json.bean.VersionCheckReq;
-import com.coleman.http.json.bean.WordlistReq;
-import com.coleman.http.json.bean.WordlistResp;
-import com.coleman.http.json.bussiness.WorkManager;
-import com.coleman.http.json.connection.SLRequest;
-import com.coleman.http.json.connection.SLResponse;
 import com.coleman.kingword.R;
+import com.coleman.ojm.annotation.RequestObject;
+import com.coleman.ojm.bean.RFile;
+import com.coleman.ojm.bean.VersionCheckReq;
+import com.coleman.ojm.bean.WordlistReq;
+import com.coleman.ojm.bean.WordlistResp;
+import com.coleman.ojm.bussiness.WorkManager;
+import com.coleman.ojm.core.Observable;
+import com.coleman.ojm.core.Observer;
+import com.coleman.ojm.http.SLRequest;
+import com.coleman.ojm.http.SLResponse;
 import com.coleman.util.Config;
 import com.coleman.util.Log;
 import com.coleman.util.ToastUtil;
@@ -92,7 +92,8 @@ public class RemoteFileExplorer extends Activity implements Observer {
             WordlistReq req = new WordlistReq();
             req.setType(2);
             SLRequest<WordlistReq> slReq = new SLRequest<WordlistReq>(req);
-            WorkManager.getInstance().getWordlist(observer, slReq);
+            slReq.addObserver(observer);
+            WorkManager.getInstance().getWordlist(slReq);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -269,25 +270,17 @@ public class RemoteFileExplorer extends Activity implements Observer {
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        if (!(observable instanceof SLResponse<?>)) {
-            return;
-        }
-        if (((SLResponse<?>) observable).getResponse() instanceof WordlistResp) {
-            final WordlistResp bean = (WordlistResp) ((SLResponse<?>) observable).getResponse();
-            if (data == null) {
-                int rc = bean.getResultCode();
-                if (rc == 0) {
-                    root = bean.getRfile();
-                    rAdapter = new RFileAdapter(this, root.getChirldren());
-                    lv.setAdapter(rAdapter);
-                    lv.setOnItemClickListener(rAdapter);
-                    rAdapter.notifyDataSetChanged();
-                    pb.setVisibility(View.GONE);
-                } else {
-                    Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
-                }
-
+    public void update(Object data) {
+        if (data instanceof WordlistResp) {
+            final WordlistResp bean = (WordlistResp) data;
+            int rc = bean.getResultCode();
+            if (rc == 0) {
+                root = bean.getRfile();
+                rAdapter = new RFileAdapter(this, root.getChirldren());
+                lv.setAdapter(rAdapter);
+                lv.setOnItemClickListener(rAdapter);
+                rAdapter.notifyDataSetChanged();
+                pb.setVisibility(View.GONE);
             } else {
                 Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
             }

@@ -10,9 +10,9 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.coleman.http.json.annotation.RequestObject;
-import com.coleman.http.json.bean.VersionCheckReq;
-import com.coleman.http.json.bean.VersionCheckResp;
+import com.coleman.ojm.annotation.RequestObject;
+import com.coleman.ojm.bean.VersionCheckReq;
+import com.coleman.ojm.bean.VersionCheckResp;
 import com.coleman.util.Config;
 import com.coleman.util.FileTransfer;
 import com.coleman.util.Log;
