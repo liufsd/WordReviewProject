@@ -22,10 +22,13 @@ import javax.mail.internet.MimeMultipart;
 
 import android.text.TextUtils;
 
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class GMailSender extends javax.mail.Authenticator {
     private static final String TAG = "GMailSender";
+
+    private Log Log = Config.getLog();
 
     private String mailhost = "smtp.gmail.com";
 
@@ -42,9 +45,9 @@ public class GMailSender extends javax.mail.Authenticator {
         this.mPassword = password;
 
         Properties props = new Properties();
-        
+
         // props.setProperty("mail.transport.protocol", "smtp");
-        
+
         props.put("mail.smtp.host", mailhost);
         // port 465 is for ssl, 587 is for starttls, need to enable
         props.put("mail.smtp.port", "587");
@@ -86,7 +89,7 @@ public class GMailSender extends javax.mail.Authenticator {
                 message.setContent(allMultipart);
                 message.saveChanges();
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+                Log.e(TAG, e);
             }
         }
         // judge multi-recipient or one recipient
@@ -98,7 +101,7 @@ public class GMailSender extends javax.mail.Authenticator {
             session.setDebug(false);
             Transport.send(message);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.e(TAG, e);
         }
     }
 

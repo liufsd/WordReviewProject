@@ -30,15 +30,16 @@ import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
-import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.SubWordListAccessor;
+import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
-import com.coleman.util.Log;
 
 public class Settings extends PreferenceActivity implements OnPreferenceClickListener {
 
-
     protected static final String TAG = Settings.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private Preference prefViewMethod, prefDatabaseSet, prefBackup, prefRestore;
 
@@ -351,7 +352,8 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         final ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(this,
                 R.layout.textview_item_white, list);
         final Index selectIndex = new Index();
-        String viewMtd = AppSettings.getString(AppSettings.VIEW_METHOD, WordListAccessor.DEFAULT_VIEW_METHOD);
+        String viewMtd = AppSettings.getString(AppSettings.VIEW_METHOD,
+                SubWordListAccessor.DEFAULT_VIEW_METHOD);
         String scrap[] = viewMtd.split("#");
         for (int i = 0; i < scrap.length; i++) {
             String ss[] = scrap[i].split(",");

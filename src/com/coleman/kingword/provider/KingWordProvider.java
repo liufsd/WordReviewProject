@@ -14,18 +14,21 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.coleman.kingword.provider.KingWord.TDict;
+import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.provider.KingWord.TWordList;
-import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class KingWordProvider extends ContentProvider {
     private KingWordDBHepler dbHelper;
 
     public static final String AUTHORITY = "kingword";
 
-    private static final String TAG = "KingWordProvider";
+    private static final String TAG = KingWordProvider.class.getName();
+
+    private static Log Log = Config.getLog();
 
     @Override
     public boolean onCreate() {

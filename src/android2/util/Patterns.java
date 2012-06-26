@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.util;
+package android2.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

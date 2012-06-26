@@ -32,8 +32,9 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 import com.coleman.util.ConvertUtils;
-import com.coleman.util.Log;
 
 /**
  * Dictionary index entry structure.
@@ -50,7 +51,9 @@ import com.coleman.util.Log;
  */
 public class DictIndex {
 
-    private static final String TAG = "DictIndex";
+    private static final String TAG = DictIndex.class.getName();
+
+    private static Log Log = Config.getLog();
 
     /**
      * word string

@@ -2,15 +2,17 @@
 package com.coleman.kingword.provider.upgrade;
 
 import com.coleman.kingword.R;
+import com.coleman.log.Log;
 import com.coleman.ojm.core.Observable;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
-import com.coleman.util.Log;
 import com.coleman.util.MyApp;
 import com.coleman.util.ThreadUtils;
 
 public class UpgradeManager extends Observable {
-    protected static final String TAG = null;
+    protected static final String TAG = UpgradeManager.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static UpgradeManager manager;
 

@@ -19,12 +19,15 @@ import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.provider.KingWordDBHepler;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.model.WordList;
+import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
+import com.coleman.util.Config;
 import com.coleman.util.GeneralParser;
-import com.coleman.util.Log;
 
 public class WordListManager {
-    private static final String TAG = "WordListManager";
+    private static final String TAG = WordListManager.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static WordListManager manager;
 
@@ -132,8 +135,7 @@ public class WordListManager {
         // int suggest =
         // context.getSharedPreferences(Config.getDefaultSharedPreferenceName(context),
         // 0).getInt(AppSettings.SPLIT_NUM_KEY, DEFAULT_SPLIT_NUM);
-        String strSuggest = AppSettings
-                .getString(AppSettings.SPLIT, "" + DEFAULT_SPLIT_NUM);
+        String strSuggest = AppSettings.getString(AppSettings.SPLIT, "" + DEFAULT_SPLIT_NUM);
         int suggest = Integer.parseInt(strSuggest);
         ArrayList<List<String>> sublist = new ArrayList<List<String>>();
         switch (wordlist.set_method) {

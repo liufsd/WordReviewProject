@@ -56,15 +56,18 @@ import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.WordAccessor;
-import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
+import com.coleman.util.Config;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnInitListener, OnLongClickListener {
-    private static final String TAG = "CoreActivity";
+    private static final String TAG = CoreActivity.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static final int SET_COLOR = 0;
 
@@ -78,7 +81,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ParaphraseAdapter adapter;
 
-    private WordListAccessor wordlist;
+    private SubWordListAccessor sublistAccessor;
 
     private LinearLayout container;
 
@@ -137,35 +140,36 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list);
-        anim = Anim.getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE_KEY, Anim.ANIM_FADE.getType()));
+        anim = Anim
+                .getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE_KEY, Anim.ANIM_FADE.getType()));
         initView();
 
         Intent intent = getIntent();
-        sliceListType = intent.getByteExtra("type", WordListAccessor.NULL_TYPE);
+        sliceListType = intent.getByteExtra("type", SubWordListAccessor.NULL_TYPE);
         switch (sliceListType) {
-            case WordListAccessor.SUB_WORD_LIST:
+            case SubWordListAccessor.SUB_WORD_LIST:
                 SubWordList info = getIntent().getParcelableExtra("subinfo");
                 Log.d(TAG, "info:" + info);
-                wordlist = new WordListAccessor(info);
+                sublistAccessor = new SubWordListAccessor(info);
                 new ExpensiveTask(ExpensiveTask.INIT_SUB_WORD_LIST).execute();
                 break;
-            case WordListAccessor.NEW_WORD_BOOK_LIST:
-                wordlist = new WordListAccessor(sliceListType);
+            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
+                sublistAccessor = new SubWordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_NEW_WORD_BOOK_LIST).execute();
                 break;
-            case WordListAccessor.SCAN_LIST:
-                wordlist = new WordListAccessor(sliceListType);
+            case SubWordListAccessor.SCAN_LIST:
+                sublistAccessor = new SubWordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
-            case WordListAccessor.REVIEW_LIST:
+            case SubWordListAccessor.REVIEW_LIST:
                 AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                         AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
-                wordlist = new WordListAccessor(sliceListType);
+                sublistAccessor = new SubWordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
-            case WordListAccessor.RECOVERY_LIST:
+            case SubWordListAccessor.RECOVERY_LIST:
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 new ExpensiveTask(ExpensiveTask.INIT_RECOVERY_LIST).execute();
@@ -212,7 +216,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         } else {
             menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_show);
         }
-        if (sliceListType == WordListAccessor.REVIEW_LIST) {
+        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
             menu.removeItem(R.id.menu_review);
         }
         return true;
@@ -271,7 +275,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private void broadcastReview() {
         Intent intent = new Intent(this, KingWordReceiver.class);
-        intent.putExtra("type", WordListAccessor.REVIEW_LIST);
+        intent.putExtra("type", SubWordListAccessor.REVIEW_LIST);
         sendBroadcast(intent);
     }
 
@@ -347,7 +351,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         ObjectInputStream ois = null;
         try {
             ois = new ObjectInputStream(new FileInputStream("/sdcard/kingword/obj.save"));
-            wordlist = (WordListAccessor) ois.readObject();
+            sublistAccessor = (SubWordListAccessor) ois.readObject();
             countdownManager = (CountdownManager) ois.readObject();
             countdownManager.setHandler(handler);
             Log.d(TAG, "------------------------load cache");
@@ -365,14 +369,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private void writeCacheObject() {
         if (needWriteCache
-                && (sliceListType == WordListAccessor.SUB_WORD_LIST || sliceListType == WordListAccessor.RECOVERY_LIST)) {
+                && (sliceListType == SubWordListAccessor.SUB_WORD_LIST || sliceListType == SubWordListAccessor.RECOVERY_LIST)) {
             new Thread() {
                 public void run() {
                     ObjectOutputStream oos = null;
                     try {
                         oos = new ObjectOutputStream(new FileOutputStream(
                                 "/sdcard/kingword/obj.save"));
-                        oos.writeObject(wordlist);
+                        oos.writeObject(sublistAccessor);
                         oos.writeObject(countdownManager);
                         AppSettings.saveBoolean(AppSettings.SAVE_CACHE_KEY, true);
                         Log.d(TAG, "------------------------save cache");
@@ -420,25 +424,27 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void updateLoopCount() {
-        if (wordlist.getListType() != WordListAccessor.SUB_WORD_LIST) {
+        if (sublistAccessor.getListType() != SubWordListAccessor.SUB_WORD_LIST) {
             return;
         }
         // loop display control
-        if (!wordlist.allComplete()) {
-            wordlist.loopCount++;
-            if (wordlist.loopCount == wordlist.getCount() - wordlist.getIgnoreCount()) {
-                wordlist.loopIndex++;
+        if (!sublistAccessor.allComplete()) {
+            sublistAccessor.loopCount++;
+            if (sublistAccessor.loopCount == sublistAccessor.getCount()
+                    - sublistAccessor.getIgnoreCount()) {
+                sublistAccessor.loopIndex++;
                 Toast.makeText(
                         this,
                         String.format(getString(R.string.enter_next_loop),
-                                wordlist.getLoopIndex() + 1), Toast.LENGTH_SHORT).show();
-                wordlist.loopCount = 0;
+                                sublistAccessor.getLoopIndex() + 1), Toast.LENGTH_SHORT).show();
+                sublistAccessor.loopCount = 0;
             }
         }
-        Log.d(TAG, "wordlist.getCount():" + wordlist.getCount() + "   wordlist.getIgnoreCount()"
-                + wordlist.getIgnoreCount());
-        loopView.setText(String.format(getString(R.string.loop_info), wordlist.getLoopIndex() + 1,
-                wordlist.getLoopCount() + 1, wordlist.getCount() - wordlist.getIgnoreCount()));
+        Log.d(TAG, "wordlist.getCount():" + sublistAccessor.getCount()
+                + "   wordlist.getIgnoreCount()" + sublistAccessor.getIgnoreCount());
+        loopView.setText(String.format(getString(R.string.loop_info),
+                sublistAccessor.getLoopIndex() + 1, sublistAccessor.getLoopCount() + 1,
+                sublistAccessor.getCount() - sublistAccessor.getIgnoreCount()));
     }
 
     @Override
@@ -526,7 +532,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     public void onBackPressed() {
-        if (sliceListType == WordListAccessor.REVIEW_LIST) {
+        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
             startActivity(new Intent(this, WordlistTabActivity.class));
         }
         super.finish();
@@ -785,7 +791,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private void lookupInDict(WordAccessor worditem) {
         _buflist.clear();
-        _buflist.addAll(wordlist.getDictData(this, worditem));
+        _buflist.addAll(sublistAccessor.getDictData(this, worditem));
     }
 
     public static final byte SUBLIST_REACH_END = 0;
@@ -845,23 +851,24 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void showCompleteStudyDialog() {
         String title = "", msg = "";
         switch (sliceListType) {
-            case WordListAccessor.RECOVERY_LIST:
-            case WordListAccessor.SUB_WORD_LIST: {
-                String str1 = wordlist.getCorrectPercentage() + "%";
-                String str2 = wordlist.computeSubListStudyResult(CoreActivity.this);
+            case SubWordListAccessor.RECOVERY_LIST:
+            case SubWordListAccessor.SUB_WORD_LIST: {
+                sublistAccessor.update(this);
+                String str1 = sublistAccessor.getCorrectPercentage() + "%";
+                String str2 = sublistAccessor.getSubListLevelString(CoreActivity.this);
                 title = getString(R.string.view_sub_complete_title);
                 msg = String.format(getString(R.string.show_complete_study), str1, str2);
                 break;
             }
-            case WordListAccessor.REVIEW_LIST:
+            case SubWordListAccessor.REVIEW_LIST:
                 title = getString(R.string.view_review_complete_title);
                 msg = getString(R.string.review_complete);
                 break;
-            case WordListAccessor.NEW_WORD_BOOK_LIST:
+            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
                 title = getString(R.string.view_newbook_complete_title);
                 msg = getString(R.string.study_new_word_book_end);
                 break;
-            case WordListAccessor.SCAN_LIST:
+            case SubWordListAccessor.SCAN_LIST:
                 title = getString(R.string.view_ignore_complete_title);
                 msg = getString(R.string.study_ignore_list_end);
                 break;
@@ -1086,10 +1093,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case INIT_REVIEW_LIST:
                     bundle = new Bundle();
-                    wordlist.loadReviewWordList(CoreActivity.this);
-                    sliceListType = WordListAccessor.REVIEW_LIST;
-                    if (!wordlist.allComplete()) {
-                        nextWordItem = wordlist.getCurrentWord();
+                    sublistAccessor.loadReviewWordList(CoreActivity.this);
+                    sliceListType = SubWordListAccessor.REVIEW_LIST;
+                    if (!sublistAccessor.allComplete()) {
+                        nextWordItem = sublistAccessor.getCurrentWord();
                         lookupInDict(nextWordItem);
                         bundle.putBoolean("complete", false);
                     } else {
@@ -1099,8 +1106,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_RECOVERY_LIST:
                     readCacheObject();
                     bundle = new Bundle();
-                    if (!wordlist.allComplete()) {
-                        nextWordItem = wordlist.getCurrentWord();
+                    if (!sublistAccessor.allComplete()) {
+                        nextWordItem = sublistAccessor.getCurrentWord();
                         lookupInDict(nextWordItem);
                         bundle.putBoolean("complete", false);
                     } else {
@@ -1111,9 +1118,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
                     bundle = new Bundle();
-                    wordlist.loadWordList(CoreActivity.this);
-                    if (!wordlist.allComplete()) {
-                        nextWordItem = wordlist.getCurrentWord();
+                    sublistAccessor.loadWordList(CoreActivity.this);
+                    if (!sublistAccessor.allComplete()) {
+                        nextWordItem = sublistAccessor.getCurrentWord();
                         lookupInDict(nextWordItem);
                         bundle.putBoolean("complete", false);
                     } else {
@@ -1122,7 +1129,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case UPDATE:
                     bundle = new Bundle();
-                    if (!wordlist.allComplete()) {
+                    if (!sublistAccessor.allComplete()) {
                         nextWordItem.clear();
                         lookupInDict(nextWordItem);
                         bundle.putBoolean("next", true);
@@ -1132,8 +1139,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case LOOKUP:
                     bundle = new Bundle();
-                    if (!wordlist.allComplete()) {
-                        nextWordItem = wordlist.getNext();
+                    if (!sublistAccessor.allComplete()) {
+                        nextWordItem = sublistAccessor.getNext();
                         lookupInDict(nextWordItem);
                         if (autoSpeak) {
                             playVoice(nextWordItem.item.word);
@@ -1215,7 +1222,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         // if recovery list, the countdown manager will be
                         // deserialized
                         if (taskType != INIT_RECOVERY_LIST) {
-                            countdownManager = new CountdownManager(handler, wordlist.getCount());
+                            countdownManager = new CountdownManager(handler,
+                                    sublistAccessor.getCount());
                         }
 
                         list.clear();
@@ -1227,8 +1235,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             textView.setText(nextWordItem.getWord(CoreActivity.this));
                         }
                         adapter.notifyDataSetChanged();
-                        progressBarDay.setProgress(wordlist.getProgress());
-                        progressBarNight.setProgress(wordlist.getProgress());
+                        progressBarDay.setProgress(sublistAccessor.getProgress());
+                        progressBarNight.setProgress(sublistAccessor.getProgress());
                         viewWord.setText(R.string.view_more);
                         if (nextWordItem.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
@@ -1242,8 +1250,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         }
                         if (taskType == INIT_SUB_WORD_LIST || taskType == INIT_RECOVERY_LIST) {
                             loopView.setText(String.format(getString(R.string.loop_info),
-                                    wordlist.getLoopIndex() + 1, wordlist.getLoopCount() + 1,
-                                    wordlist.getCount() - wordlist.getIgnoreCount()));
+                                    sublistAccessor.getLoopIndex() + 1,
+                                    sublistAccessor.getLoopCount() + 1, sublistAccessor.getCount()
+                                            - sublistAccessor.getIgnoreCount()));
                         }
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
@@ -1258,11 +1267,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 }
                 case UPDATE:
                 case LOOKUP:
-                    Log.d(TAG, "progress:" + wordlist.getProgress());
+                    Log.d(TAG, "progress:" + sublistAccessor.getProgress());
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
-                        progressBarDay.setProgress(wordlist.getProgress());
-                        progressBarNight.setProgress(wordlist.getProgress());
+                        progressBarDay.setProgress(sublistAccessor.getProgress());
+                        progressBarNight.setProgress(sublistAccessor.getProgress());
                         switch (anim) {
                             case ANIM_3D:
                                 apply3DAnim(0, 90);
@@ -1315,10 +1324,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             CoreActivity.this,
                             b ? getString(R.string.ignore_success)
                                     : getString(R.string.ignore_failed), Toast.LENGTH_SHORT).show();
-                    if (wordlist.getListType() == WordListAccessor.SUB_WORD_LIST) {
+                    if (sublistAccessor.getListType() == SubWordListAccessor.SUB_WORD_LIST) {
                         loopView.setText(String.format(getString(R.string.loop_info),
-                                wordlist.getLoopIndex() + 1, wordlist.getLoopCount() + 1,
-                                wordlist.getCount() - wordlist.getIgnoreCount()));
+                                sublistAccessor.getLoopIndex() + 1,
+                                sublistAccessor.getLoopCount() + 1, sublistAccessor.getCount()
+                                        - sublistAccessor.getIgnoreCount()));
                     }
                     new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
                     break;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:id="@+id/tableLayout1" android:visibility="gone"
+	android:id="@+id/tableLayout1" android:visibility="visible"
 	android:background="@color/cornsilk">
 	<TableRow style="@style/unit_row">
 		<LinearLayout android:orientation="vertical"

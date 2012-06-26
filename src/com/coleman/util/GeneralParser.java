@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 
-import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
+import com.coleman.log.Log;
 
 /**
  * A general parser should have the ability to parse the following format:
@@ -22,7 +22,9 @@ import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
  * @author coleman
  */
 public class GeneralParser {
-    private static final String TAG = "GeneralParser";
+    private static final String TAG = GeneralParser.class.getName();
+
+    private static Log Log = Config.getLog();
 
     /**
      * Assets is pre-installed files.
@@ -82,6 +84,7 @@ public class GeneralParser {
                 // Log.i(TAG, "skip word: " + m.group());
             }
         }
+        Log.i(TAG, "===coleman-debug-parse words count: " + list.size());
         return list;
     }
 

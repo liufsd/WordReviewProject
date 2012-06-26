@@ -246,7 +246,7 @@ public class KingWord {
         public static final String LEVEL = "level";
 
         /**
-         * 浏览单词的方式，单词以a－z排序还是数据库id排序
+         * 浏览单词的方式，举例：浏览－浏览－选择
          * 
          * @v7 added
          */
@@ -269,7 +269,7 @@ public class KingWord {
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
                 + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
-                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " integer ,"
+                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " text ,"
                 + TSubWordList.LOOP + " integer ," + TSubWordList.POSITION + " integer ,"
                 + TSubWordList.LEVEL + " integer )";
 
@@ -282,7 +282,9 @@ public class KingWord {
             projectionMap.put(_ID, _ID);
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
             projectionMap.put(LEVEL, LEVEL);
-
+            projectionMap.put(METHOD, METHOD);
+            projectionMap.put(LOOP, LOOP);
+            projectionMap.put(POSITION, POSITION);
         }
 
     }

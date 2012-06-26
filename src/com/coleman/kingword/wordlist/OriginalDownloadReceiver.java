@@ -1,23 +1,26 @@
 
 package com.coleman.kingword.wordlist;
 
-import android.app2.DownloadManager;
-import android.app2.DownloadManager.Query;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
+import android2.app.DownloadManager;
+import android2.app.DownloadManager.Query;
 
 import com.coleman.kingword.R;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 import com.coleman.util.ThreadUtils;
 import com.coleman.util.ToastUtil;
 
 public class OriginalDownloadReceiver extends BroadcastReceiver {
 
     private static final String TAG = OriginalDownloadReceiver.class.getName();
+
+    private static Log Log = Config.getLog();
 
     @Override
     public void onReceive(final Context context, final Intent intent) {

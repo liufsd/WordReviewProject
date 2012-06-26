@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.widget.TabHost;
 
 import com.coleman.kingword.R;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class WordlistTabActivity extends TabActivity implements TabHost.OnTabChangeListener {
     private static final String TAG = WordlistTabActivity.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private TabHost mTabHost;
 
@@ -59,14 +62,14 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
 
     private void setupLoadedList(Intent i) {
         Intent intent = new Intent(this, WordListActivity.class);
-        
+
         boolean external = i.getBooleanExtra(WordListActivity.EXTERNAL_FILE, false);
         String path = i.getStringExtra(WordListActivity.EXTERNAL_FILE_PATH);
         if (external) {
             intent.putExtra(WordListActivity.EXTERNAL_FILE, external);
             intent.putExtra(WordListActivity.EXTERNAL_FILE_PATH, path);
         }
-        
+
         mTabHost.addTab(mTabHost
                 .newTabSpec("remoteFileExplorer")
                 .setIndicator(getString(R.string.wordlist_loaded),

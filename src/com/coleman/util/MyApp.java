@@ -5,12 +5,16 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.coleman.log.Log;
+
 public class MyApp extends Application {
-    private static final String TAG = "MyApp";
+    private static final String TAG = MyApp.class.getName();
+
+    private static Log Log = Config.getLog();
 
     public static Context context;
 
-    public static Handler hander = new Handler();
+    public static Handler handler = new Handler();
 
     @Override
     public void onCreate() {

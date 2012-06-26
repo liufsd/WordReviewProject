@@ -24,8 +24,10 @@ import android.widget.TextView;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
-import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
+import com.coleman.log.Log;
+import com.coleman.log.Log.Level;
 import com.coleman.ojm.bean.LoginReq;
 import com.coleman.ojm.bean.LoginResp;
 import com.coleman.ojm.bean.VersionCheckReq;
@@ -37,14 +39,15 @@ import com.coleman.tools.InfoGather;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.DialogUtil;
-import com.coleman.util.Log;
-import com.coleman.util.Log.LogType;
+import com.coleman.util.MyApp;
 
 /**
  * @author coleman
  */
 public class WelcomeActivity extends Activity implements Observer {
-    private static final String TAG = "WelcomeActivity";
+    private static final String TAG = WelcomeActivity.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private Button startButton;
 
@@ -129,7 +132,12 @@ public class WelcomeActivity extends Activity implements Observer {
             AppSettings.saveLong(AppSettings.FIRST_STARTED_TIME_KEY, System.currentTimeMillis());
 
             // set default log type to warn
-            Log.init();
+            if (Config.isSimulator(MyApp.context)
+                    || "A0000022C343AF".equals(Config.getDeviceId(MyApp.context))) {// A0000022C343AF
+                Log.setLevel(Level.verbose);
+            } else {
+                Log.setLevel(Level.warning);
+            }
 
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
@@ -147,8 +155,8 @@ public class WelcomeActivity extends Activity implements Observer {
         } else {
             AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                     AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
-            Log.setLogType(LogType.instanse(AppSettings.getInt(AppSettings.LOG_TYPE_KEY,
-                    LogType.verbose.value())));
+            Log.setLevel(Level.getLevel(AppSettings.getInt(AppSettings.LOG_TYPE_KEY,
+                    Level.verbose.value)));
         }
 
         // start a service to load library.
@@ -163,7 +171,7 @@ public class WelcomeActivity extends Activity implements Observer {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final Intent i = new Intent(WelcomeActivity.this, CoreActivity.class);
-                            i.putExtra("type", WordListAccessor.RECOVERY_LIST);
+                            i.putExtra("type", SubWordListAccessor.RECOVERY_LIST);
                             startActivity(i);
                         }
                     }).setNegativeButton(R.string.cancel, null).show();

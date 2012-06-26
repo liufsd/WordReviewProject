@@ -8,16 +8,19 @@ import android.database.Cursor;
 
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class DictLibrary {
-    private static final String TAG = "DictLibrary";
+    private static final String TAG = DictLibrary.class.getName();
 
     private static final String DICTS_DIR = "kingword/dicts/";
 
     private DictInfo libraryInfo;
 
     private String mLibPath;
+
+    private static Log Log = Config.getLog();
 
     /**
      * This work is time expensive, you should do it on the background thread.

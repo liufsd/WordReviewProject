@@ -10,12 +10,15 @@ import com.coleman.kingword.provider.KingWord.TDict;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class KingWordDBHepler extends SQLiteOpenHelper {
     private static final String DB_NAME = "kingword.db";
 
-    private static final String TAG = "KingWordDBHepler";
+    private static final String TAG = KingWordDBHepler.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static final int DB_VERSION = 1;
 

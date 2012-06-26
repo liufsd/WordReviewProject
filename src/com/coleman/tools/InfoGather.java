@@ -14,10 +14,11 @@ import android.telephony.TelephonyManager;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.log.Log;
 import com.coleman.ojm.bean.LoginReq;
 import com.coleman.tools.email.GMailSenderHelper;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
+import com.coleman.util.Config;
 
 /**
  * Gather informations: 1. user phone info. 2. user first start application time
@@ -27,6 +28,8 @@ import com.coleman.util.Log;
  */
 public class InfoGather {
     private static final String TAG = "InfoGather";
+
+    private static Log Log = Config.getLog();
 
     /**
      * send every week.

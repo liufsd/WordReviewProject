@@ -10,17 +10,19 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import com.coleman.log.Log;
 import com.coleman.ojm.annotation.RequestObject;
 import com.coleman.ojm.bean.VersionCheckReq;
 import com.coleman.ojm.bean.VersionCheckResp;
 import com.coleman.util.Config;
 import com.coleman.util.FileTransfer;
-import com.coleman.util.Log;
 import com.coleman.util.ThreadUtils;
 
 public class UpgradeService extends Service {
 
-    private static final String TAG = "UpgradeService";
+    private static final String TAG = UpgradeService.class.getName();
+
+    private static Log Log = Config.getLog();
 
     @Override
     public void onCreate() {

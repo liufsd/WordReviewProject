@@ -9,7 +9,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.Settings;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.history.WordInfoHelper;
@@ -18,10 +17,11 @@ import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.model.WordListItem;
+import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
+import com.coleman.util.Config;
 
-public class WordListAccessor implements Serializable {
+public class SubWordListAccessor implements Serializable {
     private static final long serialVersionUID = -5435967694193721910L;
 
     private SubWordList subinfo;
@@ -32,7 +32,9 @@ public class WordListAccessor implements Serializable {
             TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID
     };
 
-    private static final String TAG = "WordListAccessor";
+    private static final String TAG = SubWordListAccessor.class.getName();
+
+    private static Log Log = Config.getLog();
 
     /**
      * the pointer of the word index in the sublist.
@@ -79,13 +81,13 @@ public class WordListAccessor implements Serializable {
 
     public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
-    public WordListAccessor(SubWordList info) {
+    public SubWordListAccessor(SubWordList info) {
         listType = SUB_WORD_LIST;
         subinfo = info;
         list = new ArrayList<WordAccessor>();
     }
 
-    public WordListAccessor(byte type) {
+    public SubWordListAccessor(byte type) {
         listType = type;
         list = new ArrayList<WordAccessor>();
     }
@@ -255,12 +257,12 @@ public class WordListAccessor implements Serializable {
      */
     public WordAccessor getNext() {
         if (allComplete()) {
-            return list.get(p);
+            return null;
         }
         p = p + 1 > list.size() - 1 ? 0 : p + 1;
-        WordAccessor item = list.get(p);
-        if (!item.isComplete()) {
-            return item;
+        WordAccessor accessor = list.get(p);
+        if (!accessor.isComplete()) {
+            return accessor;
         } else {
             // if the next word is already completed, then try to find the next
             // word after index of p
@@ -285,39 +287,23 @@ public class WordListAccessor implements Serializable {
         }
     }
 
-    public String computeSubListStudyResult(Context context) {
-        int tmp = 0;
+    public String getSubListLevelString(Context context) {
         String levels = context.getString(R.string.history_level);
-        if (errorCount <= list.size() * 5 / 100) {
-            tmp = 4;
-        } else if (errorCount <= list.size() * 2 / 10) {
-            tmp = 3;
-        } else if (errorCount <= list.size() * 4 / 10) {
-            tmp = 2;
-        } else {
-            tmp = 1;
-        }
-        if (tmp > subinfo.level) {
-            subinfo.level = tmp;
-            update(context);
-            switch (subinfo.level) {
-                case 1:
-                    levels = context.getString(R.string.unpass_unit);
-                    break;
-                case 2:
-                    levels = context.getString(R.string.low_level);
-                    break;
-                case 3:
-                    levels = context.getString(R.string.mid_level);
-                    break;
-                case 4:
-                    levels = context.getString(R.string.high_level);
-                    break;
-                default:// ignore
-                    break;
-            }
-        } else if (tmp == 4) {
-            levels = context.getString(R.string.high_level);
+        switch (subinfo.level) {
+            case 1:
+                levels = context.getString(R.string.unpass_unit);
+                break;
+            case 2:
+                levels = context.getString(R.string.low_level);
+                break;
+            case 3:
+                levels = context.getString(R.string.mid_level);
+                break;
+            case 4:
+                levels = context.getString(R.string.high_level);
+                break;
+            default:// ignore
+                break;
         }
         return levels;
     }
@@ -329,7 +315,25 @@ public class WordListAccessor implements Serializable {
         return 100 - errorCount * 100 / list.size();
     }
 
-    private void update(Context context) {
+    public void update(Context context) {
+        if (allComplete()) {
+            int tmp = 0;
+            if (errorCount <= list.size() * 5 / 100) {
+                tmp = 4;
+            } else if (errorCount <= list.size() * 2 / 10) {
+                tmp = 3;
+            } else if (errorCount <= list.size() * 4 / 10) {
+                tmp = 2;
+            } else {
+                tmp = 1;
+            }
+            if (tmp > subinfo.level) {
+                subinfo.level = tmp;
+            }
+        }
+        subinfo.loopIndex = loopIndex;
+        subinfo.itemIndexInLoop = loopCount;
+        subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         ContentValues values = subinfo.toContentValues();
         int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
                 TSubWordList._ID + "=" + subinfo.id, null);

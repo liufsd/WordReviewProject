@@ -10,20 +10,23 @@ import android.content.Context;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
-import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.wordlist.FiniteStateMachine.FiniteState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.model.WordListItem;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class WordAccessor implements Serializable {
 
     private static final long serialVersionUID = 884726896304858319L;
 
-    private static final String TAG = "WordAccessor";
+    private static final String TAG = WordAccessor.class.getName();
+
+    private static Log Log = Config.getLog();
 
     public WordListItem item;
 
@@ -37,26 +40,26 @@ public class WordAccessor implements Serializable {
 
     private FiniteStateMachine mStateMachine;
 
-    private WordListAccessor sliceList;
+    private SubWordListAccessor sliceList;
 
-    public WordAccessor(WordListAccessor sliceList) {
+    public WordAccessor(SubWordListAccessor sliceList) {
         this.sliceList = sliceList;
         switch (sliceList.listType) {
-            case WordListAccessor.SUB_WORD_LIST:
+            case SubWordListAccessor.SUB_WORD_LIST:
                 mStateMachine = new FiniteStateMachine(sliceList,
-                        WordListAccessor.slicelistState[0]);
+                        SubWordListAccessor.slicelistState[0]);
                 break;
-            case WordListAccessor.REVIEW_LIST:
+            case SubWordListAccessor.REVIEW_LIST:
                 mStateMachine = new FiniteStateMachine(sliceList,
-                        WordListAccessor.slicelistState[1]);
+                        SubWordListAccessor.slicelistState[1]);
                 break;
-            case WordListAccessor.NEW_WORD_BOOK_LIST:
+            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
                 mStateMachine = new FiniteStateMachine(sliceList,
-                        WordListAccessor.slicelistState[2]);
+                        SubWordListAccessor.slicelistState[2]);
                 break;
-            case WordListAccessor.SCAN_LIST:
+            case SubWordListAccessor.SCAN_LIST:
                 mStateMachine = new FiniteStateMachine(sliceList,
-                        WordListAccessor.slicelistState[3]);
+                        SubWordListAccessor.slicelistState[3]);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -66,7 +69,7 @@ public class WordAccessor implements Serializable {
     public String getWord(Context context) {
         String w = item.word;
         Log.d(TAG, "sliceList.listType:" + sliceList.listType);
-        if (sliceList.listType == WordListAccessor.REVIEW_LIST) {
+        if (sliceList.listType == SubWordListAccessor.REVIEW_LIST) {
             if (info.newword) {
                 Log.d(TAG, "info.getReviewTime:" + info.inReviewTime());
                 w += "("
@@ -177,7 +180,7 @@ public class WordAccessor implements Serializable {
     }
 
     public void studyOrReview(Context context) {
-        if (sliceList.listType == WordListAccessor.REVIEW_LIST) {
+        if (sliceList.listType == SubWordListAccessor.REVIEW_LIST) {
             reviewPlus(context);
         } else {
             studyPlus(context);

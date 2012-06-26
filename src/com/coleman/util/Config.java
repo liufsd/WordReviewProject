@@ -21,10 +21,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
+import com.coleman.log.LogFactory;
 
 /**
  * Build configuration. The constants in this class vary depending on release
@@ -39,11 +39,17 @@ public final class Config {
 
     public static final boolean isTestServer = false;
 
+    private static final String LOG_PATH = "/sdcard/kingword/logs/log.txt";
+
     public static boolean isSimulator(Context context) {
         TelephonyManager telmgr = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
         String deviceID = telmgr.getDeviceId();
         return "000000000000000".equalsIgnoreCase(deviceID);
+    }
+
+    public static final com.coleman.log.Log getLog() {
+        return LogFactory.Creator.getJavaLogFactory().getDefaultLog(LOG_PATH);
     }
 
     public static boolean isExternalMediaMounted() {

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package android.provider;
+package android2.provider;
 
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 /**
  * The Download Manager

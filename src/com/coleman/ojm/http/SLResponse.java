@@ -34,7 +34,7 @@ public class SLResponse<T extends BasicResponse> extends Observable {
     }
 
     public void notifyLoaded() {
-        MyApp.hander.post(new Runnable() {
+        MyApp.handler.post(new Runnable() {
             @Override
             public void run() {
                 loaded = true;
@@ -45,7 +45,7 @@ public class SLResponse<T extends BasicResponse> extends Observable {
     }
 
     public void notifyError(final String data) {
-        MyApp.hander.post(new Runnable() {
+        MyApp.handler.post(new Runnable() {
             @Override
             public void run() {
                 loaded = true;

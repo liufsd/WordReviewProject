@@ -4,10 +4,14 @@ package com.coleman.kingword.dict;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import com.coleman.util.Log;
+
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class DictLoadService extends Service {
-    private static final String TAG = "DictLoadService";
+    private static final String TAG = DictLoadService.class.getName();
+
+    private static Log Log = Config.getLog();
 
     @Override
     public void onCreate() {

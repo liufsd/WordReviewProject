@@ -15,11 +15,14 @@ import android.preference.PreferenceActivity;
 import android.widget.TimePicker;
 
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
-import com.coleman.util.Log;
+import com.coleman.util.Config;
 
 public class ReviewSettings extends PreferenceActivity implements OnPreferenceClickListener {
     protected static final String TAG = ReviewSettings.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private Preference time1, time2, time3;
 

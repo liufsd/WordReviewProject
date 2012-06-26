@@ -12,14 +12,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.coleman.log.Log;
 import com.coleman.ojm.annotation.KeyName;
 import com.coleman.ojm.exception.FieldNotInitException;
 import com.coleman.ojm.exception.UnknownTypeException;
 import com.coleman.ojm.http.SLResponse;
-import com.coleman.util.Log;
+import com.coleman.util.Config;
 
 public class SLParser {
     private static final String TAG = "SLParser";
+
+    private static Log Log = Config.getLog();
 
     /**
      * Parse the JSONObject to the java object.

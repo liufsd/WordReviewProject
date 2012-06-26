@@ -14,20 +14,22 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.Toast;
 
-import com.coleman.tools.InfoGather;
-import com.coleman.util.Log;
-
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.log.Log;
+import com.coleman.tools.InfoGather;
+import com.coleman.util.Config;
 
 public class KingWordReceiver extends BroadcastReceiver {
     public static final String ACTION_SEND_INFO_SILENT = "com.coleman.kingword.ACTION_SEND_INFO_SILENT";
 
-    private static final String TAG = "KingWordReceiver";
+    private static Log Log = Config.getLog();
+
+    private static final String TAG = KingWordReceiver.class.getName();
 
     @Override
     public void onReceive(final Context context, Intent intent) {

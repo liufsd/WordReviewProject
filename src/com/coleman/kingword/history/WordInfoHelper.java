@@ -2,11 +2,9 @@
 package com.coleman.kingword.history;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -19,11 +17,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import com.coleman.util.Log;
 import android.widget.Toast;
 
 import com.coleman.kingword.provider.KingWord.THistory;
-import com.coleman.kingword.wordlist.WordListAccessor;
+import com.coleman.kingword.wordlist.SubWordListAccessor;
+import com.coleman.log.Log;
 import com.coleman.util.Config;
 
 /**
@@ -39,7 +37,8 @@ public class WordInfoHelper {
             THistory.REVIEW_TIME
     };
 
-    private static final String TAG = "WordInfoHelper";
+    private static final String TAG = WordInfoHelper.class.getName();
+    private static Log Log = Config.getLog();
 
     /**
      * You must make sure the word is not empty.
@@ -138,19 +137,19 @@ public class WordInfoHelper {
 
     private static Cursor queryWordInfo(Context context, byte type, Cursor c) {
         switch (type) {
-            case WordListAccessor.NEW_WORD_BOOK_LIST:
+            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means new word
                         THistory.NEW_WORD + "= 2", null, null);
 
                 break;
-            case WordListAccessor.SCAN_LIST:
+            case SubWordListAccessor.SCAN_LIST:
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means ignore word
                         THistory.IGNORE + "= 2", null, null);
 
                 break;
-            case WordListAccessor.REVIEW_LIST:
+            case SubWordListAccessor.REVIEW_LIST:
                 long ct = System.currentTimeMillis();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 Log.d(TAG, "=====current hour:" + hour);

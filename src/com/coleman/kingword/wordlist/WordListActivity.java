@@ -39,11 +39,15 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
-import com.coleman.util.Log;
+import com.coleman.kingword.wordlist.view.SubListActivity;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnMenuItemClickListener {
-    private static final String TAG = "WordListActivity";
+    private static final String TAG = WordListActivity.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private WordListAdapter adapter;
 
@@ -163,7 +167,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         if (!DictManager.getInstance().isCurLibInitialized()) {
             showDBInitHint();
         } else {
-            Intent i = new Intent(WordListActivity.this, SubWordListActivity.class);
+            Intent i = new Intent(WordListActivity.this, SubListActivity.class);
             i.putExtra(TWordList._ID, (Long) view.getTag());
             startActivity(i);
         }
@@ -261,22 +265,22 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             case R.id.button1:
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, WordListAccessor.NEW_WORD_BOOK_LIST)) {
+                } else if (!WordInfoHelper.hasWordInfo(this, SubWordListAccessor.NEW_WORD_BOOK_LIST)) {
                     showNoNewWordHint();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", WordListAccessor.NEW_WORD_BOOK_LIST);
+                    intent.putExtra("type", SubWordListAccessor.NEW_WORD_BOOK_LIST);
                     startActivity(intent);
                 }
                 break;
             case R.id.button2:
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, WordListAccessor.SCAN_LIST)) {
+                } else if (!WordInfoHelper.hasWordInfo(this, SubWordListAccessor.SCAN_LIST)) {
                     showNoIgnoreWordHint();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", WordListAccessor.SCAN_LIST);
+                    intent.putExtra("type", SubWordListAccessor.SCAN_LIST);
                     startActivity(intent);
                 }
                 break;

@@ -8,19 +8,20 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
-import com.coleman.util.Config;
-import com.coleman.util.ConvertUtils;
-
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.text.TextUtils;
-import com.coleman.util.Log;
 
-public class DictData implements Serializable{
+import com.coleman.log.Log;
+import com.coleman.util.Config;
+
+public class DictData implements Serializable {
     private static final long serialVersionUID = -1508100039531151478L;
 
-    private static final String TAG = "DictData";
+    private static final String TAG = DictData.class.getName();
+
+    private static Log Log = Config.getLog();
 
     public String symbol;
 
@@ -64,8 +65,8 @@ public class DictData implements Serializable{
         if (merged) {
             int size1 = FILE_LEN - fileOffset;
             int size2 = (int) index.size - size1;
-            byte[] bytes1 = readData(context,isInternal, info, fName, fileOffset, size1);
-            byte[] bytes2 = readData(context,isInternal, info, fNameAppend, 0, size2);
+            byte[] bytes1 = readData(context, isInternal, info, fName, fileOffset, size1);
+            byte[] bytes2 = readData(context, isInternal, info, fNameAppend, 0, size2);
             if (bytes1 == null || bytes2 == null) {
                 Log.d(TAG, "parse data error");
                 return dici;
@@ -74,7 +75,7 @@ public class DictData implements Serializable{
             System.arraycopy(bytes2, 0, bytes, bytes1.length, bytes2.length);
             // Log.d(TAG, "the word " + index.word + " is merged!");
         } else {
-            bytes = readData(context,isInternal, info, fName, fileOffset, (int) index.size);
+            bytes = readData(context, isInternal, info, fName, fileOffset, (int) index.size);
             if (bytes == null) {
                 Log.d(TAG, "parse data error");
                 return dici;

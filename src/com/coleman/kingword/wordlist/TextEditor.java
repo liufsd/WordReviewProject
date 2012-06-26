@@ -27,12 +27,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.coleman.kingword.R;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class TextEditor extends Activity implements OnClickListener {
     public static final String ACTION_EDIT_FILE = "edit_text";
 
     private static final String TAG = "TextEditor";
+
+    private static Log Log = Config.getLog();
 
     private EditText editText;
 
@@ -182,7 +185,7 @@ public class TextEditor extends Activity implements OnClickListener {
                 baos.flush();
                 baos.close();
                 content = baos.toString();
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

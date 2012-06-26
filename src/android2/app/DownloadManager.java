@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.app2;
+package android2.app;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,8 +35,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
-import android.provider.Downloads;
 import android.util.Pair;
+import android2.provider.Downloads;
 
 /**
  * The download manager is a system service that handles long-running HTTP downloads. Clients may

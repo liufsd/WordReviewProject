@@ -19,7 +19,8 @@ import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.provider.KingWord.TDict;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.kingword.provider.KingWordDBHepler;
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 /**
  * Manager the dictionary, there are two kinds of files 1.the stardict
@@ -29,7 +30,9 @@ import com.coleman.util.Log;
  * @author coleman
  */
 public class DictManager {
-    private static final String TAG = "DictManager";
+    private static final String TAG = DictManager.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static DictManager manager;
 

@@ -7,10 +7,13 @@ import java.util.List;
 
 import android.app.Activity;
 
-import com.coleman.util.Log;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class Observable {
     private static final String TAG = Observable.class.getName();
+
+    private Log Log = Config.getLog();
 
     List<Observer> observers = new ArrayList<Observer>();
 

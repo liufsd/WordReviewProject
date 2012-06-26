@@ -31,9 +31,9 @@ public class FiniteStateMachine implements Serializable {
 
     private FiniteState completeState = new CompleteState();
 
-    private WordListAccessor sliceList;
+    private SubWordListAccessor sliceList;
 
-    public FiniteStateMachine(WordListAccessor sliceList) {
+    public FiniteStateMachine(SubWordListAccessor sliceList) {
         this.sliceList = sliceList;
 
         setInitialState(initState);
@@ -43,7 +43,7 @@ public class FiniteStateMachine implements Serializable {
         addState(completeState, null);
     }
 
-    public FiniteStateMachine(WordListAccessor sliceList, int types[]) {
+    public FiniteStateMachine(SubWordListAccessor sliceList, int types[]) {
         this.sliceList = sliceList;
         for (int i = 0; i < types.length; i++) {
             switch (types[i]) {

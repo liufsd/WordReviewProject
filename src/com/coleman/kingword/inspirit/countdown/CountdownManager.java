@@ -5,10 +5,11 @@ import java.io.Serializable;
 
 import android.content.Context;
 import android.os.Handler;
-import com.coleman.util.Log;
 
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 /**
  * As there are many ways to view word list, so the countdown manager should not
@@ -19,7 +20,9 @@ import com.coleman.kingword.R;
 public class CountdownManager implements Serializable {
     private static final long serialVersionUID = 7969022016568854596L;
 
-    private static final String TAG = "CountdownManager";
+    private static final String TAG = CountdownManager.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private final int TOTAL_TIME;
 

@@ -32,13 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.log.Log;
 import com.coleman.util.Config;
-import com.coleman.util.Log;
 
 public class FileExplorer extends Activity {
     public static final String ACTION_EXPLORER = "com.coleman.sms.activity.EXPLORER";
 
-    private static final String TAG = "FileExplorer";
+    private static final String TAG = FileExplorer.class.getName();
+
+    private static Log Log = Config.getLog();
 
     private static final String ROOT_PATH = "/sdcard";
 

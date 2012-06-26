@@ -3,25 +3,28 @@ package com.coleman.kingword.history;
 
 import java.io.Serializable;
 
-import com.coleman.kingword.R;
-
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import com.coleman.util.Log;
+
+import com.coleman.kingword.R;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 /**
  * Should only be used by WordItem and WordInfoHelper.
  */
-public class WordInfo implements Parcelable,Serializable {
+public class WordInfo implements Parcelable, Serializable {
     private static final long serialVersionUID = 3683192721924884338L;
+
+    private static Log Log = Config.getLog();
 
     public static final byte MIN_WEIGHT = 0;
 
     public static final byte MAX_WEIGHT = 5;
 
-    private static final String TAG = "WordInfo";
+    private static final String TAG = WordInfo.class.getName();
 
     public long id = -1;
 

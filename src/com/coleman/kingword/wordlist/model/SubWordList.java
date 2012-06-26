@@ -12,13 +12,6 @@ import com.coleman.kingword.provider.KingWord.TSubWordList;
 public class SubWordList implements Parcelable, Serializable {
     private static final long serialVersionUID = 911690030424514203L;
 
-    public SubWordList(long id, int index, int level, long wordlist_id) {
-        this.id = id;
-        this.index = index;
-        this.level = level;
-        this.word_list_id = wordlist_id;
-    }
-
     public SubWordList(long word_list_id) {
         this.word_list_id = word_list_id;
     }
@@ -28,7 +21,13 @@ public class SubWordList implements Parcelable, Serializable {
     public long word_list_id;
 
     public int level;
-    
+
+    public String method;
+
+    public int loopIndex;
+
+    public int itemIndexInLoop;
+
     // used for SlideTableSwitcher
     public int index;
 
@@ -36,6 +35,9 @@ public class SubWordList implements Parcelable, Serializable {
         ContentValues value = new ContentValues();
         value.put(TSubWordList.WORD_LIST_ID, word_list_id);
         value.put(TSubWordList.LEVEL, level);
+        value.put(TSubWordList.METHOD, method);
+        value.put(TSubWordList.LOOP, loopIndex);
+        value.put(TSubWordList.POSITION, itemIndexInLoop);
         return value;
     }
 
@@ -60,6 +62,9 @@ public class SubWordList implements Parcelable, Serializable {
         dest.writeLong(word_list_id);
         dest.writeInt(level);
         dest.writeInt(index);
+        dest.writeString(method);
+        dest.writeInt(loopIndex);
+        dest.writeInt(itemIndexInLoop);
     }
 
     /**
@@ -73,7 +78,17 @@ public class SubWordList implements Parcelable, Serializable {
             long word_list_id = in.readLong();
             int level = in.readInt();
             int index = in.readInt();
-            return new SubWordList(id, index, level, word_list_id);
+            String method = in.readString();
+            int loopIndex = in.readInt();
+            int itemIndexInLoop = in.readInt();
+            SubWordList swl = new SubWordList(word_list_id);
+            swl.id = id;
+            swl.level = level;
+            swl.index = index;
+            swl.method = method;
+            swl.loopIndex = loopIndex;
+            swl.itemIndexInLoop = itemIndexInLoop;
+            return swl;
         }
 
         public SubWordList[] newArray(int size) {
