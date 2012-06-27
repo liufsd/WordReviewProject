@@ -40,26 +40,23 @@ public class WordAccessor implements Serializable {
 
     private FiniteStateMachine mStateMachine;
 
-    private SubWordListAccessor sliceList;
+    private SubWordListAccessor subAccessor;
 
     public WordAccessor(SubWordListAccessor sliceList) {
-        this.sliceList = sliceList;
+        this.subAccessor = sliceList;
         switch (sliceList.listType) {
             case SubWordListAccessor.SUB_WORD_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList,
-                        SubWordListAccessor.slicelistState[0]);
+                // TODO need to parse word state, read from database
+                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[0], -1);
                 break;
             case SubWordListAccessor.REVIEW_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList,
-                        SubWordListAccessor.slicelistState[1]);
+                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[1], -1);
                 break;
             case SubWordListAccessor.NEW_WORD_BOOK_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList,
-                        SubWordListAccessor.slicelistState[2]);
+                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[2], -1);
                 break;
             case SubWordListAccessor.SCAN_LIST:
-                mStateMachine = new FiniteStateMachine(sliceList,
-                        SubWordListAccessor.slicelistState[3]);
+                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[3], -1);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -68,8 +65,8 @@ public class WordAccessor implements Serializable {
 
     public String getWord(Context context) {
         String w = item.word;
-        Log.d(TAG, "sliceList.listType:" + sliceList.listType);
-        if (sliceList.listType == SubWordListAccessor.REVIEW_LIST) {
+        Log.d(TAG, "sliceList.listType:" + subAccessor.listType);
+        if (subAccessor.listType == SubWordListAccessor.REVIEW_LIST) {
             if (info.newword) {
                 Log.d(TAG, "info.getReviewTime:" + info.inReviewTime());
                 w += "("
@@ -95,6 +92,10 @@ public class WordAccessor implements Serializable {
         cv.put(TWordListItem.WORD, item.word);
         cv.put(TWordListItem.SUB_WORD_LIST_ID, item.sub_wordlist_id);
         return cv;
+    }
+
+    public int getStudyIndex() {
+        return mStateMachine.getCurrentIndex();
     }
 
     public boolean isComplete() {
@@ -136,7 +137,6 @@ public class WordAccessor implements Serializable {
             info = WordInfoHelper.getWordInfo(context, item.word);
         }
         if (info.ignore) {
-            sliceList.ignoreCount++;
             mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
         }
     }
@@ -173,14 +173,13 @@ public class WordAccessor implements Serializable {
 
     public boolean ignore(Context context) {
         info.ignore = true;
-        sliceList.ignoreCount++;
         mStateMachine.sendEmptyMessage(IFSMCommand.COMPLETE);
         Log.d(TAG, "ignore:" + toString());
         return WordInfoHelper.store(context, info);
     }
 
     public void studyOrReview(Context context) {
-        if (sliceList.listType == SubWordListAccessor.REVIEW_LIST) {
+        if (subAccessor.listType == SubWordListAccessor.REVIEW_LIST) {
             reviewPlus(context);
         } else {
             studyPlus(context);
@@ -222,7 +221,7 @@ public class WordAccessor implements Serializable {
 
     public void errorPlus(Context context) {
         info.errorcount++;
-        sliceList.errorCount++;
+        subAccessor.errorCount++;
         if (info.errorcount % 2 == 0) {
             info.weight++;
         }
@@ -233,7 +232,7 @@ public class WordAccessor implements Serializable {
 
     @Override
     public String toString() {
-        return "id:" + item.id + " word:" + item.word + " info:" + info + " data:" + dictData
+        return "id:" + item.id + " word:" + item.word +" method:"+getViewMethod()+ " info:" + info + " data:" + dictData
                 + " detail:" + detailData;
     }
 
@@ -247,7 +246,6 @@ public class WordAccessor implements Serializable {
 
     public boolean removeIgnore(Context context) {
         info.ignore = false;
-        sliceList.ignoreCount--;
         return WordInfoHelper.store(context, info);
     }
 
@@ -257,5 +255,9 @@ public class WordAccessor implements Serializable {
 
     public void clear() {
         dictData = null;
+    }
+
+    public String getViewMethod() {
+        return mStateMachine.getViewMethod();
     }
 }

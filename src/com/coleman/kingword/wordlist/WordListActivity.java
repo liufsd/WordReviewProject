@@ -39,7 +39,6 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
-import com.coleman.kingword.wordlist.view.SubListActivity;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
 

@@ -1,5 +1,5 @@
 
-package com.coleman.kingword.wordlist.view;
+package com.coleman.kingword.wordlist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,9 @@ import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.kingword.wordlist.view.PageBottomBar;
+import com.coleman.kingword.wordlist.view.ScrollLayout;
 import com.coleman.util.MyApp;
 
 /**
@@ -51,7 +52,6 @@ public class SubListActivity extends Activity {
         setContentView(R.layout.sliding);
         mScrollLayout = (ScrollLayout) findViewById(R.id.scrollLayout1);
         mPageBottomBar = (PageBottomBar) findViewById(R.id.pageBottomBar1);
-        super.onStart();
         if (wordlist_id == -1) {
             wordlist_id = getIntent().getLongExtra(TWordList._ID, -1);
         }
@@ -60,8 +60,7 @@ public class SubListActivity extends Activity {
 
     private void initQuery(long id) {
         String projection[] = new String[] {
-                TSubWordList._ID, TSubWordList.LEVEL, TSubWordList.METHOD, TSubWordList.LOOP,
-                TSubWordList.POSITION
+                TSubWordList._ID, TSubWordList.LEVEL, TSubWordList.METHOD, TSubWordList.POSITION
         };
         long wordlist_id = id;
         Cursor c = MyApp.context.getContentResolver().query(TSubWordList.CONTENT_URI, projection,
@@ -71,12 +70,11 @@ public class SubListActivity extends Activity {
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
                 SubWordList swl = new SubWordList(wordlist_id);
-                swl.id = id;
+                swl.id = c.getLong(0);
                 swl.level = c.getInt(1);
                 swl.index = i;
                 swl.method = c.getString(2);
-                swl.loopIndex = c.getInt(3);
-                swl.itemIndexInLoop = c.getInt(4);
+                swl.itemIndexInLoop = c.getInt(3);
                 list.add(swl);
                 c.moveToNext();
                 i++;
@@ -166,7 +164,7 @@ public class SubListActivity extends Activity {
             TextView title = (TextView) convertView.findViewById(R.id.textView1);
             TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
             title.setText("unit " + getItem(position).index);
-            subTitle.setText("loop " + getItem(position).loopIndex);
+            subTitle.setText("loop " + getItem(position).itemIndexInLoop);
             return convertView;
         }
 

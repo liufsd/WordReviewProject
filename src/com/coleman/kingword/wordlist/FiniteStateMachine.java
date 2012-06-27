@@ -9,7 +9,9 @@ import java.util.Random;
 import android.content.Context;
 import android.os.Message;
 
+import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.util.MyApp;
 
 /**
  * Finite state machine is composite of an InitState, an group of states, some
@@ -19,77 +21,18 @@ public class FiniteStateMachine implements Serializable {
 
     private static final long serialVersionUID = -8116244691305999296L;
 
-    private FiniteState mCurrentState;
+    private FiniteStateEngine mStateEngine;
 
-    private FiniteStateEngine mStateEngine = new FiniteStateEngine();
-
-    private ArrayList<FiniteState> mStateList = new ArrayList<FiniteState>();
-
-    private FiniteState initState = new InitState();
-
-    private FiniteState mulState = new MultipleState();
-
-    private FiniteState completeState = new CompleteState();
-
-    private SubWordListAccessor sliceList;
-
-    public FiniteStateMachine(SubWordListAccessor sliceList) {
-        this.sliceList = sliceList;
-
-        setInitialState(initState);
-
-        addState(initState, mulState);
-        addState(mulState, completeState);
-        addState(completeState, null);
-    }
-
-    public FiniteStateMachine(SubWordListAccessor sliceList, int types[]) {
-        this.sliceList = sliceList;
-        for (int i = 0; i < types.length; i++) {
-            switch (types[i]) {
-                case InitState.TYPE:
-                    addState(new InitState());
-                    break;
-                case MultipleState.TYPE:
-                    addState(new MultipleState());
-                    break;
-                case CompleteState.TYPE:
-                    addState(new CompleteState());
-                    break;
-                default:
-                    break;
-            }
-        }
-        setInitialState(mStateList.get(0));
-        for (int i = 0; i < mStateList.size(); i++) {
-            mStateList.get(i).index = i;
-            if (i != mStateList.size() - 1) {
-                mStateList.get(i).nextState = mStateList.get(i + 1);
-            } else {
-                mStateList.get(i).nextState = null;
-            }
-        }
+    public FiniteStateMachine(int types[], int initState) {
+        mStateEngine = new FiniteStateEngine(types, initState);
     }
 
     public boolean isComplete() {
-        return mCurrentState instanceof CompleteState;
-    }
-
-    protected void addState(FiniteState curState, FiniteState nextState) {
-        mStateList.add(curState);
-        curState.nextState = nextState;
-    }
-
-    protected void addState(FiniteState curState) {
-        mStateList.add(curState);
+        return mStateEngine.isComplete();
     }
 
     public FiniteState getCurrentState() {
-        return mCurrentState;
-    }
-
-    public FiniteState getInitState() {
-        return mStateList.get(0);
+        return mStateEngine.getCurrentState();
     }
 
     public void sendMessage(Message msg) {
@@ -102,31 +45,38 @@ public class FiniteStateMachine implements Serializable {
         mStateEngine.handleMessage(msg);
     }
 
+    public int getCurrentIndex() {
+        return getCurrentState().index;
+    }
+
     public ArrayList<DictData> getDictData(Context context, WordAccessor item,
             ArrayList<WordAccessor> list) {
-        return mCurrentState.getDictData(context, item, list);
+        return getCurrentState().getDictData(context, item, list);
     }
 
-    private void setInitialState(FiniteState state) {
-        mCurrentState = state;
+    public String getViewMethod() {
+        return getCurrentState().getViewMethod();
     }
 
-    public abstract class FiniteState implements Serializable {
+    public static abstract class FiniteState implements Serializable {
         private static final long serialVersionUID = 6453121803787047807L;
 
         private Random ran = new Random();
 
         protected FiniteState nextState;
 
-        protected boolean counted;
-
         protected boolean pass;
 
         protected int index;
 
+        protected String viewMethod = "";
+
         protected FiniteState() {
-            counted = false;
             pass = false;
+        }
+
+        protected String getViewMethod() {
+            return viewMethod;
         }
 
         /**
@@ -139,7 +89,6 @@ public class FiniteStateMachine implements Serializable {
          * Called when a state is exited.
          */
         protected void exit() {
-            counted = true;
             pass = true;
         }
 
@@ -176,23 +125,16 @@ public class FiniteStateMachine implements Serializable {
             datalist.add(list.get(index).getDictData(context));
         }
 
-        public boolean isCounted() {
-            return counted;
-        }
-
     }
 
-    public class InitState extends FiniteState {
+    public static class InitState extends FiniteState {
         private static final long serialVersionUID = -1336813785311805550L;
 
         public static final int TYPE = 0;
 
-        @Override
-        protected void exit() {
-            if (!counted) {
-                sliceList.passStateCount[index]++;
-            }
-            super.exit();
+        public InitState() {
+            super();
+            viewMethod = MyApp.context.getString(R.string.view_word);
         }
 
         protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
@@ -205,17 +147,14 @@ public class FiniteStateMachine implements Serializable {
 
     }
 
-    public class MultipleState extends FiniteState {
+    public static class MultipleState extends FiniteState {
         private static final long serialVersionUID = 3630980301775392193L;
 
         public static final int TYPE = 1;
 
-        @Override
-        protected void exit() {
-            if (!counted) {
-                sliceList.passStateCount[index]++;
-            }
-            super.exit();
+        public MultipleState() {
+            super();
+            viewMethod = MyApp.context.getString(R.string.view_multi);
         }
 
         protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
@@ -236,22 +175,62 @@ public class FiniteStateMachine implements Serializable {
 
     }
 
-    public class CompleteState extends FiniteState {
+    public static class CompleteState extends FiniteState {
 
         private static final long serialVersionUID = 1872280077484642327L;
 
         public static final int TYPE = 100;
 
-        @Override
-        protected void enter() {
-            sliceList.totalCount++;
+        public CompleteState() {
+            super();
+            viewMethod = MyApp.context.getString(R.string.view_complete);
         }
     }
 
-    private class FiniteStateEngine implements IFSMCommand, Serializable {
+    private static class FiniteStateEngine implements IFSMCommand, Serializable {
         private static final long serialVersionUID = 762743574880645974L;
 
-        private FiniteStateEngine() {
+        private ArrayList<FiniteState> mStateList = new ArrayList<FiniteState>();
+
+        private FiniteState mCurrentState;
+
+        private FiniteStateEngine(int[] types, int initStIdx) {
+            for (int i = 0; i < types.length; i++) {
+                switch (types[i]) {
+                    case InitState.TYPE:
+                        addState(new InitState());
+                        break;
+                    case MultipleState.TYPE:
+                        addState(new MultipleState());
+                        break;
+                    case CompleteState.TYPE:
+                        addState(new CompleteState());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            for (int i = 0; i < mStateList.size(); i++) {
+                mStateList.get(i).index = i;
+                if (i != mStateList.size() - 1) {
+                    mStateList.get(i).nextState = mStateList.get(i + 1);
+                } else {
+                    mStateList.get(i).nextState = null;
+                }
+            }
+            setInitialState(initStIdx);
+        }
+
+        public boolean isComplete() {
+            return mCurrentState instanceof CompleteState;
+        }
+
+        protected void addState(FiniteState curState) {
+            mStateList.add(curState);
+        }
+
+        public FiniteState getCurrentState() {
+            return mCurrentState;
         }
 
         public void handleMessage(Message msg) {
@@ -281,6 +260,15 @@ public class FiniteStateMachine implements Serializable {
                 finiteState.reset();
             }
             mCurrentState = mStateList.get(0);
+        }
+
+        private void setInitialState(int stateIndex) {
+            if (stateIndex >= 0 && stateIndex < mStateList.size()) {
+                mCurrentState = mStateList.get(stateIndex);
+            } else {
+                mCurrentState = mStateList.get(0);
+            }
+
         }
 
         private void complete() {

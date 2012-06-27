@@ -171,7 +171,7 @@
     <string name="pw_successed">密码正确，认证成功！</string>
     <string name="high_level_settings">高级设置</string>
     <string name="msg_dialog_title">消息提示</string>
-    <string formatted="false" name="loop_info">第%d轮（%d/%d词）</string>
+    <string formatted="false" name="loop_info">%s（%d/%d词）</string>
     <string formatted="false" name="enter_next_loop">进入第%d轮！</string>
     <string name="view_method_dialog_title">设置查看方式</string>
     <string name="view_method_settings">学习设定</string>
@@ -242,5 +242,8 @@
     <string name="no_new_word_found">生词本中没有需要学习的单词！</string>
     <string name="no_ignore_word_found">过滤列表中没有单词！</string>
     <string name="upgrade_db_failed">数据库升级失败，请卸载后重新安装软件！</string>
+    <string name="view_word">查看模式</string>
+    <string name="view_multi">选项模式</string>
+    <string name="view_complete">完成</string>
 
 </resources>

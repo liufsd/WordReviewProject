@@ -54,10 +54,10 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
-import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.WordAccessor;
 import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
+import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
@@ -399,7 +399,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         if (list.size() == 1) {
             nextWordItem.setPass(true);
             nextWordItem.studyOrReview(this);
-            updateLoopCount();
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else if (list.get(position).equals(nextWordItem.getDictData(this))) {
             if (!(nextWordItem.getCurrentStatus() instanceof InitState)) {
@@ -411,7 +410,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 continueView.setText(String.format(getString(R.string.continue_hit_count),
                         continueHitCount));
             }
-            updateLoopCount();
             nextWordItem.studyOrReview(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
@@ -424,27 +422,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private void updateLoopCount() {
-        if (sublistAccessor.getListType() != SubWordListAccessor.SUB_WORD_LIST) {
-            return;
-        }
         // loop display control
-        if (!sublistAccessor.allComplete()) {
-            sublistAccessor.loopCount++;
-            if (sublistAccessor.loopCount == sublistAccessor.getCount()
-                    - sublistAccessor.getIgnoreCount()) {
-                sublistAccessor.loopIndex++;
-                Toast.makeText(
-                        this,
-                        String.format(getString(R.string.enter_next_loop),
-                                sublistAccessor.getLoopIndex() + 1), Toast.LENGTH_SHORT).show();
-                sublistAccessor.loopCount = 0;
-            }
-        }
-        Log.d(TAG, "wordlist.getCount():" + sublistAccessor.getCount()
-                + "   wordlist.getIgnoreCount()" + sublistAccessor.getIgnoreCount());
         loopView.setText(String.format(getString(R.string.loop_info),
-                sublistAccessor.getLoopIndex() + 1, sublistAccessor.getLoopCount() + 1,
-                sublistAccessor.getCount() - sublistAccessor.getIgnoreCount()));
+                sublistAccessor.getViewMethod(), sublistAccessor.getCurrentIndex(),
+                sublistAccessor.getCount()));
     }
 
     @Override
@@ -1248,12 +1229,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         } else {
                             ignoreOrNot.setText(R.string.ignore);
                         }
-                        if (taskType == INIT_SUB_WORD_LIST || taskType == INIT_RECOVERY_LIST) {
-                            loopView.setText(String.format(getString(R.string.loop_info),
-                                    sublistAccessor.getLoopIndex() + 1,
-                                    sublistAccessor.getLoopCount() + 1, sublistAccessor.getCount()
-                                            - sublistAccessor.getIgnoreCount()));
-                        }
+                        updateLoopCount();
                         findViewById(R.id.linearLayout1).setVisibility(View.VISIBLE);
                         findViewById(R.id.linearLayout2).setVisibility(View.VISIBLE);
                         countBtn.setVisibility(View.VISIBLE);
@@ -1299,6 +1275,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);
                     }
+                    updateLoopCount();
                     break;
                 case UPGRADE: {
                     boolean b = result.getBoolean("upgrade");
@@ -1324,12 +1301,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             CoreActivity.this,
                             b ? getString(R.string.ignore_success)
                                     : getString(R.string.ignore_failed), Toast.LENGTH_SHORT).show();
-                    if (sublistAccessor.getListType() == SubWordListAccessor.SUB_WORD_LIST) {
-                        loopView.setText(String.format(getString(R.string.loop_info),
-                                sublistAccessor.getLoopIndex() + 1,
-                                sublistAccessor.getLoopCount() + 1, sublistAccessor.getCount()
-                                        - sublistAccessor.getIgnoreCount()));
-                    }
+                    updateLoopCount();
                     new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
                     break;
                 }

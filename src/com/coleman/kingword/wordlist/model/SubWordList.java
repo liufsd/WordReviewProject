@@ -24,8 +24,6 @@ public class SubWordList implements Parcelable, Serializable {
 
     public String method;
 
-    public int loopIndex;
-
     public int itemIndexInLoop;
 
     // used for SlideTableSwitcher
@@ -36,7 +34,6 @@ public class SubWordList implements Parcelable, Serializable {
         value.put(TSubWordList.WORD_LIST_ID, word_list_id);
         value.put(TSubWordList.LEVEL, level);
         value.put(TSubWordList.METHOD, method);
-        value.put(TSubWordList.LOOP, loopIndex);
         value.put(TSubWordList.POSITION, itemIndexInLoop);
         return value;
     }
@@ -63,7 +60,6 @@ public class SubWordList implements Parcelable, Serializable {
         dest.writeInt(level);
         dest.writeInt(index);
         dest.writeString(method);
-        dest.writeInt(loopIndex);
         dest.writeInt(itemIndexInLoop);
     }
 
@@ -86,7 +82,6 @@ public class SubWordList implements Parcelable, Serializable {
             swl.level = level;
             swl.index = index;
             swl.method = method;
-            swl.loopIndex = loopIndex;
             swl.itemIndexInLoop = itemIndexInLoop;
             return swl;
         }

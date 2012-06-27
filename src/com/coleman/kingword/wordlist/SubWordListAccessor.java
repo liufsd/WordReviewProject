@@ -42,26 +42,18 @@ public class SubWordListAccessor implements Serializable {
     private int p;
 
     /**
-     * count the number of passed word, ignored will be passed, or meanwhile
-     * passView, passAlternative, and passMultiple of WordItem will also passed.
+     * 关键性能点：
+     * <p>
+     * 用来标识上次顺序遍历没有完成学习的单词的位置，加快判断是否所有单词都已学习完的速度。
+     * 
+     * @Optimize
      */
-    public int passStateCount[];
+    private int lastMark;
 
     /**
      * count the total number of the error occuring times.
      */
     public int errorCount;
-
-    public int totalCount;
-
-    /**
-     * used to control loop display
-     */
-    public int loopCount;
-
-    public int loopIndex;
-
-    public int ignoreCount;
 
     public byte listType;
 
@@ -102,27 +94,6 @@ public class SubWordListAccessor implements Serializable {
                 slicelistState[i][j] = Integer.parseInt(ss[j]);
             }
             slicelistState[i][ss.length] = CompleteState.TYPE;
-        }
-        for (int i = 0; i < slicelistState.length; i++) {
-            for (int j = 0; j < slicelistState[i].length; j++) {
-                Log.d(TAG, "=======slice list state[" + i + "][" + j + "]=" + slicelistState[i][j]);
-            }
-        }
-        switch (listType) {
-            case SUB_WORD_LIST:
-                passStateCount = new int[slicelistState[0].length];
-                break;
-            case REVIEW_LIST:
-                passStateCount = new int[slicelistState[1].length];
-                break;
-            case NEW_WORD_BOOK_LIST:
-                passStateCount = new int[slicelistState[2].length];
-                break;
-            case SCAN_LIST:
-                passStateCount = new int[slicelistState[3].length];
-                break;
-            default:
-                break;
         }
     }
 
@@ -214,21 +185,26 @@ public class SubWordListAccessor implements Serializable {
             return 100;
         }
 
-        int times = passStateCount.length - 1;
-        int cur = 0;
-        for (int i = 0; i < passStateCount.length - 1; i++) {
-            cur += passStateCount[i];
+        int sum = 0;
+        for (int i = 0; i < list.size(); i++) {
+            WordAccessor wa = list.get(i);
+            sum += wa.getStudyIndex();
         }
-        // return (passViewCount + passMulCount) * 50 / list.size();
-        return cur * (100 / times) / list.size();
+        int total = (slicelistState[listType - 1].length - 1) * list.size();
+
+        return sum * 100 / total;
     }
 
     public boolean allComplete() {
         if (list.size() == 0) {
             return true;
         }
-        if (totalCount < list.size()) {
-            return false;
+        for (int i = lastMark; i < list.size(); i++) {
+            WordAccessor wa = list.get(i);
+            if (!wa.isComplete()) {
+                lastMark = i;
+                return false;
+            }
         }
         return true;
     }
@@ -256,9 +232,6 @@ public class SubWordListAccessor implements Serializable {
      * call this method must make sure that hasNext is called first!!!
      */
     public WordAccessor getNext() {
-        if (allComplete()) {
-            return null;
-        }
         p = p + 1 > list.size() - 1 ? 0 : p + 1;
         WordAccessor accessor = list.get(p);
         if (!accessor.isComplete()) {
@@ -331,8 +304,7 @@ public class SubWordListAccessor implements Serializable {
                 subinfo.level = tmp;
             }
         }
-        subinfo.loopIndex = loopIndex;
-        subinfo.itemIndexInLoop = loopCount;
+        subinfo.itemIndexInLoop = p;
         subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         ContentValues values = subinfo.toContentValues();
         int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
@@ -344,15 +316,13 @@ public class SubWordListAccessor implements Serializable {
         return list.size();
     }
 
-    public int getLoopIndex() {
-        return loopIndex;
+    public String getViewMethod() {
+        Log.i(TAG, "===coleman-debug-getCurrentWord(): " + getCurrentWord().toString());
+        return getCurrentWord().getViewMethod();
     }
 
-    public int getLoopCount() {
-        return loopCount;
+    public int getCurrentIndex() {
+        return p + 1;
     }
 
-    public int getIgnoreCount() {
-        return ignoreCount;
-    }
 }
