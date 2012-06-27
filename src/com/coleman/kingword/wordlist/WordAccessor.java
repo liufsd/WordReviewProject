@@ -18,9 +18,11 @@ import com.coleman.kingword.wordlist.FiniteStateMachine.IFSMCommand;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.model.WordListItem;
 import com.coleman.log.Log;
+import com.coleman.ojm.core.Observer;
 import com.coleman.util.Config;
+import com.coleman.util.MyApp;
 
-public class WordAccessor implements Serializable {
+public class WordAccessor implements Serializable, Observer {
 
     private static final long serialVersionUID = 884726896304858319L;
 
@@ -42,13 +44,14 @@ public class WordAccessor implements Serializable {
 
     private SubWordListAccessor subAccessor;
 
-    public WordAccessor(SubWordListAccessor sliceList) {
-        this.subAccessor = sliceList;
-        switch (sliceList.listType) {
-            case SubWordListAccessor.SUB_WORD_LIST:
-                // TODO need to parse word state, read from database
-                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[0], -1);
-                break;
+    /**
+     * Only support REVIEW_LIST, NEW_WORD_BOOK_LIST, SCAN_LIST
+     * 
+     * @param subAccessor
+     */
+    public WordAccessor(SubWordListAccessor subAccessor) {
+        this.subAccessor = subAccessor;
+        switch (subAccessor.listType) {
             case SubWordListAccessor.REVIEW_LIST:
                 mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[1], -1);
                 break;
@@ -57,6 +60,26 @@ public class WordAccessor implements Serializable {
                 break;
             case SubWordListAccessor.SCAN_LIST:
                 mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[3], -1);
+                break;
+            default:
+                throw new RuntimeException("Not support word list type!");
+        }
+    }
+
+    /**
+     * Only support SUB_WORD_LIST
+     * 
+     * @param sliceList
+     * @param item
+     */
+    public WordAccessor(SubWordListAccessor sliceList, WordListItem item) {
+        this.subAccessor = sliceList;
+        this.item = item;
+        switch (sliceList.listType) {
+            case SubWordListAccessor.SUB_WORD_LIST:
+                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[0],
+                        item.state);
+                mStateMachine.addObserver(this);
                 break;
             default:
                 throw new RuntimeException("Not support word list type!");
@@ -232,8 +255,8 @@ public class WordAccessor implements Serializable {
 
     @Override
     public String toString() {
-        return "id:" + item.id + " word:" + item.word +" method:"+getViewMethod()+ " info:" + info + " data:" + dictData
-                + " detail:" + detailData;
+        return "id:" + item.id + " word:" + item.word + " method:" + getViewMethod() + " info:"
+                + info + " data:" + dictData + " detail:" + detailData;
     }
 
     public ArrayList<DictData> getDictData(Context context, ArrayList<WordAccessor> list) {
@@ -259,5 +282,17 @@ public class WordAccessor implements Serializable {
 
     public String getViewMethod() {
         return mStateMachine.getViewMethod();
+    }
+
+    @Override
+    public void update(Object data) {
+        updateWordListItemState();
+    }
+
+    private void updateWordListItemState() {
+        item.state = getCurrentStatus().index;
+        MyApp.context.getContentResolver().update(
+                TWordListItem.getContentUri(subAccessor.getWordListID()), item.toContentValues(),
+                TWordListItem._ID + "=" + item.id, null);
     }
 }

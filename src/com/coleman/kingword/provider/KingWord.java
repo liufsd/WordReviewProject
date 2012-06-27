@@ -248,30 +248,28 @@ public class KingWord {
         /**
          * 浏览单词的方式，举例：浏览－浏览－选择
          * 
-         * @v7 added
+         * @version 7
          */
         public static final String METHOD = "method";
 
         /**
-         * 浏览的循环计数
-         * 
-         * @v7 added
-         */
-        public static final String LOOP = "loop";
-
-        /**
          * 某次循环查看的单词位置
          * 
-         * @v7 added
+         * @version 7
          */
         public static final String POSITION = "position";
+
+        /**
+         * @version 7
+         */
+        public static final String PROGRESS = "progress";
 
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
                 + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
                 + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " text ,"
-                + TSubWordList.LOOP + " integer ," + TSubWordList.POSITION + " integer ,"
-                + TSubWordList.LEVEL + " integer )";
+                + TSubWordList.POSITION + " integer ," + TSubWordList.PROGRESS + " integer ,"
+                + TSubWordList.LEVEL + " integer default -1 )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -283,7 +281,7 @@ public class KingWord {
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
             projectionMap.put(LEVEL, LEVEL);
             projectionMap.put(METHOD, METHOD);
-            projectionMap.put(LOOP, LOOP);
+            projectionMap.put(PROGRESS, PROGRESS);
             projectionMap.put(POSITION, POSITION);
         }
 
@@ -341,6 +339,8 @@ public class KingWord {
 
             public static final String WORD = "word";
 
+            public static final String STATE = "state";
+
             // default sort order
             public static final String DEFAULT_SORT_ORDER = _ID + " asc";
 
@@ -349,6 +349,7 @@ public class KingWord {
             static {
                 projectionMap.put(_ID, _ID);
                 projectionMap.put(SUB_WORD_LIST_ID, SUB_WORD_LIST_ID);
+                projectionMap.put(STATE, STATE);
                 projectionMap.put(WORD, WORD);
             }
 
@@ -365,7 +366,8 @@ public class KingWord {
             public String getCreateTableSql() {
                 return "create table if not exists " + TABLE_NAME + " ( " + TWordListItem._ID
                         + " integer primary key autoincrement , " + TWordListItem.SUB_WORD_LIST_ID
-                        + " integer ," + TWordListItem.WORD + " text )";
+                        + " integer ," + TWordListItem.STATE + " integer default -1,"
+                        + TWordListItem.WORD + " text )";
             }
 
             public static Uri getContentUri(long word_list_id) {

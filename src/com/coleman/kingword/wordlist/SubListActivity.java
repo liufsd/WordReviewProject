@@ -40,6 +40,9 @@ import com.coleman.util.MyApp;
  * @since [product/module version]
  */
 public class SubListActivity extends Activity {
+
+    public static final String SCREEN_INDEX = "screen_index";
+
     private ScrollLayout mScrollLayout;
 
     private PageBottomBar mPageBottomBar;
@@ -55,6 +58,8 @@ public class SubListActivity extends Activity {
         if (wordlist_id == -1) {
             wordlist_id = getIntent().getLongExtra(TWordList._ID, -1);
         }
+        int curScreen = getIntent().getIntExtra(SCREEN_INDEX, ScrollLayout.DEFAULT_SCREEN);
+        mScrollLayout.setCurrentScreen(curScreen);
         initQuery(wordlist_id);
     }
 
@@ -74,13 +79,14 @@ public class SubListActivity extends Activity {
                 swl.level = c.getInt(1);
                 swl.index = i;
                 swl.method = c.getString(2);
-                swl.itemIndexInLoop = c.getInt(3);
+                swl.position = c.getInt(3);
                 list.add(swl);
                 c.moveToNext();
                 i++;
             }
         }
-        new PageControl(list).compute();
+        PageControl pc = new PageControl(list);
+        pc.compute();
         if (c != null) {
             c.close();
             c = null;
@@ -88,6 +94,7 @@ public class SubListActivity extends Activity {
     }
 
     private class PageControl {
+
         private int pageItems = 12;
 
         private int pages = 0;
@@ -112,6 +119,8 @@ public class SubListActivity extends Activity {
                 PageAdapter adapter = new PageAdapter(list.subList(s, e));
                 gv.setAdapter(adapter);
                 mScrollLayout.addView(view);
+
+                final int si = i;
                 gv.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,8 +128,10 @@ public class SubListActivity extends Activity {
                             Intent intent = new Intent(SubListActivity.this, CoreActivity.class);
                             intent.putExtra("type", SubWordListAccessor.SUB_WORD_LIST);
                             SubWordList info = (SubWordList) parent.getItemAtPosition(position);
+                            info.screenIndex = si;
                             intent.putExtra("subinfo", (Parcelable) info);
                             SubListActivity.this.startActivity(intent);
+                            finish();
                         }
                     }
                 });
@@ -164,7 +175,8 @@ public class SubListActivity extends Activity {
             TextView title = (TextView) convertView.findViewById(R.id.textView1);
             TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
             title.setText("unit " + getItem(position).index);
-            subTitle.setText("loop " + getItem(position).itemIndexInLoop);
+            subTitle.setText(SubWordListAccessor.getLevelStrings(SubListActivity.this,
+                    getItem(position).level));
             return convertView;
         }
 

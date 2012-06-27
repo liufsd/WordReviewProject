@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.log.Log;
 import com.coleman.log.Log.Level;
@@ -162,21 +161,6 @@ public class WelcomeActivity extends Activity implements Observer {
         // start a service to load library.
         startService(new Intent(this, DictLoadService.class));
 
-        // set last study restore
-        boolean isSave = AppSettings.getBoolean(AppSettings.SAVE_CACHE_KEY, false);
-        if (isSave) {
-            new AlertDialog.Builder(this).setTitle(R.string.recovery_tip)
-                    .setMessage(R.string.recovery_message)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final Intent i = new Intent(WelcomeActivity.this, CoreActivity.class);
-                            i.putExtra("type", SubWordListAccessor.RECOVERY_LIST);
-                            startActivity(i);
-                        }
-                    }).setNegativeButton(R.string.cancel, null).show();
-            AppSettings.saveBoolean(AppSettings.SAVE_CACHE_KEY, false);
-        }
     }
 
     @Override

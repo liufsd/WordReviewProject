@@ -52,6 +52,7 @@
     <string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
     <string name="continue_hit_count">%d Hit!</string>
     <string name="new_unit">新单元</string>
+    <string name="unfinish_unit">未完成</string>
     <string name="unpass_unit">未通过</string>
     <string name="low_level">通过</string>
     <string name="mid_level">良好</string>

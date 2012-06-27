@@ -2,9 +2,7 @@
 package com.coleman.kingword;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -54,11 +52,14 @@ import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
-import com.coleman.kingword.wordlist.WordAccessor;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
-import com.coleman.kingword.wordlist.WordlistTabActivity;
+import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.SubListActivity;
+import com.coleman.kingword.wordlist.SubWordListAccessor;
+import com.coleman.kingword.wordlist.WordAccessor;
+import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
+import com.coleman.kingword.wordlist.view.ScrollLayout;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
@@ -168,11 +169,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 startService(new Intent(this, DictLoadService.class));
                 sublistAccessor = new SubWordListAccessor(sliceListType);
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
-                break;
-            case SubWordListAccessor.RECOVERY_LIST:
-                DictManager.getInstance().initLibrary(this);
-                startService(new Intent(this, DictLoadService.class));
-                new ExpensiveTask(ExpensiveTask.INIT_RECOVERY_LIST).execute();
                 break;
             default:
                 finish();
@@ -337,14 +333,21 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     protected void onDestroy() {
         // backup this time study progress
-        writeCacheObject();
-
+        // writeCacheObject();
         // shutdown the text-to-speech
         tts.shutdown();
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
         // ///////////////////////////////////////////
         super.onDestroy();
+    }
+
+    private void startSubListActivity() {
+        // write result to SubListActivity
+        Intent intent = new Intent(this, SubListActivity.class);
+        intent.putExtra(TWordList._ID, sublistAccessor.getWordListID());
+        intent.putExtra(SubListActivity.SCREEN_INDEX, sublistAccessor.getSubList().screenIndex);
+        startActivity(intent);
     }
 
     private void readCacheObject() {
@@ -362,35 +365,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 ois.close();
             } catch (Exception e2) {
             }
-        }
-    }
-
-    private boolean needWriteCache = true;
-
-    private void writeCacheObject() {
-        if (needWriteCache
-                && (sliceListType == SubWordListAccessor.SUB_WORD_LIST || sliceListType == SubWordListAccessor.RECOVERY_LIST)) {
-            new Thread() {
-                public void run() {
-                    ObjectOutputStream oos = null;
-                    try {
-                        oos = new ObjectOutputStream(new FileOutputStream(
-                                "/sdcard/kingword/obj.save"));
-                        oos.writeObject(sublistAccessor);
-                        oos.writeObject(countdownManager);
-                        AppSettings.saveBoolean(AppSettings.SAVE_CACHE_KEY, true);
-                        Log.d(TAG, "------------------------save cache");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            oos.close();
-                        } catch (Exception e2) {
-                        }
-                    }
-
-                };
-            }.start();
         }
     }
 
@@ -506,17 +480,19 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
     }
 
+    @Override
     public void finish() {
-        needWriteCache = false;
+        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
+            startActivity(new Intent(this, WordlistTabActivity.class));
+        } else if (sliceListType == SubWordListAccessor.SUB_WORD_LIST) {
+            startSubListActivity();
+        }
         super.finish();
     }
 
     @Override
     public void onBackPressed() {
-        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
-            startActivity(new Intent(this, WordlistTabActivity.class));
-        }
-        super.finish();
+        finish();
     }
 
     private void slideRightIn(final Button view) {
@@ -832,7 +808,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void showCompleteStudyDialog() {
         String title = "", msg = "";
         switch (sliceListType) {
-            case SubWordListAccessor.RECOVERY_LIST:
             case SubWordListAccessor.SUB_WORD_LIST: {
                 sublistAccessor.update(this);
                 String str1 = sublistAccessor.getCorrectPercentage() + "%";
@@ -1107,6 +1082,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     } else {
                         bundle.putBoolean("complete", true);
                     }
+                    sublistAccessor.update(CoreActivity.this);
                     break;
                 case UPDATE:
                     bundle = new Bundle();

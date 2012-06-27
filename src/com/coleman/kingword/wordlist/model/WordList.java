@@ -14,7 +14,7 @@ public class WordList implements Serializable {
         String POSTGRADUATE_WORDLIST = "kingword/wordlist/cet4.txt";
     }
 
-    private static final String TAG = "WordList";
+    private static final String TAG = WordList.class.getName();
 
     public long id = -1;
 

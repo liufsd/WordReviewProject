@@ -28,10 +28,6 @@ public class SubWordListAccessor implements Serializable {
 
     private ArrayList<WordAccessor> list;
 
-    private static final String projection[] = new String[] {
-            TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID
-    };
-
     private static final String TAG = SubWordListAccessor.class.getName();
 
     private static Log Log = Config.getLog();
@@ -57,9 +53,9 @@ public class SubWordListAccessor implements Serializable {
 
     public byte listType;
 
-    public static final byte NULL_TYPE = -1;
-
     public static int slicelistState[][] = new int[4][];
+
+    public static final byte NULL_TYPE = -1;
 
     public static final byte SUB_WORD_LIST = 1;
 
@@ -68,8 +64,6 @@ public class SubWordListAccessor implements Serializable {
     public static final byte SCAN_LIST = 3;
 
     public static final byte NEW_WORD_BOOK_LIST = 4;
-
-    public static final byte RECOVERY_LIST = 5;
 
     public static final String DEFAULT_VIEW_METHOD = "0,0,1#0,1#1#0";
 
@@ -146,6 +140,10 @@ public class SubWordListAccessor implements Serializable {
     }
 
     private void loadSubList(Context context) {
+        final String projection[] = new String[] {
+                TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID,
+                TWordListItem.STATE
+        };
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(
                 TWordListItem.getContentUri(subinfo.word_list_id), projection,
@@ -153,13 +151,14 @@ public class SubWordListAccessor implements Serializable {
         if (c.moveToFirst()) {
             WordAccessor wordAccessor;
             while (!c.isAfterLast()) {
-                wordAccessor = new WordAccessor(this);
 
                 WordListItem item = new WordListItem();
                 item.word = c.getString(0);
                 item.id = c.getLong(1);
                 item.sub_wordlist_id = c.getLong(2);
-                wordAccessor.item = item;
+                item.state = c.getInt(3);
+
+                wordAccessor = new WordAccessor(this, item);
 
                 list.add(wordAccessor);
                 wordAccessor.loadInfo(context);
@@ -261,8 +260,25 @@ public class SubWordListAccessor implements Serializable {
     }
 
     public String getSubListLevelString(Context context) {
-        String levels = context.getString(R.string.history_level);
-        switch (subinfo.level) {
+        int rate = getStudyRate();
+        String levels = "";
+        if (rate <= subinfo.level) {
+            levels = context.getString(R.string.history_level);
+        } else {
+            levels = getLevelStrings(context, subinfo.level);
+        }
+        return levels;
+    }
+
+    public static String getLevelStrings(Context context, int level) {
+        String levels = "";
+        switch (level) {
+            case -1:
+                levels = context.getString(R.string.new_unit);
+                break;
+            case 0:
+                levels = context.getString(R.string.unfinish_unit);
+                break;
             case 1:
                 levels = context.getString(R.string.unpass_unit);
                 break;
@@ -289,8 +305,23 @@ public class SubWordListAccessor implements Serializable {
     }
 
     public void update(Context context) {
-        if (allComplete()) {
-            int tmp = 0;
+        int temp = getStudyRate();
+        if (temp > subinfo.level) {
+            subinfo.level = temp;
+        }
+        subinfo.position = p;
+        subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
+        ContentValues values = subinfo.toContentValues();
+        int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
+                TSubWordList._ID + "=" + subinfo.id, null);
+        Log.d(TAG, "sub word list update num: " + num);
+    }
+
+    private int getStudyRate() {
+        int tmp = -1;
+        if (!allComplete()) {
+            tmp = 0;
+        } else {
             if (errorCount <= list.size() * 5 / 100) {
                 tmp = 4;
             } else if (errorCount <= list.size() * 2 / 10) {
@@ -300,16 +331,17 @@ public class SubWordListAccessor implements Serializable {
             } else {
                 tmp = 1;
             }
-            if (tmp > subinfo.level) {
-                subinfo.level = tmp;
-            }
         }
-        subinfo.itemIndexInLoop = p;
-        subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
-        ContentValues values = subinfo.toContentValues();
-        int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
-                TSubWordList._ID + "=" + subinfo.id, null);
-        Log.d(TAG, "sub word list update num: " + num);
+        return tmp;
+    }
+
+    public void clearAllWordItemStates(Context context) {
+        ContentValues values = new ContentValues();
+        values.put(TWordListItem.STATE, -1);
+        int num = context.getContentResolver().update(
+                TWordListItem.getContentUri(subinfo.word_list_id), values,
+                TWordListItem.SUB_WORD_LIST_ID + "=" + subinfo.id, null);
+        Log.i(TAG, "===coleman-debug-update word items count: " + num);
     }
 
     public int getCount() {
@@ -323,6 +355,14 @@ public class SubWordListAccessor implements Serializable {
 
     public int getCurrentIndex() {
         return p + 1;
+    }
+
+    public long getWordListID() {
+        return subinfo.word_list_id;
+    }
+
+    public SubWordList getSubList() {
+        return subinfo;
     }
 
 }

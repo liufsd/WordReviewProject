@@ -130,7 +130,7 @@ public class Observable {
      * 
      * @param data the argument passed to {@code update()}.
      */
-    protected void notifyObservers(Object data) {
+    public void notifyObservers(Object data) {
         int size = 0;
         Observer[] arrays = null;
         synchronized (this) {
@@ -163,7 +163,7 @@ public class Observable {
      * Sets the changed flag for this {@code Observable}. After calling
      * {@code setChanged()}, {@code hasChanged()} will return {@code true}.
      */
-    protected void setChanged() {
+    public void setChanged() {
         changed = true;
     }
 }

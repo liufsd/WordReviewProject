@@ -32,7 +32,7 @@ public class ScrollLayout extends ViewGroup {
 
     private int mCurScreen;
 
-    private int mDefaultScreen = 0;
+    public static final int DEFAULT_SCREEN = 0;
 
     private float mLastMotionX, downX, downY;
 
@@ -60,8 +60,12 @@ public class ScrollLayout extends ViewGroup {
     }
 
     private void init(Context context) {
-        mCurScreen = mDefaultScreen;
+        mCurScreen = DEFAULT_SCREEN;
         mScroller = new Scroller(context);
+    }
+
+    public void setCurrentScreen(int currentScreen) {
+        this.mCurScreen = currentScreen;
     }
 
     public void setBottomBar(PageBottomBar btmBar) {
@@ -206,6 +210,10 @@ public class ScrollLayout extends ViewGroup {
                 break;
         }
         return true;
+    }
+
+    public View getCurrentScreen() {
+        return getChildAt(mCurScreen);
     }
 
     /**

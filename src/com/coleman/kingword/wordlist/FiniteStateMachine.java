@@ -11,13 +11,14 @@ import android.os.Message;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.ojm.core.Observable;
 import com.coleman.util.MyApp;
 
 /**
  * Finite state machine is composite of an InitState, an group of states, some
  * input messages, some output messages, and the state transition function.
  */
-public class FiniteStateMachine implements Serializable {
+public class FiniteStateMachine extends Observable implements Serializable {
 
     private static final long serialVersionUID = -8116244691305999296L;
 
@@ -37,12 +38,16 @@ public class FiniteStateMachine implements Serializable {
 
     public void sendMessage(Message msg) {
         mStateEngine.handleMessage(msg);
+        setChanged();
+        notifyObservers(null);
     }
 
     public void sendEmptyMessage(int what) {
         Message msg = Message.obtain();
         msg.what = what;
         mStateEngine.handleMessage(msg);
+        setChanged();
+        notifyObservers(null);
     }
 
     public int getCurrentIndex() {

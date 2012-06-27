@@ -20,21 +20,32 @@ public class SubWordList implements Parcelable, Serializable {
 
     public long word_list_id;
 
-    public int level;
+    public int level = -1;
 
     public String method;
 
-    public int itemIndexInLoop;
+    public int position;
 
-    // used for SlideTableSwitcher
+    public int progress;
+
+    // local used
     public int index;
 
+    public int screenIndex;
+
+    /**
+     * return the values of SubWordList
+     * 
+     * @notice sqlite 在创建表的SQL语句中使用default关键字不起作用，因此需要在表对应的值对象处设置默认值。
+     * @return
+     */
     public ContentValues toContentValues() {
         ContentValues value = new ContentValues();
         value.put(TSubWordList.WORD_LIST_ID, word_list_id);
         value.put(TSubWordList.LEVEL, level);
         value.put(TSubWordList.METHOD, method);
-        value.put(TSubWordList.POSITION, itemIndexInLoop);
+        value.put(TSubWordList.POSITION, position);
+        value.put(TSubWordList.PROGRESS, progress);
         return value;
     }
 
@@ -58,9 +69,12 @@ public class SubWordList implements Parcelable, Serializable {
         dest.writeLong(id);
         dest.writeLong(word_list_id);
         dest.writeInt(level);
-        dest.writeInt(index);
         dest.writeString(method);
-        dest.writeInt(itemIndexInLoop);
+        dest.writeInt(position);
+        dest.writeInt(progress);
+
+        dest.writeInt(index);
+        dest.writeInt(screenIndex);
     }
 
     /**
@@ -73,16 +87,20 @@ public class SubWordList implements Parcelable, Serializable {
             long id = in.readLong();
             long word_list_id = in.readLong();
             int level = in.readInt();
-            int index = in.readInt();
             String method = in.readString();
-            int loopIndex = in.readInt();
-            int itemIndexInLoop = in.readInt();
+            int position = in.readInt();
+            int progress = in.readInt();
+
+            int index = in.readInt();
+            int screenIndex = in.readInt();
             SubWordList swl = new SubWordList(word_list_id);
             swl.id = id;
             swl.level = level;
-            swl.index = index;
             swl.method = method;
-            swl.itemIndexInLoop = itemIndexInLoop;
+            swl.position = position;
+            swl.progress = progress;
+            swl.index = index;
+            swl.screenIndex = screenIndex;
             return swl;
         }
 
