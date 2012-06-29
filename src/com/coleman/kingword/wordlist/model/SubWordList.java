@@ -20,6 +20,8 @@ public class SubWordList implements Parcelable, Serializable {
 
     public long word_list_id;
 
+    public int history_level = -1;
+
     public int level = -1;
 
     public String method;
@@ -27,6 +29,8 @@ public class SubWordList implements Parcelable, Serializable {
     public int position;
 
     public int progress;
+
+    public int error_count;
 
     // local used
     public int index;
@@ -42,10 +46,12 @@ public class SubWordList implements Parcelable, Serializable {
     public ContentValues toContentValues() {
         ContentValues value = new ContentValues();
         value.put(TSubWordList.WORD_LIST_ID, word_list_id);
+        value.put(TSubWordList.HISTORY_LEVEL, history_level);
         value.put(TSubWordList.LEVEL, level);
         value.put(TSubWordList.METHOD, method);
         value.put(TSubWordList.POSITION, position);
         value.put(TSubWordList.PROGRESS, progress);
+        value.put(TSubWordList.ERROR_COUNT, error_count);
         return value;
     }
 
@@ -68,10 +74,12 @@ public class SubWordList implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeLong(word_list_id);
+        dest.writeInt(history_level);
         dest.writeInt(level);
         dest.writeString(method);
         dest.writeInt(position);
         dest.writeInt(progress);
+        dest.writeInt(error_count);
 
         dest.writeInt(index);
         dest.writeInt(screenIndex);
@@ -86,19 +94,23 @@ public class SubWordList implements Parcelable, Serializable {
         public SubWordList createFromParcel(Parcel in) {
             long id = in.readLong();
             long word_list_id = in.readLong();
+            int history_level = in.readInt();
             int level = in.readInt();
             String method = in.readString();
             int position = in.readInt();
             int progress = in.readInt();
+            int error_count = in.readInt();
 
             int index = in.readInt();
             int screenIndex = in.readInt();
             SubWordList swl = new SubWordList(word_list_id);
             swl.id = id;
+            swl.history_level = history_level;
             swl.level = level;
             swl.method = method;
             swl.position = position;
             swl.progress = progress;
+            swl.error_count = error_count;
             swl.index = index;
             swl.screenIndex = screenIndex;
             return swl;

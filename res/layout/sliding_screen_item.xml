@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:src="@drawable/unit_1" />
+        android:src="@drawable/unit0" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -39,5 +39,15 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearLayout1"
+        android:layout_alignLeft="@id/imageView1"
+        android:layout_alignRight="@id/imageView1"
+        android:layout_alignTop="@id/imageView1"
+        android:src="@drawable/rate0" />
 
 </RelativeLayout>

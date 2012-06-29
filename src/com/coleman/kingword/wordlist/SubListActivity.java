@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coleman.kingword.CoreActivity;
@@ -25,6 +26,8 @@ import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.view.PageBottomBar;
 import com.coleman.kingword.wordlist.view.ScrollLayout;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 import com.coleman.util.MyApp;
 
 /**
@@ -65,7 +68,9 @@ public class SubListActivity extends Activity {
 
     private void initQuery(long id) {
         String projection[] = new String[] {
-                TSubWordList._ID, TSubWordList.LEVEL, TSubWordList.METHOD, TSubWordList.POSITION
+                TSubWordList._ID, TSubWordList.HISTORY_LEVEL, TSubWordList.LEVEL,
+                TSubWordList.METHOD, TSubWordList.POSITION, TSubWordList.ERROR_COUNT,
+                TSubWordList.PROGRESS
         };
         long wordlist_id = id;
         Cursor c = MyApp.context.getContentResolver().query(TSubWordList.CONTENT_URI, projection,
@@ -76,10 +81,13 @@ public class SubListActivity extends Activity {
             while (!c.isAfterLast()) {
                 SubWordList swl = new SubWordList(wordlist_id);
                 swl.id = c.getLong(0);
-                swl.level = c.getInt(1);
+                swl.history_level = c.getInt(1);
+                swl.level = c.getInt(2);
                 swl.index = i;
-                swl.method = c.getString(2);
-                swl.position = c.getInt(3);
+                swl.method = c.getString(3);
+                swl.position = c.getInt(4);
+                swl.error_count = c.getInt(5);
+                swl.progress = c.getInt(6);
                 list.add(swl);
                 c.moveToNext();
                 i++;
@@ -94,6 +102,10 @@ public class SubListActivity extends Activity {
     }
 
     private class PageControl {
+
+        protected final String TAG = PageControl.class.getName();
+
+        protected final Log Log = Config.getLog();
 
         private int pageItems = 12;
 
@@ -128,6 +140,7 @@ public class SubListActivity extends Activity {
                             Intent intent = new Intent(SubListActivity.this, CoreActivity.class);
                             intent.putExtra("type", SubWordListAccessor.SUB_WORD_LIST);
                             SubWordList info = (SubWordList) parent.getItemAtPosition(position);
+                            Log.i(TAG, "===coleman-debug-subinfo: " + info.error_count);
                             info.screenIndex = si;
                             intent.putExtra("subinfo", (Parcelable) info);
                             SubListActivity.this.startActivity(intent);
@@ -146,6 +159,16 @@ public class SubListActivity extends Activity {
 
     private class PageAdapter extends BaseAdapter {
         private List<SubWordList> list;
+
+        private final int[] historyRateLev = new int[] {
+                R.drawable.rate0, R.drawable.rate1, R.drawable.rate2, R.drawable.rate3,
+                R.drawable.rate4, R.drawable.rate5
+        };
+
+        private final int[] historyPaperLev = new int[] {
+                R.drawable.unit0, R.drawable.unit1, R.drawable.unit2, R.drawable.unit3,
+                R.drawable.unit4, R.drawable.unit5
+        };
 
         public PageAdapter(List<SubWordList> list) {
             this.list = list;
@@ -172,11 +195,19 @@ public class SubListActivity extends Activity {
                 convertView = LayoutInflater.from(SubListActivity.this).inflate(
                         R.layout.sliding_screen_item, null);
             }
+            ImageView ivPaper = (ImageView) convertView.findViewById(R.id.imageView1);
+            ivPaper.setImageResource(historyPaperLev[getItem(position).history_level + 1]);
+
+            ImageView ivRate = (ImageView) convertView.findViewById(R.id.imageView2);
+            ivRate.setImageResource(historyRateLev[getItem(position).history_level + 1]);
+
             TextView title = (TextView) convertView.findViewById(R.id.textView1);
-            TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
             title.setText("unit " + getItem(position).index);
+
+            TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
             subTitle.setText(SubWordListAccessor.getLevelStrings(SubListActivity.this,
                     getItem(position).level));
+
             return convertView;
         }
 

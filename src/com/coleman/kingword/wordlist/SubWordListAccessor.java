@@ -46,11 +46,6 @@ public class SubWordListAccessor implements Serializable {
      */
     private int lastMark;
 
-    /**
-     * count the total number of the error occuring times.
-     */
-    public int errorCount;
-
     public byte listType;
 
     public static int slicelistState[][] = new int[4][];
@@ -70,6 +65,8 @@ public class SubWordListAccessor implements Serializable {
     public SubWordListAccessor(SubWordList info) {
         listType = SUB_WORD_LIST;
         subinfo = info;
+        p = info.position;
+        Log.i(TAG, "===coleman-debug-p: " + p);
         list = new ArrayList<WordAccessor>();
     }
 
@@ -144,6 +141,13 @@ public class SubWordListAccessor implements Serializable {
                 TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID,
                 TWordListItem.STATE
         };
+        if (subinfo.level > 0) {
+            subinfo.position = 0;
+            subinfo.progress = 0;
+            subinfo.error_count = 0;
+            update(context);
+            clearAllWordItemStates(context);
+        }
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(
                 TWordListItem.getContentUri(subinfo.word_list_id), projection,
@@ -164,6 +168,7 @@ public class SubWordListAccessor implements Serializable {
                 wordAccessor.loadInfo(context);
                 c.moveToNext();
             }
+            
         }
         if (c != null) {
             c.close();
@@ -260,9 +265,8 @@ public class SubWordListAccessor implements Serializable {
     }
 
     public String getSubListLevelString(Context context) {
-        int rate = getStudyRate();
         String levels = "";
-        if (rate <= subinfo.level) {
+        if (subinfo.level <= subinfo.history_level) {
             levels = context.getString(R.string.history_level);
         } else {
             levels = getLevelStrings(context, subinfo.level);
@@ -301,15 +305,17 @@ public class SubWordListAccessor implements Serializable {
         if (list.size() == 0) {
             return 0;
         }
-        return 100 - errorCount * 100 / list.size();
+        return 100 - subinfo.error_count * 100 / list.size();
     }
 
     public void update(Context context) {
-        int temp = getStudyRate();
-        if (temp > subinfo.level) {
-            subinfo.level = temp;
+        subinfo.level = getStudyRate();
+        if (subinfo.level > subinfo.history_level) {
+            subinfo.history_level = subinfo.level;
         }
         subinfo.position = p;
+        subinfo.progress = getProgress();
+        Log.i(TAG, "===coleman-debug-subinfo: " + subinfo.error_count);
         subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         ContentValues values = subinfo.toContentValues();
         int num = context.getContentResolver().update(TSubWordList.CONTENT_URI, values,
@@ -322,11 +328,11 @@ public class SubWordListAccessor implements Serializable {
         if (!allComplete()) {
             tmp = 0;
         } else {
-            if (errorCount <= list.size() * 5 / 100) {
+            if (subinfo.error_count <= list.size() * 5 / 100) {
                 tmp = 4;
-            } else if (errorCount <= list.size() * 2 / 10) {
+            } else if (subinfo.error_count <= list.size() * 2 / 10) {
                 tmp = 3;
-            } else if (errorCount <= list.size() * 4 / 10) {
+            } else if (subinfo.error_count <= list.size() * 4 / 10) {
                 tmp = 2;
             } else {
                 tmp = 1;

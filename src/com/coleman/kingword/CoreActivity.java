@@ -1106,6 +1106,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     } else {
                         bundle.putBoolean("next", false);
                     }
+                    sublistAccessor.update(CoreActivity.this);
                     break;
                 case UPGRADE: {
                     boolean b = nextWordItem.upgrade(CoreActivity.this);

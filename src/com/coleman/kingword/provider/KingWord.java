@@ -243,6 +243,16 @@ public class KingWord {
         // fields
         public static final String WORD_LIST_ID = "word_list_id";
 
+        /**
+         * 标识历史最好成绩
+         * 
+         * @version 7
+         */
+        public static final String HISTORY_LEVEL = "history_level";
+
+        /**
+         * 上次学习结果：新单元，未完成，未通过，通过，良好，优秀
+         */
         public static final String LEVEL = "level";
 
         /**
@@ -264,12 +274,15 @@ public class KingWord {
          */
         public static final String PROGRESS = "progress";
 
+        public static final String ERROR_COUNT = "error_count";
+
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
                 + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
                 + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " text ,"
-                + TSubWordList.POSITION + " integer ," + TSubWordList.PROGRESS + " integer ,"
-                + TSubWordList.LEVEL + " integer default -1 )";
+                + TSubWordList.POSITION + " integer ," + TSubWordList.ERROR_COUNT + " integer ,"
+                + TSubWordList.PROGRESS + " integer ," + TSubWordList.HISTORY_LEVEL
+                + " integer default -1 ," + TSubWordList.LEVEL + " integer default -1 )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -279,10 +292,12 @@ public class KingWord {
         static {
             projectionMap.put(_ID, _ID);
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(HISTORY_LEVEL, HISTORY_LEVEL);
             projectionMap.put(LEVEL, LEVEL);
             projectionMap.put(METHOD, METHOD);
             projectionMap.put(PROGRESS, PROGRESS);
             projectionMap.put(POSITION, POSITION);
+            projectionMap.put(ERROR_COUNT, ERROR_COUNT);
         }
 
     }
