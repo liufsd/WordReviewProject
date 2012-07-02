@@ -168,7 +168,7 @@ public class SubWordListAccessor implements Serializable {
                 wordAccessor.loadInfo(context);
                 c.moveToNext();
             }
-            
+
         }
         if (c != null) {
             c.close();
@@ -309,6 +309,11 @@ public class SubWordListAccessor implements Serializable {
     }
 
     public void update(Context context) {
+        // if not SUB_WORD_LIST, do not execute the update.
+        if (listType != SUB_WORD_LIST) {
+            return;
+        }
+
         subinfo.level = getStudyRate();
         if (subinfo.level > subinfo.history_level) {
             subinfo.history_level = subinfo.level;

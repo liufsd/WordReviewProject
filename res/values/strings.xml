@@ -246,5 +246,10 @@
     <string name="view_word">查看模式</string>
     <string name="view_multi">选项模式</string>
     <string name="view_complete">完成</string>
+    <!-- chart -->
+    <string name="chart_desc">最近一个月单词记忆数目统计</string>
+    <string name="chart_title">单词记忆</string>
+    <string name="chart_x_label">时间</string>
+    <string name="chart_y_label">数量</string>
 
 </resources>

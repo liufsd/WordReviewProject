@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.coleman.kingword.dict.DictLoadService;
@@ -35,6 +36,7 @@ import com.coleman.ojm.bussiness.WorkManager;
 import com.coleman.ojm.core.Observer;
 import com.coleman.ojm.http.SLRequest;
 import com.coleman.tools.InfoGather;
+import com.coleman.tools.chart.ChartManager;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.DialogUtil;
@@ -56,6 +58,8 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private Dialog versionCheckDialog;
 
+    private FrameLayout flayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +68,9 @@ public class WelcomeActivity extends Activity implements Observer {
         startButton = (Button) findViewById(R.id.w_button1);
         curTV = (TextView) findViewById(R.id.textView1);
         nextTV = (TextView) findViewById(R.id.textView2);
+        flayout = (FrameLayout) findViewById(R.id.ebbinghaus);
 
+        flayout.addView(ChartManager.getInstance().getChartView(this));
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
