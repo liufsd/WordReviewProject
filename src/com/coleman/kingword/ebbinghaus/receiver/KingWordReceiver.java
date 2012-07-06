@@ -65,8 +65,7 @@ public class KingWordReceiver extends BroadcastReceiver {
         }
 
         byte type = intent.getByteExtra("type", Byte.MAX_VALUE);
-        if (CoreActivity.class.getName().equals(cName)
-                || EbbinghausActivityAsDialog.class.getName().equals(cName)) {
+        if (cName != null && cName.contains("com.coleman.kingword")) {
             Intent it = new Intent(context, EbbinghausActivityAsDialog.class);
             it.putExtra("title", context.getString(R.string.review));
             it.putExtra("message",
@@ -142,10 +141,14 @@ public class KingWordReceiver extends BroadcastReceiver {
                 + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or "
                 + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
                 + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
-        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, null, selection, null,
-                null);
-        Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct));
-        count = c.getCount();
+        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
+            "count(*) as count"
+        }, selection, null, null);
+        if (c.moveToFirst()) {
+            count = c.getInt(0);
+        }
+        Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct)
+                + " need review num:" + count);
         if (c != null) {
             c.close();
             c = null;
