@@ -10,12 +10,22 @@ import android.app.Activity;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
 
+/**
+ * Observable 实现默认在通知Observer时，如果Observer是Activity且已经Finish，则不会通知这个Observer。
+ * <p>
+ * 这个默认实现机制不能取代deleteObserver调用，如果一个对象被析构，应该把这个对象从通知对象列表移除。
+ * 
+ * @author coleman
+ * @version [version, Jul 6, 2012]
+ * @see [relevant class/method]
+ * @since [product/module version]
+ */
 public class Observable {
     private static final String TAG = Observable.class.getName();
 
     private Log Log = Config.getLog();
 
-    List<Observer> observers = new ArrayList<Observer>();
+    private ArrayList<Observer> observers = new ArrayList<Observer>();
 
     boolean changed = false;
 

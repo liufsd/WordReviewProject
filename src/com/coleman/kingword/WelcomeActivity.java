@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import com.coleman.ojm.bean.VersionCheckResp;
 import com.coleman.ojm.bussiness.WorkManager;
 import com.coleman.ojm.core.Observer;
 import com.coleman.ojm.http.SLRequest;
+import com.coleman.ojm.http.SLResponse;
 import com.coleman.tools.InfoGather;
 import com.coleman.tools.chart.ChartManager;
 import com.coleman.util.AppSettings;
@@ -48,6 +50,8 @@ import com.coleman.util.MyApp;
 public class WelcomeActivity extends Activity implements Observer {
     private static final String TAG = WelcomeActivity.class.getName();
 
+    private static final int VERSION_CHECK_DIALOG = 0;
+
     private static Log Log = Config.getLog();
 
     private Button startButton;
@@ -59,6 +63,8 @@ public class WelcomeActivity extends Activity implements Observer {
     private Dialog versionCheckDialog;
 
     private FrameLayout flayout;
+
+    private SLResponse<VersionCheckResp> slVersionCheckResp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,9 +118,9 @@ public class WelcomeActivity extends Activity implements Observer {
             req.setVersionType(appVersionName);
             SLRequest<VersionCheckReq> slReq = new SLRequest<VersionCheckReq>(req);
             slReq.addObserver(this);
-            WorkManager.getInstance().versionUpgrade(slReq);
+            slVersionCheckResp = WorkManager.getInstance().versionUpgrade(slReq);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e);
         }
     }
 
@@ -181,6 +187,12 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     @Override
+    protected void onDestroy() {
+        slVersionCheckResp.deleteObserver(this);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.welcome_option, menu);
         return true;
@@ -209,8 +221,7 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private void userCheck() {
         upgradeCheck();
-        // versionCheckDialog = DialogUtil.showLoadingDialog(this,
-        // R.string.version_checking);
+        versionCheckDialog = DialogUtil.showLoadingDialog(this, R.string.upgrade_check);
         userCheck = true;
     }
 
@@ -356,19 +367,19 @@ public class WelcomeActivity extends Activity implements Observer {
         if (data instanceof VersionCheckResp) {
             final VersionCheckResp bean = (VersionCheckResp) data;
             int rc = bean.getResultCode();
+            dismiss(versionCheckDialog);
             if (rc == 0) {
                 if (bean.getNewVersionCode() != -1) {
-                    new AlertDialog.Builder(this).setTitle(R.string.upgrade_tip)
-                            .setMessage(bean.getDescription())
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    DialogUtil.showMessage(this, getString(R.string.upgrade_tip),
+                            bean.getDescription(), getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     UpgradeService.downloadVersion(WelcomeActivity.this, bean);
                                 }
-                            }).setNegativeButton(R.string.cancel, null).show();
+                            }, getString(R.string.cancel), null);
                 } else {
                     if (userCheck) {
-                        dismiss(versionCheckDialog);
                         userCheck = false;
                         DialogUtil.showServerMessage(this, bean.getDescription());
                     } else {
@@ -379,7 +390,6 @@ public class WelcomeActivity extends Activity implements Observer {
 
             } else {
                 if (userCheck) {
-                    dismiss(versionCheckDialog);
                     userCheck = false;
                     DialogUtil.showErrorMessage(this, bean.getDescription());
                 } else {

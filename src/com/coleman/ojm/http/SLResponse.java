@@ -33,6 +33,9 @@ public class SLResponse<T extends BasicResponse> extends Observable {
         this.mResponseBean = reponse;
     }
 
+    /**
+     * 如果一个Activity已经被Finish, 这个Activity在被通知时会被过滤掉
+     */
     public void notifyLoaded() {
         MyApp.handler.post(new Runnable() {
             @Override
@@ -44,6 +47,11 @@ public class SLResponse<T extends BasicResponse> extends Observable {
         });
     }
 
+    /**
+     * 如果一个Activity已经被Finish, 这个Activity在被通知时会被过滤掉
+     * 
+     * @param data 错误描述
+     */
     public void notifyError(final String data) {
         MyApp.handler.post(new Runnable() {
             @Override

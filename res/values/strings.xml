@@ -251,5 +251,6 @@
     <string name="chart_title">单词记忆</string>
     <string name="chart_x_label">时间</string>
     <string name="chart_y_label">数量</string>
+    <string name="upgrade_check">正在检查有没有新版本...</string>
 
 </resources>
