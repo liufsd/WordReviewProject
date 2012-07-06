@@ -109,6 +109,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private TextToSpeech tts;
 
+    /**
+     * 用来标识是否复习对话框是在当前CoreActivity上弹出来的，如果是的话，关闭当前Activity不会打开TabListActivity
+     */
+    private boolean coreTop = false;
+
     public static enum Anim {
         ANIM_3D(0), ANIM_FADE(1), ANIM_SLIDE(2);
         private final int type;
@@ -165,6 +170,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case SubWordListAccessor.REVIEW_LIST:
                 AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                         AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
+                this.coreTop = intent.getBooleanExtra("core_top", false);
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
                 sublistAccessor = new SubWordListAccessor(sliceListType);
@@ -483,7 +489,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     public void finish() {
         if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
-            startActivity(new Intent(this, WordlistTabActivity.class));
+            if (!coreTop) {
+                startActivity(new Intent(this, WordlistTabActivity.class));
+            }
         } else if (sliceListType == SubWordListAccessor.SUB_WORD_LIST) {
             startSubListActivity();
         }

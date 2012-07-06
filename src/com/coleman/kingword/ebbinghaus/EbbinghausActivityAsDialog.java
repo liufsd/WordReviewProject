@@ -18,7 +18,7 @@ public class EbbinghausActivityAsDialog extends Activity implements OnClickListe
 
     private Button btn1, btn2;
 
-    private byte type, reviewType;
+    private byte type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,6 @@ public class EbbinghausActivityAsDialog extends Activity implements OnClickListe
         String btnStr1 = i.getStringExtra("positive");
         String btnStr2 = i.getStringExtra("negative");
         type = i.getByteExtra("type", Byte.MAX_VALUE);
-        reviewType = i.getByteExtra("review_type", Byte.MAX_VALUE);
 
         title.setText(titleStr);
         msg.setText(msgStr);
@@ -55,12 +54,12 @@ public class EbbinghausActivityAsDialog extends Activity implements OnClickListe
             case R.id.positive:
                 final Intent i = new Intent(this, CoreActivity.class);
                 i.putExtra("type", type);
-                i.putExtra("review_type", reviewType);
+                i.putExtra("core_top", "true");
                 startActivity(i);
                 finish();
                 break;
             case R.id.negative:
-                EbbinghausReminder.setNotifactionDelay(this, reviewType, 10);
+                EbbinghausReminder.setNotifactionDelay(this, 10);
                 finish();
                 break;
             default:
