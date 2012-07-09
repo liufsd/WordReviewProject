@@ -141,13 +141,11 @@ public class SubWordListAccessor implements Serializable {
                 TWordListItem.WORD, TWordListItem._ID, TWordListItem.SUB_WORD_LIST_ID,
                 TWordListItem.STATE
         };
+        // 1.再次打开已经完成学习的单元需要清楚所有单词的状态
         if (subinfo.level > 0) {
-            subinfo.position = 0;
-            subinfo.progress = 0;
-            subinfo.error_count = 0;
-            update(context);
             clearAllWordItemStates(context);
         }
+        // 2.加载当前单元单词
         long time = System.currentTimeMillis();
         Cursor c = context.getContentResolver().query(
                 TWordListItem.getContentUri(subinfo.word_list_id), projection,
@@ -173,6 +171,13 @@ public class SubWordListAccessor implements Serializable {
         if (c != null) {
             c.close();
             c = null;
+        }
+        // 3.再次打开已经完成学习的单元需要清空以前的学习记录
+        if (subinfo.level > 0) {
+            subinfo.position = 0;
+            subinfo.progress = 0;
+            subinfo.error_count = 0;
+            update(context);
         }
         time = System.currentTimeMillis() - time;
         Log.d(TAG, "Load sub-wordlist cost time: " + time);
@@ -204,6 +209,13 @@ public class SubWordListAccessor implements Serializable {
             return true;
         }
         for (int i = lastMark; i < list.size(); i++) {
+            WordAccessor wa = list.get(i);
+            if (!wa.isComplete()) {
+                lastMark = i;
+                return false;
+            }
+        }
+        for (int i = 0; i < lastMark; i++) {
             WordAccessor wa = list.get(i);
             if (!wa.isComplete()) {
                 lastMark = i;
@@ -266,7 +278,7 @@ public class SubWordListAccessor implements Serializable {
 
     public String getSubListLevelString(Context context) {
         String levels = "";
-        if (subinfo.level <= subinfo.history_level) {
+        if (subinfo.level < subinfo.history_level) {
             levels = context.getString(R.string.history_level);
         } else {
             levels = getLevelStrings(context, subinfo.level);

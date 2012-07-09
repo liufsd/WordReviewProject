@@ -59,7 +59,6 @@ import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.kingword.wordlist.WordAccessor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
-import com.coleman.kingword.wordlist.view.ScrollLayout;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;

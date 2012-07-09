@@ -93,8 +93,8 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
             EbbinghausReminder.removeRepeatNotifaction(ReviewSettings.this, j);
         }
 
+        String notSet = getString(R.string.not_set);
         if (cbpre.isChecked()) {
-            String notSet = getString(R.string.not_set);
             String t1 = AppSettings.getString(AppSettings.TIME1, notSet);
             String t2 = AppSettings.getString(AppSettings.TIME2, notSet);
             String t3 = AppSettings.getString(AppSettings.TIME3, notSet);
@@ -107,6 +107,12 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
             if (!notSet.equals(t3)) {
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, 2, t3);
             }
+        }
+        else{
+            AppSettings.saveString(time1.getKey(), notSet);
+            AppSettings.saveString(time2.getKey(), notSet);
+            AppSettings.saveString(time3.getKey(), notSet);
+            initUI();
         }
     }
 

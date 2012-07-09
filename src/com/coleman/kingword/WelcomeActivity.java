@@ -13,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,8 +48,6 @@ import com.coleman.util.MyApp;
  */
 public class WelcomeActivity extends Activity implements Observer {
     private static final String TAG = WelcomeActivity.class.getName();
-
-    private static final int VERSION_CHECK_DIALOG = 0;
 
     private static Log Log = Config.getLog();
 
@@ -188,7 +185,9 @@ public class WelcomeActivity extends Activity implements Observer {
 
     @Override
     protected void onDestroy() {
-        slVersionCheckResp.deleteObserver(this);
+        if (slVersionCheckResp != null) {
+            slVersionCheckResp.deleteObserver(this);
+        }
         super.onDestroy();
     }
 
