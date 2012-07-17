@@ -251,6 +251,12 @@
     <string name="chart_title">单词记忆</string>
     <string name="chart_x_label">时间</string>
     <string name="chart_y_label">数量</string>
+    <!-- upgrade -->
     <string name="upgrade_check">正在检查有没有新版本...</string>
+    <!-- play & stop -->
+    <string name="play">播放</string>
+    <string name="stop">停止</string>
+    <string name="stop_first">请先停止自动播放！</string>
+    <string name="play_complete">播放结束，自动播放停止</string>
 
 </resources>

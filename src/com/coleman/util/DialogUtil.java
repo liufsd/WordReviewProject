@@ -14,6 +14,8 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.text.TextUtils;
 import android.util.SparseArray;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.log.Log;
@@ -124,7 +126,7 @@ public class DialogUtil {
     }
 
     public static Dialog showSystemMessage(Context context, int msgId) {
-        Dialog dialog = new AlertDialog.Builder(context).setTitle(R.string.server_msg_title)
+        Dialog dialog = new AlertDialog.Builder(context).setTitle(R.string.system_msg_title)
                 .setMessage(msgId).setPositiveButton(android.R.string.ok, null).show();
         register(context, dialog);
         return dialog;

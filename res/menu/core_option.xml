@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/menu_anim" android:title="@string/anim_set"></item>
-	<item android:id="@+id/menu_review" android:title="@string/review"></item>
-	<item android:id="@+id/menu_countdown" android:title="@string/countdown_conceal"></item>
-	<item android:id="@+id/menu_color_set" android:title="@string/color_set"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_anim"
+        android:title="@string/anim_set"></item>
+
+    <item
+        android:id="@+id/menu_review"
+        android:title="@string/review"></item>
+
+    <item
+        android:id="@+id/menu_countdown"
+        android:title="@string/countdown_conceal"></item>
+
+    <item
+        android:id="@+id/menu_color_set"
+        android:title="@string/color_set"></item>
+
+    <item
+        android:id="@+id/menu_play"
+        android:title="@string/play"></item>
+
 </menu>

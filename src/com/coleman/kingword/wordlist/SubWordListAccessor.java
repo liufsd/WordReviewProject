@@ -388,4 +388,14 @@ public class SubWordListAccessor implements Serializable {
         return subinfo;
     }
 
+    public int getIndex() {
+        return p;
+    }
+
+    public void errorPlus() {
+        if (subinfo != null) {
+            subinfo.error_count++;
+        }
+    }
+
 }

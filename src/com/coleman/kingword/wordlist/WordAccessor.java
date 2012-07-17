@@ -244,7 +244,7 @@ public class WordAccessor implements Serializable, Observer {
 
     public void errorPlus(Context context) {
         info.errorcount++;
-        subAccessor.getSubList().error_count++;
+        subAccessor.errorPlus();
         subAccessor.update(context);
         if (info.errorcount % 2 == 0) {
             info.weight++;
