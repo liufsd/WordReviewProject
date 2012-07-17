@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class KingWord {
+    public static final int version = 7;
+
     public static final HashMap<String, HashMap<String, String>> maps = new HashMap<String, HashMap<String, String>>();
 
     public static final class TDict implements BaseColumns {
@@ -234,7 +236,7 @@ public class KingWord {
 
     public static final class TSubWordList implements BaseColumns {
         // table name
-        public static final String TABLE_NAME = "sub_list";
+        public static final String TABLE_NAME = "sub_word_list";
 
         // content uri
         public static final Uri CONTENT_URI = Uri.parse("content://" + KingWordProvider.AUTHORITY

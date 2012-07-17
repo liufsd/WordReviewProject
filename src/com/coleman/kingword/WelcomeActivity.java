@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.kingword.provider.upgrade.UpgradeManager;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.log.Log;
 import com.coleman.log.Log.Level;
@@ -57,7 +59,7 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private boolean userCheck;
 
-    private Dialog versionCheckDialog;
+    private Dialog versionCheckDialog, dbUpgradeDialog;
 
     private FrameLayout flayout;
 
@@ -80,15 +82,10 @@ public class WelcomeActivity extends Activity implements Observer {
                 startActivity(new Intent(WelcomeActivity.this, WordlistTabActivity.class));
             }
         });
-
-        // initial the environment
-        init();
-        // login
-        login();
-        // test versionUpgrade
-        if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
-            upgradeCheck();
-        }
+        // check db upgrade
+        UpgradeManager.getInstance().addObserver(this);
+        UpgradeManager.getInstance().upgrade();
+        dbUpgradeDialog = DialogUtil.showDBUpgrade(this);
 
     }
 
@@ -401,6 +398,20 @@ public class WelcomeActivity extends Activity implements Observer {
             int rc = bean.getResultCode();
             String desc = bean.getDescription();
             Log.i(TAG, "===coleman-debug-rc: " + rc + " desc:" + desc);
+        } else if (data instanceof UpgradeManager) {
+            if (!TextUtils.isEmpty(UpgradeManager.getInstance().getFailMsg())) {
+                DialogUtil.showSystemMessage(this, UpgradeManager.getInstance().getFailMsg());
+                UpgradeManager.getInstance().setFailMsg("");
+            }
+            dbUpgradeDialog.dismiss();
+            // initial the environment
+            init();
+            // login
+            login();
+            // test versionUpgrade
+            if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
+                upgradeCheck();
+            }
         }
     }
 

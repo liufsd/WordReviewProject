@@ -132,6 +132,13 @@ public class DialogUtil {
         return dialog;
     }
 
+    public static Dialog showSystemMessage(Context context, String failMsg) {
+        Dialog dialog = new AlertDialog.Builder(context).setTitle(R.string.system_msg_title)
+                .setMessage(failMsg).setPositiveButton(android.R.string.ok, null).show();
+        register(context, dialog);
+        return dialog;
+    }
+
     public static Dialog showMessage(Context context, int titleId, int msgId, int positiveBtnId,
             OnClickListener listen1, int negativeBtnId, OnClickListener listen2) {
         Dialog dialog = new AlertDialog.Builder(context).setTitle(titleId).setMessage(msgId)
@@ -200,5 +207,13 @@ public class DialogUtil {
             }
         }
         Log.i(TAG, "===coleman-debug-register dialog cost: " + (System.currentTimeMillis() - time));
+    }
+
+    public static Dialog showDBUpgrade(Context context) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setCancelable(false);
+        dialog.setMessage(context.getString(R.string.db_upgrade));
+        register(context, dialog);
+        return dialog;
     }
 }

@@ -24,4 +24,5 @@ public interface Task {
      * 5. 保存升级后的数据库版本（也就是软件版本号）
      */
     public void execute();
+    
 }

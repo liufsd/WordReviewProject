@@ -34,8 +34,6 @@ public class WordAccessor implements Serializable, Observer {
 
     public WordInfo info;
 
-    private boolean reviewed;
-
     private DictData dictData;
 
     private DictData detailData;
@@ -201,44 +199,21 @@ public class WordAccessor implements Serializable, Observer {
         return WordInfoHelper.store(context, info);
     }
 
-    public void studyOrReview(Context context) {
-        if (subAccessor.listType == SubWordListAccessor.REVIEW_LIST) {
-            reviewPlus(context);
-        } else {
-            studyPlus(context);
-        }
-    }
-
-    private void studyPlus(Context context) {
+    public void viewPlus(Context context) {
         info.studycount++;
         if (info.review_time == 0) {
             info.review_type = WordInfo.REVIEW_1_HOUR;
             info.review_time = System.currentTimeMillis();
-            // ////////////////////////////////////////////////////////////
-            // EbbinghausReminder.setNotifaction(context, info.review_type);
-            // ////////////////////////////////////////////////////////////
+        } else if (info.inReviewTime()) {
+            info.review_type = WordInfo.getNextReviewType(info.review_type);
         }
-        if (info.studycount % 3 == 0) {
-            info.weight--;
-        }
+        info.weight--;
         info.weight = info.weight < WordInfo.MIN_WEIGHT ? WordInfo.MIN_WEIGHT : info.weight;
-        Log.d(TAG, "study plus:" + toString());
-        WordInfoHelper.store(context, info);
-    }
 
-    private void reviewPlus(Context context) {
-        info.studycount++;
-        if (!reviewed) {
-            reviewed = true;
-            if (info.inReviewTime()) {
-                info.review_type = WordInfo.getNextReviewType(info.review_type);
-            }
+        if (info.weight == WordInfo.MIN_WEIGHT && info.review_type == WordInfo.REVIEW_COMPLETE) {
+            info.ignore = true;
         }
-        if (info.studycount % 3 == 0) {
-            info.weight--;
-        }
-        info.weight = info.weight < WordInfo.MIN_WEIGHT ? WordInfo.MIN_WEIGHT : info.weight;
-        Log.d(TAG, "review plus:" + toString());
+        Log.d(TAG, "study plus:" + toString());
         WordInfoHelper.store(context, info);
     }
 
@@ -246,9 +221,7 @@ public class WordAccessor implements Serializable, Observer {
         info.errorcount++;
         subAccessor.errorPlus();
         subAccessor.update(context);
-        if (info.errorcount % 2 == 0) {
-            info.weight++;
-        }
+        info.weight += 2;
         info.weight = info.weight > WordInfo.MAX_WEIGHT ? WordInfo.MAX_WEIGHT : info.weight;
         Log.d(TAG, "error plus:" + toString());
         WordInfoHelper.store(context, info);

@@ -1,8 +1,11 @@
 
 package com.coleman.kingword.provider.upgrade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
+import com.coleman.kingword.provider.KingWord;
 import com.coleman.kingword.provider.upgrade.version6.Task_v6;
 import com.coleman.util.AppSettings;
 
@@ -23,30 +26,34 @@ import com.coleman.util.AppSettings;
  * @see [relevant class/method]
  * @since [product/module version]
  */
-class DBVersionChain {
-    private static DBVersionChain chain;
+class InternalDBVersionChain {
+    private static InternalDBVersionChain chain;
 
     private HashMap<Integer, Task> map = new HashMap<Integer, Task>();
 
-    private DBVersionChain() {
+    private InternalDBVersionChain() {
         map.put(6, new Task_v6());
     }
 
-    public static DBVersionChain getInstance() {
+    public static InternalDBVersionChain getInstance() {
         if (chain == null) {
-            chain = new DBVersionChain();
+            chain = new InternalDBVersionChain();
         }
         return chain;
     }
 
     /**
-     * 执行递归式步进升级，每一步升级前
+     * 执行版本+1递归式步进升级，每一步升级前检查相应版本号对应的升级任务是否存在。
      */
     public void upgrade() {
-        if (UpgradeManager.getInstance().needUpgrade()) {
-            int savedVersion = AppSettings.getInt(AppSettings.SAVED_DB_VERSION_KEY, 6);
-            Task task = map.get(savedVersion);
+        int savedVersion = AppSettings.getInt(AppSettings.SAVED_DB_VERSION_KEY, 6);
+        Task task = map.get(savedVersion);
+        if (task != null) {
             task.execute();
+            AppSettings.saveInt(AppSettings.SAVED_DB_VERSION_KEY, savedVersion + 1);
+            upgrade();
+        } else if (savedVersion < KingWord.version) {
+            AppSettings.saveInt(AppSettings.SAVED_DB_VERSION_KEY, savedVersion + 1);
             upgrade();
         }
     }

@@ -38,6 +38,7 @@ public class WordInfoHelper {
     };
 
     private static final String TAG = WordInfoHelper.class.getName();
+
     private static Log Log = Config.getLog();
 
     /**
@@ -447,15 +448,7 @@ public class WordInfoHelper {
         ContentValues value = null;
         Uri uri = null;
         if (info != null) {
-            value = new ContentValues();
-            value.put(THistory.WORD, info.word);
-            value.put(THistory.IGNORE, info.ignore ? 2 : 1);
-            value.put(THistory.STUDY_COUNT, info.studycount);
-            value.put(THistory.ERROR_COUNT, info.errorcount);
-            value.put(THistory.WEIGHT, info.weight);
-            value.put(THistory.NEW_WORD, info.newword ? 2 : 1);
-            value.put(THistory.REVIEW_TYPE, info.review_type);
-            value.put(THistory.REVIEW_TIME, info.review_time);
+            value = info.toContentValues();
             uri = context.getContentResolver().insert(THistory.CONTENT_URI, value);
         }
         return uri;
@@ -468,15 +461,7 @@ public class WordInfoHelper {
         ContentValues value = null;
         int count = 0;
         if (info != null) {
-            value = new ContentValues();
-            value.put(THistory.WORD, info.word);
-            value.put(THistory.IGNORE, info.ignore ? 2 : 1);
-            value.put(THistory.STUDY_COUNT, info.studycount);
-            value.put(THistory.ERROR_COUNT, info.errorcount);
-            value.put(THistory.WEIGHT, info.weight);
-            value.put(THistory.NEW_WORD, info.newword ? 2 : 1);
-            value.put(THistory.REVIEW_TYPE, info.review_type);
-            value.put(THistory.REVIEW_TIME, info.review_time);
+            value = info.toContentValues();
             count = context.getContentResolver().update(THistory.CONTENT_URI, value,
                     THistory._ID + "=" + info.id, null);
         }

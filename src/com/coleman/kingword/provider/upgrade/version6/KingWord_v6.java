@@ -18,6 +18,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class KingWord_v6 {
+    public static final int version = 6;
+
     public static final HashMap<String, HashMap<String, String>> maps = new HashMap<String, HashMap<String, String>>();
 
     public static final class TDict implements BaseColumns {

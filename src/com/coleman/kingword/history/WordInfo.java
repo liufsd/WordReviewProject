@@ -3,12 +3,14 @@ package com.coleman.kingword.history;
 
 import java.io.Serializable;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
 
@@ -22,7 +24,7 @@ public class WordInfo implements Parcelable, Serializable {
 
     public static final byte MIN_WEIGHT = 0;
 
-    public static final byte MAX_WEIGHT = 5;
+    public static final byte MAX_WEIGHT = 15;
 
     private static final String TAG = WordInfo.class.getName();
 
@@ -39,7 +41,12 @@ public class WordInfo implements Parcelable, Serializable {
 
     public byte errorcount = 0;
 
-    public byte weight = 3;
+    /**
+     * 如果一个单词经历两轮学习复习，且未有错误发生时weight会降为零，这时ignore会自动置为true。 每一轮依次为REVIEW_1_HOUR,
+     * REVIEW_12_HOUR, REVIEW_1_DAY, REVIEW_5_DAY, REVIEW_20_DAY, REVIEW_40_DAY,
+     * REVIEW_60_DAY, REVIEW_COMPLETE.
+     */
+    public byte weight = 13;
 
     public boolean newword = false;
 
@@ -64,7 +71,7 @@ public class WordInfo implements Parcelable, Serializable {
 
     public static final byte REVIEW_60_DAY = 7;
 
-    private static final byte REVIEW_COMPLETE = 100;
+    public static final byte REVIEW_COMPLETE = 100;
 
     public WordInfo(String word) {
         if (!TextUtils.isEmpty(word)) {
@@ -269,5 +276,18 @@ public class WordInfo implements Parcelable, Serializable {
         }
         Log.d(TAG, "get time :" + t + "  review type:" + review_type);
         return t;
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues value = new ContentValues();
+        value.put(THistory.WORD, word);
+        value.put(THistory.IGNORE, ignore ? 2 : 1);
+        value.put(THistory.STUDY_COUNT, studycount);
+        value.put(THistory.ERROR_COUNT, errorcount);
+        value.put(THistory.WEIGHT, weight);
+        value.put(THistory.NEW_WORD, newword ? 2 : 1);
+        value.put(THistory.REVIEW_TYPE, review_type);
+        value.put(THistory.REVIEW_TIME, review_time);
+        return value;
     }
 }

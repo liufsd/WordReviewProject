@@ -68,7 +68,6 @@ import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
-import com.coleman.util.DialogUtil;
 import com.coleman.util.ToastUtil;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
@@ -408,7 +407,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
         if (list.size() == 1) {
             wordAccessor.setPass(true);
-            wordAccessor.studyOrReview(this);
+            wordAccessor.viewPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else if (list.get(position).equals(wordAccessor.getDictData(this))) {
             if (!(wordAccessor.getCurrentStatus() instanceof InitState)) {
@@ -420,7 +419,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 continueView.setText(String.format(getString(R.string.continue_hit_count),
                         continueHitCount));
             }
-            wordAccessor.studyOrReview(this);
+            wordAccessor.viewPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
             wordAccessor.setPass(false);
@@ -861,6 +860,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             default:
                 break;
         }
+
+        if (playControl.ongoing) {
+            playControl.stop();
+            playControl.speak(getString(R.string.play_complete) + "," + msg);
+        }
+
         new AlertDialog.Builder(this).setTitle(title).setMessage(msg)
                 .setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
                     @Override
@@ -1133,7 +1138,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             if (playControl.ongoing) {
                                 // 自动播放看成用户点击的同等操作
                                 wordAccessor.setPass(true);
-                                wordAccessor.studyOrReview(CoreActivity.this);
+                                wordAccessor.viewPlus(CoreActivity.this);
                                 playControl.speak(null);
                             } else {
                                 playControl.speak(wordAccessor.item.word);
@@ -1467,8 +1472,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
 
         public void play() {
-            index = sublistAccessor.getIndex();
-            firstTimeSpeak = true;
             ongoing = true;
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);
@@ -1487,10 +1490,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
 
         private Handler handler = new Handler();
-
-        private int index;
-
-        private boolean firstTimeSpeak = true;
 
         private void setUnlocked() {
             Window win = getWindow();
@@ -1513,31 +1512,14 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         public void onUtteranceCompleted(final String utteranceId) {
             if (ongoing) {
-                if (!complete()) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
-                            Log.i(TAG, "===coleman-debug-utteranceId: " + utteranceId);
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            stop();
-                            speak(getString(R.string.play_complete));
-                            DialogUtil.showSystemMessage(CoreActivity.this, R.string.play_complete);
-                        }
-                    });
-                }
-                firstTimeSpeak = false;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
+                        Log.i(TAG, "===coleman-debug-utteranceId: " + utteranceId);
+                    }
+                });
             }
-        }
-
-        private boolean complete() {
-            // return !firstTimeSpeak && index == sublistAccessor.getIndex();
-            return sublistAccessor.allComplete();
         }
 
         @Override
