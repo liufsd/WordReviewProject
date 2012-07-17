@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
@@ -131,8 +132,9 @@ public class DictManager {
         DictLibrary library = libmap.get(curLib);
         Log.d(TAG, "---------------------library: " + curLib);
         if (library == null) {
-            Log.w(TAG, "library has not been initialed!");
-            return DictData.constructData(word + ": library has not been initialed!");
+            context.startService(new Intent(context, DictLoadService.class));
+            Log.w(TAG, "library has not been initialed! Init Now!");
+            return DictData.constructData(word + ": library has not been initialed! Init Now...");
         }
         DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
