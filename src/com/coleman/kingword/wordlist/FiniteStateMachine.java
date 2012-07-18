@@ -72,6 +72,9 @@ public class FiniteStateMachine extends Observable implements Serializable {
 
         protected boolean pass;
 
+        /**
+         * 标识状态在State List中的位置，用来保存每个单词的学习状态。
+         */
         protected int index;
 
         protected String viewMethod = "";

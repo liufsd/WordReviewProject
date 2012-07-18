@@ -1134,16 +1134,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     if (!sublistAccessor.allComplete()) {
                         wordAccessor = sublistAccessor.getNext();
                         lookupInDict(wordAccessor);
-                        if (autoSpeak) {
-                            if (playControl.ongoing) {
-                                // 自动播放看成用户点击的同等操作
-                                wordAccessor.setPass(true);
-                                wordAccessor.viewPlus(CoreActivity.this);
-                                playControl.speak(null);
-                            } else {
-                                playControl.speak(wordAccessor.item.word);
-                            }
-                        }
                         bundle.putBoolean("next", true);
                     } else {
                         bundle.putBoolean("next", false);
@@ -1263,6 +1253,19 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case UPDATE:
                 case LOOKUP:
                     Log.d(TAG, "progress:" + sublistAccessor.getProgress());
+                    updateLoopCount();
+                    if (!sublistAccessor.allComplete()) {
+                        if (autoSpeak) {
+                            if (playControl.ongoing) {
+                                // 自动播放看成用户点击的同等操作
+                                wordAccessor.setPass(true);
+                                wordAccessor.viewPlus(CoreActivity.this);
+                                playControl.speak(null);
+                            } else {
+                                playControl.speak(wordAccessor.item.word);
+                            }
+                        }
+                    }
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
                         progressBarDay.setProgress(sublistAccessor.getProgress());
@@ -1294,7 +1297,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);
                     }
-                    updateLoopCount();
+
                     break;
                 case UPGRADE: {
                     boolean b = result.getBoolean("upgrade");
@@ -1476,6 +1479,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);
             setUnlocked();
+            wordAccessor.setPass(true);
+            wordAccessor.viewPlus(CoreActivity.this);
             speak(null);
         }
 
