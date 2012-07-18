@@ -233,6 +233,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         } else {
             menu.findItem(R.id.menu_play).setTitle(R.string.play);
         }
+        if (!playControl.usable) {
+            menu.removeItem(R.id.menu_play);
+        }
         return true;
     }
 
@@ -1456,12 +1459,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         private boolean ongoing = false;
 
+        private Handler handler = new Handler();
+
+        private boolean usable = false;
+
         public PlayControl() {
             tts = new TextToSpeech(CoreActivity.this, this);
-            tts.setOnUtteranceCompletedListener(this);
         }
 
         public void speak(String word) {
+            if (!usable) {
+                return;
+            }
             try {
                 String tmp = TextUtils.isEmpty(word) ? wordAccessor.item.word
                         + wordAccessor.getDictData(CoreActivity.this).getDatas()
@@ -1475,6 +1484,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
 
         public void play() {
+            if (!usable) {
+                return;
+            }
             ongoing = true;
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);
@@ -1485,16 +1497,20 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
 
         public void stop() {
+            if (!usable) {
+                return;
+            }
             ongoing = false;
             setLocked();
         }
 
         public void shutdown() {
+            if (!usable) {
+                return;
+            }
             stop();
             tts.shutdown();
         }
-
-        private Handler handler = new Handler();
 
         private void setUnlocked() {
             Window win = getWindow();
@@ -1530,14 +1546,15 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         @Override
         public void onInit(int status) {
             if (status == TextToSpeech.SUCCESS) {
+                usable = true;
                 btnSpeak.setVisibility(View.VISIBLE);
                 int result = tts.setLanguage(Locale.CHINESE); // 设置发音语言
                 if (result == TextToSpeech.LANG_MISSING_DATA
                         || result == TextToSpeech.LANG_NOT_SUPPORTED) // 判断语言是否可用
                 {
-                    Log.w(TAG, "Language is not available");
+                    Log.w(TAG, "Chinese language is not available");
                 } else {
-                    Log.w(TAG, "Language set successful");
+                    Log.w(TAG, "Chinese language set successful");
                 }
                 int code = tts.setOnUtteranceCompletedListener(this);
                 Log.i(TAG, "===coleman-debug-code: " + code);
