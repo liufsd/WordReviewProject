@@ -20,6 +20,8 @@ public class SubWordList implements Parcelable, Serializable {
 
     public long word_list_id;
 
+    public int count_down;
+
     public int history_level = -1;
 
     public int level = -1;
@@ -46,6 +48,7 @@ public class SubWordList implements Parcelable, Serializable {
     public ContentValues toContentValues() {
         ContentValues value = new ContentValues();
         value.put(TSubWordList.WORD_LIST_ID, word_list_id);
+        value.put(TSubWordList.COUNT_DOWN, count_down);
         value.put(TSubWordList.HISTORY_LEVEL, history_level);
         value.put(TSubWordList.LEVEL, level);
         value.put(TSubWordList.METHOD, method);
@@ -58,7 +61,8 @@ public class SubWordList implements Parcelable, Serializable {
     @Override
     public String toString() {
         return "id:" + id + "  index:" + index + " level:" + level + " word_list_id:"
-                + word_list_id;
+                + word_list_id + " count_down:" + count_down;
+
     }
 
     @Override
@@ -74,6 +78,7 @@ public class SubWordList implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeLong(word_list_id);
+        dest.writeInt(count_down);
         dest.writeInt(history_level);
         dest.writeInt(level);
         dest.writeString(method);
@@ -94,6 +99,7 @@ public class SubWordList implements Parcelable, Serializable {
         public SubWordList createFromParcel(Parcel in) {
             long id = in.readLong();
             long word_list_id = in.readLong();
+            int count_down = in.readInt();
             int history_level = in.readInt();
             int level = in.readInt();
             String method = in.readString();
@@ -105,6 +111,8 @@ public class SubWordList implements Parcelable, Serializable {
             int screenIndex = in.readInt();
             SubWordList swl = new SubWordList(word_list_id);
             swl.id = id;
+            swl.word_list_id = word_list_id;
+            swl.count_down = count_down;
             swl.history_level = history_level;
             swl.level = level;
             swl.method = method;

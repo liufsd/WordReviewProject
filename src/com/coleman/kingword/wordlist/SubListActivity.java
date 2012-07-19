@@ -68,9 +68,9 @@ public class SubListActivity extends Activity {
 
     private void initQuery(long id) {
         String projection[] = new String[] {
-                TSubWordList._ID, TSubWordList.HISTORY_LEVEL, TSubWordList.LEVEL,
-                TSubWordList.METHOD, TSubWordList.POSITION, TSubWordList.ERROR_COUNT,
-                TSubWordList.PROGRESS
+                TSubWordList._ID, TSubWordList.HISTORY_LEVEL, TSubWordList.COUNT_DOWN,
+                TSubWordList.LEVEL, TSubWordList.METHOD, TSubWordList.POSITION,
+                TSubWordList.ERROR_COUNT, TSubWordList.PROGRESS
         };
         long wordlist_id = id;
         Cursor c = MyApp.context.getContentResolver().query(TSubWordList.CONTENT_URI, projection,
@@ -80,14 +80,15 @@ public class SubListActivity extends Activity {
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
                 SubWordList swl = new SubWordList(wordlist_id);
-                swl.id = c.getLong(0);
-                swl.history_level = c.getInt(1);
-                swl.level = c.getInt(2);
+                swl.id = c.getLong(c.getColumnIndex(TSubWordList._ID));
+                swl.history_level = c.getInt(c.getColumnIndex(TSubWordList.HISTORY_LEVEL));
+                swl.count_down = c.getInt(c.getColumnIndex(TSubWordList.COUNT_DOWN));
+                swl.level = c.getInt(c.getColumnIndex(TSubWordList.LEVEL));
                 swl.index = i;
-                swl.method = c.getString(3);
-                swl.position = c.getInt(4);
-                swl.error_count = c.getInt(5);
-                swl.progress = c.getInt(6);
+                swl.method = c.getString(c.getColumnIndex(TSubWordList.METHOD));
+                swl.position = c.getInt(c.getColumnIndex(TSubWordList.POSITION));
+                swl.error_count = c.getInt(c.getColumnIndex(TSubWordList.ERROR_COUNT));
+                swl.progress = c.getInt(c.getColumnIndex(TSubWordList.PROGRESS));
                 list.add(swl);
                 c.moveToNext();
                 i++;

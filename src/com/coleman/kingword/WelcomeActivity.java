@@ -83,10 +83,25 @@ public class WelcomeActivity extends Activity implements Observer {
             }
         });
         // check db upgrade
-        UpgradeManager.getInstance().addObserver(this);
-        UpgradeManager.getInstance().upgrade();
-        dbUpgradeDialog = DialogUtil.showDBUpgrade(this);
+        if (UpgradeManager.getInstance().needUpgrade()) {
+            UpgradeManager.getInstance().addObserver(this);
+            UpgradeManager.getInstance().upgrade(MyApp.handler);
+            dbUpgradeDialog = DialogUtil.showDBUpgrade(this);
+        } else {
+            setup();
+        }
 
+    }
+
+    private void setup() {
+        // initial the environment
+        init();
+        // login
+        login();
+        // test versionUpgrade
+        if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
+            upgradeCheck();
+        }
     }
 
     private void login() {
@@ -404,14 +419,7 @@ public class WelcomeActivity extends Activity implements Observer {
                 UpgradeManager.getInstance().setFailMsg("");
             }
             dbUpgradeDialog.dismiss();
-            // initial the environment
-            init();
-            // login
-            login();
-            // test versionUpgrade
-            if (AppSettings.getBoolean(AppSettings.VERSION_CHECK, false)) {
-                upgradeCheck();
-            }
+            setup();
         }
     }
 

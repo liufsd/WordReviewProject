@@ -24,20 +24,33 @@ public class CountdownManager implements Serializable {
 
     private static Log Log = Config.getLog();
 
-    private final int TOTAL_TIME;
+    private int TOTAL_TIME;
 
     private int costTime = 0;
 
     private transient Handler handler;
+
+    private static CountdownManager cm;
 
     public void setHandler(Handler handler) {
         this.handler = handler;
         start();
     }
 
-    public CountdownManager(Handler handler, int wordsNum) {
+    public static CountdownManager getInstance() {
+        if (cm == null) {
+            cm = new CountdownManager();
+        }
+        return cm;
+    }
+
+    private CountdownManager() {
+    }
+
+    public void setup(Handler handler, int wordsNum, int count_down) {
         this.handler = handler;
         this.TOTAL_TIME = 12 * wordsNum;
+        costTime = count_down;
         start();
     }
 
@@ -77,5 +90,9 @@ public class CountdownManager implements Serializable {
     public void update() {
         costTime++;
         handler.sendEmptyMessageDelayed(CoreActivity.UPDATE_REMAINDER_TIME, 1000);
+    }
+
+    public int getCountDown() {
+        return costTime;
     }
 }

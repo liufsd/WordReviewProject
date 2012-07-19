@@ -258,20 +258,29 @@ public class KingWord {
         public static final String LEVEL = "level";
 
         /**
-         * 浏览单词的方式，举例：浏览－浏览－选择
+         * 上次倒计时剩余时间
+         * 
+         * @version 7
+         */
+        public static final String COUNT_DOWN = "count_down";
+
+        /**
+         * 上次浏览单词的方式，举例：浏览－浏览－选择
          * 
          * @version 7
          */
         public static final String METHOD = "method";
 
         /**
-         * 某次循环查看的单词位置
+         * 上次循环查看的单词位置
          * 
          * @version 7
          */
         public static final String POSITION = "position";
 
         /**
+         * 上次学习的进度
+         * 
          * @version 7
          */
         public static final String PROGRESS = "progress";
@@ -281,10 +290,11 @@ public class KingWord {
         // create table sql
         public static final String CREATE_TABLE_SQL = "create table if not exists " + TABLE_NAME
                 + " ( " + TSubWordList._ID + " integer primary key autoincrement , "
-                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.METHOD + " text ,"
-                + TSubWordList.POSITION + " integer ," + TSubWordList.ERROR_COUNT + " integer ,"
-                + TSubWordList.PROGRESS + " integer ," + TSubWordList.HISTORY_LEVEL
-                + " integer default -1 ," + TSubWordList.LEVEL + " integer default -1 )";
+                + TSubWordList.WORD_LIST_ID + " integer ," + TSubWordList.COUNT_DOWN + " integer ,"
+                + TSubWordList.METHOD + " text ," + TSubWordList.POSITION + " integer ,"
+                + TSubWordList.ERROR_COUNT + " integer ," + TSubWordList.PROGRESS + " integer ,"
+                + TSubWordList.HISTORY_LEVEL + " integer default -1 ," + TSubWordList.LEVEL
+                + " integer default -1 )";
 
         // default sort order
         public static final String DEFAULT_SORT_ORDER = _ID + " asc";
@@ -294,6 +304,7 @@ public class KingWord {
         static {
             projectionMap.put(_ID, _ID);
             projectionMap.put(WORD_LIST_ID, WORD_LIST_ID);
+            projectionMap.put(COUNT_DOWN, COUNT_DOWN);
             projectionMap.put(HISTORY_LEVEL, HISTORY_LEVEL);
             projectionMap.put(LEVEL, LEVEL);
             projectionMap.put(METHOD, METHOD);

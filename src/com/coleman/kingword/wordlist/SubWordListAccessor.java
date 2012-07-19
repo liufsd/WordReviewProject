@@ -12,6 +12,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.history.WordInfoHelper;
+import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;
@@ -177,6 +178,7 @@ public class SubWordListAccessor implements Serializable {
             subinfo.position = 0;
             subinfo.progress = 0;
             subinfo.error_count = 0;
+            subinfo.count_down = 0;
             update(context);
         }
         time = System.currentTimeMillis() - time;
@@ -332,6 +334,7 @@ public class SubWordListAccessor implements Serializable {
         }
         subinfo.position = p;
         subinfo.progress = getProgress();
+        subinfo.count_down = CountdownManager.getInstance().getCountDown();
         Log.i(TAG, "===coleman-debug-subinfo: " + subinfo.error_count);
         subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         ContentValues values = subinfo.toContentValues();
@@ -396,6 +399,13 @@ public class SubWordListAccessor implements Serializable {
         if (subinfo != null) {
             subinfo.error_count++;
         }
+    }
+
+    public int getCountDown() {
+        if (subinfo != null) {
+            return subinfo.count_down;
+        }
+        return 0;
     }
 
 }

@@ -193,7 +193,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onPause() {
-        if (countdownManager != null) {
+        if (countdownManager != null && !playControl.ongoing) {
             countdownManager.pause();
         }
         super.onPause();
@@ -201,7 +201,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onResume() {
-        if (countdownManager != null) {
+        if (countdownManager != null && !playControl.ongoing) {
             countdownManager.start();
         }
         super.onResume();
@@ -1215,8 +1215,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         // if recovery list, the countdown manager will be
                         // deserialized
                         if (taskType != INIT_RECOVERY_LIST) {
-                            countdownManager = new CountdownManager(handler,
-                                    sublistAccessor.getCount());
+                            countdownManager = CountdownManager.getInstance();
+                            countdownManager.setup(handler, sublistAccessor.getCount(),
+                                    sublistAccessor.getCountDown());
                         }
 
                         list.clear();
