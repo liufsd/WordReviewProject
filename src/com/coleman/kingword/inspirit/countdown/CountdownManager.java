@@ -30,24 +30,13 @@ public class CountdownManager implements Serializable {
 
     private transient Handler handler;
 
-    private static CountdownManager cm;
 
     public void setHandler(Handler handler) {
         this.handler = handler;
         start();
     }
 
-    public static CountdownManager getInstance() {
-        if (cm == null) {
-            cm = new CountdownManager();
-        }
-        return cm;
-    }
-
-    private CountdownManager() {
-    }
-
-    public void setup(Handler handler, int wordsNum, int count_down) {
+    public CountdownManager(Handler handler, int wordsNum, int count_down) {
         this.handler = handler;
         this.TOTAL_TIME = 12 * wordsNum;
         costTime = count_down;

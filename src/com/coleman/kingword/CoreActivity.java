@@ -1,8 +1,6 @@
 
 package com.coleman.kingword;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -146,7 +144,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         }
     }
 
-    private CountdownManager countdownManager;
+    public CountdownManager countdownManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -384,24 +382,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         startActivity(intent);
     }
 
-    private void readCacheObject() {
-        ObjectInputStream ois = null;
-        try {
-            ois = new ObjectInputStream(new FileInputStream("/sdcard/kingword/obj.save"));
-            sublistAccessor = (SubWordListAccessor) ois.readObject();
-            countdownManager = (CountdownManager) ois.readObject();
-            countdownManager.setHandler(handler);
-            Log.d(TAG, "------------------------load cache");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                ois.close();
-            } catch (Exception e2) {
-            }
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (playControl.ongoing) {
@@ -517,6 +497,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 startActivity(new Intent(this, WordlistTabActivity.class));
             }
         } else if (sliceListType == SubWordListAccessor.SUB_WORD_LIST) {
+            sublistAccessor.update(this);
             startSubListActivity();
         }
         super.finish();
@@ -652,6 +633,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 } else {
                     textView.setText(wordAccessor.getWord(CoreActivity.this));
                 }
+                if (!sublistAccessor.allComplete()) {
+                    if (autoSpeak) {
+                        if (playControl.ongoing) {
+                            // 自动播放看成用户点击的同等操作
+                            wordAccessor.setPass(true);
+                            wordAccessor.viewPlus(CoreActivity.this);
+                            playControl.speak(null);
+                        }
+                    }
+                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -704,6 +695,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
                 } else {
                     textView.setText(wordAccessor.getWord(CoreActivity.this));
+                }
+                if (!sublistAccessor.allComplete()) {
+                    if (autoSpeak) {
+                        if (playControl.ongoing) {
+                            // 自动播放看成用户点击的同等操作
+                            wordAccessor.setPass(true);
+                            wordAccessor.viewPlus(CoreActivity.this);
+                            playControl.speak(null);
+                        }
+                    }
                 }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
@@ -965,7 +966,22 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         public void onAnimationEnd(Animation animation) {
             list.clear();
             list.addAll(_buflist);
-            textView.setText(wordAccessor.getWord(CoreActivity.this));
+            if (wordAccessor.isNewWord()) {
+                textView.setText(Html.fromHtml("<b><i>" + wordAccessor.getWord(CoreActivity.this)
+                        + "</b></i>"));
+            } else {
+                textView.setText(wordAccessor.getWord(CoreActivity.this));
+            }
+            if (!sublistAccessor.allComplete()) {
+                if (autoSpeak) {
+                    if (playControl.ongoing) {
+                        // 自动播放看成用户点击的同等操作
+                        wordAccessor.setPass(true);
+                        wordAccessor.viewPlus(CoreActivity.this);
+                        playControl.speak(null);
+                    }
+                }
+            }
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
@@ -977,8 +993,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     private class ExpensiveTask extends AsyncTask<Void, Void, Bundle> {
-
-        public static final byte INIT_RECOVERY_LIST = -9;
 
         public static final byte INIT_REVIEW_LIST = -8;
 
@@ -1032,7 +1046,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     findViewById(R.id.linearLayout2).setVisibility(View.GONE);
                     countBtn.setVisibility(View.INVISIBLE);
                     break;
-                case INIT_RECOVERY_LIST:
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
@@ -1089,17 +1102,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     bundle = new Bundle();
                     sublistAccessor.loadReviewWordList(CoreActivity.this);
                     sliceListType = SubWordListAccessor.REVIEW_LIST;
-                    if (!sublistAccessor.allComplete()) {
-                        wordAccessor = sublistAccessor.getCurrentWord();
-                        lookupInDict(wordAccessor);
-                        bundle.putBoolean("complete", false);
-                    } else {
-                        bundle.putBoolean("complete", true);
-                    }
-                    break;
-                case INIT_RECOVERY_LIST:
-                    readCacheObject();
-                    bundle = new Bundle();
                     if (!sublistAccessor.allComplete()) {
                         wordAccessor = sublistAccessor.getCurrentWord();
                         lookupInDict(wordAccessor);
@@ -1206,19 +1208,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     applySlideIn();
                     break;
                 case INIT_REVIEW_LIST:
-                case INIT_RECOVERY_LIST:
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
-                        // if recovery list, the countdown manager will be
-                        // deserialized
-                        if (taskType != INIT_RECOVERY_LIST) {
-                            countdownManager = CountdownManager.getInstance();
-                            countdownManager.setup(handler, sublistAccessor.getCount(),
-                                    sublistAccessor.getCountDown());
-                        }
+                        countdownManager = new CountdownManager(handler,
+                                sublistAccessor.getCount(), sublistAccessor.getCountDown());
 
                         list.clear();
                         list.addAll(_buflist);
@@ -1258,18 +1254,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case LOOKUP:
                     Log.d(TAG, "progress:" + sublistAccessor.getProgress());
                     updateLoopCount();
-                    if (!sublistAccessor.allComplete()) {
-                        if (autoSpeak) {
-                            if (playControl.ongoing) {
-                                // 自动播放看成用户点击的同等操作
-                                wordAccessor.setPass(true);
-                                wordAccessor.viewPlus(CoreActivity.this);
-                                playControl.speak(null);
-                            } else {
-                                playControl.speak(wordAccessor.item.word);
-                            }
-                        }
-                    }
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
                         progressBarDay.setProgress(sublistAccessor.getProgress());
@@ -1301,7 +1285,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);
                     }
-
+                    if (!sublistAccessor.allComplete()) {
+                        if (autoSpeak) {
+                            if (!playControl.ongoing) {
+                                playControl.speak(wordAccessor.item.word);
+                            }
+                        }
+                    }
                     break;
                 case UPGRADE: {
                     boolean b = result.getBoolean("upgrade");

@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfo;
@@ -69,6 +70,7 @@ public class SubWordListAccessor implements Serializable {
         p = info.position;
         Log.i(TAG, "===coleman-debug-p: " + p);
         list = new ArrayList<WordAccessor>();
+
     }
 
     public SubWordListAccessor(byte type) {
@@ -334,7 +336,12 @@ public class SubWordListAccessor implements Serializable {
         }
         subinfo.position = p;
         subinfo.progress = getProgress();
-        subinfo.count_down = CountdownManager.getInstance().getCountDown();
+        if (context instanceof CoreActivity) {
+            CoreActivity act = (CoreActivity) context;
+            if (act.countdownManager != null) {
+                subinfo.count_down = act.countdownManager.getCountDown();
+            }
+        }
         Log.i(TAG, "===coleman-debug-subinfo: " + subinfo.error_count);
         subinfo.method = AppSettings.getString(AppSettings.VIEW_METHOD, DEFAULT_VIEW_METHOD);
         ContentValues values = subinfo.toContentValues();
