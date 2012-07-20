@@ -20,7 +20,6 @@ import com.coleman.kingword.provider.KingWordDBHepler;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.model.WordList;
 import com.coleman.log.Log;
-import com.coleman.tools.WordlistArranger;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.GeneralParser;

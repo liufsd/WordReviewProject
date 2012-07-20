@@ -244,6 +244,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 showAnimSelect();
                 break;
             case R.id.menu_review:
+                playControl.stop();
+                ToastUtil.show(getString(R.string.play_stop));
                 broadcastReview();
                 break;
             case R.id.menu_countdown:
@@ -1478,6 +1480,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             if (!usable) {
                 return;
             }
+            // ===start fix bug when launch a review activity, can not auto play
+            int code = tts.setOnUtteranceCompletedListener(this);
+            Log.i(TAG, "===coleman-debug-play-set code: " + code);
+            // ===end
             ongoing = true;
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);

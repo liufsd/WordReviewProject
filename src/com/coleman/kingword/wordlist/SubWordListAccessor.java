@@ -13,7 +13,6 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.history.WordInfoHelper;
-import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
 import com.coleman.kingword.wordlist.FiniteStateMachine.CompleteState;

@@ -134,7 +134,7 @@ public class DictManager {
         if (library == null) {
             context.startService(new Intent(context, DictLoadService.class));
             Log.w(TAG, "library has not been initialed! Init Now!");
-            return DictData.constructData(word + ": library has not been initialed! Init Now...");
+            return DictData.constructData(word + ": library has not been initialed!");
         }
         DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
@@ -257,7 +257,7 @@ public class DictManager {
          * 
          * @param context
          */
-        public void initTables(Context context) {
+        private void initTables(Context context) {
 
             // clear the collection
             infoMap.clear();

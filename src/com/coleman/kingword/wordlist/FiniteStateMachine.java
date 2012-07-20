@@ -258,9 +258,11 @@ public class FiniteStateMachine extends Observable implements Serializable {
         }
 
         private void transitionTo(FiniteState state) {
-            mCurrentState.exit();
-            mCurrentState = state;
-            mCurrentState.enter();
+            if (!(mCurrentState instanceof CompleteState)) {
+                mCurrentState.exit();
+                mCurrentState = state;
+                mCurrentState.enter();
+            }
         }
 
         private void reset() {
