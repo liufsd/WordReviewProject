@@ -42,7 +42,7 @@ public class SLParser {
             IllegalArgumentException, IllegalAccessException, InstantiationException,
             UnknownTypeException, FieldNotInitException, ClassNotFoundException {
         JSONParser.parse(slRespObj.getResponse(), jsonRespObj);
-        slRespObj.notifyLoaded();
+        slRespObj.notifyObservers(null);
     }
 
     private static class JSONParser {

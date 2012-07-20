@@ -85,7 +85,7 @@ public class WelcomeActivity extends Activity implements Observer {
         // check db upgrade
         if (UpgradeManager.getInstance().needUpgrade()) {
             UpgradeManager.getInstance().addObserver(this);
-            UpgradeManager.getInstance().upgrade(MyApp.handler);
+            UpgradeManager.getInstance().upgrade();
             dbUpgradeDialog = DialogUtil.showDBUpgrade(this);
         } else {
             setup();

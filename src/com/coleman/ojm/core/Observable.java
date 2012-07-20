@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.coleman.log.Log;
 import com.coleman.util.Config;
@@ -137,12 +139,16 @@ public class Observable {
      * If {@code hasChanged()} returns {@code true}, calls the {@code update()}
      * method for every Observer in the list of observers using the specified
      * argument. Afterwards calls {@code clearChanged()}.
+     * <p>
+     * <b> This Method is run on main thread.</b>
+     * </p>
      * 
      * @param data the argument passed to {@code update()}.
      */
-    public void notifyObservers(Object data) {
+    public void notifyObservers(final Object data) {
         int size = 0;
         Observer[] arrays = null;
+        Handler handler = new Handler(Looper.getMainLooper());
         synchronized (this) {
             if (hasChanged()) {
                 clearChanged();
@@ -152,18 +158,28 @@ public class Observable {
             }
         }
         if (arrays != null) {
-            for (Observer observer : arrays) {
+            for (final Observer observer : arrays) {
                 Log.i(TAG, "===coleman-debug-notify observer: " + observer.getClass().getName());
                 if (observer instanceof Activity) {
                     Activity tempActivity = (Activity) observer;
                     if (!tempActivity.isFinishing()) {
-                        observer.update(data);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                observer.update(data);
+                            }
+                        });
                     } else {
                         Log.w(TAG, "===coleman-debug-Notified failed, "
                                 + observer.getClass().getName() + " is finished!");
                     }
                 } else {
-                    observer.update(data);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            observer.update(data);
+                        }
+                    });
                 }
             }
         }

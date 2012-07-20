@@ -1,8 +1,6 @@
 
 package com.coleman.kingword.provider.upgrade;
 
-import android.os.Handler;
-
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord;
 import com.coleman.log.Log;
@@ -58,28 +56,18 @@ public class UpgradeManager extends Observable {
         return curVersionCode > savedVersion;
     }
 
-    public void upgrade(final Handler handler) {
+    public void upgrade() {
         ThreadUtils.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     InternalDBVersionChain.getInstance().upgrade();
                     setChanged();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyObservers(UpgradeManager.this);
-                        }
-                    });
+                    notifyObservers(UpgradeManager.this);
                 } catch (Exception e) {
                     setFailMsg(MyApp.context.getString(R.string.upgrade_db_failed));
                     setChanged();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyObservers(UpgradeManager.this);
-                        }
-                    });
+                    notifyObservers(UpgradeManager.this);
                     Log.i(TAG, "===coleman-debug-argType:" + e.toString());
                 }
             }

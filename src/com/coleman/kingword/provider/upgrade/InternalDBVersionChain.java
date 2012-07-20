@@ -1,9 +1,7 @@
 
 package com.coleman.kingword.provider.upgrade;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 import com.coleman.kingword.provider.KingWord;
 import com.coleman.kingword.provider.upgrade.version6.Task_v6;

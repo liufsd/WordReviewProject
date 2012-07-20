@@ -228,7 +228,7 @@ public class HttpHandler {
                 }
 
                 if (!slRequest.isCancel() && !TextUtils.isEmpty(notifyMsg)) {
-                    mSLResponse.notifyError(notifyMsg);
+                    mSLResponse.notifyObservers(notifyMsg);
                 }
             }
 
