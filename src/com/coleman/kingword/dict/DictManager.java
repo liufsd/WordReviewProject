@@ -127,22 +127,33 @@ public class DictManager {
     /**********************************************************************
      * operate word
      **********************************************************************/
+    public DictIndex getIndex(Context context, String libName, String word) {
+        DictLibrary library = libmap.get(libName);
+        Log.d(TAG, "---------------------library: " + libName);
+        DictIndex index = library.getDictIndex(context, word);
+        return index;
+    }
 
-    public DictData viewWord(Context context, String word) {
+    public DictData viewWord(Context context, DictIndex index) {
         DictLibrary library = libmap.get(curLib);
         Log.d(TAG, "---------------------library: " + curLib);
         if (library == null) {
             context.startService(new Intent(context, DictLoadService.class));
             Log.w(TAG, "library has not been initialed! Init Now!");
-            return DictData.constructData(word + ": library has not been initialed!");
+            return DictData.constructData("library has not been initialed!");
         }
-        DictIndex index = library.getDictIndex(context, word);
         if (index == null) {
-            Log.w(TAG, word + " not found!");
-            return DictData.constructData(word + ": not found!");
+            return DictData.constructData("word not found!");
         }
         DictData wordData = DictData.readData(context, library.isInternal(),
                 library.getLibraryInfo(), index, library.getLibraryName());
+        Log.d(TAG, index.word + " >>> " + wordData);
+        return wordData;
+    }
+
+    public DictData viewWord(Context context, String word) {
+        DictIndex index = getIndex(context, curLib, word);
+        DictData wordData = viewWord(context, index);
         Log.d(TAG, word + " >>> " + wordData);
         return wordData;
     }
@@ -164,20 +175,9 @@ public class DictManager {
     }
 
     public DictData viewMore(Context context, String word) {
-        DictLibrary library = libmap.get(moreLib);
-        if (library == null) {
-            Log.w(TAG, "library has not been initialed!");
-            return DictData.constructData(word + ": library has not been initialed!");
-        }
-        DictIndex index = library.getDictIndex(context, word);
-        if (index == null) {
-            Log.w(TAG, "not found!");
-            return DictData.constructData(word + ": not found!");
-        }
-        Log.d(TAG, word + ":" + index + ":");
-        DictData wordData = DictData.readData(context, library.isInternal(),
-                library.getLibraryInfo(), index, library.getLibraryName());
-        Log.d(TAG, "" + wordData);
+        DictIndex index = getIndex(context, moreLib, word);
+        DictData wordData = viewWord(context, index);
+        Log.d(TAG, word + " >>> " + wordData);
         return wordData;
     }
 

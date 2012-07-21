@@ -10,6 +10,7 @@ import android.content.Context;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
+import com.coleman.kingword.dict.stardict.DictIndex;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList.TWordListItem;
@@ -33,6 +34,8 @@ public class WordVisitor implements Serializable, Observer {
     public WordListItem item;
 
     public WordInfo info;
+
+    public DictIndex dictIndex;
 
     private DictData dictData;
 
@@ -113,9 +116,20 @@ public class WordVisitor implements Serializable, Observer {
         }
     }
 
+    public void preload(Context context) {
+        if (dictIndex == null) {
+            dictIndex = DictManager.getInstance().getIndex(context,
+                    DictManager.getInstance().getCurLibDirName(), item.word);
+        }
+    }
+
     public DictData getDictData(Context context) {
         if (dictData == null) {
-            dictData = DictManager.getInstance().viewWord(context, item.word);
+            if (dictIndex == null) {
+                dictIndex = DictManager.getInstance().getIndex(context,
+                        DictManager.getInstance().getCurLibDirName(), item.word);
+            }
+            dictData = DictManager.getInstance().viewWord(context, dictIndex);
         }
         return dictData;
     }

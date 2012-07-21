@@ -59,6 +59,7 @@ import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.AbsSubVisitor;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.wordlist.IgnoreListVisitor;
 import com.coleman.kingword.wordlist.NewListVisitor;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
@@ -70,6 +71,7 @@ import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
+import com.coleman.util.DictDataProcessingCenter;
 import com.coleman.util.ToastUtil;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
@@ -188,9 +190,20 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 finish();
                 break;
         }
-
         playControl = new PlayControl();
 
+    }
+
+    private void startPreload() {
+        if (sublistVisitor != null) {
+            sublistVisitor.preload();
+        }
+    }
+
+    private void stopPreload() {
+        if (sublistVisitor != null) {
+            sublistVisitor.stopPreload();
+        }
     }
 
     @Override
@@ -374,6 +387,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         // writeCacheObject();
         // shutdown the text-to-speech
         playControl.shutdown();
+
+        // stop preload
+        stopPreload();
+
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
         // ///////////////////////////////////////////
@@ -934,9 +951,19 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             if (data != null) {
                 if (wordVisitor.showSymbol()) {
                     String text = data.getDataAndSymbol();
+                    if (list.size() > 1) {
+                        // Log.v(TAG, "===coleman-debug-before text:" + text);
+                        text = DictDataProcessingCenter.process(text, false);
+                        // Log.v(TAG, "===coleman-debug-after text:" + text);
+                    }
                     tv.setText(text.indexOf("<font") != -1 ? Html.fromHtml(text) : text);
                 } else {
                     String text = data.getDatas();
+                    if (list.size() > 1) {
+                        // Log.v(TAG, "===coleman-debug-before text:" + text);
+                        text = DictDataProcessingCenter.process(text, false);
+                        // Log.v(TAG, "===coleman-debug-after text:" + text);
+                    }
                     tv.setText(text.indexOf("<font") != -1 ? Html.fromHtml(text) : text);
                 }
             }
@@ -1214,6 +1241,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
+                        startPreload();
                         countdownManager = new CountdownManager(handler, sublistVisitor.getCount(),
                                 sublistVisitor.getCountDown());
 
@@ -1465,8 +1493,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             }
             try {
                 String tmp = TextUtils.isEmpty(word) ? wordVisitor.item.word
-                        + wordVisitor.getDictData(CoreActivity.this).getDatas()
-                                .replaceAll("[a-zA-Z]*", "") : word;
+                        + ".\n"
+                        + DictDataProcessingCenter.process(
+                                wordVisitor.getDictData(CoreActivity.this).getDatas(), true) : word;
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, tmp);
                 tts.speak(tmp, TextToSpeech.QUEUE_ADD, map);

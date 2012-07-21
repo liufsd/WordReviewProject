@@ -18,6 +18,10 @@ public class WordListItem implements Serializable {
 
     public int state = -1;
 
+    public WordListItem(String word) {
+        this.word = word;
+    }
+
     public ContentValues toContentValues() {
         ContentValues value = new ContentValues();
         value.put(TWordListItem.WORD, word);

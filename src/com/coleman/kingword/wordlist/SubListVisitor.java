@@ -63,8 +63,7 @@ public class SubListVisitor extends AbsSubVisitor {
             WordVisitor wordAccessor;
             while (!c.isAfterLast()) {
 
-                WordListItem item = new WordListItem();
-                item.word = c.getString(0);
+                WordListItem item = new WordListItem(c.getString(0));
                 item.id = c.getLong(1);
                 item.sub_wordlist_id = c.getLong(2);
                 item.state = c.getInt(3);

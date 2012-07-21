@@ -14,6 +14,8 @@ import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
+import com.coleman.util.MyApp;
+import com.coleman.util.ThreadUtils;
 
 public abstract class AbsSubVisitor implements Serializable {
     private static final long serialVersionUID = 7418355503075825496L;
@@ -43,6 +45,8 @@ public abstract class AbsSubVisitor implements Serializable {
     protected int lastMark;
 
     protected ViewMethod method;
+
+    private boolean preload;
 
     protected AbsSubVisitor() {
         method = new ViewMethod("");
@@ -162,6 +166,29 @@ public abstract class AbsSubVisitor implements Serializable {
 
     public int getCountDown() {
         return 0;
+    }
+
+    public void preload() {
+        preload = true;
+        ThreadUtils.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = p, c = 0; c < list.size() && preload; i = i + 1 >= list.size() ? 0
+                        : i + 1, c++) {
+                    list.get(i).preload(MyApp.context);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                preload = false;
+            }
+        });
+    }
+
+    public void stopPreload() {
+        preload = false;
     }
 
     public static class ViewMethod implements Serializable {

@@ -4,6 +4,7 @@ package com.coleman.kingword.wordlist;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 
 import android.content.Context;
@@ -124,9 +125,22 @@ public class FiniteStateMachine extends Observable implements Serializable {
             }
         }
 
-        protected void addRandomDictData(Context context, ArrayList<WordVisitor> list,
+        protected void addRandomDictData(Context context, ArrayList<WordVisitor> wlist,
                 ArrayList<DictData> datalist) {
-            int index = ran.nextInt(list.size());
+            LinkedList<WordVisitor> list = new LinkedList<WordVisitor>();
+            long time = System.currentTimeMillis();
+            int count = 0;
+            for (WordVisitor wordVisitor : wlist) {
+                if (wordVisitor.dictIndex != null) {
+                    list.add(0, wordVisitor);
+                    count++;
+                } else {
+                    list.add(wordVisitor);
+                }
+            }
+            System.out.println("cost " + (System.currentTimeMillis() - time));
+
+            int index = ran.nextInt(count < 4 ? list.size() : count);
             int i = 0;
             while (datalist.contains(list.get(index).getDictData(context))) {
                 index = index + 1 > list.size() - 1 ? 0 : index + 1;

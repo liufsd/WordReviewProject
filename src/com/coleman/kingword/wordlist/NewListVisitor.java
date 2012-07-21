@@ -38,8 +38,7 @@ public class NewListVisitor extends AbsSubVisitor {
         ArrayList<WordInfo> infoList = WordInfoHelper.getWordInfoList(context, TYPE);
         WordVisitor wa;
         for (WordInfo info : infoList) {
-            wa = new WordVisitor(this, new WordListItem());
-            wa.item.word = info.word;
+            wa = new WordVisitor(this, new WordListItem(info.word));
             wa.info = info;
             list.add(wa);
             Log.d(TAG, "item:" + wa);
