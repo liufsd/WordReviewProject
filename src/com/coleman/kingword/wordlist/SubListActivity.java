@@ -139,7 +139,7 @@ public class SubListActivity extends Activity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (!mScrollLayout.moveEvent()) {
                             Intent intent = new Intent(SubListActivity.this, CoreActivity.class);
-                            intent.putExtra("type", SubWordListAccessor.SUB_WORD_LIST);
+                            intent.putExtra("type", SubListVisitor.TYPE);
                             SubWordList info = (SubWordList) parent.getItemAtPosition(position);
                             Log.i(TAG, "===coleman-debug-subinfo: " + info.error_count);
                             info.screenIndex = si;
@@ -206,7 +206,7 @@ public class SubListActivity extends Activity {
             title.setText("unit " + getItem(position).index);
 
             TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
-            subTitle.setText(SubWordListAccessor.getLevelStrings(SubListActivity.this,
+            subTitle.setText(SubListVisitor.getLevelStrings(SubListActivity.this,
                     getItem(position).level));
 
             return convertView;

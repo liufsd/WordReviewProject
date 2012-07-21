@@ -30,7 +30,6 @@ import com.coleman.kingword.dict.stardict.DictLibrary;
 import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
@@ -352,10 +351,10 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         final ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(this,
                 R.layout.textview_item_white, list);
         final Index selectIndex = new Index();
-        String viewMtd = AppSettings.getString(AppSettings.VIEW_METHOD,
-                SubWordListAccessor.DEFAULT_VIEW_METHOD);
-        String scrap[] = viewMtd.split("#");
+        String scrap[] = new String[4];
         for (int i = 0; i < scrap.length; i++) {
+            scrap[i] = AppSettings.getString(AppSettings.METHODS[i],
+                    AppSettings.DEFAULT_METHOD_VALUE[i]);
             String ss[] = scrap[i].split(",");
             for (int j = 0; j < ss.length; j++) {
                 result.get(i).add(Integer.parseInt(ss[j]));
@@ -449,8 +448,8 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         mapStrToInt(list, result.get(selectIndex.i));
-                        String rstr = "";
                         for (int i = 0; i < result.size(); i++) {
+                            String rstr = "";
                             ArrayList<Integer> slist = result.get(i);
                             if (slist.size() == 0) {
                                 Toast.makeText(Settings.this, R.string.view_method_empty_warn,
@@ -464,12 +463,10 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
                                     rstr += "," + slist.get(j);
                                 }
                             }
-                            if (i != result.size() - 1) {
-                                rstr += "#";
-                            }
+
+                            Log.d(TAG, "===============set new view method: " + rstr);
+                            AppSettings.saveString(AppSettings.METHODS[i], rstr);
                         }
-                        Log.d(TAG, "===============set new view method: " + rstr);
-                        AppSettings.saveString(AppSettings.VIEW_METHOD, rstr);
                         Toast.makeText(Settings.this, R.string.view_method_success_hint,
                                 Toast.LENGTH_SHORT).show();
                         break;

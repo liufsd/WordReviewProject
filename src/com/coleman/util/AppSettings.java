@@ -8,6 +8,11 @@
 
 package com.coleman.util;
 
+import com.coleman.kingword.wordlist.IgnoreListVisitor;
+import com.coleman.kingword.wordlist.NewListVisitor;
+import com.coleman.kingword.wordlist.ReviewListVisitor;
+import com.coleman.kingword.wordlist.SubListVisitor;
+
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -69,6 +74,23 @@ public class AppSettings {
     public static final String VERSION_CHECK = "version_check";
 
     public static final String VIEW_METHOD = "view_method";
+
+    public static final String IGNORE_VIEW_METHOD = "ignore_view_method";
+
+    public static final String NEW_VIEW_METHOD = "new_view_method";
+
+    public static final String SUB_VIEW_METHOD = "sub_view_method";
+
+    public static final String REVIEW_VIEW_METHOD = "review_view_method";
+
+    public static final String METHODS[] = new String[] {
+            SUB_VIEW_METHOD, REVIEW_VIEW_METHOD, IGNORE_VIEW_METHOD, NEW_VIEW_METHOD
+    };
+
+    public static final String DEFAULT_METHOD_VALUE[] = new String[] {
+            SubListVisitor.DEFAULT_VIEW_METHOD, ReviewListVisitor.DEFAULT_VIEW_METHOD,
+            IgnoreListVisitor.DEFAULT_VIEW_METHOD, NewListVisitor.DEFAULT_VIEW_METHOD
+    };
 
     public static final String DATABASE_SET = "database_set";
 

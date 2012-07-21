@@ -10,14 +10,14 @@ import android.content.Intent;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
-import com.coleman.kingword.history.WordInfo;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
+import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 public class EbbinghausReminder {
     private static final String TAG = EbbinghausReminder.class.getName();
+
     private static Log Log = Config.getLog();
 
     public static void setNotifactionDelay(Context context, int delayMinute) {
@@ -26,7 +26,7 @@ public class EbbinghausReminder {
         calendar.add(Calendar.MINUTE, delayMinute);
         // calendar.add(Calendar.SECOND, delayMinute);
         Intent intent = new Intent(context, KingWordReceiver.class);
-        intent.putExtra("type", SubWordListAccessor.REVIEW_LIST);
+        intent.putExtra("type", ReviewListVisitor.TYPE);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -36,7 +36,7 @@ public class EbbinghausReminder {
     public static void removeRepeatNotifaction(Context context, int which) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent("review_time_" + which);
-        intent.putExtra("type", SubWordListAccessor.REVIEW_LIST);
+        intent.putExtra("type", ReviewListVisitor.TYPE);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         am.cancel(sender);
@@ -53,7 +53,7 @@ public class EbbinghausReminder {
             return;
         }
         Intent intent = new Intent("review_time_" + which);
-        intent.putExtra("type", SubWordListAccessor.REVIEW_LIST);
+        intent.putExtra("type", ReviewListVisitor.TYPE);
         PendingIntent sender = PendingIntent.getBroadcast(context, -1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 

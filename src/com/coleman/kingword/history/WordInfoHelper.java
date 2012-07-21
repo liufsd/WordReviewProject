@@ -20,7 +20,9 @@ import android.os.Message;
 import android.widget.Toast;
 
 import com.coleman.kingword.provider.KingWord.THistory;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
+import com.coleman.kingword.wordlist.IgnoreListVisitor;
+import com.coleman.kingword.wordlist.NewListVisitor;
+import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
 
@@ -138,19 +140,19 @@ public class WordInfoHelper {
 
     private static Cursor queryWordInfo(Context context, byte type, Cursor c) {
         switch (type) {
-            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
+            case NewListVisitor.TYPE:
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means new word
                         THistory.NEW_WORD + "= 2", null, null);
 
                 break;
-            case SubWordListAccessor.SCAN_LIST:
+            case IgnoreListVisitor.TYPE:
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection,
                 // 2 means ignore word
                         THistory.IGNORE + "= 2", null, null);
 
                 break;
-            case SubWordListAccessor.REVIEW_LIST:
+            case ReviewListVisitor.TYPE:
                 long ct = System.currentTimeMillis();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 Log.d(TAG, "=====current hour:" + hour);

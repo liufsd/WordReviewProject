@@ -54,8 +54,8 @@ public class FiniteStateMachine extends Observable implements Serializable {
         return getCurrentState().index;
     }
 
-    public ArrayList<DictData> getDictData(Context context, WordAccessor item,
-            ArrayList<WordAccessor> list) {
+    public ArrayList<DictData> getDictData(Context context, WordVisitor item,
+            ArrayList<WordVisitor> list) {
         return getCurrentState().getDictData(context, item, list);
     }
 
@@ -78,6 +78,12 @@ public class FiniteStateMachine extends Observable implements Serializable {
         protected int index;
 
         protected String viewMethod = "";
+
+        protected int type;
+
+        public int getType() {
+            return type;
+        }
 
         protected FiniteState() {
             pass = false;
@@ -104,8 +110,8 @@ public class FiniteStateMachine extends Observable implements Serializable {
             pass = false;
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
-                ArrayList<WordAccessor> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordVisitor item,
+                ArrayList<WordVisitor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             return datalist;
         }
@@ -118,7 +124,7 @@ public class FiniteStateMachine extends Observable implements Serializable {
             }
         }
 
-        protected void addRandomDictData(Context context, ArrayList<WordAccessor> list,
+        protected void addRandomDictData(Context context, ArrayList<WordVisitor> list,
                 ArrayList<DictData> datalist) {
             int index = ran.nextInt(list.size());
             int i = 0;
@@ -142,11 +148,12 @@ public class FiniteStateMachine extends Observable implements Serializable {
 
         public InitState() {
             super();
+            type = 0;
             viewMethod = MyApp.context.getString(R.string.view_word);
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
-                ArrayList<WordAccessor> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordVisitor item,
+                ArrayList<WordVisitor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             DictData data = item.getDictData(context);
             datalist.add(data);
@@ -162,11 +169,12 @@ public class FiniteStateMachine extends Observable implements Serializable {
 
         public MultipleState() {
             super();
+            type = 1;
             viewMethod = MyApp.context.getString(R.string.view_multi);
         }
 
-        protected ArrayList<DictData> getDictData(Context context, WordAccessor item,
-                ArrayList<WordAccessor> list) {
+        protected ArrayList<DictData> getDictData(Context context, WordVisitor item,
+                ArrayList<WordVisitor> list) {
             ArrayList<DictData> datalist = new ArrayList<DictData>();
             datalist.add(item.getDictData(context));
             int size = list.size();
@@ -191,6 +199,7 @@ public class FiniteStateMachine extends Observable implements Serializable {
 
         public CompleteState() {
             super();
+            type = 100;
             viewMethod = MyApp.context.getString(R.string.view_complete);
         }
     }

@@ -264,22 +264,22 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             case R.id.button1:
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, SubWordListAccessor.NEW_WORD_BOOK_LIST)) {
+                } else if (!WordInfoHelper.hasWordInfo(this, NewListVisitor.TYPE)) {
                     showNoNewWordHint();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", SubWordListAccessor.NEW_WORD_BOOK_LIST);
+                    intent.putExtra("type", NewListVisitor.TYPE);
                     startActivity(intent);
                 }
                 break;
             case R.id.button2:
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, SubWordListAccessor.SCAN_LIST)) {
+                } else if (!WordInfoHelper.hasWordInfo(this, IgnoreListVisitor.TYPE)) {
                     showNoIgnoreWordHint();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", SubWordListAccessor.SCAN_LIST);
+                    intent.putExtra("type", IgnoreListVisitor.TYPE);
                     startActivity(intent);
                 }
                 break;

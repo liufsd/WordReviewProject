@@ -57,10 +57,14 @@ import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.wordlist.AbsSubVisitor;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
+import com.coleman.kingword.wordlist.IgnoreListVisitor;
+import com.coleman.kingword.wordlist.NewListVisitor;
+import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.kingword.wordlist.SubListActivity;
-import com.coleman.kingword.wordlist.SubWordListAccessor;
-import com.coleman.kingword.wordlist.WordAccessor;
+import com.coleman.kingword.wordlist.SubListVisitor;
+import com.coleman.kingword.wordlist.WordVisitor;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.log.Log;
@@ -86,11 +90,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ParaphraseAdapter adapter;
 
-    private SubWordListAccessor sublistAccessor;
+    private AbsSubVisitor sublistVisitor;
 
     private LinearLayout container;
 
-    private WordAccessor wordAccessor;
+    private WordVisitor wordVisitor;
 
     /**
      * upgrade and degrade are not support by user anymore.
@@ -102,8 +106,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private Button countBtn;
 
     private int continueHitCount;
-
-    private byte sliceListType;
 
     private Anim anim;
 
@@ -155,29 +157,31 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         initView();
 
         Intent intent = getIntent();
-        sliceListType = intent.getByteExtra("type", SubWordListAccessor.NULL_TYPE);
+        int sliceListType = intent.getByteExtra("type", AbsSubVisitor.TYPE);
         switch (sliceListType) {
-            case SubWordListAccessor.SUB_WORD_LIST:
+            case SubListVisitor.TYPE:
                 SubWordList info = getIntent().getParcelableExtra("subinfo");
                 Log.d(TAG, "info:" + info);
-                sublistAccessor = new SubWordListAccessor(info);
+                SubListVisitor subVisitor = new SubListVisitor();
+                subVisitor.setSubInfo(info);
+                sublistVisitor = subVisitor;
                 new ExpensiveTask(ExpensiveTask.INIT_SUB_WORD_LIST).execute();
                 break;
-            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
-                sublistAccessor = new SubWordListAccessor(sliceListType);
+            case NewListVisitor.TYPE:
+                sublistVisitor = new NewListVisitor();
                 new ExpensiveTask(ExpensiveTask.INIT_NEW_WORD_BOOK_LIST).execute();
                 break;
-            case SubWordListAccessor.SCAN_LIST:
-                sublistAccessor = new SubWordListAccessor(sliceListType);
+            case IgnoreListVisitor.TYPE:
+                sublistVisitor = new IgnoreListVisitor();
                 new ExpensiveTask(ExpensiveTask.INIT_SCAN_LIST).execute();
                 break;
-            case SubWordListAccessor.REVIEW_LIST:
+            case ReviewListVisitor.TYPE:
                 AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                         AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
                 this.coreTop = intent.getBooleanExtra("core_top", false);
                 DictManager.getInstance().initLibrary(this);
                 startService(new Intent(this, DictLoadService.class));
-                sublistAccessor = new SubWordListAccessor(sliceListType);
+                sublistVisitor = new ReviewListVisitor();
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
             default:
@@ -223,7 +227,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         } else {
             menu.findItem(R.id.menu_countdown).setTitle(R.string.countdown_show);
         }
-        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
+        if (!(sublistVisitor instanceof SubListVisitor)) {
             menu.removeItem(R.id.menu_review);
         }
         if (playControl.ongoing) {
@@ -299,7 +303,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
      */
     private void broadcastReview() {
         Intent intent = new Intent(this, KingWordReceiver.class);
-        intent.putExtra("type", SubWordListAccessor.REVIEW_LIST);
+        intent.putExtra("type", ReviewListVisitor.TYPE);
         sendBroadcast(intent);
     }
 
@@ -379,8 +383,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void startSubListActivity() {
         // write result to SubListActivity
         Intent intent = new Intent(this, SubListActivity.class);
-        intent.putExtra(TWordList._ID, sublistAccessor.getWordListID());
-        intent.putExtra(SubListActivity.SCREEN_INDEX, sublistAccessor.getSubList().screenIndex);
+        intent.putExtra(TWordList._ID, ((SubListVisitor) sublistVisitor).getWordListID());
+        intent.putExtra(SubListActivity.SCREEN_INDEX,
+                ((SubListVisitor) sublistVisitor).getSubList().screenIndex);
         startActivity(intent);
     }
 
@@ -391,12 +396,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             return;
         }
         if (list.size() == 1) {
-            wordAccessor.setPass(true);
-            wordAccessor.viewPlus(this);
+            wordVisitor.setPass(true);
+            wordVisitor.viewPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
-        } else if (list.get(position).equals(wordAccessor.getDictData(this))) {
-            if (!(wordAccessor.getCurrentStatus() instanceof InitState)) {
-                wordAccessor.setPass(true);
+        } else if (list.get(position).equals(wordVisitor.getDictData(this))) {
+            if (!(wordVisitor.getCurrentStatus() instanceof InitState)) {
+                wordVisitor.setPass(true);
             }
             continueHitCount++;
             if (continueHitCount >= 3) {
@@ -404,13 +409,13 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 continueView.setText(String.format(getString(R.string.continue_hit_count),
                         continueHitCount));
             }
-            wordAccessor.viewPlus(this);
+            wordVisitor.viewPlus(this);
             new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
         } else {
-            wordAccessor.setPass(false);
+            wordVisitor.setPass(false);
             continueHitCount = 0;
             continueView.setVisibility(View.INVISIBLE);
-            wordAccessor.errorPlus(this);
+            wordVisitor.errorPlus(this);
             new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
             Toast.makeText(this, getString(R.string.miss), Toast.LENGTH_SHORT).show();
         }
@@ -419,8 +424,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private void updateLoopCount() {
         // loop display control
         loopView.setText(String.format(getString(R.string.loop_info),
-                sublistAccessor.getViewMethod(), sublistAccessor.getCurrentIndex(),
-                sublistAccessor.getCount()));
+                sublistVisitor.getViewMethod(), sublistVisitor.getCurrentIndex(),
+                sublistVisitor.getCount()));
     }
 
     @Override
@@ -433,7 +438,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.viewWord:
                 if (viewWord.getText().equals(getString(R.string.view_more))) {
                     new ExpensiveTask(ExpensiveTask.VIEW_MORE).execute();
-                    if (wordAccessor.getCurrentStatus() instanceof InitState) {
+                    if (wordVisitor.getCurrentStatus() instanceof InitState) {
                         viewWord.setText(R.string.view_raw);
                     } else {
                         viewWord.setText(R.string.view_select);
@@ -454,7 +459,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 if (ignoreOrNot.getText().equals(getString(R.string.ignore))) {
                     new ExpensiveTask(ExpensiveTask.IGNORE).execute();
                 } else {
-                    wordAccessor.removeIgnore(this);
+                    wordVisitor.removeIgnore(this);
                     ignoreOrNot.setText(R.string.ignore);
                 }
                 break;
@@ -462,7 +467,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 slideRightOut(countBtn);
                 break;
             case R.id.btn_speak:
-                playControl.speak(wordAccessor.item.word);
+                playControl.speak(wordVisitor.item.word);
                 break;
             default:
                 break;
@@ -480,7 +485,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.btn_speak:
                 if (!autoSpeak) {
                     btnSpeak.setBackgroundResource(R.drawable.speak_auto);
-                    playControl.speak(wordAccessor.item.word);
+                    playControl.speak(wordVisitor.item.word);
                 } else {
                     btnSpeak.setBackgroundResource(R.drawable.speak);
                 }
@@ -494,12 +499,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     public void finish() {
-        if (sliceListType == SubWordListAccessor.REVIEW_LIST) {
+        if (sublistVisitor instanceof ReviewListVisitor) {
             if (!coreTop) {
                 startActivity(new Intent(this, WordlistTabActivity.class));
             }
-        } else if (sliceListType == SubWordListAccessor.SUB_WORD_LIST) {
-            sublistAccessor.update(this);
+        } else if (sublistVisitor instanceof SubListVisitor) {
+            ((SubListVisitor) sublistVisitor).update(this);
             startSubListActivity();
         }
         super.finish();
@@ -629,18 +634,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             public void onAnimationEnd(Animation animation) {
                 list.clear();
                 list.addAll(_buflist);
-                if (wordAccessor.isNewWord()) {
+                if (wordVisitor.isNewWord()) {
                     textView.setText(Html.fromHtml("<b><i>"
-                            + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
+                            + wordVisitor.getWord(CoreActivity.this) + "</b></i>"));
                 } else {
-                    textView.setText(wordAccessor.getWord(CoreActivity.this));
+                    textView.setText(wordVisitor.getWord(CoreActivity.this));
                 }
-                if (!sublistAccessor.allComplete()) {
+                if (!sublistVisitor.allComplete()) {
                     if (autoSpeak) {
                         if (playControl.ongoing) {
                             // 自动播放看成用户点击的同等操作
-                            wordAccessor.setPass(true);
-                            wordAccessor.viewPlus(CoreActivity.this);
+                            wordVisitor.setPass(true);
+                            wordVisitor.viewPlus(CoreActivity.this);
                             playControl.speak(null);
                         }
                     }
@@ -692,18 +697,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             public void onAnimationEnd(Animation animation) {
                 list.clear();
                 list.addAll(_buflist);
-                if (wordAccessor.isNewWord()) {
+                if (wordVisitor.isNewWord()) {
                     textView.setText(Html.fromHtml("<b><i>"
-                            + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
+                            + wordVisitor.getWord(CoreActivity.this) + "</b></i>"));
                 } else {
-                    textView.setText(wordAccessor.getWord(CoreActivity.this));
+                    textView.setText(wordVisitor.getWord(CoreActivity.this));
                 }
-                if (!sublistAccessor.allComplete()) {
+                if (!sublistVisitor.allComplete()) {
                     if (autoSpeak) {
                         if (playControl.ongoing) {
                             // 自动播放看成用户点击的同等操作
-                            wordAccessor.setPass(true);
-                            wordAccessor.viewPlus(CoreActivity.this);
+                            wordVisitor.setPass(true);
+                            wordVisitor.viewPlus(CoreActivity.this);
                             playControl.speak(null);
                         }
                     }
@@ -781,9 +786,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private ArrayList<DictData> _buflist = new ArrayList<DictData>();
 
-    private void lookupInDict(WordAccessor worditem) {
+    private void lookupInDict(WordVisitor worditem) {
         _buflist.clear();
-        _buflist.addAll(sublistAccessor.getDictData(this, worditem));
+        _buflist.addAll(sublistVisitor.getDictData(this, worditem));
     }
 
     public static final byte SUBLIST_REACH_END = 0;
@@ -842,24 +847,25 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private void showCompleteStudyDialog() {
         String title = "", msg = "";
-        switch (sliceListType) {
-            case SubWordListAccessor.SUB_WORD_LIST: {
-                sublistAccessor.update(this);
-                String str1 = sublistAccessor.getCorrectPercentage() + "%";
-                String str2 = sublistAccessor.getSubListLevelString(CoreActivity.this);
+        switch (sublistVisitor.getType()) {
+            case SubListVisitor.TYPE: {
+                ((SubListVisitor) sublistVisitor).update(this);
+                String str1 = ((SubListVisitor) sublistVisitor).getCorrectPercentage() + "%";
+                String str2 = ((SubListVisitor) sublistVisitor)
+                        .getSubListLevelString(CoreActivity.this);
                 title = getString(R.string.view_sub_complete_title);
                 msg = String.format(getString(R.string.show_complete_study), str1, str2);
                 break;
             }
-            case SubWordListAccessor.REVIEW_LIST:
+            case ReviewListVisitor.TYPE:
                 title = getString(R.string.view_review_complete_title);
                 msg = getString(R.string.review_complete);
                 break;
-            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
+            case NewListVisitor.TYPE:
                 title = getString(R.string.view_newbook_complete_title);
                 msg = getString(R.string.study_new_word_book_end);
                 break;
-            case SubWordListAccessor.SCAN_LIST:
+            case IgnoreListVisitor.TYPE:
                 title = getString(R.string.view_ignore_complete_title);
                 msg = getString(R.string.study_ignore_list_end);
                 break;
@@ -926,7 +932,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             tv.setTypeface(mFace);
             DictData data = list.get(position);
             if (data != null) {
-                if (wordAccessor.showSymbol()) {
+                if (wordVisitor.showSymbol()) {
                     String text = data.getDataAndSymbol();
                     tv.setText(text.indexOf("<font") != -1 ? Html.fromHtml(text) : text);
                 } else {
@@ -968,18 +974,18 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         public void onAnimationEnd(Animation animation) {
             list.clear();
             list.addAll(_buflist);
-            if (wordAccessor.isNewWord()) {
-                textView.setText(Html.fromHtml("<b><i>" + wordAccessor.getWord(CoreActivity.this)
+            if (wordVisitor.isNewWord()) {
+                textView.setText(Html.fromHtml("<b><i>" + wordVisitor.getWord(CoreActivity.this)
                         + "</b></i>"));
             } else {
-                textView.setText(wordAccessor.getWord(CoreActivity.this));
+                textView.setText(wordVisitor.getWord(CoreActivity.this));
             }
-            if (!sublistAccessor.allComplete()) {
+            if (!sublistVisitor.allComplete()) {
                 if (autoSpeak) {
                     if (playControl.ongoing) {
                         // 自动播放看成用户点击的同等操作
-                        wordAccessor.setPass(true);
-                        wordAccessor.viewPlus(CoreActivity.this);
+                        wordVisitor.setPass(true);
+                        wordVisitor.viewPlus(CoreActivity.this);
                         playControl.speak(null);
                     }
                 }
@@ -1082,55 +1088,46 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             Bundle bundle = null;
             switch (taskType) {
                 case REMOVE_FROM_NEW: {
-                    boolean b = wordAccessor.removeFromNew(CoreActivity.this);
+                    boolean b = wordVisitor.removeFromNew(CoreActivity.this);
                     bundle = new Bundle();
                     bundle.putBoolean("removenew", b);
                     break;
                 }
                 case ADD_NEW: {
-                    boolean b = wordAccessor.addNew(CoreActivity.this);
+                    boolean b = wordVisitor.addNew(CoreActivity.this);
                     bundle = new Bundle();
                     bundle.putBoolean("addnew", b);
                     break;
                 }
                 case VIEW_MORE:
                     _buflist.clear();
-                    _buflist.add(wordAccessor.getDetail(CoreActivity.this));
+                    _buflist.add(wordVisitor.getDetail(CoreActivity.this));
                     break;
                 case VIEW_RAW:
-                    lookupInDict(wordAccessor);
+                    lookupInDict(wordVisitor);
                     break;
                 case INIT_REVIEW_LIST:
-                    bundle = new Bundle();
-                    sublistAccessor.loadReviewWordList(CoreActivity.this);
-                    sliceListType = SubWordListAccessor.REVIEW_LIST;
-                    if (!sublistAccessor.allComplete()) {
-                        wordAccessor = sublistAccessor.getCurrentWord();
-                        lookupInDict(wordAccessor);
-                        bundle.putBoolean("complete", false);
-                    } else {
-                        bundle.putBoolean("complete", true);
-                    }
-                    break;
                 case INIT_SCAN_LIST:
                 case INIT_NEW_WORD_BOOK_LIST:
                 case INIT_SUB_WORD_LIST:
                     bundle = new Bundle();
-                    sublistAccessor.loadWordList(CoreActivity.this);
-                    if (!sublistAccessor.allComplete()) {
-                        wordAccessor = sublistAccessor.getCurrentWord();
-                        lookupInDict(wordAccessor);
+                    sublistVisitor.loadWordList(CoreActivity.this);
+                    if (!sublistVisitor.allComplete()) {
+                        wordVisitor = sublistVisitor.getCurrentWord();
+                        lookupInDict(wordVisitor);
                         bundle.putBoolean("complete", false);
                     } else {
                         bundle.putBoolean("complete", true);
                     }
-                    sublistAccessor.update(CoreActivity.this);
+                    if (sublistVisitor instanceof SubListVisitor) {
+                        ((SubListVisitor) sublistVisitor).update(CoreActivity.this);
+                    }
                     break;
                 case UPDATE:
                     bundle = new Bundle();
-                    if (!sublistAccessor.allComplete()) {
-                        wordAccessor.clear();
-                        lookupInDict(wordAccessor);
+                    if (!sublistVisitor.allComplete()) {
+                        wordVisitor.clear();
+                        lookupInDict(wordVisitor);
                         bundle.putBoolean("next", true);
                     } else {
                         bundle.putBoolean("next", false);
@@ -1138,29 +1135,31 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     break;
                 case LOOKUP:
                     bundle = new Bundle();
-                    if (!sublistAccessor.allComplete()) {
-                        wordAccessor = sublistAccessor.getNext();
-                        lookupInDict(wordAccessor);
+                    if (!sublistVisitor.allComplete()) {
+                        wordVisitor = sublistVisitor.getNext();
+                        lookupInDict(wordVisitor);
                         bundle.putBoolean("next", true);
                     } else {
                         bundle.putBoolean("next", false);
                     }
-                    sublistAccessor.update(CoreActivity.this);
+                    if (sublistVisitor instanceof SubListVisitor) {
+                        ((SubListVisitor) sublistVisitor).update(CoreActivity.this);
+                    }
                     break;
                 case UPGRADE: {
-                    boolean b = wordAccessor.upgrade(CoreActivity.this);
+                    boolean b = wordVisitor.upgrade(CoreActivity.this);
                     bundle = new Bundle();
                     bundle.putBoolean("upgrade", b);
                     break;
                 }
                 case DEGRADE: {
-                    boolean b = wordAccessor.degrade(CoreActivity.this);
+                    boolean b = wordVisitor.degrade(CoreActivity.this);
                     bundle = new Bundle();
                     bundle.putBoolean("upgrade", b);
                     break;
                 }
                 case IGNORE: {
-                    boolean b = wordAccessor.ignore(CoreActivity.this);
+                    boolean b = wordVisitor.ignore(CoreActivity.this);
                     bundle = new Bundle();
                     bundle.putBoolean("upgrade", b);
                     break;
@@ -1181,11 +1180,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.remove_success)
                                     : getString(R.string.remove_failed), Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.add_new);
-                    if (wordAccessor.isNewWord()) {
+                    if (wordVisitor.isNewWord()) {
                         textView.setText(Html.fromHtml("<b><i>"
-                                + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
+                                + wordVisitor.getWord(CoreActivity.this) + "</b></i>"));
                     } else {
-                        textView.setText(wordAccessor.getWord(CoreActivity.this));
+                        textView.setText(wordVisitor.getWord(CoreActivity.this));
                     }
                     break;
                 }
@@ -1195,11 +1194,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             b ? getString(R.string.add_success) : getString(R.string.add_failed),
                             Toast.LENGTH_SHORT).show();
                     addOrRemove.setText(R.string.remove_from_new);
-                    if (wordAccessor.isNewWord()) {
+                    if (wordVisitor.isNewWord()) {
                         textView.setText(Html.fromHtml("<b><i>"
-                                + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
+                                + wordVisitor.getWord(CoreActivity.this) + "</b></i>"));
                     } else {
-                        textView.setText(wordAccessor.getWord(CoreActivity.this));
+                        textView.setText(wordVisitor.getWord(CoreActivity.this));
                     }
                     break;
                 }
@@ -1215,27 +1214,27 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case INIT_SUB_WORD_LIST: {
                     boolean isCompleteStudy = result.getBoolean("complete");
                     if (!isCompleteStudy) {
-                        countdownManager = new CountdownManager(handler,
-                                sublistAccessor.getCount(), sublistAccessor.getCountDown());
+                        countdownManager = new CountdownManager(handler, sublistVisitor.getCount(),
+                                sublistVisitor.getCountDown());
 
                         list.clear();
                         list.addAll(_buflist);
-                        if (wordAccessor.isNewWord()) {
+                        if (wordVisitor.isNewWord()) {
                             textView.setText(Html.fromHtml("<b><i>"
-                                    + wordAccessor.getWord(CoreActivity.this) + "</b></i>"));
+                                    + wordVisitor.getWord(CoreActivity.this) + "</b></i>"));
                         } else {
-                            textView.setText(wordAccessor.getWord(CoreActivity.this));
+                            textView.setText(wordVisitor.getWord(CoreActivity.this));
                         }
                         adapter.notifyDataSetChanged();
-                        progressBarDay.setProgress(sublistAccessor.getProgress());
-                        progressBarNight.setProgress(sublistAccessor.getProgress());
+                        progressBarDay.setProgress(sublistVisitor.getProgress());
+                        progressBarNight.setProgress(sublistVisitor.getProgress());
                         viewWord.setText(R.string.view_more);
-                        if (wordAccessor.isAddToNew()) {
+                        if (wordVisitor.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {
                             addOrRemove.setText(R.string.add_new);
                         }
-                        if (wordAccessor.isIgnore()) {
+                        if (wordVisitor.isIgnore()) {
                             ignoreOrNot.setText(R.string.remove_from_ignore);
                         } else {
                             ignoreOrNot.setText(R.string.ignore);
@@ -1254,12 +1253,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 }
                 case UPDATE:
                 case LOOKUP:
-                    Log.d(TAG, "progress:" + sublistAccessor.getProgress());
+                    Log.d(TAG, "progress:" + sublistVisitor.getProgress());
                     updateLoopCount();
                     boolean hasNext = result.getBoolean("next");
                     if (hasNext) {
-                        progressBarDay.setProgress(sublistAccessor.getProgress());
-                        progressBarNight.setProgress(sublistAccessor.getProgress());
+                        progressBarDay.setProgress(sublistVisitor.getProgress());
+                        progressBarNight.setProgress(sublistVisitor.getProgress());
                         switch (anim) {
                             case ANIM_3D:
                                 apply3DAnim(0, 90);
@@ -1271,12 +1270,12 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                                 applySlideAnim();
                                 break;
                         }
-                        if (wordAccessor.isAddToNew()) {
+                        if (wordVisitor.isAddToNew()) {
                             addOrRemove.setText(R.string.remove_from_new);
                         } else {
                             addOrRemove.setText(R.string.add_new);
                         }
-                        if (wordAccessor.isIgnore()) {
+                        if (wordVisitor.isIgnore()) {
                             ignoreOrNot.setText(R.string.remove_from_ignore);
                         } else {
                             ignoreOrNot.setText(R.string.ignore);
@@ -1287,10 +1286,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         progressBarNight.setProgress(100);
                         handler.sendEmptyMessage(INSPIRIT_COMPLETE_STUDY);
                     }
-                    if (!sublistAccessor.allComplete()) {
+                    if (!sublistVisitor.allComplete()) {
                         if (autoSpeak) {
                             if (!playControl.ongoing) {
-                                playControl.speak(wordAccessor.item.word);
+                                playControl.speak(wordVisitor.item.word);
                             }
                         }
                     }
@@ -1465,8 +1464,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 return;
             }
             try {
-                String tmp = TextUtils.isEmpty(word) ? wordAccessor.item.word
-                        + wordAccessor.getDictData(CoreActivity.this).getDatas()
+                String tmp = TextUtils.isEmpty(word) ? wordVisitor.item.word
+                        + wordVisitor.getDictData(CoreActivity.this).getDatas()
                                 .replaceAll("[a-zA-Z]*", "") : word;
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, tmp);
@@ -1488,8 +1487,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);
             setUnlocked();
-            wordAccessor.setPass(true);
-            wordAccessor.viewPlus(CoreActivity.this);
+            wordVisitor.setPass(true);
+            wordVisitor.viewPlus(CoreActivity.this);
             speak(null);
         }
 

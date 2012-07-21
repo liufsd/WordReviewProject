@@ -22,11 +22,11 @@ import com.coleman.ojm.core.Observer;
 import com.coleman.util.Config;
 import com.coleman.util.MyApp;
 
-public class WordAccessor implements Serializable, Observer {
+public class WordVisitor implements Serializable, Observer {
 
     private static final long serialVersionUID = 884726896304858319L;
 
-    private static final String TAG = WordAccessor.class.getName();
+    private static final String TAG = WordVisitor.class.getName();
 
     private static Log Log = Config.getLog();
 
@@ -40,54 +40,28 @@ public class WordAccessor implements Serializable, Observer {
 
     private FiniteStateMachine mStateMachine;
 
-    private SubWordListAccessor subAccessor;
+    private AbsSubVisitor absSubVisitor;
 
     /**
      * Only support REVIEW_LIST, NEW_WORD_BOOK_LIST, SCAN_LIST
      * 
-     * @param subAccessor
+     * @param subVisitor
      */
-    public WordAccessor(SubWordListAccessor subAccessor) {
-        this.subAccessor = subAccessor;
-        switch (subAccessor.listType) {
-            case SubWordListAccessor.REVIEW_LIST:
-                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[1], -1);
-                break;
-            case SubWordListAccessor.NEW_WORD_BOOK_LIST:
-                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[2], -1);
-                break;
-            case SubWordListAccessor.SCAN_LIST:
-                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[3], -1);
-                break;
-            default:
-                throw new RuntimeException("Not support word list type!");
-        }
-    }
+    public WordVisitor(AbsSubVisitor subVisitor, WordListItem worditem) {
+        this.absSubVisitor = subVisitor;
+        this.item = worditem;
 
-    /**
-     * Only support SUB_WORD_LIST
-     * 
-     * @param sliceList
-     * @param item
-     */
-    public WordAccessor(SubWordListAccessor sliceList, WordListItem item) {
-        this.subAccessor = sliceList;
-        this.item = item;
-        switch (sliceList.listType) {
-            case SubWordListAccessor.SUB_WORD_LIST:
-                mStateMachine = new FiniteStateMachine(SubWordListAccessor.slicelistState[0],
-                        item.state);
-                mStateMachine.addObserver(this);
-                break;
-            default:
-                throw new RuntimeException("Not support word list type!");
+        int state = item.state;
+        mStateMachine = new FiniteStateMachine(subVisitor.method.getStateTypes(), state);
+        if (subVisitor instanceof SubListVisitor) {
+            mStateMachine.addObserver(this);
         }
     }
 
     public String getWord(Context context) {
         String w = item.word;
-        Log.d(TAG, "sliceList.listType:" + subAccessor.listType);
-        if (subAccessor.listType == SubWordListAccessor.REVIEW_LIST) {
+        Log.d(TAG, "sliceList.listType:" + absSubVisitor.getType());
+        if (absSubVisitor instanceof ReviewListVisitor) {
             if (info.newword) {
                 Log.d(TAG, "info.getReviewTime:" + info.inReviewTime());
                 w += "("
@@ -219,8 +193,11 @@ public class WordAccessor implements Serializable, Observer {
 
     public void errorPlus(Context context) {
         info.errorcount++;
-        subAccessor.errorPlus();
-        subAccessor.update(context);
+        if (absSubVisitor instanceof SubListVisitor) {
+            SubListVisitor subVisitor = (SubListVisitor) absSubVisitor;
+            subVisitor.errorPlus();
+            subVisitor.update(context);
+        }
         info.weight += 2;
         info.weight = info.weight > WordInfo.MAX_WEIGHT ? WordInfo.MAX_WEIGHT : info.weight;
         Log.d(TAG, "error plus:" + toString());
@@ -233,7 +210,7 @@ public class WordAccessor implements Serializable, Observer {
                 + info + " data:" + dictData + " detail:" + detailData;
     }
 
-    public ArrayList<DictData> getDictData(Context context, ArrayList<WordAccessor> list) {
+    public ArrayList<DictData> getDictData(Context context, ArrayList<WordVisitor> list) {
         return mStateMachine.getDictData(context, this, list);
     }
 
@@ -266,7 +243,7 @@ public class WordAccessor implements Serializable, Observer {
     private void updateWordListItemState() {
         item.state = getCurrentStatus().index;
         MyApp.context.getContentResolver().update(
-                TWordListItem.getContentUri(subAccessor.getWordListID()), item.toContentValues(),
-                TWordListItem._ID + "=" + item.id, null);
+                TWordListItem.getContentUri(((SubListVisitor) absSubVisitor).getWordListID()),
+                item.toContentValues(), TWordListItem._ID + "=" + item.id, null);
     }
 }
