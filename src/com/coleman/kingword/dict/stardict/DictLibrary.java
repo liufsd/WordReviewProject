@@ -9,6 +9,7 @@ import android.database.Cursor;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.TDict.TDictIndex;
 import com.coleman.log.Log;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 public class DictLibrary {
@@ -63,12 +64,14 @@ public class DictLibrary {
 
     public boolean isCurLib() {
         return libraryInfo.dictDirName != null
-                && libraryInfo.dictDirName.equals(DictManager.getInstance().getCurLibDirName());
+                && libraryInfo.dictDirName.equals(AppSettings.getString(AppSettings.CUT_LIB_KEY,
+                        DictManager.DEFAULT_CUR_LIB));
     }
 
     public boolean isMoreLib() {
         return libraryInfo.dictDirName != null
-                && libraryInfo.dictDirName.equals(DictManager.getInstance().getMoreLibDirName());
+                && libraryInfo.dictDirName.equals(AppSettings.getString(AppSettings.MORE_LIB_KEY,
+                        DictManager.DEFAULT_MORE_LIB));
 
     }
 

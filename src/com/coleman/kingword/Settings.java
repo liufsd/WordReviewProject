@@ -14,6 +14,7 @@ import android.os.Message;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -282,10 +283,13 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
     private void showSummaryInfoDB() {
         final Collection<DictLibrary> c = DictManager.getInstance().getLibrarys();
         final String[] names = new String[c.size()];
+        final String[] values = new String[c.size()];
         int i = 0;
         int index = -1;
         for (DictLibrary dynamicTable : c) {
-            names[i] = dynamicTable.getLibDirName();
+            values[i] = dynamicTable.getLibDirName();
+            names[i] = dynamicTable.getLibraryInfo().dictName;
+            names[i] = TextUtils.isEmpty(names[i]) ? dynamicTable.getLibDirName() : names[i];
             if (dynamicTable.isCurLib()) {
                 index = i;
             }
@@ -294,7 +298,8 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DictManager.getInstance().setCurLibrary(names[which]);
+                AppSettings.saveString(AppSettings.CUT_LIB_KEY, values[which]);
+                DictManager.getInstance().setCurLibrary(values[which]);
                 dialog.dismiss();
             }
 
@@ -307,10 +312,13 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
     private void showDetailedInfoDB() {
         final Collection<DictLibrary> c = DictManager.getInstance().getLibrarys();
         final String[] names = new String[c.size()];
+        final String[] values = new String[c.size()];
         int i = 0;
         int index = -1;
         for (DictLibrary dynamicTable : c) {
-            names[i] = dynamicTable.getLibDirName();
+            values[i] = dynamicTable.getLibDirName();
+            names[i] = dynamicTable.getLibraryInfo().dictName;
+            names[i] = TextUtils.isEmpty(names[i]) ? dynamicTable.getLibDirName() : names[i];
             if (dynamicTable.isMoreLib()) {
                 index = i;
             }
@@ -319,7 +327,8 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DictManager.getInstance().setCurLibrary(names[which]);
+                AppSettings.saveString(AppSettings.MORE_LIB_KEY, values[which]);
+                DictManager.getInstance().setCurLibrary(values[which]);
                 dialog.dismiss();
             }
 

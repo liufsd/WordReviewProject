@@ -129,20 +129,21 @@ public class DictManager {
      **********************************************************************/
     public DictIndex getIndex(Context context, String libName, String word) {
         DictLibrary library = libmap.get(libName);
-        Log.d(TAG, "---------------------library: " + libName);
+        // Log.d(TAG, "---------------------library: " + libName);
         DictIndex index = library.getDictIndex(context, word);
         return index;
     }
 
     public DictData viewWord(Context context, DictIndex index) {
         DictLibrary library = libmap.get(curLib);
-        Log.d(TAG, "---------------------library: " + curLib);
+        // Log.d(TAG, "---------------------library: " + curLib);
         if (library == null) {
             context.startService(new Intent(context, DictLoadService.class));
             Log.w(TAG, "library has not been initialed! Init Now!");
             return DictData.constructData("library has not been initialed!");
         }
         if (index == null) {
+            Log.w(TAG, "dict index is null, word not found!");
             return DictData.constructData("word not found!");
         }
         DictData wordData = DictData.readData(context, library.isInternal(),

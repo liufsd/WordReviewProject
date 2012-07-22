@@ -340,12 +340,11 @@ public class WelcomeActivity extends Activity implements Observer {
                 .getStringArray(R.array.leaning_level) : getResources().getStringArray(
                 R.array.xiuzhen_level)));
         Cursor c = getContentResolver().query(THistory.CONTENT_URI, new String[] {
-            THistory._ID
-        }, null, null, THistory._ID + " desc LIMIT 1");
+            "count(*) as count"
+        }, null, null, null);
         if (c.moveToFirst()) {
-            long id = c.getLong(0);
-            count = (int) id;
-            Log.d(TAG, "id:" + id);
+            count = c.getInt(0);
+            Log.i(TAG, "===coleman-debug-count:" + count);
         }
         if (c != null) {
             c.close();

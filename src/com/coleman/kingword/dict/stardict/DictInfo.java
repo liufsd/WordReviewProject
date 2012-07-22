@@ -35,6 +35,8 @@ import android.os.Environment;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord;
 import com.coleman.kingword.provider.KingWord.TDict;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 /**
  * Dictionary information
@@ -48,6 +50,8 @@ import com.coleman.kingword.provider.KingWord.TDict;
  * @version 1.1.0.3, Feb 16, 2008
  */
 public class DictInfo {
+
+    private static final String TAG = DictInfo.class.getName();
 
     /**
      * dictionary name
@@ -82,6 +86,8 @@ public class DictInfo {
     public String dictDirName;
 
     public long date;
+
+    private static Log Log = Config.getLog();
 
     /**
      * Constructor with arguments
@@ -155,7 +161,7 @@ public class DictInfo {
             c = context.getContentResolver().query(KingWord.TDict.CONTENT_URI, null, null, null,
                     null);
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                String dictName = c.getString(c.getColumnIndex(TDict.DICT_NAME));
+                String dictName =  c.getString(c.getColumnIndex(TDict.DICT_NAME));
                 String wordCount = c.getString(c.getColumnIndex(TDict.WORD_COUNT));
                 String idxFileSize = c.getString(c.getColumnIndex(TDict.IDX_FILE_SIZE));
                 String sameTypeSequence = c.getString(c.getColumnIndex(TDict.SAME_TYPE_SEQUENCE));
@@ -248,8 +254,10 @@ public class DictInfo {
             while ((line = br.readLine()) != null) {
                 String[] info = line.split("=");
                 if (info[0].equals("bookname")) {
-                    info[1] = new String(info[1].getBytes("ISO-8859-1"), "UTF-8");
                     bookName = info[1];
+                    Log.i(TAG, "===coleman-debug-bookName:" + bookName);
+                    info[1] = new String(info[1].getBytes("ISO-8859-1"), "UTF-8");
+                    Log.i(TAG, "===coleman-debug-info[1]:" + info[1]);
                 } else if (info[0].equals("wordcount")) {
                     wordCount = info[1];
                 } else if (info[0].equals("idxfilesize")) {

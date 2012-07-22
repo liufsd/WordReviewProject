@@ -218,12 +218,13 @@ public class InfoGather {
         // int levelType = context.getSharedPreferences(
         // Config.getDefaultSharedPreferenceName(context), 0).getInt("level",
         // 0);
-        int levelType = AppSettings.getInt(AppSettings.LEVEL, 0);
+        String levelTypes[] = context.getResources().getStringArray(R.array.level_type);
+        String levelType = AppSettings.getString(AppSettings.LEVEL, levelTypes[0]);
         int[] levelNums = context.getResources().getIntArray(R.array.level_num);
-        String[] levelNames = (levelType == 0 ? context.getResources().getStringArray(
-                R.array.military_rank) : (levelType == 1 ? context.getResources().getStringArray(
-                R.array.leaning_level) : context.getResources().getStringArray(
-                R.array.xiuzhen_level)));
+        String[] levelNames = (levelType.equals(levelTypes[0]) ? context.getResources()
+                .getStringArray(R.array.military_rank) : (levelType.equals(levelTypes[1]) ? context
+                .getResources().getStringArray(R.array.leaning_level) : context.getResources()
+                .getStringArray(R.array.xiuzhen_level)));
         Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
             THistory._ID
         }, null, null, THistory._ID + " desc LIMIT 1");

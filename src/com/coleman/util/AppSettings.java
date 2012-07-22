@@ -92,6 +92,10 @@ public class AppSettings {
             IgnoreListVisitor.DEFAULT_VIEW_METHOD, NewListVisitor.DEFAULT_VIEW_METHOD
     };
 
+    public static final String CUT_LIB_KEY = "cut_lib";
+
+    public static final String MORE_LIB_KEY = "more_lib";
+
     public static final String DATABASE_SET = "database_set";
 
     public static final String RESTORE = "restore";

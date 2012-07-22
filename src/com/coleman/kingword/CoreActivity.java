@@ -657,16 +657,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 } else {
                     textView.setText(wordVisitor.getWord(CoreActivity.this));
                 }
-                if (!sublistVisitor.allComplete()) {
-                    if (autoSpeak) {
-                        if (playControl.ongoing) {
-                            // 自动播放看成用户点击的同等操作
-                            wordVisitor.setPass(true);
-                            wordVisitor.viewPlus(CoreActivity.this);
-                            playControl.speak(null);
-                        }
-                    }
-                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -687,6 +677,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             adapter.notifyDataSetChanged();
                         }
                         listView.setEnabled(true);
+                        if (!sublistVisitor.allComplete()) {
+                            if (autoSpeak) {
+                                if (playControl.ongoing) {
+                                    // 自动播放看成用户点击的同等操作
+                                    wordVisitor.setPass(true);
+                                    wordVisitor.viewPlus(CoreActivity.this);
+                                    playControl.speak(null);
+                                }
+                            }
+                        }
                     }
                 });
                 textView.startAnimation(a);
@@ -720,16 +720,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 } else {
                     textView.setText(wordVisitor.getWord(CoreActivity.this));
                 }
-                if (!sublistVisitor.allComplete()) {
-                    if (autoSpeak) {
-                        if (playControl.ongoing) {
-                            // 自动播放看成用户点击的同等操作
-                            wordVisitor.setPass(true);
-                            wordVisitor.viewPlus(CoreActivity.this);
-                            playControl.speak(null);
-                        }
-                    }
-                }
+
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
@@ -751,6 +742,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             adapter.notifyDataSetChanged();
                         }
                         listView.setEnabled(true);
+                        if (!sublistVisitor.allComplete()) {
+                            if (autoSpeak) {
+                                if (playControl.ongoing) {
+                                    // 自动播放看成用户点击的同等操作
+                                    wordVisitor.setPass(true);
+                                    wordVisitor.viewPlus(CoreActivity.this);
+                                    playControl.speak(null);
+                                }
+                            }
+                        }
                     }
                 });
                 container.startAnimation(a);
@@ -1006,16 +1007,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         + "</b></i>"));
             } else {
                 textView.setText(wordVisitor.getWord(CoreActivity.this));
-            }
-            if (!sublistVisitor.allComplete()) {
-                if (autoSpeak) {
-                    if (playControl.ongoing) {
-                        // 自动播放看成用户点击的同等操作
-                        wordVisitor.setPass(true);
-                        wordVisitor.viewPlus(CoreActivity.this);
-                        playControl.speak(null);
-                    }
-                }
             }
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
@@ -1387,6 +1378,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     listView.setEnabled(true);
+                    if (!sublistVisitor.allComplete()) {
+                        if (autoSpeak) {
+                            if (playControl.ongoing) {
+                                // 自动播放看成用户点击的同等操作
+                                wordVisitor.setPass(true);
+                                wordVisitor.viewPlus(CoreActivity.this);
+                                playControl.speak(null);
+                            }
+                        }
+                    }
                 }
             });
             container.startAnimation(rotation);
