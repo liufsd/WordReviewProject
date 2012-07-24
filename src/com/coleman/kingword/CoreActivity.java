@@ -210,7 +210,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onPause() {
-        if (countdownManager != null && !playControl.ongoing) {
+        if (countdownManager != null) {
             countdownManager.pause();
         }
         super.onPause();
@@ -218,7 +218,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     @Override
     protected void onResume() {
-        if (countdownManager != null && !playControl.ongoing) {
+        if (countdownManager != null) {
             countdownManager.start();
         }
         super.onResume();
