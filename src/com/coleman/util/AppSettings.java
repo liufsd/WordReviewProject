@@ -115,6 +115,10 @@ public class AppSettings {
 
     public static final String FILTER_IGNORE = "filter_ignore";
 
+    public static final String REVIEW_NUMBER_LIMIT = "review_number_limit";
+
+    public static final String REVIEW_NUMBER_SELECT = "review_number_select";
+
     public static void saveBoolean(String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);

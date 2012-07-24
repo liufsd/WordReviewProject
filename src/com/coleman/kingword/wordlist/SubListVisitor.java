@@ -153,11 +153,11 @@ public class SubListVisitor extends AbsSubVisitor {
         if (!allComplete()) {
             tmp = 0;
         } else {
-            if (subinfo.error_count <= list.size() * 5 / 100) {
+            if (subinfo.error_count <= list.size() * 10 / 100) {
                 tmp = 4;
-            } else if (subinfo.error_count <= list.size() * 2 / 10) {
+            } else if (subinfo.error_count <= list.size() * 20 / 100) {
                 tmp = 3;
-            } else if (subinfo.error_count <= list.size() * 4 / 10) {
+            } else if (subinfo.error_count <= list.size() * 40 / 100) {
                 tmp = 2;
             } else {
                 tmp = 1;

@@ -23,6 +23,7 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.log.Log;
 import com.coleman.tools.InfoGather;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 public class KingWordReceiver extends BroadcastReceiver {
@@ -62,7 +63,6 @@ public class KingWordReceiver extends BroadcastReceiver {
             }
             return;
         }
-
         byte type = intent.getByteExtra("type", Byte.MAX_VALUE);
         if (cName != null && cName.contains("com.coleman.kingword")) {
             Intent it = new Intent(context, EbbinghausActivityAsDialog.class);
@@ -125,11 +125,19 @@ public class KingWordReceiver extends BroadcastReceiver {
         int count = 0;
         long ct = System.currentTimeMillis();
         String selection = WordInfoHelper.getReviewSelection();
+        String sortOrder = null;
+        boolean limit = AppSettings.getBoolean(AppSettings.REVIEW_NUMBER_LIMIT, true);
+        String limitNumber = AppSettings.getString(AppSettings.REVIEW_NUMBER_SELECT, "100");
+        if (limit) {
+            sortOrder = THistory._ID + " asc limit " + limitNumber;
+        }
+        Log.i(TAG, "===coleman-debug-selection:" + selection + "  sortOrder: " + sortOrder);
+
         Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
-            "count(*) as count"
-        }, selection, null, null);
+            THistory._ID
+        }, selection, null, sortOrder);
         if (c.moveToFirst()) {
-            count = c.getInt(0);
+            count = c.getCount();
         }
         Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct)
                 + " need review num:" + count);

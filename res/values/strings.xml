@@ -62,7 +62,7 @@
     <string name="show_sub_list_reach_end">此单元学习已经完成！</string>
     <string formatted="false" name="show_complete_study">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
-	<!-- Settings & ReviewSettings -->
+    <!-- Settings & ReviewSettings -->
     <string name="set_split_num_hint">设置单元单词数量</string>
     <string name="split_num_settings">每单元单词数量</string>
     <string name="set_review_time">设置复习时间点</string>
@@ -82,6 +82,12 @@
     <string name="filter_new_summary_off">在复习时总是不加入生词本单词</string>
     <string name="filter_ignore_summary_on">在复习时总是过滤忽略列表中的单词</string>
     <string name="filter_ignore_summary_off">在复习时总是不过滤忽略列表中的单词</string>
+    <string name="review_number_settings">复习数量设置</string>
+    <string name="review_number_limit_off">不限制每次复习单词的数量</string>
+    <string name="review_number_limit_on">限制每次复习单词的数量</string>
+    <string name="review_number_limit">复习数量限制</string>
+    <string name="review_number_select">设置复习单词数量</string>
+        
     <string name="upgrade_success">单词升级成功</string>
     <string name="degrade_success">单词降级成功</string>
     <string name="ignore_success">单词忽略成功</string>

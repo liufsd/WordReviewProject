@@ -59,7 +59,6 @@ import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.AbsSubVisitor;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
-import com.coleman.kingword.wordlist.FiniteStateMachine.MultipleState;
 import com.coleman.kingword.wordlist.IgnoreListVisitor;
 import com.coleman.kingword.wordlist.NewListVisitor;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
@@ -261,8 +260,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 showAnimSelect();
                 break;
             case R.id.menu_review:
-                playControl.stop();
-                ToastUtil.show(getString(R.string.play_stop));
+                if (playControl.ongoing) {
+                    playControl.stop();
+                    ToastUtil.show(getString(R.string.play_stop));
+                }
                 broadcastReview();
                 break;
             case R.id.menu_countdown:

@@ -43,4 +43,24 @@
             android:title="@string/filter_ignore" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/review_number_settings" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="review_number_limit"
+            android:summaryOff="@string/review_number_limit_off"
+            android:summaryOn="@string/review_number_limit_on"
+            android:title="@string/review_number_limit" />
+
+        <ListPreference
+            android:defaultValue="100"
+            android:dependency="review_number_limit"
+            android:dialogTitle="@string/review_number_select"
+            android:entries="@array/review_numbers"
+            android:entryValues="@array/review_numbers"
+            android:key="review_number_select"
+            android:summary=""
+            android:title="@string/review_number_select" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

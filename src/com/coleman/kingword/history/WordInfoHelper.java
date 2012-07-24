@@ -155,9 +155,15 @@ public class WordInfoHelper {
                 break;
             case ReviewListVisitor.TYPE:
                 String selection = getReviewSelection();
-                Log.i(TAG, "===coleman-debug-selection:" + selection);
+                String sortOrder = null;
+                boolean limit = AppSettings.getBoolean(AppSettings.REVIEW_NUMBER_LIMIT, true);
+                String limitNumber = AppSettings.getString(AppSettings.REVIEW_NUMBER_SELECT, "100");
+                if (limit) {
+                    sortOrder = THistory._ID + " asc limit " + limitNumber;
+                }
+                Log.i(TAG, "===coleman-debug-selection:" + selection + "  sortOrder: " + sortOrder);
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection, selection,
-                        null, null);
+                        null, sortOrder);
                 break;
             default:
                 break;
