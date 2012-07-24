@@ -62,10 +62,11 @@
     <string name="show_sub_list_reach_end">此单元学习已经完成！</string>
     <string formatted="false" name="show_complete_study">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
+	<!-- Settings & ReviewSettings -->
     <string name="set_split_num_hint">设置单元单词数量</string>
     <string name="split_num_settings">每单元单词数量</string>
     <string name="set_review_time">设置复习时间点</string>
-    <string name="review_time_settings">复习设定</string>
+    <string name="review_settings">复习设定</string>
     <string name="review_set">复习设置</string>
     <string name="fixed_time_mode">定时模式</string>
     <string name="ebbinghaus_mode">艾宾浩斯模式</string>
@@ -73,6 +74,14 @@
     <string name="fixed_time_mode_discard">定时模式关闭</string>
     <string name="ebbinghaus_mode_used">艾宾浩斯模式启用</string>
     <string name="ebbinghaus_mode_discard">艾宾浩斯模式关闭</string>
+    <string name="review_time_settings">复习时间设定</string>
+    <string name="review_filter_settings">复习过滤设置</string>
+    <string name="filter_new">加入生词本</string>
+    <string name="filter_ignore">过滤忽略列表</string>
+    <string name="filter_new_summary_on">在复习时总是加入生词本单词</string>
+    <string name="filter_new_summary_off">在复习时总是不加入生词本单词</string>
+    <string name="filter_ignore_summary_on">在复习时总是过滤忽略列表中的单词</string>
+    <string name="filter_ignore_summary_off">在复习时总是不过滤忽略列表中的单词</string>
     <string name="upgrade_success">单词升级成功</string>
     <string name="degrade_success">单词降级成功</string>
     <string name="ignore_success">单词忽略成功</string>
@@ -177,7 +186,7 @@
     <string name="view_method_dialog_title">设置查看方式</string>
     <string name="view_method_settings">学习设定</string>
     <string name="sub_settings">查看单元</string>
-    <string name="review_settings">查看复习</string>
+    <string name="review_settings_2">查看复习</string>
     <string name="newbook_settings">查看生词</string>
     <string name="ignore_settings">查看过滤</string>
     <string name="add_method">添加</string>

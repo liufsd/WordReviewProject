@@ -954,7 +954,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     String text = data.getDataAndSymbol();
                     if (list.size() > 1) {
                         // Log.v(TAG, "===coleman-debug-before text:" + text);
-                        text = DictDataProcessingCenter.process(text, false);
+                        text = DictDataProcessingCenter.process4MultiSelect(text);
                         // Log.v(TAG, "===coleman-debug-after text:" + text);
                     }
                     tv.setText(text.indexOf("<font") != -1 ? Html.fromHtml(text) : text);
@@ -962,7 +962,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     String text = data.getDatas();
                     if (list.size() > 1) {
                         // Log.v(TAG, "===coleman-debug-before text:" + text);
-                        text = DictDataProcessingCenter.process(text, false);
+                        text = DictDataProcessingCenter.process4MultiSelect(text);
                         // Log.v(TAG, "===coleman-debug-after text:" + text);
                     }
                     tv.setText(text.indexOf("<font") != -1 ? Html.fromHtml(text) : text);
@@ -1495,8 +1495,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             try {
                 String tmp = TextUtils.isEmpty(word) ? wordVisitor.item.word
                         + ".\n"
-                        + DictDataProcessingCenter.process(
-                                wordVisitor.getDictData(CoreActivity.this).getDatas(), true) : word;
+                        + DictDataProcessingCenter.process4TTS(wordVisitor.getDictData(
+                                CoreActivity.this).getDatas()) : word;
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, tmp);
                 tts.speak(tmp, TextToSpeech.QUEUE_ADD, map);

@@ -19,6 +19,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfo;
+import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.log.Log;
 import com.coleman.tools.InfoGather;
@@ -123,22 +124,7 @@ public class KingWordReceiver extends BroadcastReceiver {
     private int needReview(Context context) {
         int count = 0;
         long ct = System.currentTimeMillis();
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        String selection = (hour >= 18 ? THistory.NEW_WORD + " = 2 or " : "") + "("
-                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_HOUR + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
-                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_12_HOUR + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_DAY + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or " + "("
-                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_5_DAY + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_40_DAY + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or "
-                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
-                + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+        String selection = WordInfoHelper.getReviewSelection();
         Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
             "count(*) as count"
         }, selection, null, null);

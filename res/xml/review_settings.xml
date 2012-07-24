@@ -2,25 +2,45 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/review_set" >
 
-    <CheckBoxPreference
-        android:key="fixed_time_review"
-        android:summaryOff="@string/fixed_time_mode_discard"
-        android:summaryOn="@string/fixed_time_mode_used"
-        android:title="@string/fixed_time_mode" />
+    <PreferenceCategory android:title="@string/review_time_settings" >
 
-    <Preference
-        android:key="time1"
-        android:summary="@string/fixed_time_hint"
-        android:title="@string/not_set" />
+        <CheckBoxPreference
+            android:key="fixed_time_review"
+            android:summaryOff="@string/fixed_time_mode_discard"
+            android:summaryOn="@string/fixed_time_mode_used"
+            android:title="@string/fixed_time_mode" />
 
-    <Preference
-        android:key="time2"
-        android:summary="@string/fixed_time_hint"
-        android:title="@string/not_set" />
+        <Preference
+            android:key="time1"
+            android:summary="@string/fixed_time_hint"
+            android:title="@string/not_set" />
 
-    <Preference
-        android:key="time3"
-        android:summary="@string/fixed_time_hint"
-        android:title="@string/not_set" />
+        <Preference
+            android:key="time2"
+            android:summary="@string/fixed_time_hint"
+            android:title="@string/not_set" />
+
+        <Preference
+            android:key="time3"
+            android:summary="@string/fixed_time_hint"
+            android:title="@string/not_set" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/review_filter_settings" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="filter_new"
+            android:summaryOff="@string/filter_new_summary_off"
+            android:summaryOn="@string/filter_new_summary_on"
+            android:title="@string/filter_new" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="filter_ignore"
+            android:summaryOff="@string/filter_ignore_summary_off"
+            android:summaryOn="@string/filter_ignore_summary_on"
+            android:title="@string/filter_ignore" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -32,7 +32,7 @@
         <PreferenceScreen
             android:key="review_screen"
             android:summary=""
-            android:title="@string/review_time_settings" >
+            android:title="@string/review_settings" >
 
             <intent
                 android:action="android.intent.action.MAIN"

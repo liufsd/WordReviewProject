@@ -111,6 +111,10 @@ public class AppSettings {
 
     public static final String TIME1 = "time1";
 
+    public static final String FILTER_NEW = "filter_new";
+
+    public static final String FILTER_IGNORE = "filter_ignore";
+
     public static void saveBoolean(String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);

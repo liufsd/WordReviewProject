@@ -24,6 +24,7 @@ import com.coleman.kingword.wordlist.IgnoreListVisitor;
 import com.coleman.kingword.wordlist.NewListVisitor;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.log.Log;
+import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 /**
@@ -153,25 +154,8 @@ public class WordInfoHelper {
 
                 break;
             case ReviewListVisitor.TYPE:
-                long ct = System.currentTimeMillis();
-                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                Log.d(TAG, "=====current hour:" + hour);
-                String selection = (hour >= 18 ? THistory.NEW_WORD + " = 2 or " : "") + "("
-                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_HOUR + " and "
-                        + THistory.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
-                        + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_12_HOUR + " and "
-                        + THistory.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or "
-                        + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_DAY + " and "
-                        + THistory.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or "
-                        + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_5_DAY + " and "
-                        + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")"
-                        + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY
-                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l)
-                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_40_DAY
-                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l)
-                        + ")" + " or " + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY
-                        + " and " + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l)
-                        + ")";
+                String selection = getReviewSelection();
+                Log.i(TAG, "===coleman-debug-selection:" + selection);
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection, selection,
                         null, null);
                 break;
@@ -179,6 +163,36 @@ public class WordInfoHelper {
                 break;
         }
         return c;
+    }
+
+    public static String getReviewSelection() {
+        long ct = System.currentTimeMillis();
+        boolean blnfilterNew = AppSettings.getBoolean(AppSettings.FILTER_NEW, false);
+        boolean blnfilterIgnore = AppSettings.getBoolean(AppSettings.FILTER_IGNORE, true);
+        String filterNew = "";
+        String filterIgnore = "";
+        if (blnfilterNew) {
+            filterNew = THistory.NEW_WORD + " = 2  or ";
+        }
+        if (blnfilterIgnore) {
+            filterIgnore = THistory.IGNORE + " <> 2 and ";
+        }
+        String selection = "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_HOUR + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_12_HOUR + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 12 * 60 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_1_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 24 * 60 * 60 * 1000l) + ")" + " or " + "("
+                + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_5_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 5 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_20_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 20 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_40_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 40 * 24 * 60 * 60 * 1000l) + ")" + " or "
+                + "(" + THistory.REVIEW_TYPE + "=" + WordInfo.REVIEW_60_DAY + " and "
+                + THistory.REVIEW_TIME + "<=" + (ct - 60 * 24 * 60 * 60 * 1000l) + ")";
+        selection = filterIgnore + "(" + filterNew + selection + ")";
+        return selection;
     }
 
     /**
