@@ -157,6 +157,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 .getAnim(AppSettings.getInt(AppSettings.ANIM_TYPE_KEY, Anim.ANIM_FADE.getType()));
         initView();
 
+        if (!DictManager.getInstance().isCurLibInitialized()) {
+            DictManager.getInstance().initLibrary(this);
+            startService(new Intent(this, DictLoadService.class));
+        }
+
         Intent intent = getIntent();
         int sliceListType = intent.getByteExtra("type", AbsSubVisitor.TYPE);
         switch (sliceListType) {
@@ -180,8 +185,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                         AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
                 this.coreTop = intent.getBooleanExtra("core_top", false);
-                DictManager.getInstance().initLibrary(this);
-                startService(new Intent(this, DictLoadService.class));
                 sublistVisitor = new ReviewListVisitor();
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;

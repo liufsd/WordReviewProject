@@ -86,4 +86,5 @@ public final class Config {
         }
         return appVersionCode;
     }
+
 }

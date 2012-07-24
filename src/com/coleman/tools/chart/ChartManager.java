@@ -48,7 +48,7 @@ public class ChartManager {
         List<int[]> values = new ArrayList<int[]>();
         Date[] dateValues = new Date[25];
         long dt = 24 * 3600 * 1000;
-        long ct = System.currentTimeMillis();
+        long ct = (System.currentTimeMillis() + dt) / dt * dt;
         for (int i = 0; i < dateValues.length; i++) {
             dateValues[i] = new Date(ct - dt * (dateValues.length - i));
         }
@@ -90,11 +90,11 @@ public class ChartManager {
         setChartSettings(renderer, context.getString(R.string.chart_title),
                 context.getString(R.string.chart_x_label),
                 context.getString(R.string.chart_y_label), dateValues[0].getTime(),
-                dateValues[dateValues.length - 1].getTime(), -4, 11, Color.GRAY, Color.LTGRAY);
-        renderer.setYLabels(10);
-        renderer.setYAxisMin(-10);
-        renderer.setYAxisMax(max);
+                dateValues[dateValues.length - 1].getTime(), -10, max, Color.GRAY, Color.LTGRAY);
         renderer.setXLabels(10);
+        renderer.setYLabels(10);
+        // renderer.setYAxisMin(-10);
+        // renderer.setYAxisMax(max);
         int bgColor = context.getResources().getColor(R.color.cornsilk);
         renderer.setBackgroundColor(bgColor);
         renderer.setMarginsColor(bgColor);

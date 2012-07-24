@@ -87,7 +87,6 @@
     <string name="review_number_limit_on">限制每次复习单词的数量</string>
     <string name="review_number_limit">复习数量限制</string>
     <string name="review_number_select">设置复习单词数量</string>
-        
     <string name="upgrade_success">单词升级成功</string>
     <string name="degrade_success">单词降级成功</string>
     <string name="ignore_success">单词忽略成功</string>
@@ -276,5 +275,7 @@
     <string name="play_stop">自动播放停止</string>
     <!-- database upgrade -->
     <string name="db_upgrade">数据库升级中...</string>
+    <!-- CoreActivity -->
+    <string name="quit">退出</string>
 
 </resources>
