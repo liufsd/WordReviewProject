@@ -20,9 +20,15 @@ import android.view.View;
 
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.THistory;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 
 public class ChartManager {
+    private static final String TAG = ChartManager.class.getName();
+
     private static ChartManager chartManager;
+
+    private Log Log = Config.getLog();
 
     private ChartManager() {
     }
@@ -42,35 +48,38 @@ public class ChartManager {
         List<int[]> values = new ArrayList<int[]>();
         Date[] dateValues = new Date[25];
         long dt = 24 * 3600 * 1000;
-        long ct = System.currentTimeMillis()/dt*dt;
+        long ct = System.currentTimeMillis();
         for (int i = 0; i < dateValues.length; i++) {
             dateValues[i] = new Date(ct - dt * (dateValues.length - i));
         }
         dates.add(dateValues);
         int[] v = new int[dateValues.length];
         final String projection[] = new String[] {
-            "count(*) as count"
+                THistory._ID, THistory.REVIEW_TIME
         };
         int max = 10;
+        String where = THistory.REVIEW_TIME + ">" + dateValues[0].getTime() + " and "
+                + THistory.REVIEW_TIME + "<" + dateValues[dateValues.length - 1].getTime();
+        Cursor cursor = context.getContentResolver().query(THistory.CONTENT_URI, projection, where,
+                null, null);
+
+        int dayIndex = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            long time = cursor.getLong(cursor.getColumnIndex(THistory.REVIEW_TIME));
+            dayIndex = (int) ((time - (ct - dt * dateValues.length)) / dt);
+            if (dayIndex >= 0 && dayIndex < dateValues.length) {
+                v[dayIndex]++;
+            }
+        }
         for (int i = 0; i < v.length; i++) {
-            String where = "";
-            if (i < v.length - 1) {
-                where = THistory.REVIEW_TIME + ">" + dateValues[i].getTime() + " and "
-                        + THistory.REVIEW_TIME + "<" + dateValues[i + 1].getTime();
-            } else {
-                where = THistory.REVIEW_TIME + ">" + dateValues[i].getTime();
-            }
-            Cursor cursor = context.getContentResolver().query(THistory.CONTENT_URI, projection,
-                    where, null, null);
-            if (cursor.moveToFirst()) {
-                v[i] = cursor.getInt(0);
-            }
             if (v[i] > max) {
                 max = v[i];
             }
-            cursor.close();
         }
+        Log.v(TAG, "===coleman-debug-max number of the daily studing words : " + max);
         values.add(v);
+
+        cursor.close();
         int[] colors = new int[] {
             Color.BLUE
         };
@@ -85,6 +94,7 @@ public class ChartManager {
         renderer.setYLabels(10);
         renderer.setYAxisMin(-10);
         renderer.setYAxisMax(max);
+        renderer.setXLabels(10);
         int bgColor = context.getResources().getColor(R.color.cornsilk);
         renderer.setBackgroundColor(bgColor);
         renderer.setMarginsColor(bgColor);
