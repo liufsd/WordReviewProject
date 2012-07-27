@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.ReviewSettings;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
+import com.coleman.util.MyApp;
 
 public class EbbinghausReminder {
     private static final String TAG = EbbinghausReminder.class.getName();
@@ -41,6 +43,32 @@ public class EbbinghausReminder {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         am.cancel(sender);
         Log.d(TAG, "================remove repeat alarm " + which);
+    }
+
+    /**
+     * 防止进程或者其它之类的原因将alarm取消，非首次用户登陆欢迎界面时，调用此方法重设alarm。
+     */
+    public static void resetRepeatNotification() {
+        for (int j = 0; j < 3; j++) {
+            EbbinghausReminder.removeRepeatNotifaction(MyApp.context, j);
+        }
+
+        String notSet = MyApp.context.getString(R.string.not_set);
+        boolean isChecked = AppSettings.getBoolean(AppSettings.FIXED_TIME_REVIEW, true);
+        if (isChecked) {
+            String t1 = AppSettings.getString(AppSettings.TIME1, notSet);
+            String t2 = AppSettings.getString(AppSettings.TIME2, notSet);
+            String t3 = AppSettings.getString(AppSettings.TIME3, notSet);
+            if (!notSet.equals(t1)) {
+                EbbinghausReminder.setRepeatNotifaction(MyApp.context, 0, t1);
+            }
+            if (!notSet.equals(t2)) {
+                EbbinghausReminder.setRepeatNotifaction(MyApp.context, 1, t2);
+            }
+            if (!notSet.equals(t3)) {
+                EbbinghausReminder.setRepeatNotifaction(MyApp.context, 2, t3);
+            }
+        }
     }
 
     /**

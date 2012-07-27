@@ -351,7 +351,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                         };
                         WordListManager.getInstance().loadWordListFromAsset(WordListActivity.this,
                                 InternalWordList.POSTGRADUATE_WORDLIST, notifier);
-                        c.requery();
+                        if (c != null) {
+                            c.requery();
+                        }
                     }
                     break;
                 }
@@ -367,7 +369,9 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     };
                     WordListManager.getInstance().loadWordListFromFile(WordListActivity.this,
                             external_file_path, notifier);
-                    c.requery();
+                    if (c != null) {
+                        c.requery();
+                    }
                     publishProgress(100);
                     break;
                 }

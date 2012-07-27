@@ -173,6 +173,9 @@ public class WelcomeActivity extends Activity implements Observer {
             // WordInfoHelper.restoreWordInfoDB(this, false);
             // ///////////////////////////////////////////////d
         } else {
+            // 重设闹钟
+            EbbinghausReminder.resetRepeatNotification();
+            // 本地登陆计数
             AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                     AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
             Log.setLevel(Level.getLevel(AppSettings.getInt(AppSettings.LOG_TYPE_KEY,
