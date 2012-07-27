@@ -46,8 +46,8 @@
     <string name="not_enable3d">关闭3D特效</string>
     <string name="night_mode">夜晚模式</string>
     <string name="day_mode">白天模式</string>
-    <string name="view_new_book">学习生词本</string>
-    <string name="view_ignore_list">浏览过滤表</string>
+    <string name="view_new_book">生词本</string>
+    <string name="view_ignore_list">过滤表</string>
     <string name="study_new_word_book_end">你完成了生词本的学习！</string>
     <string name="study_ignore_list_end">你完成了过滤列表的学习！</string>
     <string name="continue_hit_count">%d Hit!</string>
@@ -256,6 +256,7 @@
     <string name="backup_restore_settings">备份恢复设置</string>
     <string name="no_new_word_found">生词本中没有需要学习的单词！</string>
     <string name="no_ignore_word_found">过滤列表中没有单词！</string>
+    <string name="no_review_word_found">没有需要复习的单词！</string>
     <string name="upgrade_db_failed">数据库升级失败，请卸载后重新安装软件！</string>
     <string name="view_word">查看模式</string>
     <string name="view_multi">选项模式</string>

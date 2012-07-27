@@ -1,8 +1,6 @@
 
 package com.coleman.kingword.ebbinghaus.receiver;
 
-import java.util.Calendar;
-
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.widget.Toast;
 
 import com.coleman.kingword.CoreActivity;
@@ -19,11 +16,7 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfo;
-import com.coleman.kingword.history.WordInfoHelper;
-import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.log.Log;
-import com.coleman.tools.InfoGather;
-import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 public class KingWordReceiver extends BroadcastReceiver {
@@ -54,7 +47,7 @@ public class KingWordReceiver extends BroadcastReceiver {
         String cName = cn.getClassName();
         Log.d(TAG, "##############" + cn);
 
-        int needReview = needReview(context);
+        int needReview = EbbinghausReminder.needReview(context);
         if (needReview <= 0) {
             Log.d(TAG, "##############there is no words need to be reviewed!");
             if (cName != null && cName.contains("com.coleman.kingword")) {
@@ -121,30 +114,4 @@ public class KingWordReceiver extends BroadcastReceiver {
         return msg;
     }
 
-    private int needReview(Context context) {
-        int count = 0;
-        long ct = System.currentTimeMillis();
-        String selection = WordInfoHelper.getReviewSelection();
-        String sortOrder = null;
-        boolean limit = AppSettings.getBoolean(AppSettings.REVIEW_NUMBER_LIMIT, true);
-        String limitNumber = AppSettings.getString(AppSettings.REVIEW_NUMBER_SELECT, "100");
-        if (limit) {
-            sortOrder = THistory._ID + " asc limit " + limitNumber;
-        }
-        Log.i(TAG, "===coleman-debug-selection:" + selection + "  sortOrder: " + sortOrder);
-
-        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
-            THistory._ID
-        }, selection, null, sortOrder);
-        if (c.moveToFirst()) {
-            count = c.getCount();
-        }
-        Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct)
-                + " need review num:" + count);
-        if (c != null) {
-            c.close();
-            c = null;
-        }
-        return count;
-    }
 }

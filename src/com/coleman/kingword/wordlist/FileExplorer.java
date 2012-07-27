@@ -195,5 +195,6 @@ public class FileExplorer extends Activity {
         intent.setAction(TextEditor.ACTION_EDIT_FILE);
         intent.putExtra("path", path);
         startActivity(intent);
+        getParent().finish();
     }
 }

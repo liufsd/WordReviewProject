@@ -7,10 +7,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 
 import com.coleman.kingword.R;
-import com.coleman.kingword.ReviewSettings;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
+import com.coleman.kingword.history.WordInfoHelper;
+import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
@@ -144,5 +146,32 @@ public class EbbinghausReminder {
             }
         }
         Log.d(TAG, "=================reset alarm after reboot!");
+    }
+
+    public static int needReview(Context context) {
+        int count = 0;
+        long ct = System.currentTimeMillis();
+        String selection = WordInfoHelper.getReviewSelection();
+        String sortOrder = null;
+        boolean limit = AppSettings.getBoolean(AppSettings.REVIEW_NUMBER_LIMIT, true);
+        String limitNumber = AppSettings.getString(AppSettings.REVIEW_NUMBER_SELECT, "100");
+        if (limit) {
+            sortOrder = THistory._ID + " asc limit " + limitNumber;
+        }
+        Log.i(TAG, "===coleman-debug-selection:" + selection + "  sortOrder: " + sortOrder);
+
+        Cursor c = context.getContentResolver().query(THistory.CONTENT_URI, new String[] {
+            THistory._ID
+        }, selection, null, sortOrder);
+        if (c.moveToFirst()) {
+            count = c.getCount();
+        }
+        Log.d(TAG, "##########check if need review cost time: " + (System.currentTimeMillis() - ct)
+                + " need review num:" + count);
+        if (c != null) {
+            c.close();
+            c = null;
+        }
+        return count;
     }
 }

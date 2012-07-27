@@ -75,6 +75,8 @@ import com.coleman.util.ToastUtil;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnLongClickListener {
+    public static final String OPEN_TAB = "open_tab";
+
     private static final String TAG = CoreActivity.class.getName();
 
     private static Log Log = Config.getLog();
@@ -117,9 +119,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private PlayControl playControl;
 
     /**
-     * 用来标识是否复习对话框是在当前CoreActivity上弹出来的，如果是的话，关闭当前Activity不会打开TabListActivity
+     * 用来标识关闭当前Activity是否会打开TabListActivity
      */
-    private boolean coreTop = false;
+    private boolean openTabList = false;
 
     public static enum Anim {
         ANIM_3D(0), ANIM_FADE(1), ANIM_SLIDE(2);
@@ -184,7 +186,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case ReviewListVisitor.TYPE:
                 AppSettings.saveInt(AppSettings.STARTED_TOTAL_TIMES_KEY,
                         AppSettings.getInt(AppSettings.STARTED_TOTAL_TIMES_KEY, 1) + 1);
-                this.coreTop = intent.getBooleanExtra("core_top", false);
+                this.openTabList = intent.getBooleanExtra(OPEN_TAB, true);
                 sublistVisitor = new ReviewListVisitor();
                 new ExpensiveTask(ExpensiveTask.INIT_REVIEW_LIST).execute();
                 break;
@@ -521,7 +523,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     @Override
     public void finish() {
         if (sublistVisitor instanceof ReviewListVisitor) {
-            if (!coreTop) {
+            if (openTabList) {
                 startActivity(new Intent(this, WordlistTabActivity.class));
             }
         } else if (sublistVisitor instanceof SubListVisitor) {

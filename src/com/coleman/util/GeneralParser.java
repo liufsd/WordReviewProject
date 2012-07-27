@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.log.Log;
@@ -62,9 +63,33 @@ public class GeneralParser {
         }
         is.close();
         String str = new String(baf.toByteArray());
-        ArrayList<String> list = getWorldList(str);
+
+        ArrayList<String> list = null;
+        if (isQuickList(str)) {
+            list = getQuickWorldList(str);
+        } else {
+            list = getWorldList(str);
+        }
         notifier.notify(cur + 10);
 
+        return list;
+    }
+
+    private static boolean isQuickList(CharSequence sb) {
+        final Pattern pattern = Pattern.compile("[a-zA-Z \\.\\-/]+");
+        Matcher m = pattern.matcher(sb);
+        return m.matches();
+    }
+
+    private static ArrayList<String> getQuickWorldList(String sb) {
+        String strs[] = sb.split("/");
+        ArrayList<String> list = new ArrayList<String>();
+        for (String string : strs) {
+            if (!TextUtils.isEmpty(string)) {
+                list.add(string);
+            }
+        }
+        Log.i(TAG, "===coleman-debug-parse words count: " + list.size());
         return list;
     }
 

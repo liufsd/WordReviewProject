@@ -14,8 +14,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.TextView;
 
 import com.coleman.kingword.R;
 import com.coleman.log.Log;
@@ -158,6 +156,12 @@ public class DialogUtil {
         return dialog;
     }
 
+    /**
+     * 此方法如果执行后注册不成功不会crash。
+     * 
+     * @param context the activity to show dialog.
+     * @param dialog the dialog to be show.
+     */
     @SuppressWarnings("unchecked")
     private static void register(Context context, Dialog dialog) {
         // @handle-version

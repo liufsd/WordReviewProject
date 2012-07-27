@@ -11,7 +11,7 @@ public class DictDataProcessingCenter {
 
     private static final String LANGDAO_EC_GB = "langdao_ec_gb";
 
-    private static final String TAG = null;
+    private static final String TAG = DictDataProcessingCenter.class.getName();
 
     private static Log Log = Config.getLog();
 

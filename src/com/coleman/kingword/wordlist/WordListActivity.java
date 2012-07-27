@@ -35,12 +35,14 @@ import android.widget.TextView;
 import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
+import com.coleman.util.DialogUtil;
 
 public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
         OnMenuItemClickListener {
@@ -64,7 +66,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     private ListView listView;
 
-    private Button btnNew, btnIgnore;
+    private Button btnNew, btnIgnore, btnReview;
 
     private ProgressBar progressBar;
 
@@ -86,12 +88,14 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         listView = (ListView) findViewById(R.id.listView1);
         btnNew = (Button) findViewById(R.id.button1);
         btnIgnore = (Button) findViewById(R.id.button2);
+        btnReview = (Button) findViewById(R.id.button3);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
 
         btnNew.setOnClickListener(this);
         btnIgnore.setOnClickListener(this);
+        btnReview.setOnClickListener(this);
 
     }
 
@@ -265,7 +269,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
                 } else if (!WordInfoHelper.hasWordInfo(this, NewListVisitor.TYPE)) {
-                    showNoNewWordHint();
+                    DialogUtil.showSystemMessage(this, R.string.no_new_word_found);
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
                     intent.putExtra("type", NewListVisitor.TYPE);
@@ -276,21 +280,28 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
                 } else if (!WordInfoHelper.hasWordInfo(this, IgnoreListVisitor.TYPE)) {
-                    showNoIgnoreWordHint();
+                    DialogUtil.showSystemMessage(this, R.string.no_ignore_word_found);
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
                     intent.putExtra("type", IgnoreListVisitor.TYPE);
                     startActivity(intent);
                 }
                 break;
+            case R.id.button3:
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (EbbinghausReminder.needReview(this) <= 0) {
+                    DialogUtil.showSystemMessage(this, R.string.no_review_word_found);
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", ReviewListVisitor.TYPE);
+                    intent.putExtra(CoreActivity.OPEN_TAB, false);
+                    startActivity(intent);
+                }
+                break;
             default:
                 break;
         }
-    }
-
-    private void showNoNewWordHint() {
-        new AlertDialog.Builder(this).setTitle(R.string.view_new_book)
-                .setMessage(R.string.no_new_word_found).setPositiveButton(R.string.ok, null).show();
     }
 
     private void showNoIgnoreWordHint() {

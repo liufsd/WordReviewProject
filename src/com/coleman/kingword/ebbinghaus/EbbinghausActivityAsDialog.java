@@ -54,7 +54,7 @@ public class EbbinghausActivityAsDialog extends Activity implements OnClickListe
             case R.id.positive:
                 final Intent i = new Intent(this, CoreActivity.class);
                 i.putExtra("type", type);
-                i.putExtra("core_top", true);
+                i.putExtra(CoreActivity.OPEN_TAB, false);
                 startActivity(i);
                 finish();
                 break;

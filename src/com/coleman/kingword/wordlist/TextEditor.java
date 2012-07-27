@@ -64,6 +64,12 @@ public class TextEditor extends Activity implements OnClickListener {
     }
 
     @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, WordlistTabActivity.class));
+        finish();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = new MenuInflater(this);
         inflater.inflate(R.menu.editor_option, menu);
@@ -78,7 +84,7 @@ public class TextEditor extends Activity implements OnClickListener {
                 finish();
                 break;
             case R.id.menu_back:
-                finish();
+                onBackPressed();
                 break;
         }
         return true;

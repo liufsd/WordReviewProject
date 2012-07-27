@@ -159,7 +159,7 @@ public class WordInfoHelper {
                 boolean limit = AppSettings.getBoolean(AppSettings.REVIEW_NUMBER_LIMIT, true);
                 String limitNumber = AppSettings.getString(AppSettings.REVIEW_NUMBER_SELECT, "100");
                 if (limit) {
-                    sortOrder = THistory.REVIEW_TIME + " desc limit " + limitNumber;
+                    sortOrder = THistory.REVIEW_TIME + " asc limit " + limitNumber;
                 }
                 Log.i(TAG, "===coleman-debug-selection:" + selection + "  sortOrder: " + sortOrder);
                 c = context.getContentResolver().query(THistory.CONTENT_URI, projection, selection,
