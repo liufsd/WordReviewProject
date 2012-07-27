@@ -40,7 +40,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
-
 /**
  * Runs an actual download
  */

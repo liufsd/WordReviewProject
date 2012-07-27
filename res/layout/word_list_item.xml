@@ -18,6 +18,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:ellipsize="marquee"
         android:gravity="center_vertical|left"
         android:minLines="3"
         android:textColor="@color/black" >
