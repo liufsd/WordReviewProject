@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.coleman.util.MyApp;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -412,7 +414,7 @@ public class DownloadService extends Service {
             }
 
             Intent intent = new Intent(Constants.ACTION_RETRY);
-            intent.setClassName("com.android.providers.downloads", DownloadReceiver.class.getName());
+            intent.setClassName(MyApp.context.getPackageName(), DownloadReceiver.class.getName());
             alarms.set(AlarmManager.RTC_WAKEUP, mSystemFacade.currentTimeMillis() + wakeUp,
                     PendingIntent.getBroadcast(DownloadService.this, 0, intent,
                             PendingIntent.FLAG_ONE_SHOT));

@@ -29,48 +29,54 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.coleman.kingword.R;
+import com.coleman.util.MyApp;
 
 /**
- * This class handles the updating of the Notification Manager for the
- * cases where there is an ongoing download. Once the download is complete
- * (be it successful or unsuccessful) it is no longer the responsibility
- * of this component to show the download in the notification manager.
- *
+ * This class handles the updating of the Notification Manager for the cases
+ * where there is an ongoing download. Once the download is complete (be it
+ * successful or unsuccessful) it is no longer the responsibility of this
+ * component to show the download in the notification manager.
  */
 class DownloadNotification {
 
     Context mContext;
-    HashMap <String, NotificationItem> mNotifications;
+
+    HashMap<String, NotificationItem> mNotifications;
+
     private SystemFacade mSystemFacade;
 
     static final String LOGTAG = "DownloadNotification";
-    static final String WHERE_RUNNING =
-        "(" + Downloads.Impl.COLUMN_STATUS + " >= '100') AND (" +
-        Downloads.Impl.COLUMN_STATUS + " <= '199') AND (" +
-        Downloads.Impl.COLUMN_VISIBILITY + " IS NULL OR " +
-        Downloads.Impl.COLUMN_VISIBILITY + " == '" + Downloads.Impl.VISIBILITY_VISIBLE + "' OR " +
-        Downloads.Impl.COLUMN_VISIBILITY +
-            " == '" + Downloads.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED + "')";
-    static final String WHERE_COMPLETED =
-        Downloads.Impl.COLUMN_STATUS + " >= '200' AND " +
-        Downloads.Impl.COLUMN_VISIBILITY +
-            " == '" + Downloads.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED + "'";
 
+    static final String WHERE_RUNNING = "(" + Downloads.Impl.COLUMN_STATUS + " >= '100') AND ("
+            + Downloads.Impl.COLUMN_STATUS + " <= '199') AND (" + Downloads.Impl.COLUMN_VISIBILITY
+            + " IS NULL OR " + Downloads.Impl.COLUMN_VISIBILITY + " == '"
+            + Downloads.Impl.VISIBILITY_VISIBLE + "' OR " + Downloads.Impl.COLUMN_VISIBILITY
+            + " == '" + Downloads.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED + "')";
+
+    static final String WHERE_COMPLETED = Downloads.Impl.COLUMN_STATUS + " >= '200' AND "
+            + Downloads.Impl.COLUMN_VISIBILITY + " == '"
+            + Downloads.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED + "'";
 
     /**
-     * This inner class is used to collate downloads that are owned by
-     * the same application. This is so that only one notification line
-     * item is used for all downloads of a given application.
-     *
+     * This inner class is used to collate downloads that are owned by the same
+     * application. This is so that only one notification line item is used for
+     * all downloads of a given application.
      */
     static class NotificationItem {
-        int mId;  // This first db _id for the download for the app
+        int mId; // This first db _id for the download for the app
+
         long mTotalCurrent = 0;
+
         long mTotalTotal = 0;
+
         int mTitleCount = 0;
-        String mPackageName;  // App package name
+
+        String mPackageName; // App package name
+
         String mDescription;
+
         String[] mTitles = new String[2]; // download titles.
+
         String mPausedText = null;
 
         /*
@@ -90,11 +96,11 @@ class DownloadNotification {
         }
     }
 
-
     /**
      * Constructor
-     * @param ctx The context to use to obtain access to the
-     *            Notification Service
+     * 
+     * @param ctx The context to use to obtain access to the Notification
+     *            Service
      */
     DownloadNotification(Context ctx, SystemFacade systemFacade) {
         mContext = ctx;
@@ -123,8 +129,7 @@ class DownloadNotification {
             long id = download.mId;
             String title = download.mTitle;
             if (title == null || title.length() == 0) {
-                title = mContext.getResources().getString(
-                        R.string.download_unknown_title);
+                title = mContext.getResources().getString(R.string.download_unknown_title);
             }
 
             NotificationItem item;
@@ -161,8 +166,7 @@ class DownloadNotification {
             n.flags |= Notification.FLAG_ONGOING_EVENT;
 
             // Build the RemoteView object
-            RemoteViews expandedView = new RemoteViews(
-                    "com.android.providers.downloads",
+            RemoteViews expandedView = new RemoteViews(MyApp.context.getPackageName(),
                     R.layout.status_bar_ongoing_event_progress_bar);
             StringBuilder title = new StringBuilder(item.mTitles[0]);
             if (item.mTitleCount > 1) {
@@ -171,11 +175,12 @@ class DownloadNotification {
                 n.number = item.mTitleCount;
                 if (item.mTitleCount > 2) {
                     title.append(mContext.getString(R.string.notification_filename_extras,
-                            new Object[] { Integer.valueOf(item.mTitleCount - 2) }));
+                            new Object[] {
+                                Integer.valueOf(item.mTitleCount - 2)
+                            }));
                 }
             } else {
-                expandedView.setTextViewText(R.id.description,
-                        item.mDescription);
+                expandedView.setTextViewText(R.id.description, item.mDescription);
             }
             expandedView.setTextViewText(R.id.title, title);
 
@@ -184,10 +189,8 @@ class DownloadNotification {
                 expandedView.setTextViewText(R.id.paused_text, item.mPausedText);
             } else {
                 expandedView.setViewVisibility(R.id.paused_text, View.GONE);
-                expandedView.setProgressBar(R.id.progress_bar,
-                        (int) item.mTotalTotal,
-                        (int) item.mTotalCurrent,
-                        item.mTotalTotal == -1);
+                expandedView.setProgressBar(R.id.progress_bar, (int) item.mTotalTotal,
+                        (int) item.mTotalCurrent, item.mTotalTotal == -1);
             }
             expandedView.setTextViewText(R.id.progress_text,
                     getDownloadingText(item.mTotalTotal, item.mTotalCurrent));
@@ -195,10 +198,9 @@ class DownloadNotification {
             n.contentView = expandedView;
 
             Intent intent = new Intent(Constants.ACTION_LIST);
-            intent.setClassName("com.android.providers.downloads",
-                    DownloadReceiver.class.getName());
-            intent.setData(
-                    ContentUris.withAppendedId(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, item.mId));
+            intent.setClassName(MyApp.context.getPackageName(), DownloadReceiver.class.getName());
+            intent.setData(ContentUris.withAppendedId(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
+                    item.mId));
             intent.putExtra("multiple", item.mTitleCount > 1);
 
             n.contentIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
@@ -220,16 +222,14 @@ class DownloadNotification {
             long id = download.mId;
             String title = download.mTitle;
             if (title == null || title.length() == 0) {
-                title = mContext.getResources().getString(
-                        R.string.download_unknown_title);
+                title = mContext.getResources().getString(R.string.download_unknown_title);
             }
-            Uri contentUri =
-                ContentUris.withAppendedId(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, id);
+            Uri contentUri = ContentUris.withAppendedId(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
+                    id);
             String caption;
             Intent intent;
             if (Downloads.Impl.isStatusError(download.mStatus)) {
-                caption = mContext.getResources()
-                        .getString(R.string.notification_download_failed);
+                caption = mContext.getResources().getString(R.string.notification_download_failed);
                 intent = new Intent(Constants.ACTION_LIST);
             } else {
                 caption = mContext.getResources()
@@ -240,8 +240,7 @@ class DownloadNotification {
                     intent = new Intent(Constants.ACTION_LIST);
                 }
             }
-            intent.setClassName("com.android.providers.downloads",
-                    DownloadReceiver.class.getName());
+            intent.setClassName(MyApp.context.getPackageName(), DownloadReceiver.class.getName());
             intent.setData(contentUri);
 
             n.when = download.mLastMod;
@@ -249,8 +248,7 @@ class DownloadNotification {
                     PendingIntent.getBroadcast(mContext, 0, intent, 0));
 
             intent = new Intent(Constants.ACTION_HIDE);
-            intent.setClassName("com.android.providers.downloads",
-                    DownloadReceiver.class.getName());
+            intent.setClassName(MyApp.context.getPackageName(), DownloadReceiver.class.getName());
             intent.setData(contentUri);
             n.deleteIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
 
