@@ -10,6 +10,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -28,8 +29,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android2.app.DownloadManager;
-import android2.app.DownloadManager.Request;
 
 import com.coleman.kingword.R;
 import com.coleman.log.Log;
@@ -41,6 +40,9 @@ import com.coleman.ojm.bean.WordlistResp;
 import com.coleman.ojm.bussiness.WorkManager;
 import com.coleman.ojm.core.Observer;
 import com.coleman.ojm.http.SLRequest;
+import com.coleman.providers.downloads.DownloadManager;
+import com.coleman.providers.downloads.Downloads;
+import com.coleman.providers.downloads.DownloadManager.Request;
 import com.coleman.util.Config;
 import com.coleman.util.ToastUtil;
 
@@ -251,6 +253,7 @@ public class RemoteFileExplorer extends Activity implements Observer {
             String strUrl = (Config.isTestServer ? reqObj.url() : reqObj.hwUrl())
                     + "/ColemanServer/downloadFile?file=" + filePath;
             Uri remoteUri = Uri.parse(strUrl);
+            
             Request request = new Request(remoteUri);
 
             File dir = Environment.getExternalStorageDirectory();

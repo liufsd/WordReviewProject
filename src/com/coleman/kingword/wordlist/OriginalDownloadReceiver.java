@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
-import android2.app.DownloadManager;
-import android2.app.DownloadManager.Query;
 
 import com.coleman.kingword.R;
 import com.coleman.log.Log;
+import com.coleman.providers.downloads.DownloadManager;
+import com.coleman.providers.downloads.DownloadManager.Query;
 import com.coleman.util.Config;
 import com.coleman.util.ThreadUtils;
 import com.coleman.util.ToastUtil;
