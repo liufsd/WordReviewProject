@@ -175,9 +175,27 @@ public class DictManager {
         return has;
     }
 
+    public DictData viewMore(Context context, DictIndex index) {
+        DictLibrary library = libmap.get(moreLib);
+        // Log.d(TAG, "---------------------library: " + curLib);
+        if (library == null) {
+            context.startService(new Intent(context, DictLoadService.class));
+            Log.w(TAG, "library has not been initialed! Init Now!");
+            return DictData.constructData("library has not been initialed!");
+        }
+        if (index == null) {
+            Log.w(TAG, "dict index is null, word not found!");
+            return DictData.constructData("word not found!");
+        }
+        DictData wordData = DictData.readData(context, library.isInternal(),
+                library.getLibraryInfo(), index, library.getLibraryName());
+        Log.d(TAG, index.word + " >>> " + wordData);
+        return wordData;
+    }
+
     public DictData viewMore(Context context, String word) {
         DictIndex index = getIndex(context, moreLib, word);
-        DictData wordData = viewWord(context, index);
+        DictData wordData = viewMore(context, index);
         Log.d(TAG, word + " >>> " + wordData);
         return wordData;
     }
