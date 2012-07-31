@@ -149,9 +149,20 @@ public class DialogUtil {
     public static Dialog showMessage(Context context, String titleId, String msgId,
             String positiveBtnId, OnClickListener listen1, String negativeBtnId,
             OnClickListener listen2) {
-        Dialog dialog = new AlertDialog.Builder(context).setTitle(titleId).setMessage(msgId)
-                .setMessage(msgId).setPositiveButton(positiveBtnId, listen1)
-                .setNegativeButton(negativeBtnId, listen2).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (titleId != null) {
+            builder.setTitle(titleId);
+        }
+        if (msgId != null) {
+            builder.setMessage(msgId);
+        }
+        if (positiveBtnId != null) {
+            builder.setPositiveButton(positiveBtnId, listen1);
+        }
+        if (negativeBtnId != null) {
+            builder.setNegativeButton(negativeBtnId, listen2);
+        }
+        Dialog dialog = builder.show();
         register(context, dialog);
         return dialog;
     }

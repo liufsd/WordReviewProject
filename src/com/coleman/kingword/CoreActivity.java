@@ -51,6 +51,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coleman.kingword.core2.CoreActivity2;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
@@ -71,6 +72,8 @@ import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.DictDataProcessingCenter;
+import com.coleman.util.MyApp;
+import com.coleman.util.ThreadUtils;
 import com.coleman.util.ToastUtil;
 
 public class CoreActivity extends Activity implements OnItemClickListener, OnClickListener,
@@ -81,7 +84,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private static Log Log = Config.getLog();
 
-    private static final int SET_COLOR = 0;
+    private static final int RC_SET_COLOR = 0;
+
+    private static final int RC_LIST_VIEW = 1;
 
     private ProgressBar progressBarDay, progressBarNight;
 
@@ -227,11 +232,35 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SET_COLOR) {
-            if (resultCode == RESULT_OK) {
-                setReadMode();
-            }
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        switch (requestCode) {
+            case RC_SET_COLOR:
+                if (resultCode == RESULT_OK) {
+                    setReadMode();
+                }
+                break;
+            case RC_LIST_VIEW:
+                if (resultCode == RESULT_OK) {
+                    ThreadUtils.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            AbsSubVisitor subv = (AbsSubVisitor) data.getSerializableExtra("sub");
+                            sublistVisitor = subv;
+                            if (!CoreActivity.this.isFinishing()) {
+                                MyApp.handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new ExpensiveTask(ExpensiveTask.UPDATE).execute();
+                                        // adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -279,7 +308,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 }
                 break;
             case R.id.menu_color_set:
-                startActivityForResult(new Intent(this, ColorSetActivityAsDialog.class), SET_COLOR);
+                startActivityForResult(new Intent(this, ColorSetActivityAsDialog.class),
+                        RC_SET_COLOR);
                 break;
             case R.id.menu_play:
                 if (playControl.ongoing) {
@@ -291,7 +321,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             case R.id.menu_listmode:
                 Intent it = new Intent(this, CoreActivity2.class);
                 it.putExtra("sub", sublistVisitor);
-                startActivity(it);
+                startActivityForResult(it, RC_LIST_VIEW);
                 break;
             default:
                 break;
@@ -1155,6 +1185,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 case UPDATE:
                     bundle = new Bundle();
                     if (!sublistVisitor.allComplete()) {
+                        wordVisitor = sublistVisitor.getCurrentWord();
                         wordVisitor.clear();
                         lookupInDict(wordVisitor);
                         bundle.putBoolean("next", true);
@@ -1201,6 +1232,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         @Override
         protected void onPostExecute(Bundle result) {
+            if (isFinishing()) {
+                return;
+            }
             switch (taskType) {
                 case REMOVE_FROM_NEW: {
                     boolean b = result.getBoolean("removenew");
