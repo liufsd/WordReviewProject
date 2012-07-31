@@ -13,11 +13,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Camera;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,13 +48,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coleman.kingword.core2.CoreActivity2;
 import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver;
 import com.coleman.kingword.inspirit.countdown.CountdownManager;
 import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.kingword.wordlist.AbsSubVisitor;
 import com.coleman.kingword.wordlist.FiniteStateMachine.InitState;
 import com.coleman.kingword.wordlist.IgnoreListVisitor;
@@ -220,6 +217,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         if (countdownManager != null) {
             countdownManager.pause();
         }
+        sublistVisitor.pausePreload();
         super.onPause();
     }
 
@@ -228,6 +226,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         if (countdownManager != null) {
             countdownManager.start();
         }
+        sublistVisitor.resumePreload();
         super.onResume();
     }
 
@@ -361,16 +360,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         sendBroadcast(intent);
     }
 
-    private int selectMode;// 0 day 1 night 2 custom
-
-    private int textColor, bgColor, selectColor;
-
     private void setReadMode() {
-        selectMode = AppSettings.getInt(AppSettings.SELECT_COLOR_MODE_KEY, 0);
-        textColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][0], Color.BLACK);
-        bgColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][1], Color.WHITE);
-        selectColor = AppSettings.getInt(AppSettings.COLOR_MODE[selectMode][2], Color.GRAY);
-
+        ColorManager.getInstance().init();
+        int bgColor = ColorManager.getInstance().getBgColor();
+        int textColor = ColorManager.getInstance().getTextColor();
+        int selectMode = ColorManager.getInstance().getSelectMode();
         findViewById(R.id.container).setBackgroundColor(bgColor);
         textView.setTextColor(textColor);
 
@@ -645,8 +639,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
         // set the read mode night or day
         setReadMode();
-
-        if (selectMode == 1) {
+        if (ColorManager.getInstance().getSelectMode() == 1) {
             listView.setEmptyView(findViewById(R.id.progressBarNight2));
         } else {
             listView.setEmptyView(findViewById(R.id.progressBarDay2));
@@ -985,9 +978,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             }
             LinearLayout layout = (LinearLayout) v.findViewById(R.id.itemLayout);
             TextView tv = (TextView) v.findViewById(R.id.textView1);
-            tv.setTextColor(textColor);
-            BGDrawable bg = new BGDrawable();
-            layout.setBackgroundDrawable(bg);
+            tv.setTextColor(ColorManager.getInstance().getTextColor());
+            layout.setBackgroundDrawable(ColorManager.getInstance().getSelector());
             tv.setTypeface(mFace);
             DictData data = list.get(position);
             if (data != null) {
@@ -1010,20 +1002,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 }
             }
             return v;
-        }
-    }
-
-    private class BGDrawable extends StateListDrawable {
-        public BGDrawable() {
-            addState(new int[] {
-                android.R.attr.state_pressed
-            }, new ColorDrawable(selectColor));
-            addState(new int[] {
-                android.R.attr.state_selected
-            }, new ColorDrawable(selectColor));
-            addState(new int[] {
-                -android.R.attr.state_selected
-            }, new ColorDrawable(bgColor));
         }
     }
 

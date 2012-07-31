@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.coleman.providers.downloads.Downloads.Impl;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -34,6 +32,8 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
+
+import com.coleman.providers.downloads.Downloads.Impl;
 
 /**
  * Stores information about an individual download.

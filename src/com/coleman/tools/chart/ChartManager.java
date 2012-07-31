@@ -40,7 +40,7 @@ public class ChartManager {
         return chartManager;
     }
 
-    public View getChartView(Context context) {
+    public View getChartView(Context context, int bgColor, int labelColor) {
         String[] titles = new String[] {
             context.getString(R.string.chart_desc)
         };
@@ -95,12 +95,11 @@ public class ChartManager {
         renderer.setYLabels(10);
         // renderer.setYAxisMin(-10);
         // renderer.setYAxisMax(max);
-        int bgColor = context.getResources().getColor(R.color.cornsilk);
         renderer.setBackgroundColor(bgColor);
         renderer.setMarginsColor(bgColor);
-        renderer.setLabelsColor(Color.BLACK);
-        renderer.setXLabelsColor(Color.BLACK);
-        renderer.setYLabelsColor(0, Color.BLACK);
+        renderer.setLabelsColor(labelColor);
+        renderer.setXLabelsColor(labelColor);
+        renderer.setYLabelsColor(0, labelColor);
         TimeChart chart = new TimeChart(buildDateDataset(titles, dates, values), renderer);
         chart.setDateFormat("MM/dd");
         GraphicalView mView = new GraphicalView(context, chart);

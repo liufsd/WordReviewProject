@@ -10,7 +10,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -24,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.log.Log;
 import com.coleman.ojm.annotation.RequestObject;
 import com.coleman.ojm.bean.RFile;
@@ -41,7 +42,6 @@ import com.coleman.ojm.bussiness.WorkManager;
 import com.coleman.ojm.core.Observer;
 import com.coleman.ojm.http.SLRequest;
 import com.coleman.providers.downloads.DownloadManager;
-import com.coleman.providers.downloads.Downloads;
 import com.coleman.providers.downloads.DownloadManager.Request;
 import com.coleman.util.Config;
 import com.coleman.util.ToastUtil;
@@ -79,6 +79,7 @@ public class RemoteFileExplorer extends Activity implements Observer {
         setContentView(R.layout.remote_file_list);
         lv = (ListView) findViewById(R.id.listView1);
         pathView = (TextView) findViewById(R.id.textView1);
+
         findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "press button...");
@@ -87,6 +88,12 @@ public class RemoteFileExplorer extends Activity implements Observer {
         });
         pb = (ProgressBar) findViewById(R.id.progressBar1);
         getWordlist(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColorMode();
     }
 
     public void getWordlist(Observer observer) {
@@ -110,6 +117,39 @@ public class RemoteFileExplorer extends Activity implements Observer {
             rAdapter.subRoot = getParentFile(root, rAdapter.subRoot);
             listFiles(rAdapter.list, rAdapter.subRoot);
             rAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void update(Object data) {
+        if (data instanceof WordlistResp) {
+            final WordlistResp bean = (WordlistResp) data;
+            int rc = bean.getResultCode();
+            if (rc == 0) {
+                root = bean.getRfile();
+                rAdapter = new RFileAdapter(this, root.getChirldren());
+                lv.setAdapter(rAdapter);
+                lv.setOnItemClickListener(rAdapter);
+                rAdapter.notifyDataSetChanged();
+                pb.setVisibility(View.GONE);
+            } else {
+                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
+            }
+        }
+    }
+
+    private void setColorMode() {
+        int bgColor = ColorManager.getInstance().getBgColor();
+        int selectMode = ColorManager.getInstance().getSelectMode();
+        int textColor = ColorManager.getInstance().getTextColor();
+        findViewById(R.id.linearLayout1).setBackgroundColor(bgColor);
+        findViewById(R.id.frameLayout1).setBackgroundColor(bgColor);
+        if (selectMode == 1) {
+            findViewById(R.id.button1).setBackgroundResource(R.drawable.btn_bg_night);
+            ((Button) findViewById(R.id.button1)).setTextColor(textColor);
+        } else {
+            findViewById(R.id.button1).setBackgroundResource(android.R.drawable.btn_default);
+            ((Button) findViewById(R.id.button1)).setTextColor(textColor);
         }
     }
 
@@ -192,6 +232,8 @@ public class RemoteFileExplorer extends Activity implements Observer {
                 convertView = inflater.inflate(R.layout.file_item, null);
             }
             TextView textView = (TextView) convertView.findViewById(R.id.textView1);
+            textView.setTextColor(ColorManager.getInstance().getTextColor());
+            convertView.setBackgroundDrawable(ColorManager.getInstance().getSelector());
             String fileName = list.get(position).getName();
             textView.setText(fileName);
             convertView.setTag(fileName);
@@ -253,7 +295,7 @@ public class RemoteFileExplorer extends Activity implements Observer {
             String strUrl = (Config.isTestServer ? reqObj.url() : reqObj.hwUrl())
                     + "/ColemanServer/downloadFile?file=" + filePath;
             Uri remoteUri = Uri.parse(strUrl);
-            
+
             Request request = new Request(remoteUri);
 
             File dir = Environment.getExternalStorageDirectory();
@@ -272,21 +314,4 @@ public class RemoteFileExplorer extends Activity implements Observer {
         }
     }
 
-    @Override
-    public void update(Object data) {
-        if (data instanceof WordlistResp) {
-            final WordlistResp bean = (WordlistResp) data;
-            int rc = bean.getResultCode();
-            if (rc == 0) {
-                root = bean.getRfile();
-                rAdapter = new RFileAdapter(this, root.getChirldren());
-                lv.setAdapter(rAdapter);
-                lv.setOnItemClickListener(rAdapter);
-                rAdapter.notifyDataSetChanged();
-                pb.setVisibility(View.GONE);
-            } else {
-                Log.i(TAG, "===coleman-debug-bean.getDescription():" + bean.getDescription());
-            }
-        }
-    }
 }

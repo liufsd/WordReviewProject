@@ -20,31 +20,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
-import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
-import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
-import com.coleman.util.DialogUtil;
 
-public class WordListActivity extends Activity implements OnItemClickListener, OnClickListener,
+public class WordListActivity extends Activity implements OnItemClickListener,
         OnMenuItemClickListener {
     private static final String TAG = WordListActivity.class.getName();
 
@@ -66,11 +61,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
 
     private ListView listView;
 
-    private Button btnNew, btnIgnore, btnReview;
-
     private ProgressBar progressBar;
-
-    private View loadLayout;
 
     private View emptyView;
 
@@ -83,19 +74,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.word_list);
-        loadLayout = findViewById(R.id.loadLayout);
         emptyView = findViewById(R.id.view1);
         listView = (ListView) findViewById(R.id.listView1);
-        btnNew = (Button) findViewById(R.id.button1);
-        btnIgnore = (Button) findViewById(R.id.button2);
-        btnReview = (Button) findViewById(R.id.button3);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
-
-        btnNew.setOnClickListener(this);
-        btnIgnore.setOnClickListener(this);
-        btnReview.setOnClickListener(this);
 
     }
 
@@ -107,6 +90,7 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
     @Override
     protected void onResume() {
         super.onResume();
+        setColorMode();
         boolean loadExternal = getIntent().getBooleanExtra(EXTERNAL_FILE, false);
         getIntent().removeExtra(EXTERNAL_FILE);
         if (loadExternal) {
@@ -121,64 +105,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 new ExpensiveTask(ExpensiveTask.INIT_QUERY).execute();
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (c != null) {
-            c.close();
-            c = null;
-        }
-        super.onDestroy();
-    }
-
-    private class WordListAdapter extends ResourceCursorAdapter {
-        public WordListAdapter(Context context, int layout, Cursor c) {
-            super(context, layout, c);
-        }
-
-        @Override
-        public void bindView(View view, Context context, final Cursor cursor) {
-            view.setTag(cursor.getLong(0));
-            TextView tv = (TextView) view.findViewById(R.id.textView1);
-            String text = getName(cursor.getString(2));
-            tv.setText(text);
-            tv.setLines(3);
-        }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return super.newView(context, cursor, parent);
-        }
-
-        private String getName(String src) {
-            String str = (src == null ? "" : src);
-            int s_idx = src.lastIndexOf(File.separator);
-            if (s_idx != -1 && s_idx < src.length() - 1) {
-                str = str.substring(s_idx + 1);
-            }
-            int e_idx = str.lastIndexOf(".");
-            if (e_idx != -1) {
-                str = str.substring(0, e_idx);
-            }
-            return str;
-        }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (!DictManager.getInstance().isCurLibInitialized()) {
-            showDBInitHint();
-        } else {
-            Intent i = new Intent(WordListActivity.this, SubListActivity.class);
-            i.putExtra(TWordList._ID, (Long) view.getTag());
-            startActivity(i);
-        }
-    }
-
-    private void showDBInitHint() {
-        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
-                .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override
@@ -228,6 +154,41 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
         return true;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (!DictManager.getInstance().isCurLibInitialized()) {
+            showDBInitHint();
+        } else {
+            Intent i = new Intent(WordListActivity.this, SubListActivity.class);
+            i.putExtra(TWordList._ID, (Long) view.getTag());
+            startActivity(i);
+        }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (c != null) {
+            c.close();
+            c = null;
+        }
+        super.onDestroy();
+    }
+
+    private void setColorMode() {
+        findViewById(R.id.relativeLayout1).setBackgroundColor(
+                ColorManager.getInstance().getBgColor());
+    }
+
+    private void showDBInitHint() {
+        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+                .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
+    }
+
     private void showDeleteDialog(final long id, String name) {
         String msg = String.format(getString(R.string.delete_warning), name);
         new AlertDialog.Builder(this).setTitle(R.string.warning_dialog_title).setMessage(msg)
@@ -262,57 +223,39 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                 }).setNegativeButton(R.string.cancel, null).show();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button1:
-                if (!DictManager.getInstance().isCurLibInitialized()) {
-                    showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, NewListVisitor.TYPE)) {
-                    DialogUtil.showSystemMessage(this, R.string.no_new_word_found);
-                } else {
-                    Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", NewListVisitor.TYPE);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.button2:
-                if (!DictManager.getInstance().isCurLibInitialized()) {
-                    showDBInitHint();
-                } else if (!WordInfoHelper.hasWordInfo(this, IgnoreListVisitor.TYPE)) {
-                    DialogUtil.showSystemMessage(this, R.string.no_ignore_word_found);
-                } else {
-                    Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", IgnoreListVisitor.TYPE);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.button3:
-                if (!DictManager.getInstance().isCurLibInitialized()) {
-                    showDBInitHint();
-                } else if (EbbinghausReminder.needReview(this) <= 0) {
-                    DialogUtil.showSystemMessage(this, R.string.no_review_word_found);
-                } else {
-                    Intent intent = new Intent(this, CoreActivity.class);
-                    intent.putExtra("type", ReviewListVisitor.TYPE);
-                    intent.putExtra(CoreActivity.OPEN_TAB, false);
-                    startActivity(intent);
-                }
-                break;
-            default:
-                break;
+    private class WordListAdapter extends ResourceCursorAdapter {
+        public WordListAdapter(Context context, int layout, Cursor c) {
+            super(context, layout, c);
         }
-    }
 
-    private void showNoIgnoreWordHint() {
-        new AlertDialog.Builder(this).setTitle(R.string.view_ignore_list)
-                .setMessage(R.string.no_ignore_word_found).setPositiveButton(R.string.ok, null)
-                .show();
-    }
+        @Override
+        public void bindView(View view, Context context, final Cursor cursor) {
+            view.setTag(cursor.getLong(0));
+            view.setBackgroundDrawable(ColorManager.getInstance().getSelector());
+            TextView tv = (TextView) view.findViewById(R.id.textView1);
+            String text = getName(cursor.getString(2));
+            tv.setTextColor(ColorManager.getInstance().getTextColor());
+            tv.setText(text);
+            tv.setLines(3);
+        }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return false;
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            return super.newView(context, cursor, parent);
+        }
+
+        private String getName(String src) {
+            String str = (src == null ? "" : src);
+            int s_idx = src.lastIndexOf(File.separator);
+            if (s_idx != -1 && s_idx < src.length() - 1) {
+                str = str.substring(s_idx + 1);
+            }
+            int e_idx = str.lastIndexOf(".");
+            if (e_idx != -1) {
+                str = str.substring(0, e_idx);
+            }
+            return str;
+        }
     }
 
     private class ExpensiveTask extends AsyncTask<Void, Integer, Void> {
@@ -331,13 +274,11 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             switch (type) {
                 case INIT_QUERY:
                     listView.setVisibility(View.GONE);
-                    loadLayout.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
                 case LOAD_EXTERNAL:
                     listView.setVisibility(View.GONE);
-                    loadLayout.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.VISIBLE);
                     break;
@@ -422,7 +363,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
                     listView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
-                    loadLayout.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.INVISIBLE);
                     break;
                 case LOAD_EXTERNAL:
@@ -430,7 +370,6 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
                     adapter = new WordListAdapter(WordListActivity.this, R.layout.word_list_item, c);
                     listView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);
-                    loadLayout.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.INVISIBLE);
                     break;
                 default:
@@ -438,5 +377,4 @@ public class WordListActivity extends Activity implements OnItemClickListener, O
             }
         }
     }
-
 }

@@ -27,6 +27,7 @@ import com.coleman.kingword.dict.DictLoadService;
 import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
 import com.coleman.kingword.provider.KingWord.THistory;
 import com.coleman.kingword.provider.upgrade.UpgradeManager;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.kingword.wordlist.WordlistTabActivity;
 import com.coleman.log.Log;
 import com.coleman.log.Log.Level;
@@ -75,7 +76,6 @@ public class WelcomeActivity extends Activity implements Observer {
         nextTV = (TextView) findViewById(R.id.textView2);
         flayout = (FrameLayout) findViewById(R.id.ebbinghaus);
 
-        flayout.addView(ChartManager.getInstance().getChartView(this));
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +91,18 @@ public class WelcomeActivity extends Activity implements Observer {
             setup();
         }
 
+    }
+
+    private void setColorMode() {
+        ColorManager mgr = ColorManager.getInstance();
+        findViewById(R.id.relativeLayout1).setBackgroundColor(mgr.getBgColor());
+        if (mgr.getSelectMode() == 1) {
+            startButton.setBackgroundResource(R.drawable.btn_bg_night);
+            startButton.setTextColor(mgr.getTextColor());
+        } else {
+            startButton.setBackgroundResource(android.R.drawable.btn_default);
+            startButton.setTextColor(mgr.getTextColor());
+        }
     }
 
     private void setup() {
@@ -190,6 +202,10 @@ public class WelcomeActivity extends Activity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
+        flayout.removeAllViews();
+        flayout.addView(ChartManager.getInstance().getChartView(this,
+                ColorManager.getInstance().getBgColor(), ColorManager.getInstance().getTextColor()));
+        setColorMode();
         initLevels();
     }
 

@@ -2,17 +2,30 @@
 package com.coleman.kingword.wordlist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TabHost;
 
+import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
+import com.coleman.kingword.dict.DictManager;
+import com.coleman.kingword.ebbinghaus.EbbinghausReminder;
+import com.coleman.kingword.history.WordInfoHelper;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
+import com.coleman.util.DialogUtil;
 
-public class WordlistTabActivity extends TabActivity implements TabHost.OnTabChangeListener {
+public class WordlistTabActivity extends TabActivity implements TabHost.OnTabChangeListener,
+        OnClickListener {
     private static final String TAG = WordlistTabActivity.class.getName();
+
+    private Button btnNew, btnIgnore, btnReview;
 
     private static Log Log = Config.getLog();
 
@@ -27,6 +40,13 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wordlist_tab);
+        btnNew = (Button) findViewById(R.id.button1);
+        btnIgnore = (Button) findViewById(R.id.button2);
+        btnReview = (Button) findViewById(R.id.button3);
+
+        btnNew.setOnClickListener(this);
+        btnIgnore.setOnClickListener(this);
+        btnReview.setOnClickListener(this);
 
         // get current intent
         Intent intent = getIntent();
@@ -42,6 +62,80 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
 
         // set current tab
         setCurrentTab(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColorMode();
+    }
+
+    @Override
+    public void onTabChanged(String tabId) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button1:
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (!WordInfoHelper.hasWordInfo(this, NewListVisitor.TYPE)) {
+                    DialogUtil.showSystemMessage(this, R.string.no_new_word_found);
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", NewListVisitor.TYPE);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.button2:
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (!WordInfoHelper.hasWordInfo(this, IgnoreListVisitor.TYPE)) {
+                    DialogUtil.showSystemMessage(this, R.string.no_ignore_word_found);
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", IgnoreListVisitor.TYPE);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.button3:
+                if (!DictManager.getInstance().isCurLibInitialized()) {
+                    showDBInitHint();
+                } else if (EbbinghausReminder.needReview(this) <= 0) {
+                    DialogUtil.showSystemMessage(this, R.string.no_review_word_found);
+                } else {
+                    Intent intent = new Intent(this, CoreActivity.class);
+                    intent.putExtra("type", ReviewListVisitor.TYPE);
+                    intent.putExtra(CoreActivity.OPEN_TAB, false);
+                    startActivity(intent);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setColorMode() {
+        ColorManager mgr = ColorManager.getInstance();
+        if (mgr.getSelectMode() == 1) {
+            btnNew.setBackgroundResource(R.drawable.btn_bg_night);
+            btnNew.setTextColor(mgr.getTextColor());
+            btnIgnore.setBackgroundResource(R.drawable.btn_bg_night);
+            btnIgnore.setTextColor(mgr.getTextColor());
+            btnReview.setBackgroundResource(R.drawable.btn_bg_night);
+            btnReview.setTextColor(mgr.getTextColor());
+            findViewById(R.id.linearLayout1).setBackgroundResource(R.drawable.bottom_bar_night);
+        } else {
+            btnNew.setBackgroundResource(android.R.drawable.btn_default);
+            btnNew.setTextColor(mgr.getTextColor());
+            btnIgnore.setBackgroundResource(android.R.drawable.btn_default);
+            btnIgnore.setTextColor(mgr.getTextColor());
+            btnReview.setBackgroundResource(android.R.drawable.btn_default);
+            btnReview.setTextColor(mgr.getTextColor());
+            findViewById(R.id.linearLayout1).setBackgroundResource(android.R.drawable.bottom_bar);
+        }
     }
 
     private void setupLoadRemoteWordList() {
@@ -95,8 +189,8 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
         }
     }
 
-    @Override
-    public void onTabChanged(String tabId) {
-
+    private void showDBInitHint() {
+        new AlertDialog.Builder(this).setTitle(R.string.msg_dialog_title)
+                .setMessage(R.string.init_db).setPositiveButton(R.string.ok, null).show();
     }
 }

@@ -8,13 +8,13 @@
 
 package com.coleman.util;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.coleman.kingword.wordlist.IgnoreListVisitor;
 import com.coleman.kingword.wordlist.NewListVisitor;
 import com.coleman.kingword.wordlist.ReviewListVisitor;
 import com.coleman.kingword.wordlist.SubListVisitor;
-
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 /**
  * 在res/xml中定义的参数必须也定义到AppSettings中

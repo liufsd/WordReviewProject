@@ -12,10 +12,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.coleman.kingword.provider.KingWordProvider;
-
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import com.coleman.kingword.provider.KingWordProvider;
 
 public class KingWord_v6 {
     public static final int version = 6;

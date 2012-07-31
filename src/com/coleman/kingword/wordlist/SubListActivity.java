@@ -23,6 +23,7 @@ import com.coleman.kingword.CoreActivity;
 import com.coleman.kingword.R;
 import com.coleman.kingword.provider.KingWord.TSubWordList;
 import com.coleman.kingword.provider.KingWord.TWordList;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.kingword.wordlist.model.SubWordList;
 import com.coleman.kingword.wordlist.view.PageBottomBar;
 import com.coleman.kingword.wordlist.view.ScrollLayout;
@@ -58,12 +59,24 @@ public class SubListActivity extends Activity {
         setContentView(R.layout.sliding);
         mScrollLayout = (ScrollLayout) findViewById(R.id.scrollLayout1);
         mPageBottomBar = (PageBottomBar) findViewById(R.id.pageBottomBar1);
+
         if (wordlist_id == -1) {
             wordlist_id = getIntent().getLongExtra(TWordList._ID, -1);
         }
         int curScreen = getIntent().getIntExtra(SCREEN_INDEX, ScrollLayout.DEFAULT_SCREEN);
         mScrollLayout.setCurrentScreen(curScreen);
         initQuery(wordlist_id);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColorMode();
+    }
+
+    private void setColorMode() {
+        findViewById(R.id.relativeLayout1).setBackgroundColor(
+                ColorManager.getInstance().getBgColor());
     }
 
     private void initQuery(long id) {
@@ -196,6 +209,7 @@ public class SubListActivity extends Activity {
                 convertView = LayoutInflater.from(SubListActivity.this).inflate(
                         R.layout.sliding_screen_item, null);
             }
+            convertView.setBackgroundDrawable(ColorManager.getInstance().getSelector());
             ImageView ivPaper = (ImageView) convertView.findViewById(R.id.imageView1);
             ivPaper.setImageResource(historyPaperLev[getItem(position).history_level + 1]);
 
@@ -203,9 +217,11 @@ public class SubListActivity extends Activity {
             ivRate.setImageResource(historyRateLev[getItem(position).history_level + 1]);
 
             TextView title = (TextView) convertView.findViewById(R.id.textView1);
+            title.setTextColor(ColorManager.getInstance().getTextColor());
             title.setText("unit " + getItem(position).index);
 
             TextView subTitle = (TextView) convertView.findViewById(R.id.textView2);
+            subTitle.setTextColor(ColorManager.getInstance().getTextColor());
             subTitle.setText(SubListVisitor.getLevelStrings(SubListActivity.this,
                     getItem(position).level));
 
@@ -213,4 +229,5 @@ public class SubListActivity extends Activity {
         }
 
     }
+
 }

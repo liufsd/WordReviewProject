@@ -91,7 +91,7 @@
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".core2.CoreActivity2"
+            android:name=".CoreActivity2"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity

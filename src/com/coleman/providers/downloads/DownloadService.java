@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.coleman.util.MyApp;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -40,6 +38,8 @@ import android.os.IBinder;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.coleman.util.MyApp;
 
 /**
  * Performs the background downloads requested by applications that use the

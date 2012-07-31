@@ -48,6 +48,10 @@ public abstract class AbsSubVisitor implements Serializable {
 
     private boolean preload;
 
+    private String pauseLock = new String();
+
+    private boolean pausePreload;
+
     protected AbsSubVisitor() {
         method = new ViewMethod("");
     }
@@ -179,12 +183,40 @@ public abstract class AbsSubVisitor implements Serializable {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, e);
+                    }
+                    if (pausePreload) {
+                        pause();
                     }
                 }
                 preload = false;
             }
         });
+    }
+
+    public void pausePreload() {
+        pausePreload = true;
+    }
+
+    private void pause() {
+        synchronized (pauseLock) {
+            try {
+                pauseLock.wait();
+            } catch (InterruptedException e) {
+                Log.e(TAG, e);
+            }
+        }
+    }
+
+    public void resumePreload() {
+        pausePreload = false;
+        synchronized (pauseLock) {
+            try {
+                pauseLock.notifyAll();
+            } catch (Exception e) {
+                Log.e(TAG, e);
+            }
+        }
     }
 
     public void stopPreload() {

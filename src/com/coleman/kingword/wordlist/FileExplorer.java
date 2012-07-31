@@ -26,12 +26,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coleman.kingword.R;
+import com.coleman.kingword.skin.ColorManager;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
 
@@ -60,6 +62,7 @@ public class FileExplorer extends Activity {
         setContentView(R.layout.file_list);
         listView = (ListView) findViewById(R.id.listView1);
         pathView = (TextView) findViewById(R.id.textView1);
+
         root = new File(ROOT_PATH);
         listFiles(list, root);
         findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
@@ -73,18 +76,10 @@ public class FileExplorer extends Activity {
         listView.setOnItemClickListener(adapter);
     }
 
-    private void listFiles(ArrayList<File> list, File dir) {
-        list.clear();
-        if (dir.isDirectory()) {
-            File fs[] = dir.listFiles();
-            if (fs != null) {
-                Log.d(TAG, "fs.length: " + fs.length);
-                list.addAll(Arrays.asList(fs));
-            }
-        }
-        String path = String.format(getString(R.string.path), dir.getPath());
-        Log.d(TAG, "path: " + path);
-        pathView.setText(path);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColorMode();
     }
 
     @Override
@@ -116,6 +111,47 @@ public class FileExplorer extends Activity {
         return true;
     }
 
+    private void setColorMode() {
+        int bgColor = ColorManager.getInstance().getBgColor();
+        int textColor = ColorManager.getInstance().getTextColor();
+        int selectMode = ColorManager.getInstance().getSelectMode();
+        findViewById(R.id.linearLayout1).setBackgroundColor(bgColor);
+        findViewById(R.id.frameLayout1).setBackgroundColor(bgColor);
+        if (selectMode == 1) {
+            findViewById(R.id.button1).setBackgroundResource(R.drawable.btn_bg_night);
+            ((Button) findViewById(R.id.button1)).setTextColor(textColor);
+        } else {
+            findViewById(R.id.button1).setBackgroundResource(android.R.drawable.btn_default);
+            ((Button) findViewById(R.id.button1)).setTextColor(textColor);
+        }
+    }
+
+    private void listFiles(ArrayList<File> list, File dir) {
+        list.clear();
+        if (dir.isDirectory()) {
+            File fs[] = dir.listFiles();
+            if (fs != null) {
+                Log.d(TAG, "fs.length: " + fs.length);
+                list.addAll(Arrays.asList(fs));
+            }
+        }
+        String path = String.format(getString(R.string.path), dir.getPath());
+        Log.d(TAG, "path: " + path);
+        pathView.setText(path);
+    }
+
+    private void doEdit(final String path) {
+        if (!Config.isExternalMediaMounted()) {
+            Toast.makeText(this, R.string.toast_media_unmounted, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent();
+        intent.setAction(TextEditor.ACTION_EDIT_FILE);
+        intent.putExtra("path", path);
+        startActivity(intent);
+        getParent().finish();
+    }
+
     private class FileAdapter extends BaseAdapter implements OnItemClickListener {
         private LayoutInflater inflater;
 
@@ -145,6 +181,8 @@ public class FileExplorer extends Activity {
             }
             TextView textView = (TextView) convertView.findViewById(R.id.textView1);
             String fileName = list.get(position).getName();
+            textView.setTextColor(ColorManager.getInstance().getTextColor());
+            convertView.setBackgroundDrawable(ColorManager.getInstance().getSelector());
             textView.setText(fileName);
             convertView.setTag(fileName);
             ImageView imgView = (ImageView) convertView.findViewById(R.id.imageView1);
@@ -186,15 +224,4 @@ public class FileExplorer extends Activity {
         }
     }
 
-    private void doEdit(final String path) {
-        if (!Config.isExternalMediaMounted()) {
-            Toast.makeText(this, R.string.toast_media_unmounted, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent intent = new Intent();
-        intent.setAction(TextEditor.ACTION_EDIT_FILE);
-        intent.putExtra("path", path);
-        startActivity(intent);
-        getParent().finish();
-    }
 }

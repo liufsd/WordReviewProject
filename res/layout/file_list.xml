@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/cornsilk"
@@ -30,11 +31,19 @@
         </TextView>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listView1"
+    <FrameLayout
+        android:id="@+id/frameLayout1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:cacheColorHint="#00000000" >
-    </ListView>
+        android:background="@color/cornsilk"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000" >
+        </ListView>
+    </FrameLayout>
 
 </LinearLayout>

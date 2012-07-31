@@ -1,8 +1,6 @@
 
 package com.coleman.providers.downloads;
 
-import com.coleman.util.MyApp;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -14,6 +12,8 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.coleman.util.MyApp;
 
 class RealSystemFacade implements SystemFacade {
     private Context mContext;
