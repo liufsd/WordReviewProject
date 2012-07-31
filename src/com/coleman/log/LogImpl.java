@@ -1,38 +1,43 @@
+
 package com.coleman.log;
 
-public abstract class LogImpl implements Log {
-	protected Level level;
+import java.io.Serializable;
 
-	@Override
-	public void v(String TAG, Object msg) {
-		log(TAG, Level.verbose, msg);
-	}
+public abstract class LogImpl implements Log, Serializable {
+    private static final long serialVersionUID = -3275114910556411467L;
 
-	@Override
-	public void d(String TAG, Object msg) {
-		log(TAG, Level.debug, msg);
-	}
+    protected Level level;
 
-	@Override
-	public void i(String TAG, Object msg) {
-		log(TAG, Level.info, msg);
-	}
+    @Override
+    public void v(String TAG, Object msg) {
+        log(TAG, Level.verbose, msg);
+    }
 
-	@Override
-	public void w(String TAG, Object msg) {
-		log(TAG, Level.warning, msg);
-	}
+    @Override
+    public void d(String TAG, Object msg) {
+        log(TAG, Level.debug, msg);
+    }
 
-	@Override
-	public void e(String TAG, Object msg) {
-		log(TAG, Level.error, msg);
-	}
+    @Override
+    public void i(String TAG, Object msg) {
+        log(TAG, Level.info, msg);
+    }
 
-	@Override
-	public void setLevel(Level level) {
-		this.level = level;
-	}
+    @Override
+    public void w(String TAG, Object msg) {
+        log(TAG, Level.warning, msg);
+    }
 
-	protected abstract void log(String TAG, Level verbose, Object msg);
+    @Override
+    public void e(String TAG, Object msg) {
+        log(TAG, Level.error, msg);
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    protected abstract void log(String TAG, Level verbose, Object msg);
 
 }

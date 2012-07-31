@@ -288,6 +288,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                     playControl.play();
                 }
                 break;
+            case R.id.menu_listmode:
+                Intent it = new Intent(this, CoreActivity2.class);
+                it.putExtra("sub", sublistVisitor);
+                startActivity(it);
+                break;
             default:
                 break;
         }

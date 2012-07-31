@@ -29,7 +29,7 @@ public class WordVisitor implements Serializable, Observer {
 
     private static final String TAG = WordVisitor.class.getName();
 
-    private static Log Log = Config.getLog();
+    private static volatile Log Log = Config.getLog();
 
     public WordListItem item;
 
@@ -131,6 +131,15 @@ public class WordVisitor implements Serializable, Observer {
             }
             dictData = DictManager.getInstance().viewWord(context, dictIndex);
         }
+        return dictData;
+    }
+
+    /**
+     * Return the DictData directly.
+     * 
+     * @return the data or null
+     */
+    public DictData getData() {
         return dictData;
     }
 

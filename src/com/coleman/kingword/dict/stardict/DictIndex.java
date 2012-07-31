@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -49,7 +50,9 @@ import com.coleman.util.ConvertUtils;
  * @author 88250
  * @version 1.1.0.2, Feb 16, 2008
  */
-public class DictIndex {
+public class DictIndex implements Serializable{
+
+    private static final long serialVersionUID = -3522450998887309292L;
 
     private static final String TAG = DictIndex.class.getName();
 

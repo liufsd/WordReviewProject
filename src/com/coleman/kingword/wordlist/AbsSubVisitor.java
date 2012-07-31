@@ -28,7 +28,7 @@ public abstract class AbsSubVisitor implements Serializable {
 
     protected byte type = TYPE;
 
-    private static Log Log = Config.getLog();
+    private static volatile Log Log = Config.getLog();
 
     /**
      * the pointer of the word index in the sublist.
@@ -297,5 +297,9 @@ public abstract class AbsSubVisitor implements Serializable {
             }
             return typeStr;
         }
+    }
+
+    public WordVisitor getWordVisitor(int position) {
+        return list.get(position);
     }
 }

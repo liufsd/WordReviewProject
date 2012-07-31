@@ -21,4 +21,8 @@
         android:id="@+id/menu_play"
         android:title="@string/play"></item>
 
+    <item
+        android:id="@+id/menu_listmode"
+        android:title="@string/list_mode"></item>
+
 </menu>

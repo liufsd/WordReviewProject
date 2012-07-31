@@ -62,6 +62,10 @@
     <string name="show_sub_list_reach_end">此单元学习已经完成！</string>
     <string formatted="false" name="show_complete_study">您已完成此单元学习,正确率%s,此单元成绩%s！
 	</string>
+    <!-- CoreActivit2 -->
+    <string name="list_mode">列表模式</string>
+    <string name="study_mode">学习模式</string>
+
     <!-- Settings & ReviewSettings -->
     <string name="set_split_num_hint">设置单元单词数量</string>
     <string name="split_num_settings">每单元单词数量</string>
