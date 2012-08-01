@@ -378,9 +378,10 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                     }
                     break;
                 case TYPE_ALL_COMPLETE:
-                    resetState = false;
                     pd.dismiss();
-                    finish();
+                    if (subVisitor.allComplete()) {
+                        onBackPressed();
+                    }
                     break;
                 default:
                     break;
