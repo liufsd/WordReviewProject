@@ -2,11 +2,12 @@
 package com.coleman.kingword;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -63,6 +64,7 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
         listView.setOnScrollListener(this);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
+        setReadMode();
 
         ExpensiveTask task = new ExpensiveTask(ExpensiveTask.TYPE_INIT);
         tasklist.add(task);
@@ -81,6 +83,10 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
         switch (item.getItemId()) {
             case R.id.menu_study_mode:
                 onBackPressed();
+                break;
+            case R.id.menu_all_complete:
+                ExpensiveTask task = new ExpensiveTask(ExpensiveTask.TYPE_ALL_COMPLETE);
+                task.execute();
                 break;
             default:
                 break;
@@ -175,16 +181,21 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
     protected void onDestroy() {
         synchronized (tasklist) {
             for (int i = tasklist.size() - 1; i >= 0; i--) {
-                tasklist.remove(i).loading = false;
+                ExpensiveTask task = tasklist.remove(i);
+                task.loading = false;
+                task.resetState = false;
             }
         }
         super.onDestroy();
     }
 
-    private class MyAdapter extends BaseAdapter implements OnClickListener {
-        private AbsSubVisitor asv;
+    private void setReadMode() {
+        findViewById(R.id.relativeLayout1).setBackgroundColor(
+                ColorManager.getInstance().getBgColor());
+    }
 
-        private HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
+    private class MyAdapter extends BaseAdapter {
+        private AbsSubVisitor asv;
 
         Typeface mFace = Typeface.createFromAsset(getAssets(), "font/seguibk.ttf");
 
@@ -218,8 +229,13 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
             TextView wordView = (TextView) convertView.findViewById(R.id.textView1);
             TextView datasView = (TextView) convertView.findViewById(R.id.textView2);
             ImageView imgView = (ImageView) convertView.findViewById(R.id.imageView1);
-            imgView.setOnClickListener(this);
-            imgView.setTag(position);
+
+            int selectMode = ColorManager.getInstance().getSelectMode();
+            if (selectMode == 1) {
+                imgView.setBackgroundResource(R.drawable.word_night);
+            } else {
+                imgView.setBackgroundResource(R.drawable.word_day);
+            }
 
             datasView.setTypeface(mFace);
             String word = getItem(position).item.word;
@@ -233,32 +249,23 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
             return convertView;
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.imageView1:
-                    if (!map.containsKey(v.getTag()) || !map.get(v.getTag())) {
-                        map.put((Integer) v.getTag(), true);
-                    } else {
-                        map.put((Integer) v.getTag(), false);
-                    }
-                    myAdapter.notifyDataSetChanged();
-                    break;
-                default:
-                    break;
-            }
-        }
-
     }
 
-    private class ExpensiveTask extends AsyncTask<Integer, Void, Void> {
+    private class ExpensiveTask extends AsyncTask<Integer, Integer, Void> implements
+            OnCancelListener {
         public static final int TYPE_INIT = 1;
 
         public static final int TYPE_LOADING = 2;
 
+        public static final int TYPE_ALL_COMPLETE = 3;
+
         private int type;
 
         private boolean loading;
+
+        private boolean resetState;
+
+        private ProgressDialog pd;
 
         public ExpensiveTask(int type) {
             this.type = type;
@@ -277,6 +284,15 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                     break;
                 case TYPE_LOADING:
                     loading = true;
+                    break;
+                case TYPE_ALL_COMPLETE:
+                    resetState = true;
+                    pd = new ProgressDialog(CoreActivity2.this);
+                    pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    pd.setMax(subVisitor.getCount());
+                    pd.setOnCancelListener(this);
+                    pd.setMessage(getString(R.string.view_state_reset));
+                    DialogUtil.showDialog(CoreActivity2.this, pd);
                     break;
                 default:
                     break;
@@ -301,6 +317,20 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                         publishProgress();
                     }
                     break;
+                case TYPE_ALL_COMPLETE:
+                    boolean isComplete = false;
+                    for (int i = 0; resetState && i < subVisitor.getCount(); i++) {
+                        WordVisitor wv = subVisitor.getWordVisitor(i);
+                        isComplete = wv.isComplete();
+                        while (!wv.isComplete() && resetState) {
+                            wv.setPass(true);
+                        }
+                        if (!isComplete) {
+                            wv.viewPlus(CoreActivity2.this);
+                        }
+                        publishProgress(i + 1);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -308,7 +338,7 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(Integer... values) {
             if (isFinishing()) {
                 return;
             }
@@ -317,6 +347,9 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                     break;
                 case TYPE_LOADING:
                     myAdapter.notifyDataSetChanged();
+                    break;
+                case TYPE_ALL_COMPLETE:
+                    pd.setProgress(values[0]);
                     break;
                 default:
                     break;
@@ -344,8 +377,20 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                         tasklist.remove(this);
                     }
                     break;
+                case TYPE_ALL_COMPLETE:
+                    resetState = false;
+                    pd.dismiss();
+                    finish();
+                    break;
                 default:
                     break;
+            }
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            if (dialog.equals(pd)) {
+                resetState = false;
             }
         }
 

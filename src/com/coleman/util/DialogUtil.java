@@ -228,6 +228,13 @@ public class DialogUtil {
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setCancelable(false);
         dialog.setMessage(context.getString(R.string.db_upgrade));
+        dialog.show();
+        register(context, dialog);
+        return dialog;
+    }
+
+    public static Dialog showDialog(Context context, Dialog dialog) {
+        dialog.show();
         register(context, dialog);
         return dialog;
     }

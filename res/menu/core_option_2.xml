@@ -5,4 +5,8 @@
         android:id="@+id/menu_study_mode"
         android:title="@string/study_mode"></item>
 
+    <item
+        android:id="@+id/menu_all_complete"
+        android:title="@string/all_complete"></item>
+
 </menu>

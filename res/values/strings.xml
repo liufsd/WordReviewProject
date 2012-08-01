@@ -65,6 +65,8 @@
     <!-- CoreActivit2 -->
     <string name="list_mode">列表模式</string>
     <string name="study_mode">学习模式</string>
+    <string name="view_state_reset">正在设置单词的完成状态...</string>
+    <string name="all_complete">全部通过</string>
 
     <!-- Settings & ReviewSettings -->
     <string name="set_split_num_hint">设置单元单词数量</string>

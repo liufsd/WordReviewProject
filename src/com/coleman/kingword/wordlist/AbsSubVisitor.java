@@ -172,6 +172,10 @@ public abstract class AbsSubVisitor implements Serializable {
         return 0;
     }
 
+    public WordVisitor getWordVisitor(int position) {
+        return list.get(position);
+    }
+
     public void preload() {
         preload = true;
         ThreadUtils.execute(new Runnable() {
@@ -329,9 +333,5 @@ public abstract class AbsSubVisitor implements Serializable {
             }
             return typeStr;
         }
-    }
-
-    public WordVisitor getWordVisitor(int position) {
-        return list.get(position);
     }
 }
