@@ -11,6 +11,11 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -146,10 +151,12 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                     case 0:
                         info.newword = isChecked;
                         WordInfoHelper.store(CoreActivity2.this, info);
+                        myAdapter.notifyDataSetChanged();
                         break;
                     case 1:
                         info.ignore = isChecked;
                         WordInfoHelper.store(CoreActivity2.this, info);
+                        myAdapter.notifyDataSetChanged();
                         break;
                     default:
                         break;
@@ -242,13 +249,22 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
             DictData datas = getItem(position).getData();
             String strDatas = datas == null ? "..." : datas.getDataAndSymbol()
                     .replaceAll("\n", " ");
-            wordView.setText(word);
+            SpannableString sp = new SpannableString(word);
+            if (getItem(position).info.newword) {
+                sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD_ITALIC), 0, sp.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            if (getItem(position).info.ignore) {
+                sp.setSpan(new StrikethroughSpan(), 0, sp.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            wordView.setText(sp);
+
             datasView.setText(strDatas);
             wordView.setTextColor(ColorManager.getInstance().getTextColor());
             datasView.setTextColor(ColorManager.getInstance().getTextColor());
             return convertView;
         }
-
     }
 
     private class ExpensiveTask extends AsyncTask<Integer, Integer, Void> implements

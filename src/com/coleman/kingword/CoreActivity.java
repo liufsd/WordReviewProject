@@ -328,6 +328,152 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (playControl.ongoing) {
+            ToastUtil.show(getString(R.string.stop_first));
+            return;
+        }
+        if (list.size() == 1) {
+            wordVisitor.setPass(true);
+            wordVisitor.viewPlus(this);
+            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
+        } else if (list.get(position).equals(wordVisitor.getDictData(this))) {
+            if (!(wordVisitor.getCurrentStatus() instanceof InitState)) {
+                wordVisitor.setPass(true);
+            }
+            continueHitCount++;
+            if (continueHitCount >= 3) {
+                continueView.setVisibility(View.VISIBLE);
+                continueView.setText(String.format(getString(R.string.continue_hit_count),
+                        continueHitCount));
+            }
+            wordVisitor.viewPlus(this);
+            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
+        } else {
+            wordVisitor.setPass(false);
+            continueHitCount = 0;
+            continueView.setVisibility(View.INVISIBLE);
+            wordVisitor.errorPlus(this);
+            new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
+            Toast.makeText(this, getString(R.string.miss), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (playControl.ongoing) {
+            ToastUtil.show(getString(R.string.stop_first));
+            return;
+        }
+        switch (v.getId()) {
+            case R.id.viewWord:
+                if (viewWord.getText().equals(getString(R.string.view_more))) {
+                    new ExpensiveTask(ExpensiveTask.VIEW_MORE).execute();
+                    if (wordVisitor.getCurrentStatus() instanceof InitState) {
+                        viewWord.setText(R.string.view_raw);
+                    } else {
+                        viewWord.setText(R.string.view_select);
+                    }
+                } else {
+                    new ExpensiveTask(ExpensiveTask.VIEW_RAW).execute();
+                    viewWord.setText(R.string.view_more);
+                }
+                break;
+            case R.id.add_or_remove:
+                if (addOrRemove.getText().equals(getString(R.string.add_new))) {
+                    new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
+                } else {
+                    new ExpensiveTask(ExpensiveTask.REMOVE_FROM_NEW).execute();
+                }
+                break;
+            case R.id.ignore_or_not:
+                if (ignoreOrNot.getText().equals(getString(R.string.ignore))) {
+                    new ExpensiveTask(ExpensiveTask.IGNORE).execute();
+                } else {
+                    wordVisitor.removeIgnore(this);
+                    ignoreOrNot.setText(R.string.ignore);
+                }
+                break;
+            case R.id.countdown:
+                slideRightOut(countBtn);
+                break;
+            case R.id.btn_speak:
+                playControl.speak(wordVisitor.item.word);
+                break;
+            default:
+                break;
+        }
+    
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (playControl.ongoing) {
+            ToastUtil.show(getString(R.string.stop_first));
+            return false;
+        }
+        switch (v.getId()) {
+            case R.id.btn_speak:
+                if (!autoSpeak) {
+                    btnSpeak.setBackgroundResource(R.drawable.speak_auto);
+                    playControl.speak(wordVisitor.item.word);
+                } else {
+                    btnSpeak.setBackgroundResource(R.drawable.speak);
+                }
+                autoSpeak = !autoSpeak;
+                return true;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void finish() {
+        if (sublistVisitor instanceof ReviewListVisitor) {
+            if (openTabList) {
+                startActivity(new Intent(this, WordlistTabActivity.class));
+            }
+        } else if (sublistVisitor instanceof SubListVisitor) {
+            ((SubListVisitor) sublistVisitor).update(this);
+            startSubListActivity();
+        }
+        super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        // playControl.stop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // backup this time study progress
+        // writeCacheObject();
+        // shutdown the text-to-speech
+        playControl.shutdown();
+    
+        // stop preload
+        stopPreload();
+    
+        // ///////////////////////////////////////////
+        // WordInfoHelper.backupWordInfoDB(this, false);
+        // ///////////////////////////////////////////
+        super.onDestroy();
+    }
+
     private void showAnimSelect() {
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
@@ -405,33 +551,6 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onStop() {
-        // playControl.stop();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        // backup this time study progress
-        // writeCacheObject();
-        // shutdown the text-to-speech
-        playControl.shutdown();
-
-        // stop preload
-        stopPreload();
-
-        // ///////////////////////////////////////////
-        // WordInfoHelper.backupWordInfoDB(this, false);
-        // ///////////////////////////////////////////
-        super.onDestroy();
-    }
-
     private void startSubListActivity() {
         // write result to SubListActivity
         Intent intent = new Intent(this, SubListActivity.class);
@@ -441,130 +560,11 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         startActivity(intent);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (playControl.ongoing) {
-            ToastUtil.show(getString(R.string.stop_first));
-            return;
-        }
-        if (list.size() == 1) {
-            wordVisitor.setPass(true);
-            wordVisitor.viewPlus(this);
-            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
-        } else if (list.get(position).equals(wordVisitor.getDictData(this))) {
-            if (!(wordVisitor.getCurrentStatus() instanceof InitState)) {
-                wordVisitor.setPass(true);
-            }
-            continueHitCount++;
-            if (continueHitCount >= 3) {
-                continueView.setVisibility(View.VISIBLE);
-                continueView.setText(String.format(getString(R.string.continue_hit_count),
-                        continueHitCount));
-            }
-            wordVisitor.viewPlus(this);
-            new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
-        } else {
-            wordVisitor.setPass(false);
-            continueHitCount = 0;
-            continueView.setVisibility(View.INVISIBLE);
-            wordVisitor.errorPlus(this);
-            new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
-            Toast.makeText(this, getString(R.string.miss), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void updateLoopCount() {
         // loop display control
         loopView.setText(String.format(getString(R.string.loop_info),
                 sublistVisitor.getViewMethod(), sublistVisitor.getCurrentIndex(),
                 sublistVisitor.getCount()));
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (playControl.ongoing) {
-            ToastUtil.show(getString(R.string.stop_first));
-            return;
-        }
-        switch (v.getId()) {
-            case R.id.viewWord:
-                if (viewWord.getText().equals(getString(R.string.view_more))) {
-                    new ExpensiveTask(ExpensiveTask.VIEW_MORE).execute();
-                    if (wordVisitor.getCurrentStatus() instanceof InitState) {
-                        viewWord.setText(R.string.view_raw);
-                    } else {
-                        viewWord.setText(R.string.view_select);
-                    }
-                } else {
-                    new ExpensiveTask(ExpensiveTask.VIEW_RAW).execute();
-                    viewWord.setText(R.string.view_more);
-                }
-                break;
-            case R.id.add_or_remove:
-                if (addOrRemove.getText().equals(getString(R.string.add_new))) {
-                    new ExpensiveTask(ExpensiveTask.ADD_NEW).execute();
-                } else {
-                    new ExpensiveTask(ExpensiveTask.REMOVE_FROM_NEW).execute();
-                }
-                break;
-            case R.id.ignore_or_not:
-                if (ignoreOrNot.getText().equals(getString(R.string.ignore))) {
-                    new ExpensiveTask(ExpensiveTask.IGNORE).execute();
-                } else {
-                    wordVisitor.removeIgnore(this);
-                    ignoreOrNot.setText(R.string.ignore);
-                }
-                break;
-            case R.id.countdown:
-                slideRightOut(countBtn);
-                break;
-            case R.id.btn_speak:
-                playControl.speak(wordVisitor.item.word);
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (playControl.ongoing) {
-            ToastUtil.show(getString(R.string.stop_first));
-            return false;
-        }
-        switch (v.getId()) {
-            case R.id.btn_speak:
-                if (!autoSpeak) {
-                    btnSpeak.setBackgroundResource(R.drawable.speak_auto);
-                    playControl.speak(wordVisitor.item.word);
-                } else {
-                    btnSpeak.setBackgroundResource(R.drawable.speak);
-                }
-                autoSpeak = !autoSpeak;
-                return true;
-            default:
-                break;
-        }
-        return false;
-    }
-
-    @Override
-    public void finish() {
-        if (sublistVisitor instanceof ReviewListVisitor) {
-            if (openTabList) {
-                startActivity(new Intent(this, WordlistTabActivity.class));
-            }
-        } else if (sublistVisitor instanceof SubListVisitor) {
-            ((SubListVisitor) sublistVisitor).update(this);
-            startSubListActivity();
-        }
-        super.finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     private void slideRightIn(final Button view) {
