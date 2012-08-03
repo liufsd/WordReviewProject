@@ -5,13 +5,13 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -39,10 +39,16 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.skin.ColorManager;
 import com.coleman.kingword.wordlist.AbsSubVisitor;
 import com.coleman.kingword.wordlist.WordVisitor;
+import com.coleman.log.Log;
+import com.coleman.util.Config;
 import com.coleman.util.DialogUtil;
 
 public class CoreActivity2 extends Activity implements OnClickListener, OnScrollListener,
         OnItemClickListener, OnItemLongClickListener {
+
+    private static final String TAG = CoreActivity2.class.getName();
+
+    private Log Log = Config.getLog();
 
     private AbsSubVisitor subVisitor;
 
@@ -137,6 +143,7 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.i(TAG, "===coleman-debug-item click:" + subVisitor.getWordVisitor(position).info.word);
         final WordInfo info = subVisitor.getWordVisitor(position).info;
         String arg0[] = new String[] {
                 getString(R.string.new_word), getString(R.string.ignore)
@@ -163,8 +170,10 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                 }
             }
         };
-        new AlertDialog.Builder(this).setTitle(info.word).setMultiChoiceItems(arg0, arg1, arg2)
-                .setPositiveButton(getString(R.string.ok), null).show();
+        Dialog dialog = new AlertDialog.Builder(this).setTitle(info.word)
+                .setMultiChoiceItems(arg0, arg1, arg2)
+                .setPositiveButton(getString(R.string.ok), null).create();
+        DialogUtil.showDialog(this, dialog);
     }
 
     @Override
@@ -259,8 +268,8 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             wordView.setText(sp);
-
-            datasView.setText(strDatas);
+            sp = new SpannableString(strDatas);
+            datasView.setText(sp);
             wordView.setTextColor(ColorManager.getInstance().getTextColor());
             datasView.setTextColor(ColorManager.getInstance().getTextColor());
             return convertView;

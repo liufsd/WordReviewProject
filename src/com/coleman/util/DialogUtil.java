@@ -234,6 +234,7 @@ public class DialogUtil {
     }
 
     public static Dialog showDialog(Context context, Dialog dialog) {
+        Log.i(TAG, "===coleman-debug-dialog:" + dialog);
         dialog.show();
         register(context, dialog);
         return dialog;

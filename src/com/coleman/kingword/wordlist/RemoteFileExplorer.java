@@ -144,6 +144,7 @@ public class RemoteFileExplorer extends Activity implements Observer {
         int textColor = ColorManager.getInstance().getTextColor();
         findViewById(R.id.linearLayout1).setBackgroundColor(bgColor);
         findViewById(R.id.frameLayout1).setBackgroundColor(bgColor);
+        pathView.setTextColor(textColor);
         if (selectMode == 1) {
             findViewById(R.id.button1).setBackgroundResource(R.drawable.btn_bg_night);
             ((Button) findViewById(R.id.button1)).setTextColor(textColor);

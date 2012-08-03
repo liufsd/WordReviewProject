@@ -328,7 +328,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceClickLis
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 AppSettings.saveString(AppSettings.MORE_LIB_KEY, values[which]);
-                DictManager.getInstance().setCurLibrary(values[which]);
+                DictManager.getInstance().setMoreLibrary(values[which]);
                 dialog.dismiss();
             }
 
