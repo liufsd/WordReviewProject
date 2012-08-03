@@ -20,6 +20,12 @@ import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 
 public class ReviewSettings extends PreferenceActivity implements OnPreferenceClickListener {
+    private static final String DEFAULT_TIME_3 = "20:00";
+
+    private static final String DEFAULT_TIME_2 = "12:00";
+
+    private static final String DEFAULT_TIME_1 = "08:00";
+
     protected static final String TAG = ReviewSettings.class.getName();
 
     private static Log Log = Config.getLog();
@@ -48,12 +54,9 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
 
     private void initUI() {
         String notSet = getString(R.string.not_set);
-        String t1 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME1,
-                notSet);
-        String t2 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME2,
-                notSet);
-        String t3 = getPreferenceScreen().getSharedPreferences().getString(AppSettings.TIME3,
-                notSet);
+        String t1 = AppSettings.getString(AppSettings.TIME1, notSet);
+        String t2 = AppSettings.getString(AppSettings.TIME2, notSet);
+        String t3 = AppSettings.getString(AppSettings.TIME3, notSet);
         time1.setTitle(t1);
         time2.setTitle(t2);
         time3.setTitle(t3);
@@ -76,12 +79,19 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
+        String notSet = getString(R.string.not_set);
+        String t1 = AppSettings.getString(AppSettings.TIME1, notSet);
+        String t2 = AppSettings.getString(AppSettings.TIME2, notSet);
+        String t3 = AppSettings.getString(AppSettings.TIME3, notSet);
+        t1 = notSet.equals(t1) ? DEFAULT_TIME_1 : t1;
+        t2 = notSet.equals(t2) ? DEFAULT_TIME_2 : t2;
+        t3 = notSet.equals(t3) ? DEFAULT_TIME_3 : t3;
         if (preference == time1) {
-            showSetReviewTime(time1, 0, "08:00");
+            showSetReviewTime(time1, 0, t1);
         } else if (preference == time2) {
-            showSetReviewTime(time2, 1, "12:00");
+            showSetReviewTime(time2, 1, t2);
         } else if (preference == time3) {
-            showSetReviewTime(time3, 2, "20:00");
+            showSetReviewTime(time3, 2, t3);
         } else if (preference == cbpre) {
             checkFixedModeSelect();
         }
@@ -107,8 +117,7 @@ public class ReviewSettings extends PreferenceActivity implements OnPreferenceCl
             if (!notSet.equals(t3)) {
                 EbbinghausReminder.setRepeatNotifaction(ReviewSettings.this, 2, t3);
             }
-        }
-        else{
+        } else {
             AppSettings.saveString(time1.getKey(), notSet);
             AppSettings.saveString(time2.getKey(), notSet);
             AppSettings.saveString(time3.getKey(), notSet);
