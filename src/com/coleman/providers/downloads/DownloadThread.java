@@ -28,11 +28,12 @@ import java.util.Locale;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.net.http.AndroidHttpClient;
 import android.os.FileUtils;
 import android.os.PowerManager;
 import android.os.Process;
@@ -156,7 +157,7 @@ public class DownloadThread extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
         State state = new State(mInfo);
-        AndroidHttpClient client = null;
+        HttpClient client = null;
         PowerManager.WakeLock wakeLock = null;
         int finalStatus = Downloads.Impl.STATUS_UNKNOWN_ERROR;
 
@@ -169,7 +170,8 @@ public class DownloadThread extends Thread {
                 Log.v(Constants.TAG, "initiating download for " + mInfo.mUri);
             }
 
-            client = AndroidHttpClient.newInstance(userAgent(), mContext);
+            // client = AndroidHttpClient.newInstance(userAgent(), mContext);
+            client = new DefaultHttpClient();
 
             boolean finished = false;
             while (!finished) {
@@ -208,7 +210,6 @@ public class DownloadThread extends Thread {
                 wakeLock = null;
             }
             if (client != null) {
-                client.close();
                 client = null;
             }
             cleanupDestination(state, finalStatus);
@@ -222,7 +223,7 @@ public class DownloadThread extends Thread {
      * Fully execute a single download request - setup and send the request,
      * handle the response, and transfer the data to the destination file.
      */
-    private void executeDownload(State state, AndroidHttpClient client, HttpGet request)
+    private void executeDownload(State state, HttpClient client, HttpGet request)
             throws StopRequest, RetryDownload {
         InnerState innerState = new InnerState();
         byte data[] = new byte[Constants.BUFFER_SIZE];
@@ -770,7 +771,7 @@ public class DownloadThread extends Thread {
     /**
      * Send the request to the server, handling any I/O exceptions.
      */
-    private HttpResponse sendRequest(State state, AndroidHttpClient client, HttpGet request)
+    private HttpResponse sendRequest(State state, HttpClient client, HttpGet request)
             throws StopRequest {
         try {
             return client.execute(request);
