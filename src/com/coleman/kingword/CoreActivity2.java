@@ -12,6 +12,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -268,8 +269,7 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             wordView.setText(sp);
-            sp = new SpannableString(strDatas);
-            datasView.setText(sp);
+            datasView.setText(Html.fromHtml(strDatas));
             wordView.setTextColor(ColorManager.getInstance().getTextColor());
             datasView.setTextColor(ColorManager.getInstance().getTextColor());
             return convertView;

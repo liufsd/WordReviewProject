@@ -18,8 +18,6 @@ package com.coleman.util;
 
 import java.io.UnsupportedEncodingException;
 
-import android.util.Base64OutputStream;
-
 /**
  * Utilities for encoding and decoding the Base64 representation of
  * binary data.  See RFCs <a
