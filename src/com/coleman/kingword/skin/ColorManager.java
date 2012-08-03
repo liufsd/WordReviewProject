@@ -41,6 +41,11 @@ public class ColorManager {
         return selectMode;
     }
 
+    /**
+     * This method must be invoked each time if client want to get a BGDrawable.
+     * 
+     * @return a new instance of the BGDrawable.
+     */
     public StateListDrawable getSelector() {
         return new BGDrawable();
     }

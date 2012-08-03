@@ -31,6 +31,11 @@ import com.coleman.util.Config;
  * @author coleman
  */
 public class DictManager {
+
+    public static final String LIBRARY_NOT_INITIALED = "library has not been initialed!";
+
+    public static final String WORD_NOT_FOUND = "word not found!";
+
     private static final String TAG = DictManager.class.getName();
 
     private static Log Log = Config.getLog();
@@ -140,11 +145,11 @@ public class DictManager {
         if (library == null) {
             context.startService(new Intent(context, DictLoadService.class));
             Log.w(TAG, "library has not been initialed! Init Now!");
-            return DictData.constructData("library has not been initialed!");
+            return DictData.constructData(LIBRARY_NOT_INITIALED);
         }
         if (index == null) {
             Log.w(TAG, "dict index is null, word not found!");
-            return DictData.constructData("word not found!");
+            return DictData.constructData(WORD_NOT_FOUND);
         }
         DictData wordData = DictData.readData(context, library.isInternal(),
                 library.getLibraryInfo(), index, library.getLibraryName());
@@ -181,11 +186,11 @@ public class DictManager {
         if (library == null) {
             context.startService(new Intent(context, DictLoadService.class));
             Log.w(TAG, "library has not been initialed! Init Now!");
-            return DictData.constructData("library has not been initialed!");
+            return DictData.constructData(LIBRARY_NOT_INITIALED);
         }
         if (index == null) {
             Log.w(TAG, "dict index is null, word not found!");
-            return DictData.constructData("word not found!");
+            return DictData.constructData(WORD_NOT_FOUND);
         }
         DictData wordData = DictData.readData(context, library.isInternal(),
                 library.getLibraryInfo(), index, library.getLibraryName());

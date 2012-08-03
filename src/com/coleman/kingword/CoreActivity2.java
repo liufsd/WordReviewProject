@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -15,25 +15,31 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.dict.stardict.DictData;
 import com.coleman.kingword.history.WordInfo;
 import com.coleman.kingword.history.WordInfoHelper;
@@ -44,12 +50,11 @@ import com.coleman.log.Log;
 import com.coleman.util.Config;
 import com.coleman.util.DialogUtil;
 
-public class CoreActivity2 extends Activity implements OnClickListener, OnScrollListener,
-        OnItemClickListener, OnItemLongClickListener {
+public class CoreActivity2 extends Activity implements OnClickListener, OnScrollListener {
 
     private static final String TAG = CoreActivity2.class.getName();
 
-    private Log Log = Config.getLog();
+    private static Log Log = Config.getLog();
 
     private AbsSubVisitor subVisitor;
 
@@ -69,13 +74,15 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
 
     private ArrayList<ExpensiveTask> tasklist = new ArrayList<ExpensiveTask>();
 
+    private Typeface mFace;
+
     protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_list_2);
         listView = (ListView) findViewById(R.id.listView1);
+        mFace = Typeface.createFromAsset(getAssets(), "font/seguibk.ttf");
         listView.setOnScrollListener(this);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+
         setReadMode();
 
         ExpensiveTask task = new ExpensiveTask(ExpensiveTask.TYPE_INIT);
@@ -143,50 +150,6 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i(TAG, "===coleman-debug-item click:" + subVisitor.getWordVisitor(position).info.word);
-        final WordInfo info = subVisitor.getWordVisitor(position).info;
-        String arg0[] = new String[] {
-                getString(R.string.new_word), getString(R.string.ignore)
-        };
-        boolean arg1[] = new boolean[] {
-                info.newword, info.ignore
-        };
-        DialogInterface.OnMultiChoiceClickListener arg2 = new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                switch (which) {
-                    case 0:
-                        info.newword = isChecked;
-                        WordInfoHelper.store(CoreActivity2.this, info);
-                        myAdapter.notifyDataSetChanged();
-                        break;
-                    case 1:
-                        info.ignore = isChecked;
-                        WordInfoHelper.store(CoreActivity2.this, info);
-                        myAdapter.notifyDataSetChanged();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        Dialog dialog = new AlertDialog.Builder(this).setTitle(info.word)
-                .setMultiChoiceItems(arg0, arg1, arg2)
-                .setPositiveButton(getString(R.string.ok), null).create();
-        DialogUtil.showDialog(this, dialog);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        final WordInfo info = subVisitor.getWordVisitor(position).info;
-        DialogUtil.showMessage(this, info.word,
-                subVisitor.getWordVisitor(position).getDictData(this).getDataAndSymbol(),
-                getString(R.string.ok), null, null, null);
-        return true;
-    }
-
-    @Override
     public void onBackPressed() {
         Intent data = new Intent();
         data.putExtra("sub", subVisitor);
@@ -206,6 +169,103 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
         super.onDestroy();
     }
 
+    private void showOperation(int position) {
+        final WordInfo info = subVisitor.getWordVisitor(position).info;
+        final String arg0[] = new String[] {
+                getString(R.string.new_word), getString(R.string.ignore)
+        };
+        final boolean arg1[] = new boolean[] {
+                info.newword, info.ignore
+        };
+        DismissAlertDialog dialog = new DismissAlertDialog(this);
+        dialog.setTitle(info.word);
+        dialog.setButton(getString(R.string.ok),
+                (android.content.DialogInterface.OnClickListener) null);
+        View containView = getLayoutInflater().inflate(R.layout.core_2_dialog_list, null);
+        ListView lv = (ListView) containView.findViewById(R.id.listView1);
+        lv.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                arg1[position] = !arg1[position];
+                if (position == 0) {
+                    info.newword = arg1[position];
+                } else if (position == 1) {
+                    info.ignore = arg1[position];
+                }
+
+                CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox1);
+                cb.setChecked(arg1[position]);
+
+                WordInfoHelper.store(CoreActivity2.this, info);
+                myAdapter.notifyDataSetChanged();
+            }
+        });
+        class _Adapter extends BaseAdapter {
+            private _Adapter() {
+            }
+
+            @Override
+            public int getCount() {
+                return arg0.length;
+            }
+
+            @Override
+            public String getItem(int position) {
+                return arg0[position];
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.core_2_dialog_item, null);
+                }
+                TextView tv = (TextView) convertView.findViewById(R.id.textView1);
+                CheckBox cb = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                tv.setText(arg0[position]);
+                cb.setChecked(arg1[position]);
+                return convertView;
+            }
+
+        }
+        _Adapter adapter = new _Adapter();
+        lv.setAdapter(adapter);
+        dialog.setView(containView);
+        dialog.show();
+    }
+
+    private void showDetail(int position) {
+        final WordInfo info = subVisitor.getWordVisitor(position).info;
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+                LayoutParams.FILL_PARENT));
+        scrollView.addView(tv);
+
+        String datas = subVisitor.getWordVisitor(position).getDetail(this).getDataAndSymbol();
+        if (TextUtils.isEmpty(datas) || datas.equals(DictManager.WORD_NOT_FOUND)
+                || datas.equals(DictManager.LIBRARY_NOT_INITIALED)) {
+            datas = subVisitor.getWordVisitor(position).getDictData(this).getDataAndSymbol();
+        }
+        tv.setTypeface(mFace);
+        tv.setText(Html.fromHtml(datas.replaceAll("\n", "<br/>")));
+        // AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Dialog dialog = builder.setTitle(info.word).setView(scrollView)
+        // .setPositiveButton(R.string.ok, null).create();
+        DismissAlertDialog dialog = new DismissAlertDialog(this);
+        dialog.setTitle(info.word);
+        dialog.setView(scrollView);
+        dialog.setButton(getString(R.string.ok),
+                (android.content.DialogInterface.OnClickListener) null);
+        dialog.show();
+    }
+
     private void setReadMode() {
         findViewById(R.id.relativeLayout1).setBackgroundColor(
                 ColorManager.getInstance().getBgColor());
@@ -213,8 +273,6 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
 
     private class MyAdapter extends BaseAdapter {
         private AbsSubVisitor asv;
-
-        Typeface mFace = Typeface.createFromAsset(getAssets(), "font/seguibk.ttf");
 
         private MyAdapter(AbsSubVisitor subVisitor) {
             asv = subVisitor;
@@ -236,29 +294,46 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(CoreActivity2.this).inflate(R.layout.core_item_2,
                         null);
             }
             convertView.setBackgroundDrawable(ColorManager.getInstance().getSelector());
 
+            LinearLayout layout1 = (LinearLayout) convertView.findViewById(R.id.linearLayout1);
+            LinearLayout layout2 = (LinearLayout) convertView.findViewById(R.id.linearLayout2);
             TextView wordView = (TextView) convertView.findViewById(R.id.textView1);
             TextView datasView = (TextView) convertView.findViewById(R.id.textView2);
             ImageView imgView = (ImageView) convertView.findViewById(R.id.imageView1);
 
             int selectMode = ColorManager.getInstance().getSelectMode();
+            int textColor = ColorManager.getInstance().getTextColor();
+            wordView.setTextColor(textColor);
+            datasView.setTextColor(textColor);
+
+            layout1.setBackgroundDrawable(ColorManager.getInstance().getSelector());
+            layout2.setBackgroundDrawable(ColorManager.getInstance().getSelector());
             if (selectMode == 1) {
                 imgView.setBackgroundResource(R.drawable.word_night);
             } else {
                 imgView.setBackgroundResource(R.drawable.word_day);
             }
+            layout1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showOperation(position);
+                }
+            });
+            layout2.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDetail(position);
+                }
+            });
 
             datasView.setTypeface(mFace);
             String word = getItem(position).item.word;
-            DictData datas = getItem(position).getData();
-            String strDatas = datas == null ? "..." : datas.getDataAndSymbol()
-                    .replaceAll("\n", " ");
             SpannableString sp = new SpannableString(word);
             if (getItem(position).info.newword) {
                 sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD_ITALIC), 0, sp.length(),
@@ -269,9 +344,10 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             wordView.setText(sp);
+
+            DictData datas = getItem(position).getData();
+            String strDatas = datas == null ? "..." : datas.getDataAndSymbol();
             datasView.setText(Html.fromHtml(strDatas));
-            wordView.setTextColor(ColorManager.getInstance().getTextColor());
-            datasView.setTextColor(ColorManager.getInstance().getTextColor());
             return convertView;
         }
     }
@@ -317,7 +393,7 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
                     pd.setMax(subVisitor.getCount());
                     pd.setOnCancelListener(this);
                     pd.setMessage(getString(R.string.view_state_reset));
-                    DialogUtil.showDialog(CoreActivity2.this, pd);
+                    pd.show();
                     break;
                 default:
                     break;
@@ -418,6 +494,26 @@ public class CoreActivity2 extends Activity implements OnClickListener, OnScroll
             if (dialog.equals(pd)) {
                 resetState = false;
             }
+        }
+
+    }
+
+    private static class DismissAlertDialog extends AlertDialog {
+        private Context mContext;
+
+        protected DismissAlertDialog(Context context) {
+            super(context);
+            this.mContext = context;
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            View view = getCurrentFocus();
+            if (view == null || view instanceof ListView) {
+                dismiss();
+                DialogUtil.unregister(mContext, this);
+            }
+            return super.onTouchEvent(event);
         }
 
     }

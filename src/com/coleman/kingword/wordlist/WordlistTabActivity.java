@@ -19,7 +19,6 @@ import com.coleman.kingword.history.WordInfoHelper;
 import com.coleman.kingword.skin.ColorManager;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
-import com.coleman.util.DialogUtil;
 
 public class WordlistTabActivity extends TabActivity implements TabHost.OnTabChangeListener,
         OnClickListener {
@@ -82,7 +81,9 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
                 } else if (!WordInfoHelper.hasWordInfo(this, NewListVisitor.TYPE)) {
-                    DialogUtil.showSystemMessage(this, R.string.no_new_word_found);
+                    new AlertDialog.Builder(this).setTitle(R.string.system_msg_title)
+                            .setMessage(R.string.no_new_word_found)
+                            .setPositiveButton(android.R.string.ok, null).show();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
                     intent.putExtra("type", NewListVisitor.TYPE);
@@ -93,7 +94,9 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
                 } else if (!WordInfoHelper.hasWordInfo(this, IgnoreListVisitor.TYPE)) {
-                    DialogUtil.showSystemMessage(this, R.string.no_ignore_word_found);
+                    new AlertDialog.Builder(this).setTitle(R.string.system_msg_title)
+                            .setMessage(R.string.no_ignore_word_found)
+                            .setPositiveButton(android.R.string.ok, null).show();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
                     intent.putExtra("type", IgnoreListVisitor.TYPE);
@@ -104,7 +107,9 @@ public class WordlistTabActivity extends TabActivity implements TabHost.OnTabCha
                 if (!DictManager.getInstance().isCurLibInitialized()) {
                     showDBInitHint();
                 } else if (EbbinghausReminder.needReview(this) <= 0) {
-                    DialogUtil.showSystemMessage(this, R.string.no_review_word_found);
+                    new AlertDialog.Builder(this).setTitle(R.string.system_msg_title)
+                            .setMessage(R.string.no_review_word_found)
+                            .setPositiveButton(android.R.string.ok, null).show();
                 } else {
                     Intent intent = new Intent(this, CoreActivity.class);
                     intent.putExtra("type", ReviewListVisitor.TYPE);

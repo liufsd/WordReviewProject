@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -86,7 +87,10 @@ public class WelcomeActivity extends Activity implements Observer {
         if (UpgradeManager.getInstance().needUpgrade()) {
             UpgradeManager.getInstance().addObserver(this);
             UpgradeManager.getInstance().upgrade();
-            dbUpgradeDialog = DialogUtil.showDBUpgrade(this);
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setCancelable(false);
+            dialog.setMessage(getString(R.string.db_upgrade));
+            dialog.show();
         } else {
             setup();
         }
@@ -399,18 +403,20 @@ public class WelcomeActivity extends Activity implements Observer {
             dismiss(versionCheckDialog);
             if (rc == 0) {
                 if (bean.getNewVersionCode() != -1) {
-                    DialogUtil.showMessage(this, getString(R.string.upgrade_tip),
-                            bean.getDescription(), getString(R.string.ok),
-                            new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(this).setTitle(R.string.upgrade_tip)
+                            .setMessage(bean.getDescription())
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     UpgradeService.downloadVersion(WelcomeActivity.this, bean);
                                 }
-                            }, getString(R.string.cancel), null);
+                            }).setNegativeButton(R.string.cancel, null).show();
                 } else {
                     if (userCheck) {
                         userCheck = false;
-                        DialogUtil.showServerMessage(this, bean.getDescription());
+                        new AlertDialog.Builder(this).setTitle(R.string.system_msg_title)
+                                .setMessage(bean.getDescription())
+                                .setPositiveButton(android.R.string.ok, null).show();
                     } else {
                         Log.i(TAG,
                                 "===coleman-debug-bean.getDescription(): " + bean.getDescription());
@@ -420,7 +426,9 @@ public class WelcomeActivity extends Activity implements Observer {
             } else {
                 if (userCheck) {
                     userCheck = false;
-                    DialogUtil.showErrorMessage(this, bean.getDescription());
+                    new AlertDialog.Builder(this).setTitle(R.string.error_msg_title)
+                            .setMessage(bean.getDescription())
+                            .setPositiveButton(android.R.string.ok, null).show();
                 } else {
                     Log.i(TAG, "===coleman-debug-bean.getDescription(): " + data == null ? ""
                             : data.toString());
@@ -433,7 +441,9 @@ public class WelcomeActivity extends Activity implements Observer {
             Log.i(TAG, "===coleman-debug-rc: " + rc + " desc:" + desc);
         } else if (data instanceof UpgradeManager) {
             if (!TextUtils.isEmpty(UpgradeManager.getInstance().getFailMsg())) {
-                DialogUtil.showSystemMessage(this, UpgradeManager.getInstance().getFailMsg());
+                new AlertDialog.Builder(this).setTitle(R.string.system_msg_title)
+                        .setMessage(UpgradeManager.getInstance().getFailMsg())
+                        .setPositiveButton(android.R.string.ok, null).show();
                 UpgradeManager.getInstance().setFailMsg("");
             }
             dbUpgradeDialog.dismiss();

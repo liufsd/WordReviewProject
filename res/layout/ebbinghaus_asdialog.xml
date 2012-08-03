@@ -39,15 +39,6 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp" >
 
-        <!--
-        <ImageView
-            android:id="@+id/divider_line_1"
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/title_rect_line" >
-        </ImageView>
-        -->
-
         <TextView
             android:id="@+id/message"
             style="@android:style/TextAppearance.Medium"
