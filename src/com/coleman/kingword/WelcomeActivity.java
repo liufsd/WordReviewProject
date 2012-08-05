@@ -61,7 +61,9 @@ public class WelcomeActivity extends Activity implements Observer {
 
     private boolean userCheck;
 
-    private Dialog versionCheckDialog, dbUpgradeDialog;
+    private Dialog versionCheckDialog;
+
+    private AlertDialog dbUpgradeDialog;
 
     private FrameLayout flayout;
 
@@ -87,10 +89,10 @@ public class WelcomeActivity extends Activity implements Observer {
         if (UpgradeManager.getInstance().needUpgrade()) {
             UpgradeManager.getInstance().addObserver(this);
             UpgradeManager.getInstance().upgrade();
-            ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setCancelable(false);
-            dialog.setMessage(getString(R.string.db_upgrade));
-            dialog.show();
+            dbUpgradeDialog = new ProgressDialog(this);
+            dbUpgradeDialog.setCancelable(false);
+            dbUpgradeDialog.setMessage(getString(R.string.db_upgrade));
+            dbUpgradeDialog.show();
         } else {
             setup();
         }
@@ -150,6 +152,17 @@ public class WelcomeActivity extends Activity implements Observer {
     }
 
     private void init() {
+
+        // set default log type to warn
+        if (Config.isSimulator(MyApp.context)
+                || "A0000022C343AF".equals(Config.getDeviceId(MyApp.context))) {// A0000022C343AF
+            Log.setPrintable(true);
+            Log.setLevel(Level.verbose);
+        } else {
+            Log.setPrintable(false);
+            Log.setLevel(Level.warning);
+        }
+
         boolean firstStarted = AppSettings.getBoolean(AppSettings.FIRST_STARTED_KEY, true);
         if (firstStarted) {
 
@@ -166,14 +179,6 @@ public class WelcomeActivity extends Activity implements Observer {
 
             // save first start app time
             AppSettings.saveLong(AppSettings.FIRST_STARTED_TIME_KEY, System.currentTimeMillis());
-
-            // set default log type to warn
-            if (Config.isSimulator(MyApp.context)
-                    || "A0000022C343AF".equals(Config.getDeviceId(MyApp.context))) {// A0000022C343AF
-                Log.setLevel(Level.verbose);
-            } else {
-                Log.setLevel(Level.warning);
-            }
 
             // set default color configuration
             int c[][] = ColorSetActivityAsDialog.MODE_COLOR;
@@ -446,7 +451,7 @@ public class WelcomeActivity extends Activity implements Observer {
                         .setPositiveButton(android.R.string.ok, null).show();
                 UpgradeManager.getInstance().setFailMsg("");
             }
-            dbUpgradeDialog.dismiss();
+            dismiss(dbUpgradeDialog);
             setup();
         }
     }

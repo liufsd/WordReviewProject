@@ -46,7 +46,7 @@ public class KingWordDBHepler extends SQLiteOpenHelper {
 
         // create trigger
         // handle delete word list
-        db.execSQL("CREATE TRIGGER sub_list AFTER DELETE ON " + TWordList.TABLE_NAME + " "
+        db.execSQL("CREATE TRIGGER list_trigger AFTER DELETE ON " + TWordList.TABLE_NAME + " "
                 + "BEGIN " + "  DELETE FROM " + TSubWordList.TABLE_NAME + "  WHERE "
                 + TSubWordList.WORD_LIST_ID + "=old._id;" + "END;");
 

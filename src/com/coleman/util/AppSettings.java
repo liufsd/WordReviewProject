@@ -8,8 +8,8 @@
 
 package com.coleman.util;
 
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.coleman.kingword.wordlist.IgnoreListVisitor;
 import com.coleman.kingword.wordlist.NewListVisitor;
@@ -210,7 +210,8 @@ public class AppSettings {
      * @return
      */
     private static SharedPreferences getSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(MyApp.context);
+        // return PreferenceManager.getDefaultSharedPreferences(MyApp.context);
+        return MyApp.context.getSharedPreferences("settings", Context.MODE_PRIVATE);
     }
 
 }

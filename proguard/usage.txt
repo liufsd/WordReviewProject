@@ -1,4 +1,410 @@
-android.app2.DownloadManager:
+android.os.FileUtils:
+    public static final int S_IRWXU
+    public static final int S_IRUSR
+    public static final int S_IWUSR
+    public static final int S_IXUSR
+    public static final int S_IRWXG
+    public static final int S_IRGRP
+    public static final int S_IWGRP
+    public static final int S_IXGRP
+    public static final int S_IRWXO
+    public static final int S_IROTH
+    public static final int S_IWOTH
+    public static final int S_IXOTH
+    public static native boolean getFileStatus(java.lang.String,android.os.FileUtils$FileStatus)
+    public static native int getPermissions(java.lang.String,int[])
+    public static native int getFatVolumeId(java.lang.String)
+    126:132:public static boolean sync(java.io.FileOutputStream)
+    138:149:public static boolean copyFile(java.io.File,java.io.File)
+    158:178:public static boolean copyToFile(java.io.InputStream,java.io.File)
+    191:191:public static boolean isFilenameSafe(java.io.File)
+    204:261:public static java.lang.String readTextFile(java.io.File,int,java.lang.String)
+android.os.FileUtils$FileStatus
+android2.provider.Telephony
+android2.provider.Telephony$BaseMmsColumns
+android2.provider.Telephony$CanonicalAddressesColumns
+android2.provider.Telephony$Carriers
+android2.provider.Telephony$Intents
+android2.provider.Telephony$Mms
+android2.provider.Telephony$Mms$Addr
+android2.provider.Telephony$Mms$Draft
+android2.provider.Telephony$Mms$Inbox
+android2.provider.Telephony$Mms$Intents
+android2.provider.Telephony$Mms$Outbox
+android2.provider.Telephony$Mms$Part
+android2.provider.Telephony$Mms$Rate
+android2.provider.Telephony$Mms$ScrapSpace
+android2.provider.Telephony$Mms$Sent
+android2.provider.Telephony$MmsSms
+android2.provider.Telephony$MmsSms$PendingMessages
+android2.provider.Telephony$MmsSms$WordsTable
+android2.provider.Telephony$Sms
+android2.provider.Telephony$Sms$Conversations
+android2.provider.Telephony$Sms$Draft
+android2.provider.Telephony$Sms$Inbox
+android2.provider.Telephony$Sms$Intents
+android2.provider.Telephony$Sms$Outbox
+android2.provider.Telephony$Sms$Sent
+android2.provider.Telephony$TextBasedSmsColumns
+android2.provider.Telephony$Threads
+android2.provider.Telephony$ThreadsColumns
+android2.util.Patterns
+com.coleman.kingword.ColemanIntent
+com.coleman.kingword.CoreActivity:
+    public static final java.lang.String OPEN_TAB
+    private static final int RC_SET_COLOR
+    private static final int RC_LIST_VIEW
+    public static final byte SUBLIST_REACH_END
+    public static final byte INSPIRIT_COMPLETE_STUDY
+    public static final byte INSPIRIT_CONTINUE_HIT
+    public static final byte INSPIRIT_CONTINUE_NO_ACTION
+    public static final byte INSPIRIT_ACHIEVEMETN_REPORT
+    public static final int UPDATE_REMAINDER_TIME
+com.coleman.kingword.CoreActivity$ExpensiveTask:
+    public static final byte INIT_REVIEW_LIST
+    public static final byte INIT_SCAN_LIST
+    public static final byte INIT_NEW_WORD_BOOK_LIST
+    public static final byte REMOVE_FROM_NEW
+    public static final byte ADD_NEW
+    public static final byte VIEW_RAW
+    public static final byte VIEW_MORE
+    private static final byte INIT_SUB_WORD_LIST
+    private static final byte LOOKUP
+    private static final byte UPGRADE
+    private static final byte DEGRADE
+    private static final byte IGNORE
+    private static final byte UPDATE
+com.coleman.kingword.CoreActivity2$ExpensiveTask:
+    public static final int TYPE_INIT
+    public static final int TYPE_LOADING
+    public static final int TYPE_ALL_COMPLETE
+com.coleman.kingword.R
+com.coleman.kingword.R$anim
+com.coleman.kingword.R$array
+com.coleman.kingword.R$attr
+com.coleman.kingword.R$color
+com.coleman.kingword.R$drawable
+com.coleman.kingword.R$id
+com.coleman.kingword.R$layout
+com.coleman.kingword.R$menu
+com.coleman.kingword.R$string
+com.coleman.kingword.R$style
+com.coleman.kingword.R$styleable
+com.coleman.kingword.R$xml
+com.coleman.kingword.ReviewSettings:
+    private static final java.lang.String DEFAULT_TIME_3
+    private static final java.lang.String DEFAULT_TIME_2
+    private static final java.lang.String DEFAULT_TIME_1
+com.coleman.kingword.WelcomeActivity:
+    331:357:void _DEL_REPEAT_WORDS()
+com.coleman.kingword.WelcomeActivity$1Info
+com.coleman.kingword.dict.DictManager:
+    public static final java.lang.String LIBRARY_NOT_INITIALED
+    public static final java.lang.String WORD_NOT_FOUND
+    public static final java.lang.String DEFAULT_CUR_LIB
+    public static final java.lang.String DEFAULT_MORE_LIB
+    117:117:public com.coleman.kingword.dict.stardict.DictLibrary getLibrary(java.lang.String)
+    161:164:public com.coleman.kingword.dict.stardict.DictData viewWord(android.content.Context,java.lang.String)
+    171:180:public boolean hasWord(android.content.Context,java.lang.String)
+    209:209:public boolean isInitialed(java.lang.String)
+    213:213:public boolean isInternal(java.lang.String)
+com.coleman.kingword.dict.DictManager$LibraryLoader:
+    private static final java.lang.String TAG
+    361:361:public boolean isInternal(java.lang.String)
+    365:369:public boolean isInitialed(java.lang.String)
+com.coleman.kingword.dict.DictManager$ViewType
+com.coleman.kingword.dict.stardict.DictData:
+    private static final long serialVersionUID
+    155:167:java.lang.String removeSymbol()
+com.coleman.kingword.dict.stardict.DictIndex:
+    private static final long serialVersionUID
+com.coleman.kingword.dict.stardict.DictInfo:
+    149:152:public static com.coleman.kingword.dict.stardict.DictInfo loadInfo(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
+    205:234:private static com.coleman.kingword.dict.stardict.DictInfo loadFromDB(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
+com.coleman.kingword.dict.stardict.DictLibrary:
+    private static final java.lang.String DICTS_DIR
+    125:125:public java.lang.String getIfoFileName()
+com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver:
+    public static final java.lang.String ACTION_SEND_INFO_SILENT
+    88:114:java.lang.String getMessage(android.content.Context,byte)
+com.coleman.kingword.history.WordInfo:
+    private static final long serialVersionUID
+    public static final byte MIN_WEIGHT
+    public static final byte MAX_WEIGHT
+    public static final byte REVIEW_1_HOUR
+    public static final byte REVIEW_12_HOUR
+    public static final byte REVIEW_1_DAY
+    public static final byte REVIEW_5_DAY
+    public static final byte REVIEW_20_DAY
+    public static final byte REVIEW_40_DAY
+    public static final byte REVIEW_60_DAY
+    public static final byte REVIEW_COMPLETE
+    92:99:public boolean increaseWeight()
+    103:109:public boolean decreaseWeight()
+    113:114:public boolean canUpgrade()
+    118:118:public boolean canDegrade()
+com.coleman.kingword.history.WordInfoHelper:
+    50:54:public static boolean upgrade(android.content.Context,java.lang.String)
+    61:65:public static boolean degrade(android.content.Context,java.lang.String)
+    72:74:public static boolean study(android.content.Context,java.lang.String)
+    81:83:public static boolean reportMiss(android.content.Context,java.lang.String)
+    90:92:public static boolean ignore(android.content.Context,java.lang.String)
+    240:242:public static int delete(android.content.Context,java.lang.String)
+com.coleman.kingword.inspirit.InspiritCenter
+com.coleman.kingword.inspirit.countdown.CountdownManager:
+    private static final long serialVersionUID
+    35:37:public void setHandler(android.os.Handler)
+com.coleman.kingword.provider.KingWord:
+    public static final int version
+com.coleman.kingword.provider.KingWord$TAchievement
+com.coleman.kingword.provider.KingWord$TDict:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String DICT_NAME
+    public static final java.lang.String WORD_COUNT
+    public static final java.lang.String IDX_FILE_SIZE
+    public static final java.lang.String SAME_TYPE_SEQUENCE
+    public static final java.lang.String TYPE
+    public static final java.lang.String LOADED
+    public static final java.lang.String INTERNAL
+    public static final java.lang.String DICT_DIR_NAME
+    public static final java.lang.String DATE
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TDict$TDictIndex:
+    public static final java.lang.String TABLE_NAME_PREFIX
+com.coleman.kingword.provider.KingWord$THistory:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String WORD
+    public static final java.lang.String IGNORE
+    public static final java.lang.String STUDY_COUNT
+    public static final java.lang.String ERROR_COUNT
+    public static final java.lang.String WEIGHT
+    public static final java.lang.String NEW_WORD
+    public static final java.lang.String REVIEW_TYPE
+    public static final java.lang.String REVIEW_TIME
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TSubWordList:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String WORD_LIST_ID
+    public static final java.lang.String HISTORY_LEVEL
+    public static final java.lang.String LEVEL
+    public static final java.lang.String COUNT_DOWN
+    public static final java.lang.String METHOD
+    public static final java.lang.String POSITION
+    public static final java.lang.String PROGRESS
+    public static final java.lang.String ERROR_COUNT
+    public static final java.lang.String CREATE_TABLE_SQL
+    public static final java.lang.String DEFAULT_SORT_ORDER
+com.coleman.kingword.provider.KingWord$TWordList:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String DESCRIBE
+    public static final java.lang.String PATH_NAME
+    public static final java.lang.String SET_METHOD
+    public static final java.lang.String WORDLIST_NAME
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    public static final java.lang.String CREATE_TABLE_SQL
+com.coleman.kingword.provider.KingWord$TWordList$TWordListItem:
+    private static final long serialVersionUID
+    public static final java.lang.String TABLE_NAME_PREFIX
+    public static final java.lang.String SUB_WORD_LIST_ID
+    public static final java.lang.String WORD
+    public static final java.lang.String STATE
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    390:390:public android.net.Uri getContentUri()
+com.coleman.kingword.provider.KingWordDBHepler:
+    private static final java.lang.String DB_NAME
+    private static final int DB_VERSION
+com.coleman.kingword.provider.KingWordProvider:
+    public static final java.lang.String AUTHORITY
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6:
+    public static final int version
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TAchievement
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TDict
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TDict$TDictIndex
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$THistory
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TSubWordList
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TWordList:
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String DESCRIBE
+    public static final java.lang.String PATH_NAME
+    public static final java.lang.String SET_METHOD
+    public static final java.lang.String WORDLIST_NAME
+    public static final java.lang.String DEFAULT_SORT_ORDER
+    public static final java.lang.String CREATE_TABLE_SQL
+com.coleman.kingword.provider.upgrade.version6.KingWord_v6$TWordList$TWordListItem
+com.coleman.kingword.skin.ColorManager:
+    37:37:public int selectColor()
+com.coleman.kingword.wordlist.AbsSubVisitor:
+    private static final long serialVersionUID
+    public static final byte TYPE
+com.coleman.kingword.wordlist.AbsSubVisitor$ViewMethod:
+    private static final long serialVersionUID
+    235:258:public AbsSubVisitor$ViewMethod(com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState[])
+    260:262:public AbsSubVisitor$ViewMethod(int[])
+    326:334:public java.lang.String getTypeString()
+com.coleman.kingword.wordlist.FileExplorer:
+    public static final java.lang.String ACTION_EXPLORER
+    private static final java.lang.String ROOT_PATH
+com.coleman.kingword.wordlist.FiniteStateMachine:
+    private static final long serialVersionUID
+    41:44:public void sendMessage(android.os.Message)
+com.coleman.kingword.wordlist.FiniteStateMachine$CompleteState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState:
+    private static final long serialVersionUID
+    86:86:public int getType()
+com.coleman.kingword.wordlist.FiniteStateMachine$FiniteStateEngine:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.FiniteStateMachine$IFSMCommand
+com.coleman.kingword.wordlist.FiniteStateMachine$InitState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState:
+    private static final long serialVersionUID
+    public static final int TYPE
+com.coleman.kingword.wordlist.IgnoreListVisitor:
+    private static final long serialVersionUID
+    public static final java.lang.String DEFAULT_VIEW_METHOD
+    public static final byte TYPE
+com.coleman.kingword.wordlist.NewListVisitor:
+    private static final long serialVersionUID
+    public static final java.lang.String DEFAULT_VIEW_METHOD
+    public static final byte TYPE
+com.coleman.kingword.wordlist.RemoteFileExplorer:
+    private static final java.lang.String ROOT_PATH
+com.coleman.kingword.wordlist.ReviewListVisitor:
+    private static final long serialVersionUID
+    public static final java.lang.String DEFAULT_VIEW_METHOD
+    public static final byte TYPE
+com.coleman.kingword.wordlist.SubListActivity:
+    public static final java.lang.String SCREEN_INDEX
+com.coleman.kingword.wordlist.SubListVisitor:
+    private static final long serialVersionUID
+    public static final java.lang.String DEFAULT_VIEW_METHOD
+    public static final byte TYPE
+com.coleman.kingword.wordlist.TextEditor:
+    public static final java.lang.String ACTION_EDIT_FILE
+    private static final java.lang.String TAG
+com.coleman.kingword.wordlist.TextEditor$ExpensiveTask:
+    private static final byte LOAD_FILE
+com.coleman.kingword.wordlist.WordListActivity:
+    public static final java.lang.String EXTERNAL_FILE
+    public static final java.lang.String EXTERNAL_FILE_PATH
+com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask:
+    private static final byte INIT_QUERY
+    private static final byte LOAD_EXTERNAL
+com.coleman.kingword.wordlist.WordListManager:
+    public static final int DEFAULT_SPLIT_NUM
+com.coleman.kingword.wordlist.WordVisitor:
+    private static final long serialVersionUID
+    89:92:public android.content.ContentValues toContentValues()
+    173:173:public boolean canUpgrade()
+    177:177:public boolean canDegrade()
+com.coleman.kingword.wordlist.model.SubWordList:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.model.WordList:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.model.WordList$InternalWordList
+com.coleman.kingword.wordlist.model.WordList$SetMethod:
+    45:52:public com.coleman.kingword.wordlist.model.WordList$SetMethod getSetMethod(int)
+com.coleman.kingword.wordlist.model.WordListItem:
+    private static final long serialVersionUID
+com.coleman.kingword.wordlist.view.ScrollLayout:
+    private static final int SNAP_VELOCITY
+    public static final int DEFAULT_SCREEN
+    216:216:public android.view.View getCurrentScreen()
+    227:233:private boolean IsCanMove(int)
+    237:238:public void SetOnViewChangeListener(com.coleman.kingword.wordlist.view.ScrollLayout$OnViewChangeListener)
+com.coleman.log.LogFactory:
+    public abstract com.coleman.log.Log getDefaultLog()
+    public abstract com.coleman.log.Log getLog(java.lang.String)
+    public abstract com.coleman.log.Log getLog(java.lang.String,java.lang.String,int,int)
+com.coleman.log.LogImpl:
+    private static final long serialVersionUID
+com.coleman.log.LogPool:
+    18:19:public void clear()
+com.coleman.log.jdk.JavaLogFactory:
+    14:21:public com.coleman.log.Log getDefaultLog()
+    27:33:public com.coleman.log.Log getLog(java.lang.String)
+    64:75:public com.coleman.log.Log getLog(java.lang.String,java.lang.String,int,int)
+com.coleman.log.jdk.JavaLogImpl:
+    private static final long serialVersionUID
+    18:21:public JavaLogImpl(java.lang.String)
+com.coleman.ojm.core.Observable:
+    91:91:public java.util.List getObservers()
+    108:108:public int countObservers()
+    125:126:public synchronized void deleteObservers()
+com.coleman.ojm.core.SLParser:
+    private static final java.lang.String TAG
+com.coleman.ojm.core.SLWrapper:
+    private static final java.lang.String TAG
+com.coleman.ojm.exception.FieldNotInitException:
+    private static final long serialVersionUID
+    11:14:public FieldNotInitException(boolean,java.lang.String,java.lang.String)
+com.coleman.ojm.exception.UnknownTypeException:
+    private static final long serialVersionUID
+com.coleman.ojm.http.HttpHandler:
+    private static final java.lang.String TAG
+    51:61:public static void cancelAllRequests()
+    80:81:public void sendBackgroundRequest(com.coleman.ojm.http.SLRequest)
+    95:95:public com.coleman.ojm.http.SLResponse getResponse()
+com.coleman.ojm.http.SLRequest:
+    private static final java.lang.String TAG
+    45:45:public boolean removeObserver(com.coleman.ojm.core.Observer)
+com.coleman.ojm.http.SLResponse:
+    28:28:public boolean isLoaded()
+    32:33:public void setResponse(com.coleman.ojm.bean.BasicResponse)
+com.coleman.ojm.local.LocalDataHandler
+com.coleman.ojm.test.TestBean
+com.coleman.ojm.test.TestBean$InnerBean
+com.coleman.ojm.test.TestJSONTool
+com.coleman.providers.downloads.Constants:
+    public static final java.lang.String TAG
+    public static final java.lang.String RETRY_AFTER_X_REDIRECT_COUNT
+    public static final java.lang.String OTA_UPDATE
+    public static final java.lang.String NO_SYSTEM_FILES
+    public static final java.lang.String ETAG
+    public static final java.lang.String UID
+    public static final java.lang.String MEDIA_SCANNED
+    public static final java.lang.String FAILED_CONNECTIONS
+    public static final java.lang.String ACTION_RETRY
+    public static final java.lang.String ACTION_OPEN
+    public static final java.lang.String ACTION_LIST
+    public static final java.lang.String ACTION_HIDE
+    public static final java.lang.String DEFAULT_DL_FILENAME
+    public static final java.lang.String DEFAULT_DL_HTML_EXTENSION
+    public static final java.lang.String DEFAULT_DL_TEXT_EXTENSION
+    public static final java.lang.String DEFAULT_DL_BINARY_EXTENSION
+    public static final java.lang.String FILENAME_SEQUENCE_SEPARATOR
+    public static final java.lang.String DEFAULT_DL_SUBDIR
+    public static final java.lang.String KNOWN_SPURIOUS_FILENAME
+    public static final java.lang.String RECOVERY_DIRECTORY
+    public static final java.lang.String DEFAULT_USER_AGENT
+    public static final java.lang.String MIMETYPE_APK
+    public static final int BUFFER_SIZE
+    public static final int MIN_PROGRESS_STEP
+    public static final long MIN_PROGRESS_TIME
+    public static final int MAX_DOWNLOADS
+    public static final int MAX_RETRIES
+    public static final int MIN_RETRY_AFTER
+    public static final int MAX_RETRY_AFTER
+    public static final int MAX_REDIRECTS
+    public static final int RETRY_FIRST_DELAY
+    static final boolean LOGX
+    private static final boolean LOCAL_LOGV
+    private static final boolean LOCAL_LOGVV
+com.coleman.providers.downloads.DownloadInfo:
+    public static final int NETWORK_OK
+    public static final int NETWORK_NO_CONNECTION
+    public static final int NETWORK_UNUSABLE_DUE_TO_SIZE
+    public static final int NETWORK_RECOMMENDED_UNUSABLE_DUE_TO_SIZE
+    public static final int NETWORK_CANNOT_USE_ROAMING
+    public static final int NETWORK_TYPE_DISALLOWED_BY_REQUESTOR
+    public static final java.lang.String EXTRA_IS_WIFI_REQUIRED
+    587:587:boolean shouldScanFile()
+com.coleman.providers.downloads.DownloadManager:
     private static final java.lang.String TAG
     public static final java.lang.String COLUMN_ID
     public static final java.lang.String COLUMN_TITLE
@@ -34,31 +440,53 @@ android.app2.DownloadManager:
     public static final java.lang.String ACTION_NOTIFICATION_CLICKED
     public static final java.lang.String ACTION_VIEW_DOWNLOADS
     public static final java.lang.String EXTRA_DOWNLOAD_ID
-    703:708:public void setAccessAllDownloads(boolean)
-    735:741:public int markRowDeleted(long[])
-    754:758:public int remove(long[])
-    782:782:public android.os.ParcelFileDescriptor openDownloadedFile(long)
-    792:811:public void restartDownload(long[])
-    817:817:android.net.Uri getDownloadUri(long)
-android.app2.DownloadManager$Query:
+    700:705:public void setAccessAllDownloads(boolean)
+    732:738:public int markRowDeleted(long[])
+    751:755:public int remove(long[])
+    779:779:public android.os.ParcelFileDescriptor openDownloadedFile(long)
+    789:808:public void restartDownload(long[])
+    814:814:android.net.Uri getDownloadUri(long)
+com.coleman.providers.downloads.DownloadManager$Query:
     public static final int ORDER_ASCENDING
     public static final int ORDER_DESCENDING
-    571:572:public android.app2.DownloadManager$Query setFilterByStatus(int)
-    584:585:public android.app2.DownloadManager$Query setOnlyIncludeVisibleInDownloadsUi(boolean)
-    599:611:public android.app2.DownloadManager$Query orderBy(java.lang.String,int)
-android.app2.DownloadManager$Request:
+    568:569:public com.coleman.providers.downloads.DownloadManager$Query setFilterByStatus(int)
+    581:582:public com.coleman.providers.downloads.DownloadManager$Query setOnlyIncludeVisibleInDownloadsUi(boolean)
+    596:608:public com.coleman.providers.downloads.DownloadManager$Query orderBy(java.lang.String,int)
+com.coleman.providers.downloads.DownloadManager$Request:
     public static final int NETWORK_MOBILE
     public static final int NETWORK_WIFI
-    365:366:public android.app2.DownloadManager$Request setDestinationUri(android.net.Uri)
-    386:396:public android.app2.DownloadManager$Request addRequestHeader(java.lang.String,java.lang.String)
-    406:407:public android.app2.DownloadManager$Request setTitle(java.lang.CharSequence)
-    415:416:public android.app2.DownloadManager$Request setDescription(java.lang.CharSequence)
-    427:428:public android.app2.DownloadManager$Request setMimeType(java.lang.String)
-    444:445:public android.app2.DownloadManager$Request setShowRunningNotification(boolean)
-    455:456:public android.app2.DownloadManager$Request setAllowedNetworkTypes(int)
-    466:467:public android.app2.DownloadManager$Request setAllowedOverRoaming(boolean)
-    477:478:public android.app2.DownloadManager$Request setVisibleInDownloadsUi(boolean)
-android.provider.Downloads:
+    362:363:public com.coleman.providers.downloads.DownloadManager$Request setDestinationUri(android.net.Uri)
+    383:393:public com.coleman.providers.downloads.DownloadManager$Request addRequestHeader(java.lang.String,java.lang.String)
+    403:404:public com.coleman.providers.downloads.DownloadManager$Request setTitle(java.lang.CharSequence)
+    412:413:public com.coleman.providers.downloads.DownloadManager$Request setDescription(java.lang.CharSequence)
+    424:425:public com.coleman.providers.downloads.DownloadManager$Request setMimeType(java.lang.String)
+    441:442:public com.coleman.providers.downloads.DownloadManager$Request setShowRunningNotification(boolean)
+    452:453:public com.coleman.providers.downloads.DownloadManager$Request setAllowedNetworkTypes(int)
+    463:464:public com.coleman.providers.downloads.DownloadManager$Request setAllowedOverRoaming(boolean)
+    474:475:public com.coleman.providers.downloads.DownloadManager$Request setVisibleInDownloadsUi(boolean)
+com.coleman.providers.downloads.DownloadNotification:
+    static final java.lang.String LOGTAG
+    static final java.lang.String WHERE_RUNNING
+    static final java.lang.String WHERE_COMPLETED
+com.coleman.providers.downloads.DownloadProvider:
+    private static final java.lang.String DB_NAME
+    private static final int DB_VERSION
+    private static final java.lang.String DB_TABLE
+    private static final java.lang.String DOWNLOAD_LIST_TYPE
+    private static final java.lang.String DOWNLOAD_TYPE
+    private static final int MY_DOWNLOADS
+    private static final int MY_DOWNLOADS_ID
+    private static final int ALL_DOWNLOADS
+    private static final int ALL_DOWNLOADS_ID
+    private static final int REQUEST_HEADERS_URI
+com.coleman.providers.downloads.DownloadProvider$ReadOnlyCursorWrapper:
+    1137:1137:public boolean deleteRow()
+    1141:1141:public boolean commitUpdates()
+com.coleman.providers.downloads.DownloadService:
+    private static final long WAIT_TIMEOUT
+com.coleman.providers.downloads.DownloadThread:
+    66:72:private java.lang.String userAgent()
+com.coleman.providers.downloads.Downloads:
     public static final java.lang.String PERMISSION_ACCESS
     public static final java.lang.String PERMISSION_ACCESS_ADVANCED
     public static final java.lang.String PERMISSION_CACHE
@@ -114,12 +542,12 @@ android.provider.Downloads:
     public static final int VISIBILITY_VISIBLE
     public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED
     public static final int VISIBILITY_HIDDEN
-    386:386:public static boolean isStatusInformational(int)
-    394:394:public static boolean isStatusSuccess(int)
-    410:410:public static boolean isStatusClientError(int)
-    418:418:public static boolean isStatusServerError(int)
-    427:427:public static boolean isStatusCompleted(int)
-android.provider.Downloads$Impl:
+    511:511:public static boolean isStatusInformational(int)
+    520:520:public static boolean isStatusSuccess(int)
+    538:538:public static boolean isStatusClientError(int)
+    547:547:public static boolean isStatusServerError(int)
+    557:557:public static boolean isStatusCompleted(int)
+com.coleman.providers.downloads.Downloads$Impl:
     public static final java.lang.String PERMISSION_ACCESS
     public static final java.lang.String PERMISSION_ACCESS_ADVANCED
     public static final java.lang.String PERMISSION_ACCESS_ALL
@@ -192,352 +620,75 @@ android.provider.Downloads$Impl:
     public static final int VISIBILITY_VISIBLE
     public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED
     public static final int VISIBILITY_HIDDEN
-    990:990:public static boolean isStatusInformational(int)
-    997:997:public static boolean isStatusSuccess(int)
-    1004:1004:public static boolean isStatusError(int)
-    1011:1011:public static boolean isStatusClientError(int)
-    1018:1018:public static boolean isStatusServerError(int)
-    1026:1026:public static boolean isStatusCompleted(int)
-android.provider.Downloads$Impl$RequestHeaders
-android.provider.Telephony
-android.provider.Telephony$BaseMmsColumns
-android.provider.Telephony$CanonicalAddressesColumns
-android.provider.Telephony$Carriers
-android.provider.Telephony$Intents
-android.provider.Telephony$Mms
-android.provider.Telephony$Mms$Addr
-android.provider.Telephony$Mms$Draft
-android.provider.Telephony$Mms$Inbox
-android.provider.Telephony$Mms$Intents
-android.provider.Telephony$Mms$Outbox
-android.provider.Telephony$Mms$Part
-android.provider.Telephony$Mms$Rate
-android.provider.Telephony$Mms$ScrapSpace
-android.provider.Telephony$Mms$Sent
-android.provider.Telephony$MmsSms
-android.provider.Telephony$MmsSms$PendingMessages
-android.provider.Telephony$MmsSms$WordsTable
-android.provider.Telephony$Sms
-android.provider.Telephony$Sms$Conversations
-android.provider.Telephony$Sms$Draft
-android.provider.Telephony$Sms$Inbox
-android.provider.Telephony$Sms$Intents
-android.provider.Telephony$Sms$Outbox
-android.provider.Telephony$Sms$Sent
-android.provider.Telephony$TextBasedSmsColumns
-android.provider.Telephony$Threads
-android.provider.Telephony$ThreadsColumns
-android.util.Patterns
-com.coleman.http.json.connection.HttpHandler:
-    private static final java.lang.String TAG
-    49:59:public static void cancelAllRequests()
-    65:70:public static void cancelForegroundRequests()
-    78:79:public void sendBackgroundRequest(com.coleman.http.json.connection.SLRequest)
-    93:93:public com.coleman.http.json.connection.SLResponse getResponse()
-com.coleman.http.json.connection.SLRequest:
-    private static final java.lang.String TAG
-    72:81:void disconnect()
-com.coleman.http.json.connection.SLResponse:
-    private static final java.lang.String TAG
-    48:48:public boolean isLoaded()
-    53:54:public void setResponse(java.lang.Object)
-com.coleman.http.json.core.SLParser:
-    private static final java.lang.String TAG
-com.coleman.http.json.core.SLWrapper:
-    private static final java.lang.String TAG
-com.coleman.http.json.exception.FieldNotInitException:
-    private static final long serialVersionUID
-    11:14:public FieldNotInitException(boolean,java.lang.String,java.lang.String)
-com.coleman.http.json.exception.UnknownTypeException:
-    private static final long serialVersionUID
-com.coleman.http.json.local.LocalDataHandler
-com.coleman.http.json.test.TestBean
-com.coleman.http.json.test.TestBean$InnerBean
-com.coleman.http.json.test.TestJSONTool
-com.coleman.kingword.ColemanIntent
-com.coleman.kingword.ColorSetActivityAsDialog:
-    private static final java.lang.String TAG
-com.coleman.kingword.CoreActivity:
-    private static final java.lang.String TAG
-    private static final int SET_COLOR
-    public static final byte SUBLIST_REACH_END
-    public static final byte INSPIRIT_COMPLETE_STUDY
-    public static final byte INSPIRIT_CONTINUE_HIT
-    public static final byte INSPIRIT_CONTINUE_NO_ACTION
-    public static final byte INSPIRIT_ACHIEVEMETN_REPORT
-    public static final int UPDATE_REMAINDER_TIME
-com.coleman.kingword.CoreActivity$ExpensiveTask:
-    public static final byte INIT_RECOVERY_LIST
-    public static final byte INIT_REVIEW_LIST
-    public static final byte INIT_SCAN_LIST
-    public static final byte INIT_NEW_WORD_BOOK_LIST
-    public static final byte REMOVE_FROM_NEW
-    public static final byte ADD_NEW
-    public static final byte VIEW_RAW
-    public static final byte VIEW_MORE
-    private static final byte INIT_SUB_WORD_LIST
-    private static final byte LOOKUP
-    private static final byte UPGRADE
-    private static final byte DEGRADE
-    private static final byte IGNORE
-    private static final byte UPDATE
-com.coleman.kingword.R
-com.coleman.kingword.R$anim
-com.coleman.kingword.R$array
-com.coleman.kingword.R$attr
-com.coleman.kingword.R$color
-com.coleman.kingword.R$drawable
-com.coleman.kingword.R$id
-com.coleman.kingword.R$layout
-com.coleman.kingword.R$menu
-com.coleman.kingword.R$string
-com.coleman.kingword.R$style
-com.coleman.kingword.R$xml
-com.coleman.kingword.SettingsActivity:
-    protected static final java.lang.String TAG
-com.coleman.kingword.SettingsActivity$SimpleCrypto:
-    private static final java.lang.String HEX
-    931:934:public static java.lang.String decrypt(java.lang.String,java.lang.String)
-    956:960:private static byte[] decrypt(byte[],byte[])
-    964:964:public static java.lang.String toHex(java.lang.String)
-    968:968:public static java.lang.String fromHex(java.lang.String)
-    972:976:public static byte[] toByte(java.lang.String)
-com.coleman.kingword.UpgradeService:
-    private static final java.lang.String TAG
-com.coleman.kingword.WelcomeActivity:
-    private static final java.lang.String TAG
-    259:285:void _DEL_REPEAT_WORDS()
-com.coleman.kingword.WelcomeActivity$1Info
-com.coleman.kingword.dict.DictLoadService:
-    private static final java.lang.String TAG
-com.coleman.kingword.dict.DictManager:
-    private static final java.lang.String TAG
-    public static final java.lang.String DEFAULT_CUR_LIB
-    public static final java.lang.String DEFAULT_MORE_LIB
-    108:108:public com.coleman.kingword.dict.stardict.DictLibrary getLibrary(java.lang.String)
-    149:158:public boolean hasWord(android.content.Context,java.lang.String)
-    180:180:public boolean isInitialed(java.lang.String)
-    184:184:public boolean isInternal(java.lang.String)
-com.coleman.kingword.dict.DictManager$LibraryLoader:
-    private static final java.lang.String TAG
-    332:332:public boolean isInternal(java.lang.String)
-    336:340:public boolean isInitialed(java.lang.String)
-com.coleman.kingword.dict.DictManager$ViewType
-com.coleman.kingword.dict.stardict.DictData:
-    private static final long serialVersionUID
-    private static final java.lang.String TAG
-    154:166:java.lang.String removeSymbol()
-com.coleman.kingword.dict.stardict.DictIndex:
-    private static final java.lang.String TAG
-com.coleman.kingword.dict.stardict.DictInfo:
-    143:146:public static com.coleman.kingword.dict.stardict.DictInfo loadInfo(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
-    199:228:private static com.coleman.kingword.dict.stardict.DictInfo loadFromDB(android.content.Context,com.coleman.kingword.dict.stardict.DictLibrary)
-com.coleman.kingword.dict.stardict.DictLibrary:
-    private static final java.lang.String TAG
-    private static final java.lang.String DICTS_DIR
-    119:119:public java.lang.String getIfoFileName()
-com.coleman.kingword.ebbinghaus.EbbinghausReminder:
-    private static final java.lang.String TAG
-    private static long mTime
-    35:80:public static void setNotifaction(android.content.Context,byte)
-    86:90:private static boolean checkOneHourTimeUp()
-com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver:
-    public static final java.lang.String ACTION_SEND_INFO_SILENT
-    private static final java.lang.String TAG
-    93:119:java.lang.String getMessage(android.content.Context,byte)
-com.coleman.kingword.history.WordInfo:
-    private static final long serialVersionUID
-    public static final byte MIN_WEIGHT
-    public static final byte MAX_WEIGHT
-    private static final java.lang.String TAG
-    public static final byte REVIEW_1_HOUR
-    public static final byte REVIEW_12_HOUR
-    public static final byte REVIEW_1_DAY
-    public static final byte REVIEW_5_DAY
-    public static final byte REVIEW_20_DAY
-    public static final byte REVIEW_40_DAY
-    public static final byte REVIEW_60_DAY
-    private static final byte REVIEW_COMPLETE
-    82:89:public boolean increaseWeight()
-    93:99:public boolean decreaseWeight()
-    103:104:public boolean canUpgrade()
-    108:108:public boolean canDegrade()
-com.coleman.kingword.history.WordInfoHelper:
-    private static final java.lang.String TAG
-    48:52:public static boolean upgrade(android.content.Context,java.lang.String)
-    59:63:public static boolean degrade(android.content.Context,java.lang.String)
-    70:72:public static boolean study(android.content.Context,java.lang.String)
-    79:81:public static boolean reportMiss(android.content.Context,java.lang.String)
-    88:90:public static boolean ignore(android.content.Context,java.lang.String)
-    193:195:public static int delete(android.content.Context,java.lang.String)
-com.coleman.kingword.inspirit.InspiritCenter
-com.coleman.kingword.inspirit.countdown.CountdownManager:
-    private static final long serialVersionUID
-    private static final java.lang.String TAG
-com.coleman.kingword.provider.KingWord$TAchievement
-com.coleman.kingword.provider.KingWord$TDict:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String DICT_NAME
-    public static final java.lang.String WORD_COUNT
-    public static final java.lang.String IDX_FILE_SIZE
-    public static final java.lang.String SAME_TYPE_SEQUENCE
-    public static final java.lang.String TYPE
-    public static final java.lang.String LOADED
-    public static final java.lang.String INTERNAL
-    public static final java.lang.String DICT_DIR_NAME
-    public static final java.lang.String DATE
-    public static final java.lang.String CREATE_TABLE_SQL
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$TDict$TDictIndex:
-    public static final java.lang.String TABLE_NAME_PREFIX
-com.coleman.kingword.provider.KingWord$THistory:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String WORD
-    public static final java.lang.String IGNORE
-    public static final java.lang.String STUDY_COUNT
-    public static final java.lang.String ERROR_COUNT
-    public static final java.lang.String WEIGHT
-    public static final java.lang.String NEW_WORD
-    public static final java.lang.String REVIEW_TYPE
-    public static final java.lang.String REVIEW_TIME
-    public static final java.lang.String CREATE_TABLE_SQL
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$TSubWordList:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String WORD_LIST_ID
-    public static final java.lang.String LEVEL
-    public static final java.lang.String CREATE_TABLE_SQL
-    public static final java.lang.String DEFAULT_SORT_ORDER
-com.coleman.kingword.provider.KingWord$TWordList:
-    public static final java.lang.String TABLE_NAME
-    public static final java.lang.String DESCRIBE
-    public static final java.lang.String PATH_NAME
-    public static final java.lang.String SET_METHOD
-    public static final java.lang.String WORDLIST_NAME
-    public static final java.lang.String DEFAULT_SORT_ORDER
-    public static final java.lang.String CREATE_TABLE_SQL
-com.coleman.kingword.provider.KingWord$TWordList$TWordListItem:
-    private static final long serialVersionUID
-    public static final java.lang.String TABLE_NAME_PREFIX
-    public static final java.lang.String SUB_WORD_LIST_ID
-    public static final java.lang.String WORD
-    public static final java.lang.String DEFAULT_SORT_ORDER
-    335:335:public android.net.Uri getContentUri()
-com.coleman.kingword.provider.KingWordDBHepler:
-    private static final java.lang.String DB_NAME
-    private static final java.lang.String TAG
-    private static final int DB_VERSION
-com.coleman.kingword.provider.KingWordProvider:
-    public static final java.lang.String AUTHORITY
-    private static final java.lang.String TAG
-com.coleman.kingword.wordlist.FileExplorer:
-    public static final java.lang.String ACTION_EXPLORER
-    private static final java.lang.String TAG
-    private static final java.lang.String ROOT_PATH
-com.coleman.kingword.wordlist.FiniteStateMachine:
-    private static final long serialVersionUID
-    36:44:public FiniteStateMachine(com.coleman.kingword.wordlist.WordListAccessor)
-    79:81:protected void addState(com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState,com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState)
-    92:92:public com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState getInitState()
-    96:97:public void sendMessage(android.os.Message)
-com.coleman.kingword.wordlist.FiniteStateMachine$CompleteState:
-    private static final long serialVersionUID
-    public static final int TYPE
-com.coleman.kingword.wordlist.FiniteStateMachine$FiniteState:
-    private static final long serialVersionUID
-    180:180:public boolean isCounted()
-com.coleman.kingword.wordlist.FiniteStateMachine$FiniteStateEngine:
-    private static final long serialVersionUID
-com.coleman.kingword.wordlist.FiniteStateMachine$IFSMCommand
-com.coleman.kingword.wordlist.FiniteStateMachine$InitState:
-    private static final long serialVersionUID
-    public static final int TYPE
-com.coleman.kingword.wordlist.FiniteStateMachine$MultipleState:
-    private static final long serialVersionUID
-    public static final int TYPE
-com.coleman.kingword.wordlist.RemoteFileExplorer:
-    private static final java.lang.String ROOT_PATH
-com.coleman.kingword.wordlist.SubWordListActivity:
-    private static final java.lang.String TAG
-com.coleman.kingword.wordlist.SubWordListActivity$ExpensiveTask:
-    private static final byte INIT_QUERY
-com.coleman.kingword.wordlist.SubWordListActivity$PageControl:
-    167:167:public int getCurPageIndex()
-    171:172:public void setCurPageIndex(int)
-com.coleman.kingword.wordlist.TextEditor:
-    public static final java.lang.String ACTION_EDIT_FILE
-    private static final java.lang.String TAG
-com.coleman.kingword.wordlist.TextEditor$ExpensiveTask:
-    private static final byte LOAD_FILE
-com.coleman.kingword.wordlist.WordAccessor:
-    private static final long serialVersionUID
-    private static final java.lang.String TAG
-    91:94:public android.content.ContentValues toContentValues()
-    152:152:public boolean canUpgrade()
-    156:156:public boolean canDegrade()
-com.coleman.kingword.wordlist.WordListAccessor:
-    private static final long serialVersionUID
-    private static final java.lang.String TAG
-    public static final byte NULL_TYPE
-    public static final byte SUB_WORD_LIST
-    public static final byte REVIEW_LIST
-    public static final byte SCAN_LIST
-    public static final byte NEW_WORD_BOOK_LIST
-    public static final byte RECOVERY_LIST
-    public static final java.lang.String DEFAULT_VIEW_METHOD
-com.coleman.kingword.wordlist.WordListActivity:
-    private static final java.lang.String TAG
-    public static final java.lang.String EXTERNAL_FILE
-    public static final java.lang.String EXTERNAL_FILE_PATH
-com.coleman.kingword.wordlist.WordListActivity$ExpensiveTask:
-    private static final byte INIT_QUERY
-    private static final byte LOAD_EXTERNAL
-com.coleman.kingword.wordlist.WordListManager:
-    private static final java.lang.String TAG
-    public static final int DEFAULT_SPLIT_NUM
-com.coleman.kingword.wordlist.model.SubWordList:
-    private static final long serialVersionUID
-com.coleman.kingword.wordlist.model.WordList:
-    private static final long serialVersionUID
-    private static final java.lang.String TAG
-com.coleman.kingword.wordlist.model.WordList$InternalWordList
-com.coleman.kingword.wordlist.model.WordList$SetMethod:
-    45:52:public com.coleman.kingword.wordlist.model.WordList$SetMethod getSetMethod(int)
-com.coleman.kingword.wordlist.model.WordListItem:
-    private static final long serialVersionUID
-    20:23:public android.content.ContentValues toContentValues()
-com.coleman.kingword.wordlist.view.SlideTableSwitcher:
-    private static final java.lang.String TAG
+    1247:1247:public static boolean isStatusInformational(int)
+    1254:1254:public static boolean isStatusSuccess(int)
+    1268:1268:public static boolean isStatusClientError(int)
+    1275:1275:public static boolean isStatusServerError(int)
+com.coleman.providers.downloads.Downloads$Impl$RequestHeaders
+com.coleman.providers.downloads.Helpers$Lexer:
+    public static final int TOKEN_START
+    public static final int TOKEN_OPEN_PAREN
+    public static final int TOKEN_CLOSE_PAREN
+    public static final int TOKEN_AND_OR
+    public static final int TOKEN_COLUMN
+    public static final int TOKEN_COMPARE
+    public static final int TOKEN_VALUE
+    public static final int TOKEN_IS
+    public static final int TOKEN_NULL
+    public static final int TOKEN_END
+com.coleman.providers.downloads.RealSystemFacade:
+    95:95:public boolean userOwnsPackage(int,java.lang.String)
+com.coleman.providers.downloads.SystemFacade:
+    public abstract boolean userOwnsPackage(int,java.lang.String)
 com.coleman.tools.InfoGather:
     private static final java.lang.String TAG
-    36:51:public static void setWeeklyGatherNotifaction(android.content.Context)
+    40:55:public static void setWeeklyGatherNotifaction(android.content.Context)
+    64:78:public static void checkLevelUpgrade(android.content.Context,int)
+    86:98:public static void sendByEmail(android.content.Context)
+    107:119:public static void sendEmailWithInfo(android.content.Context,java.lang.String,java.lang.String)
+    161:210:private static java.lang.String gatherDetail(android.content.Context)
+    160:160:static java.lang.String access$0(android.content.Context)
+    32:32:static com.coleman.log.Log access$1()
+com.coleman.tools.InfoGather$1
+com.coleman.tools.InfoGather$2
 com.coleman.tools.WordlistArranger
-com.coleman.tools.email.GMailSender:
-    private static final java.lang.String TAG
+com.coleman.tools.email.GMailSender
+com.coleman.tools.email.GMailSender$1
 com.coleman.tools.email.GMailSender$ByteArrayDataSource
+com.coleman.tools.email.GMailSenderHelper
 com.coleman.util.AppSettings:
     public static final java.lang.String TAG
-    public static final java.lang.String SPLIT_NUM_KEY
-    public static final java.lang.String ANIM_TYPE
+    public static final java.lang.String SAVED_DB_VERSION_KEY
+    public static final java.lang.String ANIM_TYPE_KEY
     public static final java.lang.String IS_NIGHT_MODE_KEY
     public static final java.lang.String FIRST_STARTED_KEY
     public static final java.lang.String SELECT_COLOR_MODE_KEY
-    public static final java.lang.String LEVEL_TYPE_KEY
     public static final java.lang.String FIRST_STARTED_TIME_KEY
     public static final java.lang.String STARTED_TOTAL_TIMES_KEY
-    public static final java.lang.String LAST_SEND_GET_PW_REQUEST_TIME_KEY
-    public static final java.lang.String SAVED_PW_KEY
+    public static final java.lang.String SAVE_CACHE_KEY
     public static final java.lang.String LOG_TYPE_KEY
     public static final java.lang.String MARK_SEND_MSG_LEVEL_KEY
-    public static final java.lang.String VIEW_METHOD_KEY
-    public static final java.lang.String LANGUAGE_TYPE
-    public static final java.lang.String DB_VERSION_KEY
-    public static final java.lang.String DICTS_KEY
-    public static final java.lang.String VIEW_SUMMARY_INFO_KEY
-    public static final java.lang.String VIEW_DETAILED_INFO_KEY
-    public static final java.lang.String SAVE_CACHE_KEY
-    170:179:public static java.lang.String getCurLibraryString(android.content.Context)
-    183:192:public static java.lang.String getMoreLibraryString(android.content.Context)
+    public static final java.lang.String SPLIT
+    public static final java.lang.String LEVEL
+    public static final java.lang.String VERSION_CHECK
+    public static final java.lang.String VIEW_METHOD
+    public static final java.lang.String IGNORE_VIEW_METHOD
+    public static final java.lang.String NEW_VIEW_METHOD
+    public static final java.lang.String SUB_VIEW_METHOD
+    public static final java.lang.String REVIEW_VIEW_METHOD
+    public static final java.lang.String CUT_LIB_KEY
+    public static final java.lang.String MORE_LIB_KEY
+    public static final java.lang.String DATABASE_SET
+    public static final java.lang.String RESTORE
+    public static final java.lang.String BACKUP
+    public static final java.lang.String FIXED_TIME_REVIEW
+    public static final java.lang.String TIME3
+    public static final java.lang.String TIME2
+    public static final java.lang.String TIME1
+    public static final java.lang.String FILTER_NEW
+    public static final java.lang.String FILTER_IGNORE
+    public static final java.lang.String REVIEW_NUMBER_LIMIT
+    public static final java.lang.String REVIEW_NUMBER_SELECT
 com.coleman.util.Base64
 com.coleman.util.Base64$Coder
 com.coleman.util.Base64$Decoder
@@ -545,38 +696,22 @@ com.coleman.util.Base64$Encoder
 com.coleman.util.Config:
     public static final java.lang.String ENCODE
     public static final boolean isTestServer
+    private static final java.lang.String LOG_PATH
+    70:74:public static java.lang.String getTopActivityClassName()
+    78:87:public static int getVersionCode()
 com.coleman.util.ConvertUtils:
     12:20:public static java.lang.String convert(java.lang.String,java.lang.String,java.lang.String)
     40:41:public static java.lang.String byteToHex(byte)
-com.coleman.util.DialogUtil
-com.coleman.util.DialogUtil$1
-com.coleman.util.DialogUtil$2
-com.coleman.util.DialogUtil$3
+com.coleman.util.DialogUtil:
+    73:117:public static boolean register(android.content.Context,android.app.Dialog)
+com.coleman.util.DictDataProcessingCenter:
+    private static final java.lang.String A51_BABYLON_ENGLISH
+    private static final java.lang.String LANGDAO_EC_GB
 com.coleman.util.GeneralParser:
-    private static final java.lang.String TAG
-    98:108:public static java.util.HashMap parseFile(java.io.InputStream)
-    112:120:private static java.util.HashMap getProperties(java.lang.String)
-com.coleman.util.Log:
-    public static final int VERBOSE
-    public static final int DEBUG
-    public static final int INFO
-    public static final int WARN
-    public static final int ERROR
-    public static final int ASSERT
-    134:134:public static int v(java.lang.String,java.lang.String,java.lang.Throwable)
-    157:157:public static int d(java.lang.String,java.lang.String,java.lang.Throwable)
-    180:180:public static int i(java.lang.String,java.lang.String,java.lang.Throwable)
-    203:203:public static int w(java.lang.String,java.lang.String,java.lang.Throwable)
-    public static native boolean isLoggable(java.lang.String,int)
-    233:233:public static int w(java.lang.String,java.lang.Throwable)
-    244:244:public static int e(java.lang.String,java.lang.String)
-    265:271:public static java.lang.String getStackTraceString(java.lang.Throwable)
-com.coleman.util.MyApp:
-    private static final java.lang.String TAG
+    126:136:public static java.util.HashMap parseFile(java.io.InputStream)
+    140:148:private static java.util.HashMap getProperties(java.lang.String)
 com.coleman.util.ThreadUtils:
     65:65:public static java.util.concurrent.Future submit(java.util.concurrent.Callable)
-com.coleman.util.ToastUtil:
-    16:17:public static void show(java.lang.String)
 com.sun.activation.registries.LineTokenizer:
     private static final java.lang.String singles
     330:331:public void pushToken(java.lang.String)
@@ -852,6 +987,7 @@ javax.mail.internet.InternetAddress:
     228:233:public void setPersonal(java.lang.String)
     251:266:public java.lang.String getPersonal()
     298:304:public java.lang.String toUnicodeString()
+    546:546:public static javax.mail.internet.InternetAddress[] parse(java.lang.String)
     870:871:public void validate()
 javax.mail.internet.InternetHeaders:
     575:575:public java.util.Enumeration getAllHeaderLines()
@@ -885,6 +1021,7 @@ javax.mail.internet.MimeMessage:
     297:301:protected MimeMessage(javax.mail.Folder,javax.mail.internet.InternetHeaders,byte[],int)
     326:345:protected void parse(java.io.InputStream)
     437:440:public javax.mail.Address getSender()
+    458:462:public void setSender(javax.mail.Address)
     601:608:public void setRecipients(javax.mail.Message$RecipientType,java.lang.String)
     649:654:public void addRecipients(javax.mail.Message$RecipientType,java.lang.String)
     1029:1029:public java.lang.String getContentID()
@@ -985,6 +1122,219 @@ myjava.awt.datatransfer.Transferable:
     public abstract myjava.awt.datatransfer.DataFlavor[] getTransferDataFlavors()
 myjava.awt.datatransfer.UnsupportedFlavorException:
     private static final long serialVersionUID
+org.achartengine.ChartFactory
+org.achartengine.GraphicalView:
+    135:135:public org.achartengine.model.SeriesSelection getCurrentSeriesAndPoint()
+    145:149:public double[] toRealPoint(int)
+    186:190:public void setZoomRate(float)
+    231:240:public void addZoomListener(org.achartengine.tools.ZoomListener,boolean,boolean)
+    248:253:public synchronized void removeZoomListener(org.achartengine.tools.ZoomListener)
+    261:262:public void addPanListener(org.achartengine.tools.PanListener)
+    270:271:public void removePanListener(org.achartengine.tools.PanListener)
+    313:318:public void repaint(int,int,int,int)
+    326:334:public android.graphics.Bitmap toBitmap()
+org.achartengine.GraphicalView$2
+org.achartengine.ITouchHandler:
+    public abstract void addZoomListener(org.achartengine.tools.ZoomListener)
+    public abstract void removeZoomListener(org.achartengine.tools.ZoomListener)
+    public abstract void addPanListener(org.achartengine.tools.PanListener)
+    public abstract void removePanListener(org.achartengine.tools.PanListener)
+org.achartengine.TouchHandler:
+    167:170:public void addZoomListener(org.achartengine.tools.ZoomListener)
+    178:181:public void removeZoomListener(org.achartengine.tools.ZoomListener)
+    189:192:public void addPanListener(org.achartengine.tools.PanListener)
+    200:203:public void removePanListener(org.achartengine.tools.PanListener)
+org.achartengine.TouchHandlerOld:
+    105:105:public void addZoomListener(org.achartengine.tools.ZoomListener)
+    113:113:public void removeZoomListener(org.achartengine.tools.ZoomListener)
+    121:124:public void addPanListener(org.achartengine.tools.PanListener)
+    132:135:public void removePanListener(org.achartengine.tools.PanListener)
+org.achartengine.chart.AbstractChart:
+    336:346:private java.lang.String getFitText(java.lang.String,float,android.graphics.Paint)
+    389:434:protected void drawLabel(android.graphics.Canvas,java.lang.String,org.achartengine.renderer.DefaultRenderer,java.util.List,int,int,float,float,float,float,int,int,int,android.graphics.Paint)
+    449:449:public org.achartengine.model.SeriesSelection getSeriesAndPointForScreenCoordinate(org.achartengine.model.Point)
+org.achartengine.chart.BarChart
+org.achartengine.chart.BarChart$Type
+org.achartengine.chart.BubbleChart
+org.achartengine.chart.ClickableArea:
+    33:33:public android.graphics.RectF getRect()
+    37:37:public double getX()
+    41:41:public double getY()
+org.achartengine.chart.CombinedXYChart
+org.achartengine.chart.CubicLineChart
+org.achartengine.chart.DialChart
+org.achartengine.chart.DoughnutChart
+org.achartengine.chart.LineChart:
+    public static final java.lang.String TYPE
+    private static final int SHAPE_WIDTH
+    61:63:protected void setDatasetRenderer(org.achartengine.model.XYMultipleSeriesDataset,org.achartengine.renderer.XYMultipleSeriesRenderer)
+    167:167:public java.lang.String getChartType()
+org.achartengine.chart.PieChart
+org.achartengine.chart.PieMapper
+org.achartengine.chart.PieSegment
+org.achartengine.chart.PointStyle:
+    62:70:public static org.achartengine.chart.PointStyle getPointStyleForName(java.lang.String)
+    79:87:public static int getIndexForName(java.lang.String)
+org.achartengine.chart.RangeBarChart
+org.achartengine.chart.RoundChart:
+    protected static final int SHAPE_WIDTH
+    protected org.achartengine.model.CategorySeries mDataset
+    protected static final int NO_VALUE
+    49:52:public RoundChart(org.achartengine.model.CategorySeries,org.achartengine.renderer.DefaultRenderer)
+    64:71:public void drawTitle(android.graphics.Canvas,int,int,int,android.graphics.Paint)
+org.achartengine.chart.ScatterChart:
+    public static final java.lang.String TYPE
+    private static final float SIZE
+    private static final int SHAPE_WIDTH
+    58:60:protected void setDatasetRenderer(org.achartengine.model.XYMultipleSeriesDataset,org.achartengine.renderer.XYMultipleSeriesRenderer)
+    263:263:public java.lang.String getChartType()
+org.achartengine.chart.TimeChart:
+    public static final java.lang.String TYPE
+    public static final long DAY
+    65:65:public java.lang.String getDateFormat()
+    84:84:public boolean isXAxisSmart()
+    93:94:public void setXAxisSmart(boolean)
+    171:171:public java.lang.String getChartType()
+org.achartengine.chart.XYChart:
+    92:94:protected void setDatasetRenderer(org.achartengine.model.XYMultipleSeriesDataset,org.achartengine.renderer.XYMultipleSeriesRenderer)
+    438:438:protected android.graphics.Rect getScreenR()
+    442:443:protected void setScreenR(android.graphics.Rect)
+    774:775:public void setCalcRange(double[],int)
+    778:778:public double[] toRealPoint(float,float)
+    782:782:public double[] toScreenPoint(double[])
+    812:824:public double[] toScreenPoint(double[],int)
+    830:848:public org.achartengine.model.SeriesSelection getSeriesAndPointForScreenCoordinate(org.achartengine.model.Point)
+    902:902:public double getDefaultMinimum()
+    public abstract java.lang.String getChartType()
+org.achartengine.model.CategorySeries
+org.achartengine.model.MultipleCategorySeries
+org.achartengine.model.Point:
+    46:47:public void setX(float)
+    50:51:public void setY(float)
+org.achartengine.model.RangeCategorySeries
+org.achartengine.model.SeriesSelection
+org.achartengine.model.XYMultipleSeriesDataset:
+    45:46:public synchronized void addSeries(int,org.achartengine.model.XYSeries)
+    54:55:public synchronized void removeSeries(int)
+    63:64:public synchronized void removeSeries(org.achartengine.model.XYSeries)
+org.achartengine.model.XYSeries:
+    116:117:public void setTitle(java.lang.String)
+    136:142:public synchronized void remove(int)
+    148:150:public synchronized void clear()
+org.achartengine.model.XYValueSeries
+org.achartengine.renderer.DefaultRenderer:
+    public static final int NO_COLOR
+    public static final int BACKGROUND_COLOR
+    public static final int TEXT_COLOR
+    159:160:public void addSeriesRenderer(int,org.achartengine.renderer.SimpleSeriesRenderer)
+    168:169:public void removeSeriesRenderer(org.achartengine.renderer.SimpleSeriesRenderer)
+    196:196:public org.achartengine.renderer.SimpleSeriesRenderer[] getSeriesRenderers()
+    232:233:public void setApplyBackgroundColor(boolean)
+    305:306:public void setShowAxes(boolean)
+    323:324:public void setShowLabels(boolean)
+    350:351:public void setShowGridX(boolean)
+    359:360:public void setShowGridY(boolean)
+    368:370:public void setShowGrid(boolean)
+    387:388:public void setShowCustomTextGrid(boolean)
+    405:406:public void setShowLegend(boolean)
+    423:424:public void setFitLegend(boolean)
+    469:471:public void setTextTypeface(java.lang.String,int)
+    488:489:public void setAntialiasing(boolean)
+    534:535:public void setZoomEnabled(boolean)
+    552:553:public void setZoomButtonsVisible(boolean)
+    570:571:public void setExternalZoomEnabled(boolean)
+    597:598:public void setPanEnabled(boolean)
+    606:607:public void setZoomRate(float)
+    624:625:public void setClickEnabled(boolean)
+    642:643:public void setSelectableBuffer(int)
+    660:661:public void setLegendHeight(int)
+    699:700:public void setInScroll(boolean)
+    710:710:public float getStartAngle()
+    721:722:public void setStartAngle(float)
+org.achartengine.renderer.DialRenderer
+org.achartengine.renderer.DialRenderer$Type
+org.achartengine.renderer.SimpleSeriesRenderer:
+    private double mGradientStartValue
+    private int mGradientStartColor
+    private double mGradientStopValue
+    private int mGradientStopColor
+    83:84:public void setDisplayChartValues(boolean)
+    101:102:public void setChartValuesTextSize(float)
+    120:121:public void setChartValuesTextAlign(android.graphics.Paint$Align)
+    138:139:public void setChartValuesSpacing(float)
+    156:157:public void setStroke(org.achartengine.renderer.BasicStroke)
+    164:164:public boolean isGradientEnabled()
+    172:173:public void setGradientEnabled(boolean)
+    180:180:public double getGradientStartValue()
+    188:188:public int getGradientStartColor()
+    197:199:public void setGradientStart(double,int)
+    206:206:public double getGradientStopValue()
+    214:214:public int getGradientStopColor()
+    223:225:public void setGradientStop(double,int)
+org.achartengine.renderer.XYMultipleSeriesRenderer:
+    168:169:public void setOrientation(org.achartengine.renderer.XYMultipleSeriesRenderer$Orientation)
+    251:251:public double getXAxisMin()
+    269:269:public boolean isMinXSet()
+    278:278:public double getXAxisMax()
+    296:296:public boolean isMaxXSet()
+    305:305:public double getYAxisMin()
+    323:323:public boolean isMinYSet()
+    332:332:public double getYAxisMax()
+    350:350:public boolean isMaxYSet()
+    511:512:public void addTextLabel(double,java.lang.String)
+    521:522:public void addXTextLabel(double,java.lang.String)
+    549:550:public void clearTextLabels()
+    556:557:public void clearXTextLabels()
+    566:567:public void addYTextLabel(double,java.lang.String)
+    577:578:public void addYTextLabel(double,java.lang.String,int)
+    587:587:public java.lang.String getYTextLabel(java.lang.Double)
+    607:607:public java.lang.Double[] getYTextLabelLocations()
+    624:625:public void clearYTextLabels()
+    652:656:public void setDisplayChartValues(boolean)
+    665:669:public void setChartValuesTextSize(float)
+    705:707:public void setPanEnabled(boolean,boolean)
+    743:745:public void setZoomEnabled(boolean,boolean)
+    754:754:public double getBarsSpacing()
+    763:763:public double getBarSpacing()
+    774:775:public void setBarSpacing(double)
+    810:811:public void setGridColor(int)
+    830:831:public void setPanLimits(double[])
+    850:851:public void setZoomLimits(double[])
+    868:869:public void setXLabelsAngle(float)
+    886:887:public void setYLabelsAngle(float)
+    908:909:public void setRange(double[])
+    945:945:public double[] getInitialRange()
+    965:966:public void setInitialRange(double[])
+    976:977:public void setInitialRange(double[],int)
+    1031:1032:public void setXLabelsAlign(android.graphics.Paint$Align)
+    1045:1046:public void setYLabelsAlign(android.graphics.Paint$Align)
+    1053:1054:public void setYAxisAlign(android.graphics.Paint$Align,int)
+    1062:1063:public void setYLabelsAlign(android.graphics.Paint$Align,int)
+org.achartengine.renderer.XYSeriesRenderer:
+    53:54:public void setFillBelowLine(boolean)
+    71:72:public void setFillPoints(boolean)
+    89:90:public void setFillBelowLineColor(int)
+    125:126:public void setLineWidth(float)
+org.achartengine.tools.Pan:
+    157:158:public synchronized void addPanListener(org.achartengine.tools.PanListener)
+    166:167:public synchronized void removePanListener(org.achartengine.tools.PanListener)
+org.achartengine.tools.Zoom:
+    public static final int ZOOM_AXIS_XY
+    public static final int ZOOM_AXIS_X
+    public static final int ZOOM_AXIS_Y
+    177:178:public synchronized void addZoomListener(org.achartengine.tools.ZoomListener)
+    186:187:public synchronized void removeZoomListener(org.achartengine.tools.ZoomListener)
+org.achartengine.tools.ZoomEvent:
+    45:45:public boolean isZoomIn()
+    54:54:public float getZoomRate()
+org.achartengine.util.IndexXYMap:
+    54:54:public double getMaxXDifference()
+    91:92:public org.achartengine.util.XYEntry getByIndex(int)
+    101:102:public org.achartengine.util.XYEntry removeByIndex(int)
+org.achartengine.util.MathHelper:
+    public static final double NULL_VALUE
+    46:57:public static double[] minmax(java.util.List)
+org.achartengine.util.XYEntry
 org.apache.harmony.awt.ContextStorage:
     private java.awt.Toolkit toolkit
     private java.awt.GraphicsEnvironment graphicsEnvironment

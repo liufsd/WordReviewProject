@@ -33,5 +33,8 @@ public class Task_v6 implements Task {
         db.execSQL("drop table if exists " + KingWord_v6.TSubWordList.TABLE_NAME);
         db.execSQL(TWordList.CREATE_TABLE_SQL);
         db.execSQL(TSubWordList.CREATE_TABLE_SQL);
+        db.execSQL("CREATE TRIGGER list_trigger AFTER DELETE ON " + TWordList.TABLE_NAME + " "
+                + "BEGIN " + "  DELETE FROM " + TSubWordList.TABLE_NAME + "  WHERE "
+                + TSubWordList.WORD_LIST_ID + "=old._id;" + "END;");
     }
 }

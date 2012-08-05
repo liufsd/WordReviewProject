@@ -1188,109 +1188,176 @@ javax.activation.FileTypeMap: void setDefaultFileTypeMap(javax.activation.FileTy
 javax.activation.FileTypeMap: javax.activation.FileTypeMap getDefaultFileTypeMap()
 com.sun.mail.smtp.SMTPTransport
 com.sun.mail.smtp.SMTPSSLTransport
-com.coleman.http.json.bean.WordlistReq
-com.coleman.http.json.bean.WordlistReq: java.lang.Integer type
-com.coleman.http.json.bean.WordlistReq: WordlistReq()
-com.coleman.http.json.bean.WordlistReq: void setType(java.lang.Integer)
-com.coleman.http.json.bean.WordlistReq: java.lang.Integer getType()
-com.coleman.http.json.bean.VersionCheckResp
-com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer resultCode
-com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer newVersionCode
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String Description
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String downloadFileName
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String thirdpartDownloadUrl
-com.coleman.http.json.bean.VersionCheckResp: VersionCheckResp()
-com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer getNewVersionCode()
-com.coleman.http.json.bean.VersionCheckResp: void setNewVersionCode(java.lang.Integer)
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String getDescription()
-com.coleman.http.json.bean.VersionCheckResp: void setDescription(java.lang.String)
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String getDownloadFileName()
-com.coleman.http.json.bean.VersionCheckResp: void setDownloadFile(java.lang.String)
-com.coleman.http.json.bean.VersionCheckResp: void setResultCode(java.lang.Integer)
-com.coleman.http.json.bean.VersionCheckResp: java.lang.Integer getResultCode()
-com.coleman.http.json.bean.VersionCheckResp: void setThirdpartDownloadUrl(java.lang.String)
-com.coleman.http.json.bean.VersionCheckResp: java.lang.String getThirdpartDownloadUrl()
-com.coleman.http.json.bean.VersionCheckReq
-com.coleman.http.json.bean.VersionCheckReq: java.lang.Integer versionCode
-com.coleman.http.json.bean.VersionCheckReq: java.lang.String versionType
-com.coleman.http.json.bean.VersionCheckReq: VersionCheckReq()
-com.coleman.http.json.bean.VersionCheckReq: java.lang.Integer getVersionCode()
-com.coleman.http.json.bean.VersionCheckReq: void setVersionCode(java.lang.Integer)
-com.coleman.http.json.bean.VersionCheckReq: java.lang.String getVersionType()
-com.coleman.http.json.bean.VersionCheckReq: void setVersionType(java.lang.String)
-com.coleman.http.json.bean.WordlistResp
-com.coleman.http.json.bean.WordlistResp: java.lang.Integer resultCode
-com.coleman.http.json.bean.WordlistResp: java.lang.String Description
-com.coleman.http.json.bean.WordlistResp: com.coleman.http.json.bean.RFile rfile
-com.coleman.http.json.bean.WordlistResp: WordlistResp()
-com.coleman.http.json.bean.WordlistResp: java.lang.Integer getResultCode()
-com.coleman.http.json.bean.WordlistResp: void setResultCode(java.lang.Integer)
-com.coleman.http.json.bean.WordlistResp: java.lang.String getDescription()
-com.coleman.http.json.bean.WordlistResp: void setDescription(java.lang.String)
-com.coleman.http.json.bean.WordlistResp: com.coleman.http.json.bean.RFile getRfile()
-com.coleman.http.json.bean.WordlistResp: void setRfile(com.coleman.http.json.bean.RFile)
-com.coleman.http.json.bean.RFile
-com.coleman.http.json.bean.RFile: java.lang.Boolean isRoot
-com.coleman.http.json.bean.RFile: java.lang.Boolean isFolder
-com.coleman.http.json.bean.RFile: com.coleman.http.json.bean.RFile[] chirldren
-com.coleman.http.json.bean.RFile: java.lang.String name
-com.coleman.http.json.bean.RFile: java.lang.String id
-com.coleman.http.json.bean.RFile: java.lang.String path
-com.coleman.http.json.bean.RFile: RFile()
-com.coleman.http.json.bean.RFile: java.lang.Boolean getIsRoot()
-com.coleman.http.json.bean.RFile: void setIsRoot(java.lang.Boolean)
-com.coleman.http.json.bean.RFile: java.lang.Boolean getIsFolder()
-com.coleman.http.json.bean.RFile: void setIsFolder(java.lang.Boolean)
-com.coleman.http.json.bean.RFile: com.coleman.http.json.bean.RFile[] getChirldren()
-com.coleman.http.json.bean.RFile: void setChirldren(com.coleman.http.json.bean.RFile[])
-com.coleman.http.json.bean.RFile: java.lang.String getName()
-com.coleman.http.json.bean.RFile: void setName(java.lang.String)
-com.coleman.http.json.bean.RFile: java.lang.String getId()
-com.coleman.http.json.bean.RFile: void setId(java.lang.String)
-com.coleman.http.json.bean.RFile: java.lang.String getPath()
-com.coleman.http.json.bean.RFile: void setPath(java.lang.String)
-com.coleman.http.json.annotation.KeyName
-com.coleman.http.json.annotation.KeyName: java.lang.String abbr()
-com.coleman.http.json.annotation.KeyName: boolean need()
-com.coleman.http.json.annotation.KeyName: java.lang.Class genericType()
-com.coleman.http.json.annotation.KeyName: boolean question()
-com.coleman.http.json.annotation.RequestObject
-com.coleman.http.json.annotation.RequestObject: java.lang.String url()
-com.coleman.http.json.annotation.RequestObject: java.lang.String path()
-com.coleman.http.json.annotation.RequestObject: java.lang.String hwUrl()
-com.coleman.http.json.annotation.ValueObject
-com.coleman.http.json.annotation.ResponseObject
-com.coleman.util.Log
-com.coleman.util.Log: boolean isLoggable(java.lang.String,int)
-com.coleman.kingword.wordlist.view.SlideTableSwitcher
-com.coleman.kingword.wordlist.view.SlideTableSwitcher: SlideTableSwitcher(android.content.Context,android.util.AttributeSet)
+com.coleman.ojm.bean.RFile
+com.coleman.ojm.bean.RFile: java.lang.Boolean isRoot
+com.coleman.ojm.bean.RFile: java.lang.Boolean isFolder
+com.coleman.ojm.bean.RFile: com.coleman.ojm.bean.RFile[] chirldren
+com.coleman.ojm.bean.RFile: java.lang.String name
+com.coleman.ojm.bean.RFile: java.lang.String id
+com.coleman.ojm.bean.RFile: java.lang.String path
+com.coleman.ojm.bean.RFile: RFile()
+com.coleman.ojm.bean.RFile: java.lang.Boolean getIsRoot()
+com.coleman.ojm.bean.RFile: void setIsRoot(java.lang.Boolean)
+com.coleman.ojm.bean.RFile: java.lang.Boolean getIsFolder()
+com.coleman.ojm.bean.RFile: void setIsFolder(java.lang.Boolean)
+com.coleman.ojm.bean.RFile: com.coleman.ojm.bean.RFile[] getChirldren()
+com.coleman.ojm.bean.RFile: void setChirldren(com.coleman.ojm.bean.RFile[])
+com.coleman.ojm.bean.RFile: java.lang.String getName()
+com.coleman.ojm.bean.RFile: void setName(java.lang.String)
+com.coleman.ojm.bean.RFile: java.lang.String getId()
+com.coleman.ojm.bean.RFile: void setId(java.lang.String)
+com.coleman.ojm.bean.RFile: java.lang.String getPath()
+com.coleman.ojm.bean.RFile: void setPath(java.lang.String)
+com.coleman.ojm.bean.LoginResp
+com.coleman.ojm.bean.LoginResp: java.lang.Integer resultCode
+com.coleman.ojm.bean.LoginResp: java.lang.String Description
+com.coleman.ojm.bean.LoginResp: LoginResp()
+com.coleman.ojm.bean.LoginResp: java.lang.Integer getResultCode()
+com.coleman.ojm.bean.LoginResp: void setResultCode(java.lang.Integer)
+com.coleman.ojm.bean.LoginResp: java.lang.String getDescription()
+com.coleman.ojm.bean.LoginResp: void setDescription(java.lang.String)
+com.coleman.ojm.bean.WordlistReq
+com.coleman.ojm.bean.WordlistReq: java.lang.Integer type
+com.coleman.ojm.bean.WordlistReq: WordlistReq()
+com.coleman.ojm.bean.WordlistReq: void setType(java.lang.Integer)
+com.coleman.ojm.bean.WordlistReq: java.lang.Integer getType()
+com.coleman.ojm.bean.VersionCheckResp
+com.coleman.ojm.bean.VersionCheckResp: java.lang.Integer resultCode
+com.coleman.ojm.bean.VersionCheckResp: java.lang.Integer newVersionCode
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String Description
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String downloadFileName
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String thirdpartDownloadUrl
+com.coleman.ojm.bean.VersionCheckResp: VersionCheckResp()
+com.coleman.ojm.bean.VersionCheckResp: java.lang.Integer getNewVersionCode()
+com.coleman.ojm.bean.VersionCheckResp: void setNewVersionCode(java.lang.Integer)
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String getDescription()
+com.coleman.ojm.bean.VersionCheckResp: void setDescription(java.lang.String)
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String getDownloadFileName()
+com.coleman.ojm.bean.VersionCheckResp: void setDownloadFile(java.lang.String)
+com.coleman.ojm.bean.VersionCheckResp: void setResultCode(java.lang.Integer)
+com.coleman.ojm.bean.VersionCheckResp: java.lang.Integer getResultCode()
+com.coleman.ojm.bean.VersionCheckResp: void setThirdpartDownloadUrl(java.lang.String)
+com.coleman.ojm.bean.VersionCheckResp: java.lang.String getThirdpartDownloadUrl()
+com.coleman.ojm.bean.WordlistResp
+com.coleman.ojm.bean.WordlistResp: java.lang.Integer resultCode
+com.coleman.ojm.bean.WordlistResp: java.lang.String Description
+com.coleman.ojm.bean.WordlistResp: com.coleman.ojm.bean.RFile rfile
+com.coleman.ojm.bean.WordlistResp: WordlistResp()
+com.coleman.ojm.bean.WordlistResp: java.lang.Integer getResultCode()
+com.coleman.ojm.bean.WordlistResp: void setResultCode(java.lang.Integer)
+com.coleman.ojm.bean.WordlistResp: java.lang.String getDescription()
+com.coleman.ojm.bean.WordlistResp: void setDescription(java.lang.String)
+com.coleman.ojm.bean.WordlistResp: com.coleman.ojm.bean.RFile getRfile()
+com.coleman.ojm.bean.WordlistResp: void setRfile(com.coleman.ojm.bean.RFile)
+com.coleman.ojm.bean.LoginReq
+com.coleman.ojm.bean.LoginReq: java.lang.String userName
+com.coleman.ojm.bean.LoginReq: java.lang.String password
+com.coleman.ojm.bean.LoginReq: java.lang.String model
+com.coleman.ojm.bean.LoginReq: java.lang.String phoneNumber
+com.coleman.ojm.bean.LoginReq: java.lang.Long installedTime
+com.coleman.ojm.bean.LoginReq: java.lang.Integer startTimes
+com.coleman.ojm.bean.LoginReq: java.lang.String currentLevel
+com.coleman.ojm.bean.LoginReq: java.lang.String IMEI
+com.coleman.ojm.bean.LoginReq: java.lang.String version
+com.coleman.ojm.bean.LoginReq: java.lang.String device
+com.coleman.ojm.bean.LoginReq: LoginReq()
+com.coleman.ojm.bean.LoginReq: java.lang.String getUserName()
+com.coleman.ojm.bean.LoginReq: void setUserName(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getPassword()
+com.coleman.ojm.bean.LoginReq: void setPassword(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getModel()
+com.coleman.ojm.bean.LoginReq: void setModel(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getPhoneNumber()
+com.coleman.ojm.bean.LoginReq: void setPhoneNumber(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.Long getInstalledTime()
+com.coleman.ojm.bean.LoginReq: void setInstalledTime(java.lang.Long)
+com.coleman.ojm.bean.LoginReq: java.lang.Integer getStartTimes()
+com.coleman.ojm.bean.LoginReq: void setStartTimes(java.lang.Integer)
+com.coleman.ojm.bean.LoginReq: java.lang.String getCurrentLevel()
+com.coleman.ojm.bean.LoginReq: void setCurrentLevel(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getIMEI()
+com.coleman.ojm.bean.LoginReq: void setIMEI(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getVersion()
+com.coleman.ojm.bean.LoginReq: void setVersion(java.lang.String)
+com.coleman.ojm.bean.LoginReq: java.lang.String getDevice()
+com.coleman.ojm.bean.LoginReq: void setDevice(java.lang.String)
+com.coleman.ojm.bean.VersionCheckReq
+com.coleman.ojm.bean.VersionCheckReq: java.lang.Integer versionCode
+com.coleman.ojm.bean.VersionCheckReq: java.lang.String versionType
+com.coleman.ojm.bean.VersionCheckReq: VersionCheckReq()
+com.coleman.ojm.bean.VersionCheckReq: java.lang.Integer getVersionCode()
+com.coleman.ojm.bean.VersionCheckReq: void setVersionCode(java.lang.Integer)
+com.coleman.ojm.bean.VersionCheckReq: java.lang.String getVersionType()
+com.coleman.ojm.bean.VersionCheckReq: void setVersionType(java.lang.String)
+com.coleman.ojm.bean.BasicResponse
+com.coleman.ojm.bean.BasicResponse: java.lang.Integer getResultCode()
+com.coleman.ojm.bean.BasicResponse: void setResultCode(java.lang.Integer)
+com.coleman.ojm.bean.BasicResponse: java.lang.String getDescription()
+com.coleman.ojm.bean.BasicResponse: void setDescription(java.lang.String)
+com.coleman.ojm.annotation.ValueObject
+com.coleman.ojm.annotation.KeyName
+com.coleman.ojm.annotation.KeyName: java.lang.String abbr()
+com.coleman.ojm.annotation.KeyName: boolean need()
+com.coleman.ojm.annotation.KeyName: java.lang.Class genericType()
+com.coleman.ojm.annotation.KeyName: boolean question()
+com.coleman.ojm.annotation.RequestObject
+com.coleman.ojm.annotation.RequestObject: java.lang.String url()
+com.coleman.ojm.annotation.RequestObject: java.lang.String path()
+com.coleman.ojm.annotation.RequestObject: java.lang.String hwUrl()
+com.coleman.ojm.annotation.ResponseObject
+android.os.FileUtils
+android.os.FileUtils: boolean getFileStatus(java.lang.String,android.os.FileUtils$FileStatus)
+android.os.FileUtils: int setPermissions(java.lang.String,int,int,int)
+android.os.FileUtils: int getPermissions(java.lang.String,int[])
+android.os.FileUtils: int getFatVolumeId(java.lang.String)
+com.coleman.kingword.wordlist.view.PageBottomBar
+com.coleman.kingword.wordlist.view.PageBottomBar: PageBottomBar(android.content.Context,android.util.AttributeSet)
+com.coleman.kingword.wordlist.view.ScrollLayout
+com.coleman.kingword.wordlist.view.ScrollLayout: ScrollLayout(android.content.Context,android.util.AttributeSet)
+com.coleman.kingword.wordlist.view.PageBottomBar
+com.coleman.kingword.wordlist.view.PageBottomBar: PageBottomBar(android.content.Context,android.util.AttributeSet,int)
+com.coleman.kingword.wordlist.view.ScrollLayout
+com.coleman.kingword.wordlist.view.ScrollLayout: ScrollLayout(android.content.Context,android.util.AttributeSet,int)
 com.coleman.kingword.CoreActivity$Anim: com.coleman.kingword.CoreActivity$Anim[] values()
 com.coleman.kingword.CoreActivity$Anim: com.coleman.kingword.CoreActivity$Anim valueOf(java.lang.String)
 com.coleman.kingword.wordlist.model.WordList$SetMethod: com.coleman.kingword.wordlist.model.WordList$SetMethod[] values()
 com.coleman.kingword.wordlist.model.WordList$SetMethod: com.coleman.kingword.wordlist.model.WordList$SetMethod valueOf(java.lang.String)
-com.coleman.util.Log$LogType: com.coleman.util.Log$LogType[] values()
-com.coleman.util.Log$LogType: com.coleman.util.Log$LogType valueOf(java.lang.String)
+org.achartengine.chart.BarChart$Type: org.achartengine.chart.BarChart$Type[] values()
+org.achartengine.chart.BarChart$Type: org.achartengine.chart.BarChart$Type valueOf(java.lang.String)
 com.coleman.kingword.dict.DictManager$ViewType: com.coleman.kingword.dict.DictManager$ViewType[] values()
 com.coleman.kingword.dict.DictManager$ViewType: com.coleman.kingword.dict.DictManager$ViewType valueOf(java.lang.String)
+org.achartengine.renderer.DialRenderer$Type: org.achartengine.renderer.DialRenderer$Type[] values()
+org.achartengine.renderer.DialRenderer$Type: org.achartengine.renderer.DialRenderer$Type valueOf(java.lang.String)
+org.achartengine.chart.PointStyle: org.achartengine.chart.PointStyle[] values()
+org.achartengine.chart.PointStyle: org.achartengine.chart.PointStyle valueOf(java.lang.String)
+org.achartengine.renderer.XYMultipleSeriesRenderer$Orientation: org.achartengine.renderer.XYMultipleSeriesRenderer$Orientation[] values()
+org.achartengine.renderer.XYMultipleSeriesRenderer$Orientation: org.achartengine.renderer.XYMultipleSeriesRenderer$Orientation valueOf(java.lang.String)
+com.coleman.log.Log$Level: com.coleman.log.Log$Level[] values()
+com.coleman.log.Log$Level: com.coleman.log.Log$Level valueOf(java.lang.String)
+com.coleman.providers.downloads.SizeLimitActivity
 com.coleman.kingword.CoreActivity
-com.coleman.kingword.wordlist.SubWordListActivity
 com.coleman.kingword.WelcomeActivity
 com.coleman.kingword.wordlist.FileExplorer
 com.coleman.kingword.wordlist.WordListActivity
 com.coleman.kingword.ColorSetActivityAsDialog
 com.coleman.kingword.wordlist.TextEditor
+org.achartengine.GraphicalActivity
 com.coleman.kingword.wordlist.RemoteFileExplorer
-com.coleman.kingword.SettingsActivity
+com.coleman.kingword.wordlist.SubListActivity
 com.coleman.kingword.ebbinghaus.EbbinghausActivityAsDialog
+com.coleman.kingword.CoreActivity2
 com.coleman.kingword.wordlist.WordlistTabActivity
 com.coleman.kingword.Settings
 com.coleman.kingword.ReviewSettings
 com.coleman.util.MyApp
+com.coleman.providers.downloads.DownloadService
 com.coleman.kingword.dict.DictLoadService
 com.coleman.kingword.UpgradeService
 com.coleman.kingword.wordlist.OriginalDownloadReceiver
+com.coleman.providers.downloads.DownloadReceiver
 com.coleman.kingword.ebbinghaus.receiver.KingWordReceiver
 com.coleman.kingword.provider.KingWordProvider
+com.coleman.providers.downloads.DownloadProvider
 com.coleman.kingword.history.WordInfo
 com.coleman.kingword.history.WordInfo: android.os.Parcelable$Creator CREATOR
 com.coleman.kingword.wordlist.model.SubWordList

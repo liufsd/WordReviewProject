@@ -17,9 +17,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.coleman.kingword.R;
+import com.coleman.log.Log;
 import com.coleman.ojm.annotation.RequestObject;
 import com.coleman.ojm.annotation.ResponseObject;
 import com.coleman.ojm.core.SLParser;
@@ -38,6 +38,8 @@ public class HttpHandler {
     private static final LinkedList<SLRequest<?>> backgroundList = new LinkedList<SLRequest<?>>();
 
     private SLResponse<?> mSLResponse;
+
+    private Log Log = Config.getLog();
 
     public HttpHandler() {
     }

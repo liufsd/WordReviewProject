@@ -259,7 +259,7 @@
     <string name="down_wordlist_success">%s下载成功！</string>
     <string name="load_wordlist_success">%s加载成功！</string>
     <string name="basic_settings">基本设置</string>
-    <string name="backup_restore_settings">备份恢复设置</string>
+    <string name="backup_restore_settings">备份恢复设置(不稳定，慎用！)</string>
     <string name="no_new_word_found">生词本中没有需要学习的单词！</string>
     <string name="no_ignore_word_found">过滤列表中没有单词！</string>
     <string name="no_review_word_found">没有需要复习的单词！</string>
