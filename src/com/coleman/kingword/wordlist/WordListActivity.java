@@ -34,10 +34,10 @@ import com.coleman.kingword.R;
 import com.coleman.kingword.dict.DictManager;
 import com.coleman.kingword.provider.KingWord.TWordList;
 import com.coleman.kingword.skin.ColorManager;
-import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.kingword.wordlist.model.WordList.InternalWordList;
 import com.coleman.log.Log;
 import com.coleman.util.Config;
+import com.coleman.util.GeneralParser.IProgressNotifier;
 
 public class WordListActivity extends Activity implements OnItemClickListener,
         OnMenuItemClickListener {

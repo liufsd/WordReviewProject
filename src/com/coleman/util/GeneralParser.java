@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.coleman.kingword.wordlist.WordListManager.IProgressNotifier;
 import com.coleman.log.Log;
 
 /**
@@ -146,5 +145,9 @@ public class GeneralParser {
             }
         }
         return list;
+    }
+
+    public static interface IProgressNotifier {
+        void notify(int p);
     }
 }

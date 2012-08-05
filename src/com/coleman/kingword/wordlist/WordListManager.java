@@ -23,6 +23,7 @@ import com.coleman.log.Log;
 import com.coleman.util.AppSettings;
 import com.coleman.util.Config;
 import com.coleman.util.GeneralParser;
+import com.coleman.util.GeneralParser.IProgressNotifier;
 
 public class WordListManager {
     private static final String TAG = WordListManager.class.getName();
@@ -237,7 +238,4 @@ public class WordListManager {
         });
     }
 
-    public static interface IProgressNotifier {
-        void notify(int p);
-    }
 }
