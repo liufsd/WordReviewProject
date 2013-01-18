@@ -116,6 +116,9 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
 
     private Button btnSpeak;
 
+    /**
+     * 自动播放声音，每出现一个新的单词会自动朗读一遍。
+     */
     private boolean autoSpeak;
 
     private PlayControl playControl;
@@ -409,7 +412,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             default:
                 break;
         }
-    
+
     }
 
     @Override
@@ -464,10 +467,10 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
         // writeCacheObject();
         // shutdown the text-to-speech
         playControl.shutdown();
-    
+
         // stop preload
         stopPreload();
-    
+
         // ///////////////////////////////////////////
         // WordInfoHelper.backupWordInfoDB(this, false);
         // ///////////////////////////////////////////
@@ -715,8 +718,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             if (autoSpeak) {
                                 if (playControl.ongoing) {
                                     // 自动播放看成用户点击的同等操作
-                                    wordVisitor.setPass(true);
-                                    wordVisitor.viewPlus(CoreActivity.this);
+                                    // wordVisitor.setPass(true);
+                                    // wordVisitor.viewPlus(CoreActivity.this);
                                     playControl.speak(null);
                                 }
                             }
@@ -780,8 +783,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                             if (autoSpeak) {
                                 if (playControl.ongoing) {
                                     // 自动播放看成用户点击的同等操作
-                                    wordVisitor.setPass(true);
-                                    wordVisitor.viewPlus(CoreActivity.this);
+                                    // wordVisitor.setPass(true);
+                                    // wordVisitor.viewPlus(CoreActivity.this);
                                     playControl.speak(null);
                                 }
                             }
@@ -1405,8 +1408,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                         if (autoSpeak) {
                             if (playControl.ongoing) {
                                 // 自动播放看成用户点击的同等操作
-                                wordVisitor.setPass(true);
-                                wordVisitor.viewPlus(CoreActivity.this);
+                                // wordVisitor.setPass(true);
+                                // wordVisitor.viewPlus(CoreActivity.this);
                                 playControl.speak(null);
                             }
                         }
@@ -1501,10 +1504,16 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
     private class PlayControl implements OnInitListener, OnUtteranceCompletedListener {
         private TextToSpeech tts;
 
+        /**
+         * 自动播放整个列表
+         */
         private boolean ongoing = false;
 
         private Handler handler = new Handler();
 
+        /**
+         * 标志TTS是否可用
+         */
         private boolean usable = false;
 
         public PlayControl() {
@@ -1540,8 +1549,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             autoSpeak = true;
             btnSpeak.setBackgroundResource(R.drawable.speak_auto);
             setUnlocked();
-            wordVisitor.setPass(true);
-            wordVisitor.viewPlus(CoreActivity.this);
+            // wordVisitor.setPass(true);
+            // wordVisitor.viewPlus(CoreActivity.this);
             speak(null);
         }
 
@@ -1585,6 +1594,8 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        wordVisitor.setPass(true);
+                        wordVisitor.viewPlus(CoreActivity.this);
                         new ExpensiveTask(ExpensiveTask.LOOKUP).execute();
                         Log.i(TAG, "===coleman-debug-utteranceId: " + utteranceId);
                     }
