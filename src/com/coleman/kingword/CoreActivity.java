@@ -1608,7 +1608,7 @@ public class CoreActivity extends Activity implements OnItemClickListener, OnCli
             if (status == TextToSpeech.SUCCESS) {
                 usable = true;
                 btnSpeak.setVisibility(View.VISIBLE);
-                int result = tts.setLanguage(Locale.CHINESE); // 设置发音语言
+                int result = tts.setLanguage(Locale.US); // 设置发音语言
                 if (result == TextToSpeech.LANG_MISSING_DATA
                         || result == TextToSpeech.LANG_NOT_SUPPORTED) // 判断语言是否可用
                 {
