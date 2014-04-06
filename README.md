@@ -1,4 +1,4 @@
-KingWord
-========
+WordReviewProject
+=================
 
-a tool to remember the English vocabulary
+android word review 
