@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/activation-4b9f921f67cc6040e21eeeb48223959f.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/additionnal-5aab86cf31b20290391129e630ecd010.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/annotations-e6d6175117d21c18518e04759385db45.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/achartengine-1.0.0-77a46de82f73f48e6340484d53db301e.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/mail-522ed702a8e0e632cb59ec759f461633.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

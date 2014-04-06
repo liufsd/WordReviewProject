@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AChartEngine.src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/tools/AChartEngine.src.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
